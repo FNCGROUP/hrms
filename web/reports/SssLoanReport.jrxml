@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SssLoanReport" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="c39e4072-58b3-4e39-b65d-e9dae1deb8b2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="BRANCH_ID" class="java.lang.String"/>
+	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT a.amount AS amount, e.sssNo AS sssNo, CONCAT_WS(', ', setNameToUpper(e.lastname), CONCAT_WS(' ', setNameToUpper(e.firstname), setNameToUpper(e.middlename))) AS name, b.name AS branch, tn.name AS tradeName, cn.name AS corporateName, tn.sssNo AS erSssNo, b.address AS address, s.payrollDate AS payrollDate FROM employee e INNER JOIN salary s ON e.employeeId = s.employeeId INNER JOIN advances a ON s.id = a.salaryId INNER JOIN branch b ON e.branchId = b.id  INNER JOIN trade_name tn ON b.tradeId = tn.id INNER JOIN corporate_name cn ON tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND a.advancesType = 'sss loan' AND a.rowStatus IS NULL ORDER BY e.lastname ASC]]>
+	</queryString>
+	<field name="amount" class="java.lang.Double"/>
+	<field name="sssNo" class="java.lang.String"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="branch" class="java.lang.String"/>
+	<field name="tradeName" class="java.lang.String"/>
+	<field name="corporateName" class="java.lang.String"/>
+	<field name="erSssNo" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="payrollDate" class="java.sql.Date"/>
+	<variable name="total" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="140" splitType="Stretch">
+			<line>
+				<reportElement uuid="7d18a9af-37ea-4399-9c82-89b2d3edc10b" x="97" y="119" width="128" height="1"/>
+			</line>
+			<staticText>
+				<reportElement uuid="0615b23a-4ea4-42f4-97aa-3d45b2b2a195" x="189" y="75" width="100" height="18"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[For the Month of ]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="edc11e37-f098-431a-a553-ea24eb1346f9" x="136" y="35" width="300" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="f81e63dc-35fd-4b7d-b984-a5aa1fe55d94" x="0" y="99" width="105" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Employer's SSS ID No: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d38d681d-8fee-469d-910e-f01c2bd3b846" x="183" y="57" width="200" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[Schedule of SSS Loan Payment]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement uuid="9394deb9-c970-4970-9004-0265777ea67f" x="105" y="100" width="120" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{erSssNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8162cf8a-c02f-4c6c-a638-ea34624938be" x="185" y="0" width="200" height="18"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="10"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tradeName}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM yyyy">
+				<reportElement uuid="1ad9c4d7-89ed-48db-acc5-b9217576f73f" x="292" y="75" width="100" height="18"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba" x="237" y="17" width="200" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b" x="134" y="17" width="100" height="18"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Operated By:  ]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="007cc089-d095-42ad-835d-801561aab626" x="144" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[SSS ID No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="45c9eda3-4682-40f8-8823-9cc2a40a4d55" x="244" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6511d091-2770-49cf-9471-c47750e3f70e" x="344" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<line>
+				<reportElement uuid="8a4f473f-0aec-41ac-a4c1-20238295928c" x="144" y="20" width="280" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement uuid="a411fb1e-a289-4080-9202-f5eb2ea2c8a4" x="144" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sssNo}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="c8791775-3c5c-4419-ae4d-3a1f718eadb8" x="244" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="21bb2e72-8eef-49f9-b47a-aea997b00149" x="344" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="20" splitType="Stretch">
+			<textField>
+				<reportElement uuid="8440e653-e80d-4fd6-b456-2ae7d9d656a5" x="0" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="110" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="de73cc35-aa74-41f7-b4ff-ee289f8f47bb" x="199" y="40" width="109" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[SSS Loans Payable]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="d93a8be3-8a78-40b0-b9f1-aaa6b35d6f6b" x="263" y="0" width="81" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[TOTAL]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f0460a76-ebe1-453c-b6cc-7c9f5b077600" x="199" y="20" width="81" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Journal Entry: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2c63b0d7-4e68-4649-b5c9-d95895a8acea" x="199" y="60" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Vouchers Payable]]></text>
+			</staticText>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="14a1ea82-2cda-440a-92fe-f258a56c9c4b" x="344" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="1bfcd7f7-a1f3-4041-9795-a45435f871fd" x="344" y="40" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="bf80497e-149c-4fb5-8ce7-b7fca589d7ee" x="424" y="60" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="57427cfa-55df-4dc7-8b7d-690e9b6453b9" x="344" y="80" width="160" height="1"/>
+			</line>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="6cdc812a-f0e2-47aa-9444-142344645bde" x="344" y="81" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00" isBlankWhenNull="true">
+				<reportElement uuid="1bb21de6-00a9-43e9-bbd5-3cac7484b34d" x="424" y="81" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="e2818cc7-f22d-4529-bbe7-70ea96af6f02" x="344" y="101" width="160" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="3f47e21d-91d5-4b6a-8e1a-3d4e92d8fcab" x="344" y="103" width="160" height="1"/>
+			</line>
+			<line>
+				<reportElement uuid="f3812eb2-57a4-4cdb-8470-286603c91326" x="344" y="0" width="80" height="1"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

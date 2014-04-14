@@ -1,0 +1,102 @@
+@import "../reindeermods/styles.css";
+@import "../com_vaadin_addon_calendar/calendar.css";
+/* 
+    Document   : styles
+    Created on : Jul 9, 2012, 7:56:53 PM
+    Author     : jet
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.left-split-panel {
+    margin-top: 10px;
+}
+
+.right-split-panel {
+    margin-top: 15px;
+}
+.banner{
+    width: 100%;
+    height: 20px;
+}
+
+.panel-left{
+    border:0px solid;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
+    -moz-border-radius:15px;
+}
+
+.v-table-cell-content {
+    vertical-align: middle;
+}
+
+.payroll-splitpanel{
+    width: 100%;
+}
+
+/*green*/
+.v-calendar .v-calendar-event-color1 {
+color: #4f8324; /*4f8324*/
+}
+/*blue*/
+.v-calendar .v-calendar-event-color2 {
+color: #0000FF;
+}
+/*red*/
+.v-calendar .v-calendar-event-color3 {
+color: #FF0000;
+}
+/*orange*/
+.v-calendar .v-calendar-event-color4 {
+color: #FFA500;
+}
+
+.v-calendar .v-calendar-event-color1-all-day {
+background-color: #61c114;
+}
+/* For week/day view */
+.v-calendar .v-calendar-event-color1 .v-calendar-event-caption
+{
+color: #4f8324;
+}
+.v-calendar .v-calendar-event-color2 .v-calendar-event-caption
+{
+color: #0000FF;
+}
+.v-calendar .v-calendar-event-color3 .v-calendar-event-caption
+{
+color: #FF0000;
+}
+.v-calendar .v-calendar-event-color4 .v-calendar-event-caption
+{
+color: #FFA500;
+}
+.v-calendar .v-calendar-event-color1 .v-calendar-event-content
+{
+border-color: #61c114;
+background-color: #daff70;
+}
+.v-calendar .v-calendar-event-color2 .v-calendar-event-content
+{
+border-color: #61c114;
+background-color: #daff70;
+}
+.v-calendar .v-calendar-event-color3 .v-calendar-event-content
+{
+border-color: #61c114;
+background-color: #daff70;
+}
+.v-calendar .v-calendar-event-color4 .v-calendar-event-content
+{
+border-color: #61c114;
+background-color: #daff70;
+}
+
+.v-textfield-numerical {
+    text-align: right;
+}
