@@ -179,14 +179,14 @@ public class ProcessPayrollComputation {
             payroll.setAmountToBeReceive(amountToBeReceive);  
             payrollList.add(payroll);
 
-            double forAdjustments = sal.getForAdjustmentFromPreviousPayroll(employeeId);            
-            System.out.println("for adjustments: " +forAdjustments);
-	    System.out.println("employee ID: " +employeeId);
+            double adjustment = sal.getAdjustmentFromPreviousPayroll(employeeId);            
+//            System.out.println("for adjustments: " +forAdjustments);
+//	    System.out.println("employee ID: " +employeeId);
 	    
             result = serviceInsert.insertPayrollAndAttendance(payrollList, 
                     timekeepingList, 
                     editPayroll, 
-                    forAdjustments, 
+                    adjustment, 
                     previousPayrollId);
         } catch (Exception e) {
             e.printStackTrace(System.out);

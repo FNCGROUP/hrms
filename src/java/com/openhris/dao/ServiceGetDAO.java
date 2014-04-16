@@ -1334,7 +1334,7 @@ public class ServiceGetDAO {
         return advancesList;
     }
     
-    public double getForAdjustmentFromPreviousPayroll(String employeeId){
+    public double getAdjustmentFromPreviousPayroll(String employeeId){
         double forAdjustments = 0;
         Connection conn = getConnection.connection();
         Statement stmt = null;
@@ -1344,7 +1344,7 @@ public class ServiceGetDAO {
 //            rs = stmt.executeQuery("SELECT ROUND(SUM(ifnull(forAdjustments, 0)),2) AS forAdjustments FROM payroll_table WHERE id = '"+payrollId+"' ");
 	    rs = stmt.executeQuery("SELECT ifnull(forAdjustments, 0) AS forAdjustments "
 		    + "FROM payroll_table WHERE employeeId = '"+employeeId+"' "
-                    + "ORDER BY payrollDate DESC, id DESC LIMIT 1, 1");
+                    + "ORDER BY payrollDate DESC, id DESC LIMIT 1");
             while(rs.next()){
                 forAdjustments = util.convertStringToDouble(rs.getString("forAdjustments"));                
             }

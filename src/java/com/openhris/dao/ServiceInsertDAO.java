@@ -133,8 +133,9 @@ public class ServiceInsertDAO {
                         + "basicSalary, halfMonthSalary, phic, sss, hdmf, absences, numberOfDays, taxableSalary, tax, "
                         + "cashBond, totalLatesDeduction, totalUndertimeDeduction, totalOvertimePaid, totalNightDifferentialPaid, "
                         + "totalLegalHolidayPaid, totalSpecialHolidayPaid, totalWorkingDayOffPaid, allowance, "
-                        + "allowanceForLiquidation, netSalary, amountToBeReceive, amountReceivable, branchId, payrollPeriod, payrollDate) "
-                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        + "allowanceForLiquidation, netSalary, adjustments, amountToBeReceive, amountReceivable, branchId, "
+			+ "payrollPeriod, payrollDate) "
+                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 pstmt.setString(1, p.getEmployeeId());
                 pstmt.setString(2, util.convertDateFormat(p.getAttendancePeriodFrom().toString()));
                 pstmt.setString(3, util.convertDateFormat(p.getAttendancePeriodTo().toString()));
@@ -158,11 +159,12 @@ public class ServiceInsertDAO {
                 pstmt.setDouble(21, p.getAllowance());
                 pstmt.setDouble(22, p.getAllowanceForLiquidation());
                 pstmt.setDouble(23, p.getNetSalary());
-                pstmt.setDouble(24, p.getAmountToBeReceive());
-                pstmt.setDouble(25, p.getAmountReceivable());
-                pstmt.setInt(26, p.getBranchId());
-                pstmt.setString(27, p.getPayrollPeriod());
-                pstmt.setString(28, util.convertDateFormat(p.getPayrollDate().toString()));                
+		pstmt.setDouble(24, adjustments);
+                pstmt.setDouble(25, p.getAmountToBeReceive() + adjustments);
+                pstmt.setDouble(26, p.getAmountReceivable() + adjustments);
+                pstmt.setInt(27, p.getBranchId());
+                pstmt.setString(28, p.getPayrollPeriod());
+                pstmt.setString(29, util.convertDateFormat(p.getPayrollDate().toString()));                
                 pstmt.executeUpdate();
                 
                 int payrollId = 0;            
@@ -198,20 +200,20 @@ public class ServiceInsertDAO {
                     pstmt.executeUpdate();
                 }
                 
-                if(adjustments != 0){
-                    double amountReceivable = Math.round((p.getAmountReceivable() + adjustments)*100.0)/100.0;
-                    double amountToBeReceive = amountReceivable;
-
-                    pstmt = conn.prepareStatement("UPDATE payroll_table SET amountToBeReceive = ?, "
-			    + "amountReceivable = ?, "
-			    + "adjustments = ? "
-                            + "WHERE id = ? ");
-                    pstmt.setDouble(1, amountToBeReceive);
-                    pstmt.setDouble(2, amountReceivable);
-		    pstmt.setDouble(3, adjustments);
-                    pstmt.setInt(4, payrollId);
-                    pstmt.executeUpdate();
-                }           
+//                if(adjustments != 0){
+//                    double amountReceivable = Math.round((p.getAmountReceivable() + adjustments)*100.0)/100.0;
+//                    double amountToBeReceive = amountReceivable;
+//
+//                    pstmt = conn.prepareStatement("UPDATE payroll_table SET amountToBeReceive = ?, "
+//			    + "amountReceivable = ?, "
+//			    + "adjustments = ? "
+//                            + "WHERE id = ? ");
+//                    pstmt.setDouble(1, amountToBeReceive);
+//                    pstmt.setDouble(2, amountReceivable);
+//		    pstmt.setDouble(3, adjustments);
+//                    pstmt.setInt(4, payrollId);
+//                    pstmt.executeUpdate();
+//                }           
 				
 		if(previousPayrollId != 0){
 		    double previousAmountReceived = serviceGet.getPreviousAmountReceived(previousPayrollId);

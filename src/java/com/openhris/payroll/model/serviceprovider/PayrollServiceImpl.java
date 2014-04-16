@@ -154,8 +154,8 @@ public class PayrollServiceImpl implements PayrollService {
     }
 
     @Override
-    public double getForAdjustmentFromPreviousPayroll(String employeeId) {
-        return serviceGet.getForAdjustmentFromPreviousPayroll(employeeId);
+    public double getAdjustmentFromPreviousPayroll(String employeeId) {
+        return serviceGet.getAdjustmentFromPreviousPayroll(employeeId);
     }
 
     @Override

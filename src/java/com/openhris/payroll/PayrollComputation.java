@@ -247,7 +247,7 @@ public class PayrollComputation {
         return new Double(df.format(totalAbsences));
     }
     
-    public double getForAdjustmentFromPreviousPayroll(String employeeId){
-        return payrollService.getForAdjustmentFromPreviousPayroll(employeeId);
+    public double getAdjustmentFromPreviousPayroll(String employeeId){
+        return payrollService.getAdjustmentFromPreviousPayroll(employeeId);
     }
 }

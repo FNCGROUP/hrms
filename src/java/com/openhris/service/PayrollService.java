@@ -69,7 +69,7 @@ public interface PayrollService {
     
     public boolean lockPayroll(int payrollId);
     
-    public double getForAdjustmentFromPreviousPayroll(String employeeId);
+    public double getAdjustmentFromPreviousPayroll(String employeeId);
     
     public boolean insertForAdjustmentAndUpdatePayroll(int payrollId, 
             double adjustedAmount, 
