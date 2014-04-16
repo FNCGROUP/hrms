@@ -29,6 +29,8 @@ public interface CompanyService {
     
     public String getTradeById(int tradeId);
     
+    public int getTradeIdByBranchId(int branchId);
+    
     public List<Trade> getTradeListAssignedForUser(int userId, int corporateId);
     
     public List<Branch> getBranchByTrade(int tradeId, int corporateId);

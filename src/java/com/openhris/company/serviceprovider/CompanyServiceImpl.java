@@ -97,5 +97,10 @@ public class CompanyServiceImpl implements CompanyService {
     public boolean removeBranchAssignedForUser(int branchId, int userId) {
         return serviceUpdate.removeBranchAssignedForUser(branchId, userId);
     }
+
+    @Override
+    public int getTradeIdByBranchId(int branchId) {
+        return serviceGet.getTradeIdByBranchId(branchId);
+    }
     
 }

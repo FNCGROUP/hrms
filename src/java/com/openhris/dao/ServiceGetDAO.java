@@ -292,6 +292,33 @@ public class ServiceGetDAO {
         return tradeName;
     }
     
+    public int getTradeIdByBranchId(int branchId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null; 
+        int tradeId = 0;
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT tradeId FROM branch_table WHERE id = "+branchId+" AND actionTaken IS NULL ");
+            while(rs.next()){ 
+                tradeId = util.convertStringToInteger(rs.getString("tradeId"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return tradeId;
+    }
+    
     public List<Branch> getBranchListAssignedForUser(int userId, int tradeId){
         List<Branch> branchLists = new ArrayList<Branch>();
         Connection conn = getConnection.connection();
@@ -407,7 +434,7 @@ public class ServiceGetDAO {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(" SELECT name FROM branch_table WHERE id = "+branchId+" ");
             while(rs.next()){
-                branchName = rs.getString("id");
+                branchName = rs.getString("name");
             }
         } catch (SQLException ex) {
             Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
