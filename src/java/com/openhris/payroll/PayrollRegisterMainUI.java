@@ -125,17 +125,17 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         glayout.addComponent(payrollRegisterButton, 1, 0);
         glayout.setComponentAlignment(payrollRegisterButton, Alignment.BOTTOM_LEFT);
         
-        Button adjustedPayrollRegisterButton = new Button();
-        if(!UserAccessControl.isPayroll()){
-            adjustedPayrollRegisterButton.setCaption("Adjusted Payroll Button is Disabled");
-            adjustedPayrollRegisterButton.setEnabled(UserAccessControl.isPayroll());
-        } else {
-            adjustedPayrollRegisterButton.setCaption("Generate Adjusted Payroll Register");
-            adjustedPayrollRegisterButton.setEnabled(UserAccessControl.isPayroll());
-        }
-        adjustedPayrollRegisterButton.setWidth("100%");
-        glayout.addComponent(adjustedPayrollRegisterButton, 2, 0);
-        glayout.setComponentAlignment(adjustedPayrollRegisterButton, Alignment.BOTTOM_LEFT);
+//        Button adjustedPayrollRegisterButton = new Button();
+//        if(!UserAccessControl.isPayroll()){
+//            adjustedPayrollRegisterButton.setCaption("Adjusted Payroll Button is Disabled");
+//            adjustedPayrollRegisterButton.setEnabled(UserAccessControl.isPayroll());
+//        } else {
+//            adjustedPayrollRegisterButton.setCaption("Generate Adjusted Payroll Register");
+//            adjustedPayrollRegisterButton.setEnabled(UserAccessControl.isPayroll());
+//        }
+//        adjustedPayrollRegisterButton.setWidth("100%");
+//        glayout.addComponent(adjustedPayrollRegisterButton, 2, 0);
+//        glayout.setComponentAlignment(adjustedPayrollRegisterButton, Alignment.BOTTOM_LEFT);
         
         vsplit.setFirstComponent(glayout);        
         addComponent(vsplit);
@@ -245,7 +245,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         payrollRegisterTbl.addContainerProperty("advances to o/e", Double.class, null);         
         payrollRegisterTbl.addContainerProperty("adjustments", Double.class, null);        
         payrollRegisterTbl.addContainerProperty("amount to be receive", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("amount received", Double.class, null);        
+        payrollRegisterTbl.addContainerProperty("amount received", Double.class, null);  
+	payrollRegisterTbl.addContainerProperty("for adjustments", Double.class, null);
         
         payrollRegisterTbl.setColumnAlignment("no. of days", Table.ALIGN_CENTER);
         payrollRegisterTbl.setColumnAlignment("rate per day", Table.ALIGN_RIGHT);
@@ -271,6 +272,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         payrollRegisterTbl.setColumnAlignment("advances to o/e", Table.ALIGN_RIGHT);
         payrollRegisterTbl.setColumnAlignment("amount to be receive", Table.ALIGN_RIGHT);
         payrollRegisterTbl.setColumnAlignment("amount received", Table.ALIGN_RIGHT);
+	payrollRegisterTbl.setColumnAlignment("for adjustments", Table.ALIGN_RIGHT);
         
         List<PayrollRegister> payrollRegisterList = payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev);
         int i = 0;
@@ -283,7 +285,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                 pr.getTotalUndertimeDeduction(), pr.getGrossPay(), pr.getSss(), pr.getPhic(), 
                 pr.getHdmf(), pr.getTax(), pr.getNetSalary(), pr.getAllowance(), 
                 pr.getAllowanceForLiquidation(), pr.getAmount(), pr.getAdjustment(), 
-                pr.getAmountToBeReceive(), pr.getAmountReceivable()
+                pr.getAmountToBeReceive(), pr.getAmountReceivable(), pr.getForAdjustments()
             }, new Integer(i));
             i++;
         }
@@ -321,6 +323,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         });
         
         payrollRegisterTbl.setColumnCollapsed("amount received", true);
+	payrollRegisterTbl.setColumnCollapsed("for adjustments", true);
     }
     
     public int getBranchId(){

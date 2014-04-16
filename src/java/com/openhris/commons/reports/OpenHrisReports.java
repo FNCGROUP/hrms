@@ -90,7 +90,8 @@ public class OpenHrisReports extends VerticalLayout {
         table.addContainerProperty("advances to o/e", Double.class, null);         
         table.addContainerProperty("adjustments", Double.class, null);        
         table.addContainerProperty("amount to be receive", Double.class, null);        
-        table.addContainerProperty("amount received", Double.class, null);        
+        table.addContainerProperty("amount received", Double.class, null);      
+	table.addContainerProperty("for adjustments", Double.class, null);
         
         table.setColumnAlignment("no. of days", Table.ALIGN_CENTER);
         table.setColumnAlignment("rate per day", Table.ALIGN_RIGHT);
@@ -116,6 +117,7 @@ public class OpenHrisReports extends VerticalLayout {
         table.setColumnAlignment("advances to o/e", Table.ALIGN_RIGHT);
         table.setColumnAlignment("amount to be receive", Table.ALIGN_RIGHT);
         table.setColumnAlignment("amount received", Table.ALIGN_RIGHT);
+	table.setColumnAlignment("for adjustments", Table.ALIGN_RIGHT);
         
         List<PayrollRegister> payrollRegisterList = payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev);
         int i = 0;
@@ -128,7 +130,7 @@ public class OpenHrisReports extends VerticalLayout {
                 pr.getTotalUndertimeDeduction(), pr.getGrossPay(), pr.getSss(), pr.getPhic(), 
                 pr.getHdmf(), pr.getTax(), pr.getNetSalary(), pr.getAllowance(), 
                 pr.getAllowanceForLiquidation(), pr.getAmount(), pr.getAdjustment(), 
-                pr.getAmountToBeReceive(), pr.getAmountReceivable()
+                pr.getAmountToBeReceive(), pr.getAmountReceivable(), pr.getForAdjustments()
             }, new Integer(i));
             i++;
         }
@@ -139,6 +141,7 @@ public class OpenHrisReports extends VerticalLayout {
         }
                 
         table.setColumnCollapsed("amount received", true);
+	table.setColumnCollapsed("for adjustments", true);
         subWindow.addComponent(table);
         
         Button printButton = new Button("Print Payroll Register");
