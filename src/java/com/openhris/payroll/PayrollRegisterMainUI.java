@@ -10,13 +10,16 @@ import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.commons.reports.OpenHrisReports;
+import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.PayrollRegister;
 import com.openhris.payroll.model.serviceprovider.PayrollServiceImpl;
+import com.openhris.service.CompanyService;
 import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;
+import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
@@ -58,6 +61,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     OpenHrisUtilities util = new OpenHrisUtilities();    
     PayrollService payrollService = new PayrollServiceImpl();
     EmployeeService employeeService = new EmployeeServiceImpl();
+    CompanyService companyService = new CompanyServiceImpl();
     DropDownComponent dropDown = new DropDownComponent();
     ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
     GetSQLConnection getConnection = new GetSQLConnection();
@@ -125,18 +129,34 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         glayout.addComponent(payrollRegisterButton, 1, 0);
         glayout.setComponentAlignment(payrollRegisterButton, Alignment.BOTTOM_LEFT);
         
-//        Button adjustedPayrollRegisterButton = new Button();
-//        if(!UserAccessControl.isPayroll()){
-//            adjustedPayrollRegisterButton.setCaption("Adjusted Payroll Button is Disabled");
-//            adjustedPayrollRegisterButton.setEnabled(UserAccessControl.isPayroll());
-//        } else {
-//            adjustedPayrollRegisterButton.setCaption("Generate Adjusted Payroll Register");
-//            adjustedPayrollRegisterButton.setEnabled(UserAccessControl.isPayroll());
-//        }
-//        adjustedPayrollRegisterButton.setWidth("100%");
-//        glayout.addComponent(adjustedPayrollRegisterButton, 2, 0);
-//        glayout.setComponentAlignment(adjustedPayrollRegisterButton, Alignment.BOTTOM_LEFT);
-        
+	Button exportTableToExcel = new Button();
+	if(!UserAccessControl.isPayroll()){
+            exportTableToExcel.setCaption("Export Table to Excel is Disabled");
+            exportTableToExcel.setEnabled(UserAccessControl.isPayroll());
+        } else {
+            exportTableToExcel.setCaption("Export Table to Excel");
+            exportTableToExcel.setEnabled(UserAccessControl.isPayroll());
+        }
+	exportTableToExcel.setWidth("100%");
+	exportTableToExcel.addListener(new Button.ClickListener() {
+
+	    private static final long serialVersionUID = -73954695086117200L;
+            private ExcelExport excelExport;
+		
+		@Override
+		public void buttonClick(Button.ClickEvent event) {
+			
+			int tradeId = companyService.getTradeIdByBranchId(getBranchId());
+			excelExport = new ExcelExport(payrollRegisterTbl, "Payroll Register");
+			excelExport.excludeCollapsedColumns();
+			excelExport.setReportTitle(companyService.getTradeById(tradeId).toUpperCase()+" Payroll Register");
+			excelExport.setExportFileName(companyService.getTradeById(tradeId).toUpperCase()+" Payroll Register");                    
+			excelExport.export();
+		}
+	});
+	glayout.addComponent(exportTableToExcel, 2, 0);
+        glayout.setComponentAlignment(exportTableToExcel, Alignment.BOTTOM_LEFT);
+	        
         vsplit.setFirstComponent(glayout);        
         addComponent(vsplit);
         
