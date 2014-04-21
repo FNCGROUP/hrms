@@ -6,6 +6,7 @@ package com.openhris.payroll;
 
 import com.hrms.beans.AdvancesTypeBean;
 import com.hrms.dbconnection.GetSQLConnection;
+import com.hrms.modules.PayrollRegisterModule;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
@@ -45,6 +46,7 @@ import java.io.InputStream;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -70,6 +72,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     String employeeId;
     boolean lastAddedAdvanceType;
     String payroll_date;
+    String payrollPeriod;
+    int day = 0;
     
     Table payrollRegisterTbl = new Table();
     Table advancesTbl = new Table();
@@ -124,6 +128,10 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                 payrollRegisterTable(getBranchId(), 
                         payroll_date, 
                         false); 
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(util.parsingDate(util.convertDateFormat(payrollDate.getValue().toString())));
+		day = cal.get(Calendar.DAY_OF_MONTH);
             }
         });
         glayout.addComponent(payrollRegisterButton, 1, 0);
@@ -204,7 +212,63 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                 if(reportType.getValue().equals("Payroll Register")){
                     String fileName = "payrollRegisterReport_";
                     reports.deleteFile(fileName);
-                    payrollRegisterReport(true, util.convertDateFormat(payrollDate.getValue().toString()));
+                    payrollRegisterReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                }else if(reportType.getValue().equals("Adjusted Payroll Register")){
+		    String fileName = "PayrollRegisterReportAdjusted_";
+                    reports.deleteFile(fileName);
+                    adjustedPayrollRegisterReport(util.convertDateFormat(payrollDate.getValue().toString()));	
+		}else if(reportType.getValue().equals("Payslip Report")){
+                    String fileName = "PayslipReport_";
+                    reports.deleteFile(fileName);
+                    payslipReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                }else if(reportType.getValue().equals("SSS Report")){
+                    if(day == 15){
+                        String fileName = "SssReport_";
+                        reports.deleteFile(fileName);
+                        sssReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    }else{
+                        getWindow().showNotification("SSS Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
+                    }
+                }else if(reportType.getValue().equals("HDMF Report")){
+                    if(day != 15){
+                        String fileName = "HdmfReport_";
+                        reports.deleteFile(fileName);
+                        hdmfReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    }else{
+                        getWindow().showNotification("HDMF Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
+                    }
+                }else if(reportType.getValue().equals("HDMF Savings")){
+                    String fileName = "HdmfVoluntarySavingsReport_";
+                    reports.deleteFile(fileName);
+                    hdmfSavingsReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                }else if(reportType.getValue().equals("Philhealth Report")){
+                    if(day != 15){
+                        String fileName = "PhicReport_";
+                        reports.deleteFile(fileName);
+                        phicReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    }else{
+                        getWindow().showNotification("Philhealth Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
+                    }
+                }else if(reportType.getValue().equals("Witholding Tax")){
+                    String fileName = "WitholdingTaxesReport_";
+                    reports.deleteFile(fileName);
+                    witholdingTaxReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                }else if(reportType.getValue().equals("Attendance Report")){
+                    String fileName = "AttendanceReport_";
+                    reports.deleteFile(fileName);
+                    attendanceReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                }else if(reportType.getValue().equals("Bank Debit Memo")){
+                    String fileName = "BankDebitMemo_";
+                    reports.deleteFile(fileName);
+                    bankDebitMemoReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                }else if(reportType.getValue().equals("SSS Loans Payable")){
+                    String fileName = "SssLoanReport_";
+                    reports.deleteFile(fileName);
+                    sssLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                }else{
+                    String fileName = "HdmfLoanReport_";
+                    reports.deleteFile(fileName);
+                    hdmfLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
                 }
             }
         });
@@ -298,14 +362,33 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         int i = 0;
         for(PayrollRegister pr : payrollRegisterList){
             payrollRegisterTbl.addItem(new Object[]{
-                pr.getId(), pr.getName(), pr.getNumOfDays(), pr.getRatePerDay(), pr.getBasicSalary(), 
-                pr.getHalfMonthSalary(), pr.getTotalOvertimePaid(), pr.getTotalLegalHolidayPaid(), 
-                pr.getTotalSpecialHolidayPaid(), pr.getTotalNightDifferentialPaid(), 
-                pr.getTotalWorkingDayOffPaid(), pr.getAbsences(), pr.getTotalLatesDeduction(), 
-                pr.getTotalUndertimeDeduction(), pr.getGrossPay(), pr.getSss(), pr.getPhic(), 
-                pr.getHdmf(), pr.getTax(), pr.getNetSalary(), pr.getAllowance(), 
-                pr.getAllowanceForLiquidation(), pr.getAmount(), pr.getAdjustment(), 
-                pr.getAmountToBeReceive(), pr.getAmountReceivable(), pr.getForAdjustments()
+                pr.getId(), 
+		pr.getName().toUpperCase(), 
+		pr.getNumOfDays(), 
+		pr.getRatePerDay(), 
+		pr.getBasicSalary(), 
+                pr.getHalfMonthSalary(), 
+		pr.getTotalOvertimePaid(), 
+		pr.getTotalLegalHolidayPaid(), 
+                pr.getTotalSpecialHolidayPaid(), 
+		pr.getTotalNightDifferentialPaid(), 
+                pr.getTotalWorkingDayOffPaid(), 
+		pr.getAbsences(), 
+		pr.getTotalLatesDeduction(), 
+                pr.getTotalUndertimeDeduction(), 
+		pr.getGrossPay(), 
+		pr.getSss(), 
+		pr.getPhic(), 
+                pr.getHdmf(), 
+		pr.getTax(), 
+		pr.getNetSalary(), 
+		pr.getAllowance(), 
+                pr.getAllowanceForLiquidation(), 
+		pr.getAmount(), 
+		pr.getAdjustment(), 
+                pr.getAmountToBeReceive(), 
+		pr.getAmountReceivable(), 
+		pr.getForAdjustments()
             }, new Integer(i));
             i++;
         }
@@ -600,14 +683,9 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         return subWindow;
     }
     
-    public void payrollRegisterReport(boolean selectedPayrollRegisterReport, String payrollDate){
+    public void payrollRegisterReport(String payrollDate){
         Connection conn = getConnection.connection();
-        File reportFile;
-        if(selectedPayrollRegisterReport == true){
-            reportFile = new File("C:/reportsJasper/payrollRegisterReport.jasper");
-        }else{
-            reportFile = new File("C:/reportsJasper/payrollRegisterReportAdjusted.jasper");
-        } 
+        File reportFile = new File("C:/reportsJasper/payrollRegisterReport.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("BRANCH_ID", branchId);
@@ -658,4 +736,645 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         }
     }
     
+    public void adjustedPayrollRegisterReport(String payrollDate){
+        Connection conn = getConnection.connection();
+        File reportFile = new File("C:/reportsJasper/PayrollRegisterReportAdjusted.jasper");
+        
+        final HashMap hm = new HashMap();
+        hm.put("BRANCH_ID", branchId);
+        hm.put("PAYROLL_DATE", payrollDate);
+
+        try{
+             JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+             SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+             String timestamp = df.format(new Date());
+             final String filePath = "C:/reportsPdf/payrollRegisterReportAdjusted_"+timestamp+".pdf";
+             JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+             Window subWindow = new Window("Payroll Register Report");
+             ((VerticalLayout) subWindow.getContent()).setSizeFull();
+             subWindow.setWidth("800px");
+             subWindow.setHeight("600px");
+             subWindow.center();
+
+             StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                 @Override
+                 public InputStream getStream() {
+                     try {
+                         File f = new File(filePath);
+                         FileInputStream fis = new FileInputStream(f);
+                         return fis;
+                     } catch (Exception e) {
+                         e.getMessage();
+                         return null;
+                     }
+                 }
+             };
+
+             StreamResource resource = new StreamResource(source, filePath, getApplication());
+             resource.setMIMEType("application/pdf");       
+
+             Embedded e = new Embedded();
+             e.setMimeType("application/pdf");
+             e.setType(Embedded.TYPE_OBJECT);
+             e.setSizeFull();
+             e.setSource(resource);
+             e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+             subWindow.addComponent(e);
+
+             getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+             e.getMessage();
+        }
+    }
+    
+    private void payslipReport(String payrollDate){
+       Connection conn = getConnection.connection();
+       File reportFile = new File("C:/reportsJasper/PayslipReport.jasper");
+
+       final HashMap hm = new HashMap();
+       hm.put("BRANCH_ID", branchId);
+       hm.put("PAYROLL_DATE", payrollDate);
+
+       try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/PayslipReport_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("Payslip Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");     
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+       }catch(Exception e){
+            e.getMessage();
+       }
+   }
+   
+   private void hdmfReport(String payrollDate){       
+       Connection conn = getConnection.connection();
+       File reportFile = new File("C:/reportsJasper/HdmfReport.jasper");
+
+       final HashMap hm = new HashMap();
+       hm.put("BRANCH_ID", branchId);
+       hm.put("PAYROLL_DATE", payrollDate);
+
+       try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/HdmfReport_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("HDMF Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");  
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+       }catch(Exception e){
+            e.getMessage();
+       }
+   }
+   
+   private void hdmfSavingsReport(String payrollDate){
+       Connection conn = getConnection.connection();
+       File reportFile = new File("C:/reportsJasper/HdmfVoluntarySavingsReport.jasper");
+
+       final HashMap hm = new HashMap();
+       hm.put("BRANCH_ID", branchId);
+       hm.put("PAYROLL_DATE", payrollDate);
+
+       try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/HdmfVoluntarySavingsReport_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("HDMF Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");      
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+       }catch(Exception e){
+            e.getMessage();
+       }
+   }
+   
+   private void sssReport(String payrollDate){
+	Connection conn = getConnection.connection();   
+        File reportFile = new File("C:/reportsJasper/SssReport.jasper");
+
+        final HashMap hm = new HashMap();
+        hm.put("BRANCH_ID", branchId);
+        hm.put("PAYROLL_DATE", payrollDate);
+
+        try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/SssReport_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("SSS Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");     
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+            e.getMessage();
+        }
+   }
+   
+   private void phicReport(String payrollDate){
+       Connection conn = getConnection.connection();	   
+       File reportFile = new File("C:/reportsJasper/PhicReport.jasper");
+
+        final HashMap hm = new HashMap();
+        hm.put("BRANCH_ID", branchId);
+        hm.put("PAYROLL_DATE", payrollDate);
+
+        try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/PhicReport_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("Phic Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");     
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+            e.getMessage();
+        }
+   }
+   
+   private void witholdingTaxReport(String payrollDate){
+       Connection conn = getConnection.connection();	   
+       File reportFile = new File("C:/reportsJasper/WitholdingTaxesReport.jasper");
+
+        final HashMap hm = new HashMap();
+        hm.put("BRANCH_ID", branchId);
+        hm.put("PAYROLL_DATE", payrollDate);
+
+        try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/WitholdingTaxesReport_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("Witholding Taxes Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");     
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+            e.getMessage();
+        }
+   }
+   
+   private void attendanceReport(String payrollDate){
+       Connection conn = getConnection.connection();	   
+       File reportFile = new File("C:/reportsJasper/AttendanceReport.jasper");
+
+        final HashMap hm = new HashMap();
+        hm.put("BRANCH_ID", branchId);
+        hm.put("PAYROLL_DATE", payrollDate);
+
+        try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/AttendanceReport_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("Witholding Taxes Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");       
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+            e.getMessage();
+        }
+   }
+   
+   private void bankDebitMemoReport(String payrollDate){
+       Connection conn = getConnection.connection();	   
+       File reportFile = new File("C:/reportsJasper/BankDebitMemo.jasper");
+
+        final HashMap hm = new HashMap();
+        hm.put("BRANCH_ID", branchId);
+        hm.put("PAYROLL_DATE", payrollDate);
+
+        try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/BankDebitMemo_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("Witholding Taxes Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");    
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+            e.getMessage();
+        }
+   }     
+   
+   private void sssLoanReport(String payrollDate){
+       Connection conn = getConnection.connection();	   
+       File reportFile = new File("C:/reportsJasper/SssLoanReport.jasper");
+
+        final HashMap hm = new HashMap();
+        hm.put("BRANCH_ID", branchId);
+        hm.put("PAYROLL_DATE", payrollDate);
+
+        try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/SssLoanReport_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("SSS Loans Payable Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");        
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+            e.getMessage();
+        }
+   }  
+   
+   private void hdmfLoanReport(String payrollDate){
+	Connection conn = getConnection.connection();   
+        File reportFile = new File("C:/reportsJasper/HdmfLoanReport.jasper");
+	int tradeId = companyService.getTradeIdByBranchId(branchId);
+	int corporateId = companyService.getCorporateIdByTradeId(tradeId);
+
+        final HashMap hm = new HashMap();
+        hm.put("BRANCH_ID", corporateId);
+        hm.put("PAYROLL_DATE", payrollDate);
+
+        try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/HdmfLoanReport_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("HDMF Loans Payable Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");   
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+            e.getMessage();
+        }
+   }
+
+   private void allowancesReport(String payroll_date){
+        Connection conn = getConnection.connection(); 
+        File reportFile = new File("C:/reportsJasper/AllowancesReport.jasper");
+        int tradeId = companyService.getTradeIdByBranchId(branchId);
+        int corporateId = companyService.getCorporateIdByTradeId(tradeId);
+	String corporateName = companyService.getCorporateById(corporateId);
+
+        final HashMap hm = new HashMap();
+        hm.put("CORPORATE_NAME", corporateName);
+        hm.put("PAYROLL_DATE", payroll_date);
+
+        try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/AllowancesReport_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("Allowances Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");
+            //resource.getStream();                    
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+            e.getMessage();
+        }
+   }
 }

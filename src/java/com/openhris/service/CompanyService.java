@@ -21,6 +21,10 @@ public interface CompanyService {
     
     public int getCorporateId(String corporateName);
     
+    public int getCorporateIdByTradeId(int tradeId);
+    
+    public String getCorporateById(int corporateId);
+    
     public List<Company> getCorporateListAssignedForUser(int userId);
     
     public List<Trade> getTradeByCorporateId(int corporateId);

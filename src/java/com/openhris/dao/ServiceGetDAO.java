@@ -102,6 +102,62 @@ public class ServiceGetDAO {
         return corporateId;
     }
     
+    public int getCorporateIdByTradeId(int tradeId){
+	Connection conn = getConnection.connection();
+        ResultSet rs = null; 
+        PreparedStatement pstmt = null;
+        int corporateId = 0;
+        try {
+            pstmt = conn.prepareStatement(" SELECT corporateId FROM trade_table WHERE id = ? ");
+            pstmt.setInt(1, tradeId);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                corporateId = Integer.parseInt(rs.getString("corporateId"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return corporateId;    
+    }
+    
+    public String getCorporateById(int corporateId){
+        Connection conn = getConnection.connection();
+        ResultSet rs = null; 
+        PreparedStatement pstmt = null;
+        String corporateName = null;
+        try {
+            pstmt = conn.prepareStatement(" SELECT name FROM corporate_table WHERE id = ? ");
+            pstmt.setInt(1, corporateId);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                corporateName = rs.getString("name");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return corporateName;	    
+    }
+    
     public List<Company> getCorporateListAssignedForUser(int userId){
         Connection conn = getConnection.connection();
         Statement stmt = null;

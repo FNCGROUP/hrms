@@ -102,5 +102,15 @@ public class CompanyServiceImpl implements CompanyService {
     public int getTradeIdByBranchId(int branchId) {
         return serviceGet.getTradeIdByBranchId(branchId);
     }
+
+    @Override
+    public int getCorporateIdByTradeId(int tradeId) {
+	return serviceGet.getCorporateIdByTradeId(tradeId);
+    }
+
+    @Override
+    public String getCorporateById(int corporateId) {
+	return serviceGet.getCorporateById(corporateId);
+    }
     
 }

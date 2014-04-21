@@ -2,12 +2,12 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PayrollRegisterReportOld" language="groovy" pageWidth="1188" pageHeight="612" orientation="Landscape" columnWidth="1148" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="16473a3e-63f8-4526-9a92-6256ac4f4633">
 	<property name="ireport.zoom" value="1.2100000000000002"/>
 	<property name="ireport.x" value="247"/>
-	<property name="ireport.y" value="21"/>
+	<property name="ireport.y" value="56"/>
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT * FROM payroll_register WHERE branchId = $P{BRANCH_ID} AND 
-payrollDate = $P{PAYROLL_DATE} AND (rowStatus != 'removed' OR rowStatus IS NULL) AND (actionTaken = 'adjusted' OR actionTaken IS NULL ) ORDER BY employmentWageEntry, name ASC]]>
+payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'adjusted' OR actionTaken IS NULL ) ORDER BY employmentWageEntry, name ASC]]>
 	</queryString>
 	<field name="salaryId" class="java.lang.Integer"/>
 	<field name="name" class="java.lang.String"/>
@@ -25,7 +25,7 @@ payrollDate = $P{PAYROLL_DATE} AND (rowStatus != 'removed' OR rowStatus IS NULL)
 	<field name="totalUndertimeDeduction" class="java.lang.Double"/>
 	<field name="grossPay" class="java.lang.Double"/>
 	<field name="sss" class="java.lang.Double"/>
-	<field name="philhealth" class="java.lang.Double"/>
+	<field name="phic" class="java.lang.Double"/>
 	<field name="hdmf" class="java.lang.Double"/>
 	<field name="tax" class="java.lang.Double"/>
 	<field name="netSalary" class="java.lang.Double"/>
@@ -45,7 +45,7 @@ payrollDate = $P{PAYROLL_DATE} AND (rowStatus != 'removed' OR rowStatus IS NULL)
 	<field name="branchName" class="java.lang.String"/>
 	<field name="tradeName" class="java.lang.String"/>
 	<field name="corporateName" class="java.lang.String"/>
-	<field name="rowStatus" class="java.lang.String"/>
+	<field name="currentStatus" class="java.lang.String"/>
 	<variable name="basicSalary" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{basicSalary}]]></variableExpression>
 	</variable>
@@ -80,7 +80,7 @@ payrollDate = $P{PAYROLL_DATE} AND (rowStatus != 'removed' OR rowStatus IS NULL)
 		<variableExpression><![CDATA[$F{sss}]]></variableExpression>
 	</variable>
 	<variable name="phic" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{philhealth}]]></variableExpression>
+		<variableExpression><![CDATA[$F{phic}]]></variableExpression>
 	</variable>
 	<variable name="hdmf" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{hdmf}]]></variableExpression>
@@ -458,13 +458,6 @@ payrollDate = $P{PAYROLL_DATE} AND (rowStatus != 'removed' OR rowStatus IS NULL)
 				<textFieldExpression><![CDATA[$F{totalLatesDeduction}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement uuid="ad35fc27-acf4-4e96-b347-979382ded831" x="654" y="0" width="40" height="20"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="7"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{philhealth}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00">
 				<reportElement uuid="4ffd0232-f7fb-46b0-96bd-3b150c4aca1e" x="386" y="0" width="35" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="6"/>
@@ -581,6 +574,13 @@ payrollDate = $P{PAYROLL_DATE} AND (rowStatus != 'removed' OR rowStatus IS NULL)
 					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="1a141418-0338-49bf-afb6-6844700b8ddb" x="654" y="0" width="40" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{phic}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

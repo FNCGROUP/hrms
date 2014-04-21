@@ -209,8 +209,9 @@ public class Constant {
     }
     
     public static String[] createConstantPayrollReportTypeList(){
-        String[] reportTypeArray = {"Payroll Register", "Payslip Report", "SSS Report", "SSS Loans Payable","Philhealth Report", 
-            "HDMF Report", "HDMF Savings", "HDMF Loans Payable","Witholding Tax", "Attendance Report", "Bank Debit Memo", "Allowances"};
+        String[] reportTypeArray = {"Payroll Register", "Adjusted Payroll Register","Payslip Report", "SSS Report", 
+		"SSS Loans Payable","Philhealth Report", "HDMF Report", "HDMF Savings", "HDMF Loans Payable", 
+		"Witholding Tax", "Attendance Report", "Bank Debit Memo", "Allowances"};
         return reportTypeArray;
     }
     
