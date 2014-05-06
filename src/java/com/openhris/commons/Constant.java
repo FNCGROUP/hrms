@@ -10,7 +10,7 @@ import com.openhris.company.model.Company;
 import com.openhris.company.model.Trade;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.dao.ServiceGetDAO;
-import com.openhris.payroll.model.serviceprovider.PayrollServiceImpl;
+import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.CompanyService;
 import com.openhris.service.PayrollService;
 import java.util.Collections;

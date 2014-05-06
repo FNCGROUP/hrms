@@ -12,7 +12,7 @@ import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.employee.model.Employee;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.PayrollMainUI;
-import com.openhris.payroll.model.serviceprovider.PayrollServiceImpl;
+import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;
 import com.openhris.service.TimekeepingService;

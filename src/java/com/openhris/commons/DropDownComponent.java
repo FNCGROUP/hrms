@@ -12,7 +12,7 @@ import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.employee.model.Employee;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
-import com.openhris.payroll.model.serviceprovider.PayrollServiceImpl;
+import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.CompanyService;
 import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;

@@ -13,7 +13,7 @@ import com.openhris.contributions.model.Phic;
 import com.openhris.contributions.model.Sss;
 import com.openhris.employee.model.PositionHistory;
 import com.openhris.payroll.model.Payroll;
-import com.openhris.payroll.model.serviceprovider.PayrollServiceImpl;
+import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.PayrollService;
 import com.openhris.timekeeping.model.Timekeeping;
 import java.sql.Connection;

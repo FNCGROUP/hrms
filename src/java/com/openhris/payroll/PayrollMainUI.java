@@ -14,7 +14,7 @@ import com.openhris.employee.model.Employee;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.Payroll;
-import com.openhris.payroll.model.serviceprovider.PayrollServiceImpl;
+import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;
 import com.vaadin.data.Item;

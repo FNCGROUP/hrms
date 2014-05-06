@@ -7,7 +7,7 @@ package com.openhris.commons.reports;
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.payroll.PayrollRegisterMainUI;
 import com.openhris.payroll.model.PayrollRegister;
-import com.openhris.payroll.model.serviceprovider.PayrollServiceImpl;
+import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.PayrollService;
 import com.vaadin.Application;
 import com.vaadin.event.ItemClickEvent;

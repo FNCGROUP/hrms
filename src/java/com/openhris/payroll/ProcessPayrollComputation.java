@@ -9,7 +9,7 @@ import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.ServiceInsertDAO;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.model.Payroll;
-import com.openhris.payroll.model.serviceprovider.PayrollServiceImpl;
+import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;
 import com.openhris.timekeeping.model.Timekeeping;

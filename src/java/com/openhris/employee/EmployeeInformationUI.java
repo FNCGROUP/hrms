@@ -18,6 +18,8 @@ import com.vaadin.ui.Window;
  */
 public class EmployeeInformationUI extends VerticalLayout {
     
+    EmployeePersonalInformation employeePersonalInformation;	
+	
     String employeeId;	
     	
     public EmployeeInformationUI(){}
@@ -25,14 +27,16 @@ public class EmployeeInformationUI extends VerticalLayout {
     public EmployeeInformationUI(String employeeId){
         this.employeeId = employeeId;
 	
-	employeeInformationInit();
+	init();	
     }
     
-    public void employeeInformationInit(){
+    public void init(){
 	setSpacing(true);
 	setMargin(true);	
 	setSizeFull();
 	setImmediate(true);
+	
+	employeePersonalInformation =  new EmployeePersonalInformation(getEmployeeId());
     }
     
     public Window employeeInformationWindow(){
@@ -44,16 +48,11 @@ public class EmployeeInformationUI extends VerticalLayout {
         ts.setSizeFull();
         ts.addStyleName("bar");
 	
-	GridLayout glayout = new GridLayout();
-	glayout.setSizeFull();
-	glayout.setCaption("Personal Information");
-	ts.addComponent(glayout);
-	
-	glayout = new GridLayout();
-	glayout.setSizeFull();
-	glayout.setCaption("Educational Background");
-	ts.addComponent(glayout);
-	
+	VerticalLayout vlayout = new VerticalLayout();
+	vlayout.setCaption("Personal Information");
+	vlayout.addComponent(employeePersonalInformation);
+	ts.addComponent(vlayout);
+		
 	window.addComponent(ts);
 	
 	return window;    
