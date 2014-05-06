@@ -83,7 +83,7 @@ public class EmployeeMainUI extends VerticalLayout {
         employeesTbl.setSizeFull();
         employeesTbl.setSelectable(true);
         
-        employeesTbl.addContainerProperty("id", String.class, null);
+        employeesTbl.addContainerProperty("employee id", String.class, null);
         employeesTbl.addContainerProperty("name", String.class, null);
         employeesTbl.addContainerProperty("corporate name", String.class, null);
         employeesTbl.addContainerProperty("trade name", String.class, null);
@@ -115,8 +115,10 @@ public class EmployeeMainUI extends VerticalLayout {
                 Object itemId = event.getItemId();
                 Item item = employeesTbl.getItem(itemId);
                 
-                if(event.getPropertyId().equals("id")){
-                    Window subWindow = openNewEmployeeWindow(item.getItemProperty("id").getValue().toString());
+                if(event.getPropertyId().equals("employee id")){
+//                    Window subWindow = openNewEmployeeWindow(item.getItemProperty("id").getValue().toString());
+//		    EmployeeInformationUI employeeInformationUI = new EmployeeInformationUI();
+		    Window subWindow =  new EmployeeInformationUI(item.getItemProperty("employee id").getValue().toString()).employeeInformationWindow();
                     subWindow.setModal(true);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow);
@@ -126,7 +128,7 @@ public class EmployeeMainUI extends VerticalLayout {
                 
                 if(event.getPropertyId().equals("name")){          
                     String employeeId = employeeService.getEmployeeId(item.getItemProperty("name").toString());
-                    Window subWindow = addAllowanceForLiquidation(item.getItemProperty("id").getValue().toString());
+                    Window subWindow = addAllowanceForLiquidation(item.getItemProperty("employee id").getValue().toString());
                     subWindow.setModal(true);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow);
