@@ -55,7 +55,6 @@ public class ContributionUtilities extends VerticalLayout {
     
     public Double getSss(Double salary, String employeeId, String payrollDate){
         Connection conn = getConnection.connection();
-//        double sssContribution30 = 0;
         double sssContribution = 0;
         double previousGrossPay = 0;   
         double grossPay = 0;

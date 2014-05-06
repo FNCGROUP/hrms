@@ -223,11 +223,19 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     payslipReport(util.convertDateFormat(payrollDate.getValue().toString()));
                 }else if(reportType.getValue().equals("SSS Report")){
                     if(day == 15){
-                        String fileName = "SssReport_";
+                        getWindow().showNotification("SSS Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
+                    }else{                        
+			String fileName = "SssReport_";
                         reports.deleteFile(fileName);
                         sssReport(util.convertDateFormat(payrollDate.getValue().toString()));
-                    }else{
-                        getWindow().showNotification("SSS Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
+                    }
+                }else if(reportType.getValue().equals("SSS Report Sbarro")){
+                    if(day == 15){
+                        getWindow().showNotification("SSS Report Sbarro is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
+                    }else{                        
+			String fileName = "SssReportSbarro_";
+                        reports.deleteFile(fileName);
+                        sssReportSbarro(util.convertDateFormat(payrollDate.getValue().toString()));
                     }
                 }else if(reportType.getValue().equals("HDMF Report")){
                     if(day != 15){
@@ -964,6 +972,59 @@ public class PayrollRegisterMainUI extends VerticalLayout {
             JasperExportManager.exportReportToPdfFile(jpReport, filePath);
 
             Window subWindow = new Window("SSS Report");
+            ((VerticalLayout) subWindow.getContent()).setSizeFull();
+            subWindow.setWidth("800px");
+            subWindow.setHeight("600px");
+            subWindow.center();
+
+            StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                @Override
+                public InputStream getStream() {
+                    try {
+                        File f = new File(filePath);
+                        FileInputStream fis = new FileInputStream(f);
+                        return fis;
+                    } catch (Exception e) {
+                        e.getMessage();
+                        return null;
+                    }
+                }
+            };
+
+            StreamResource resource = new StreamResource(source, filePath, getApplication());
+            resource.setMIMEType("application/pdf");     
+
+            Embedded e = new Embedded();
+            e.setMimeType("application/pdf");
+            e.setType(Embedded.TYPE_OBJECT);
+            e.setSizeFull();
+            e.setSource(resource);
+            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+            subWindow.addComponent(e);
+
+            getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+            e.getMessage();
+        }
+   }
+   
+   private void sssReportSbarro(String payrollDate){
+	Connection conn = getConnection.connection();   
+        File reportFile = new File("C:/reportsJasper/SssReportSbarro.jasper");
+
+        final HashMap hm = new HashMap();
+        hm.put("BRANCH_ID", branchId);
+        hm.put("PAYROLL_DATE", payrollDate);
+
+        try{
+            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            final String filePath = "C:/reportsPdf/SssReportSbarro_"+timestamp+".pdf";
+            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+            Window subWindow = new Window("SSS Report Sbarro");
             ((VerticalLayout) subWindow.getContent()).setSizeFull();
             subWindow.setWidth("800px");
             subWindow.setHeight("600px");

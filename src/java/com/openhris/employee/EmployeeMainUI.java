@@ -662,10 +662,10 @@ public class EmployeeMainUI extends VerticalLayout {
         vlayout.setSpacing(true);
         vlayout.setMargin(true);
         
-        final Window subWindow = new Window("New Employee", vlayout);
+        final Window subWindow = new Window("Allowance For Liquidation", vlayout);
         subWindow.setWidth("200px");
         
-        final TextField aflField = new TextField("Allowance For Liquidation: ");
+        final TextField aflField = new TextField("AFL: ");
         aflField.setWidth("100%");
         double aflAmount = employeeService.getEmploymentAllowanceForLiquidation(employeeId);
         aflField.setValue(aflAmount);   
