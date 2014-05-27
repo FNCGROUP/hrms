@@ -62,7 +62,7 @@ public class OpenHrisUtilities {
     public String convertDateFormat(String date){
         DateFormat currentDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
         DateFormat newDateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        String dateConvert = null;
+        String dateConvert = "2009-08-24";
         try {
             Date newDate = currentDateFormat.parse(date);
             dateConvert = newDateFormat.format(newDate);

@@ -34,8 +34,8 @@ public class Constant {
     public static final Map<Integer, String> MAP_CONSTANT_EMPLOYMENT_ALLOWANCE_ENTRY = getConstantEmploymentAllowanceEntry();
     public static final Map<Integer, String> MAP_CONSTANT_POLICY = createConstantPolicyList();
     public static final Map<Integer, String> MAP_CONSTANT_HOLIDAY = createConstantHolidayList();
-    public static final Map<Integer, String> MAP_CONSTANT_CIVIL_STATUS = createConstantCivilStatusList();
-    public static final Map<Integer, String> MAP_CONSTANT_GENDER = createConstantGenderList();
+    public static final String[] CONSTANT_ARRAY_CIVIL_STATUS = createConstantCivilStatusList();
+    public static final String[] CONSTANT_ARRAY_GENDER = createConstantGenderList();
     public static final Map<Integer, String> MAP_CONSTANT_EDUCATION = createConstantEducationList();
     public static final Map<Integer, String> MAP_CONSTANT_BENEFITS_TYPE = createConstantBenefitsTypeList();
     public static final Map<Integer, String> MAP_CONSTANT_TARGET_TYPE = createConstantTargetTypeList();
@@ -44,7 +44,7 @@ public class Constant {
     public static final Map<Integer, String> MAP_CONSTANT_CALENDAR_EVENT_TYPE = createConstantCalendarEventTypeList();
     public static final Map<Integer, String> MAP_CONSTANT_CALENDAR_STYLE_NAME = createConstantCalendarStyleNameList();
     public static final Map<Integer, String> MAP_CONSTANT_PAYROLL_PERIOD = createConstantPayrollPeriodList();
-    public static final String[] MAP_CONSTANT_PAYROLL_REPORT_TYPE = createConstantPayrollReportTypeList();
+    public static final String[] CONSTANT_ARRAY_PAYROLL_REPORT_TYPE = createConstantPayrollReportTypeList();
     public static final Map<Integer, String> MAP_CONSTANT_USER_ROLE = createConstantUserRoleList();
     
     private static Map<Integer, String> createConstantMapDependent(){
@@ -111,21 +111,14 @@ public class Constant {
         return Collections.unmodifiableMap(map);
     }
     
-    public static Map<Integer, String> createConstantCivilStatusList(){
-        Map<Integer, String> map = new HashMap<Integer, String>();
-        map.put(0, "single");
-        map.put(1, "married");
-        map.put(2, "widow");
-        map.put(3, "separated");
-        map.put(4, "annulled");
-        return Collections.unmodifiableMap(map);
+    public static String[] createConstantCivilStatusList(){
+        String[] civilStatusArray = {"Single", "Married", "Widow", "Separated", "Annulled"};
+        return civilStatusArray;
     }
     
-    public static Map<Integer, String> createConstantGenderList(){
-        Map<Integer, String> map = new HashMap<Integer, String>();
-        map.put(0, "male");
-        map.put(1, "female");
-        return Collections.unmodifiableMap(map);
+    public static String[] createConstantGenderList(){
+        String[] genderList = {"Male", "Female"};
+        return genderList;
     }
     
     public static Map<Integer, String> createConstantEducationList(){
@@ -243,5 +236,6 @@ public class Constant {
             i++;
         } 
         return Collections.unmodifiableMap(map);
-    }        
+    }     
+        
 }

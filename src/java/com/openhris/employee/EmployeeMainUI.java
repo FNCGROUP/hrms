@@ -19,10 +19,12 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Table;
@@ -58,7 +60,8 @@ public class EmployeeMainUI extends VerticalLayout {
     
     OpenHrisUtilities util = new OpenHrisUtilities();
     
-    private String userRole;    
+    private String userRole; 
+    HorizontalSplitPanel hsplit;
     
     public EmployeeMainUI(final String userRole, int branchId){
         
@@ -66,11 +69,20 @@ public class EmployeeMainUI extends VerticalLayout {
         this.branchId = branchId;
                 
         setSpacing(true);
+	setSizeFull();
         
         employeesTable(branchId);
         
-        addComponent(employeesTbl);
-        setExpandRatio(employeesTbl, 1.0f);
+	hsplit = new HorizontalSplitPanel();        
+        hsplit.addStyleName("small blue white");
+        hsplit.setLocked(true);
+        hsplit.setSplitPosition(33, Sizeable.UNITS_PERCENTAGE);
+	hsplit.setFirstComponent(employeesTbl);
+	hsplit.setSecondComponent(new EmployeeInformationUI(null));
+	
+	hsplit.setSizeFull();
+        addComponent(hsplit);
+        setExpandRatio(hsplit, 1.0f);
                         
         corporateNames.setUserRole(userRole);
         tradeNames.setUserRole(userRole);
@@ -82,12 +94,13 @@ public class EmployeeMainUI extends VerticalLayout {
         employeesTbl.removeAllItems();
         employeesTbl.setSizeFull();
         employeesTbl.setSelectable(true);
+	employeesTbl.addStyleName("employees-table-layout");
         
         employeesTbl.addContainerProperty("employee id", String.class, null);
         employeesTbl.addContainerProperty("name", String.class, null);
-        employeesTbl.addContainerProperty("corporate name", String.class, null);
-        employeesTbl.addContainerProperty("trade name", String.class, null);
-        employeesTbl.addContainerProperty("branch", String.class, null);
+//        employeesTbl.addContainerProperty("corporate name", String.class, null);
+//        employeesTbl.addContainerProperty("trade name", String.class, null);
+//        employeesTbl.addContainerProperty("branch", String.class, null);
         
         List<PositionHistory> employeeList = employeeService.getEmployeePerBranch(branchId);
         int i = 0; 
@@ -95,10 +108,10 @@ public class EmployeeMainUI extends VerticalLayout {
             String name = p.getLastname()+", "+p.getFirstname()+" "+p.getMiddlename();
             employeesTbl.addItem(new Object[]{
                 p.getEmployeeId(), 
-                name.toUpperCase(), 
-                p.getCompany().toUpperCase(), 
-                p.getTrade().toUpperCase(), 
-                p.getBranch().toUpperCase()
+                name.toUpperCase() 
+//                p.getCompany().toUpperCase(), 
+//                p.getTrade().toUpperCase(), 
+//                p.getBranch().toUpperCase()
             }, new Integer(i));
             i++;
         }
@@ -115,15 +128,8 @@ public class EmployeeMainUI extends VerticalLayout {
                 Object itemId = event.getItemId();
                 Item item = employeesTbl.getItem(itemId);
                 
-                if(event.getPropertyId().equals("employee id")){
-//                    Window subWindow = openNewEmployeeWindow(item.getItemProperty("id").getValue().toString());
-//		    EmployeeInformationUI employeeInformationUI = new EmployeeInformationUI();
-		    Window subWindow =  new EmployeeInformationUI(item.getItemProperty("employee id").getValue().toString()).employeeInformationWindow();
-                    subWindow.setModal(true);
-                    if(subWindow.getParent() == null){
-                        getWindow().addWindow(subWindow);
-                    }
-                    subWindow.center();
+                if(event.getPropertyId().equals("employee id")){                    		    
+		    hsplit.setSecondComponent(new EmployeeInformationUI(item.getItemProperty("employee id").getValue().toString()));
                 }
                 
                 if(event.getPropertyId().equals("name")){          

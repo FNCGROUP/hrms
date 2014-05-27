@@ -258,12 +258,40 @@ public class DropDownComponent extends ComboBox {
         reportType.setWidth("100%");
         reportType.setCaption("Report Type: ");
         reportType.setNullSelectionAllowed(false);
-        String[] reportTypeList = Constant.MAP_CONSTANT_PAYROLL_REPORT_TYPE;        
+        String[] reportTypeList = Constant.CONSTANT_ARRAY_PAYROLL_REPORT_TYPE;        
         for(int i = 0; i < reportTypeList.length; i++){
             reportType.addItem(reportTypeList[i]);
         }
         reportType.setImmediate(true);
         
         return reportType;
+    }
+    
+    public ComboBox populateCivilStatusList(ComboBox civilStatus){
+	civilStatus.removeAllItems();
+	civilStatus.setWidth("100%");
+	civilStatus.setCaption("Civil Status: ");
+	civilStatus.setNullSelectionAllowed(false);
+	String[] civilStatusList = Constant.CONSTANT_ARRAY_CIVIL_STATUS;
+	for(int i = 0; i < civilStatusList.length; i++){
+	     civilStatus.addItem(civilStatusList[i]);
+	}
+	civilStatus.setImmediate(true);
+	
+	return civilStatus;	
+    }
+    
+    public ComboBox populateGenderList(ComboBox gender){
+	gender.removeAllItems();
+	gender.setWidth("100%");
+	gender.setCaption("Gender: ");
+	gender.setNullSelectionAllowed(false);
+	String[] genderList = Constant.CONSTANT_ARRAY_GENDER;
+	for(int i = 0; i < genderList.length; i++){
+	     gender.addItem(genderList[i]);
+	}
+	gender.setImmediate(true);
+	
+	return gender;
     }
 }

@@ -6,6 +6,7 @@
 
 package com.openhris.employee;
 
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TabSheet;
@@ -31,19 +32,16 @@ public class EmployeeInformationUI extends VerticalLayout {
     }
     
     public void init(){
-	setSpacing(true);
-	setMargin(true);	
+//	setSpacing(true);
+//	setMargin(true);	
 	setSizeFull();
 	setImmediate(true);
 	
 	employeePersonalInformation =  new EmployeePersonalInformation(getEmployeeId());
+	addComponent(employeeInformationWindow());
     }
     
-    public Window employeeInformationWindow(){
-	Window window = new Window("Employee Information"); 
-	window.setWidth("90%");
-	window.setHeight("100%");
-	
+    public ComponentContainer employeeInformationWindow(){	
 	TabSheet ts = new TabSheet();
         ts.setSizeFull();
         ts.addStyleName("bar");
@@ -51,11 +49,45 @@ public class EmployeeInformationUI extends VerticalLayout {
 	VerticalLayout vlayout = new VerticalLayout();
 	vlayout.setCaption("Personal Information");
 	vlayout.addComponent(employeePersonalInformation);
+	vlayout.setComponentAlignment(employeePersonalInformation, Alignment.MIDDLE_LEFT);
 	ts.addComponent(vlayout);
-		
-	window.addComponent(ts);
 	
-	return window;    
+	vlayout = new VerticalLayout();
+	vlayout.setCaption("Address");
+//	vlayout.addComponent(employeePersonalInformation);
+	ts.addComponent(vlayout);
+	
+	vlayout = new VerticalLayout();
+	vlayout.setCaption("Character Reference");
+//	vlayout.addComponent(employeePersonalInformation);
+	ts.addComponent(vlayout);
+	
+	vlayout = new VerticalLayout();
+	vlayout.setCaption("Dependent(s)");
+//	vlayout.addComponent(employeePersonalInformation);
+	ts.addComponent(vlayout);
+	
+	vlayout = new VerticalLayout();
+	vlayout.setCaption("Educational Background");
+//	vlayout.addComponent(employeePersonalInformation);
+	ts.addComponent(vlayout);
+	
+	vlayout = new VerticalLayout();
+	vlayout.setCaption("Position History");
+//	vlayout.addComponent(employeePersonalInformation);
+	ts.addComponent(vlayout);
+	
+	vlayout = new VerticalLayout();
+	vlayout.setCaption("Employment Record");
+//	vlayout.addComponent(employeePersonalInformation);
+	ts.addComponent(vlayout);
+	
+	vlayout = new VerticalLayout();
+	vlayout.setCaption("Salary Information");
+//	vlayout.addComponent(employeePersonalInformation);
+	ts.addComponent(vlayout);
+	
+	return ts;    
     }
     
     public String getEmployeeId(){

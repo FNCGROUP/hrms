@@ -39,6 +39,20 @@ root {
     width: 100%;
 }
 
+.tree-layout{
+    font-size: 11px;
+}
+
+.employees-table-layout{
+    font-size: 9px;
+}
+
+.logo-img{
+    -moz-box-shadow: inset -5px -5px 5px #888;
+    -webkit-box-shadow: inset -5px -5px 5px #888;
+    box-shadow: inset -5px -5px 5px #888;
+}
+
 /*green*/
 .v-calendar .v-calendar-event-color1 {
 color: #4f8324; /*4f8324*/

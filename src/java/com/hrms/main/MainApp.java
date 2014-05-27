@@ -75,9 +75,6 @@ public class MainApp extends Application {
     int branchId = 0;;
     int userId;
     
-    
-//    PhilhealthModule philhealth = new PhilhealthModule();
-//    TaxTableModule tax = new TaxTableModule();
     CompanyModule companyModule;
     
     EmployeeMainUI employeeMainUI;
@@ -86,14 +83,8 @@ public class MainApp extends Application {
     PayrollMainUI payrollMainUI;
     UsersMainUI usersMainUI;
     UserToolbarMenuAccessMainUI userToolbarMenuAccessMainUI;
-    UserAdvanceAccessMainUI userAdvanceAccessMainUI;
-    
-//    AttendanceModule attendanceModule;    
-//    Form201Summary form201;
-//    CalendarModule calendarModule;
+    UserAdvanceAccessMainUI userAdvanceAccessMainUI;    
     CompanyEventModule companyEventModule;
-//    LoansModule loansModule;
-//    LedgerModule ledgerModule;
     
     AdvanceUserAccessModule advanceUserAccess = new AdvanceUserAccessModule();
     CreateNewUser createNewUser;
@@ -214,7 +205,9 @@ public class MainApp extends Application {
         hsplit = new HorizontalSplitPanel();        
         hsplit.addStyleName("small blue white");
         hsplit.setLocked(true);
-        hsplit.setSplitPosition(25, Sizeable.UNITS_PERCENTAGE);
+        hsplit.setSplitPosition(23, Sizeable.UNITS_PERCENTAGE);
+	hsplit.setSizeFull();
+	
         vlayout.addComponent(hsplit);
         vlayout.setExpandRatio(hsplit, 1);         
         
@@ -346,7 +339,8 @@ public class MainApp extends Application {
         Label treeLabel = new Label("F&C Group of Companies");
         treeLabel.setStyleName("section");
         vlayout.addComponent(treeLabel);
-             
+        
+	tree.addStyleName("tree-layout");
         for(Company c : companyList){							
             tree.addItem(c.getCompanyName());			
 	}
@@ -541,21 +535,18 @@ public class MainApp extends Application {
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
         ts.addStyleName("bar");
-        
-//        VerticalLayout mainMenuGrid = new VerticalLayout();
-//        mainMenuGrid.setCaption("Calendar");
-//        mainMenuGrid.addComponent(calendarModule);
-//        ts.addComponent(mainMenuGrid);
-        
+                
         VerticalLayout mainMenuGrid = new VerticalLayout();
         mainMenuGrid.setCaption("Employees");
         mainMenuGrid.addComponent(employeeMainUI);
+	mainMenuGrid.setSizeFull();
         ts.addComponent(mainMenuGrid);
         
         mainMenuGrid = new VerticalLayout();
         mainMenuGrid.setSizeFull();
         mainMenuGrid.setCaption("Companies");
         mainMenuGrid.addComponent(companyModule);
+	mainMenuGrid.setSizeFull();
         ts.addComponent(mainMenuGrid);
         
         return ts;
@@ -572,19 +563,7 @@ public class MainApp extends Application {
         payrollMenuGrid.setSizeFull();
         payrollMenuGrid.setCaption("Timekeeping Summary");
         payrollMenuGrid.addComponent(timekeepingMainUI);
-        ts.addComponent(payrollMenuGrid);
-        
-//        payrollMenuGrid = new GridLayout();
-//        payrollMenuGrid.setSizeFull();
-//        payrollMenuGrid.setCaption("Payroll Register");
-//        payrollMenuGrid.addComponent(payrollRegisterModule);
-//        ts.addComponent(payrollMenuGrid);
-//        
-//        payrollMenuGrid = new GridLayout();
-//        payrollMenuGrid.setSizeFull();
-//        payrollMenuGrid.setCaption("201 Summary");
-//        payrollMenuGrid.addComponent(form201);
-//        ts.addComponent(payrollMenuGrid);
+        ts.addComponent(payrollMenuGrid);        
         
         return ts;
     }
