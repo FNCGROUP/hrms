@@ -362,13 +362,7 @@ public class CompanyModule extends VerticalLayout{
         save.addListener(new Button.ClickListener() {
 
             @Override
-            public void buttonClick(ClickEvent event) {
-                boolean checkIfEmployeesExistForBranch = queryUpdate.checkIfEmployeesExistForBranch(id);
-                if(checkIfEmployeesExistForBranch == true){  
-                    getWindow().showNotification("There are employees exist on this branch, Contact your DBA!");
-                    return;
-                }
-                
+            public void buttonClick(ClickEvent event) {                
                 boolean result = queryUpdate.updateBranchAddress(id, branchAddress.toString().trim().toLowerCase());
                 if(result == true){
                     companyTable();
@@ -412,6 +406,12 @@ public class CompanyModule extends VerticalLayout{
 
             @Override
             public void buttonClick(ClickEvent event) {
+                boolean checkIfEmployeesExistForBranch = queryUpdate.checkIfEmployeesExistForBranch(id);
+                if(checkIfEmployeesExistForBranch == true){  
+                    getWindow().showNotification("There are employees exist on this branch, Contact your DBA!");
+                    return;
+                }
+                
                 Boolean result = queryUpdate.removeBranchFromTrade(id);
                 if(result == true){
                     companyTable();

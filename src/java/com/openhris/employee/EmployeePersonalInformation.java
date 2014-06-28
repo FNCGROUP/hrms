@@ -118,15 +118,15 @@ public class EmployeePersonalInformation extends VerticalLayout{
                 
         final ComboBox genderBox = dropDownComponent.populateGenderList(new ComboBox());
 	genderBox.setWidth("100%");
-        Object genderItemId = genderBox.addItem();
-        genderBox.setValue(genderItemId);     
+//        Object genderItemId = genderBox.addItem();
+//        genderBox.setValue(genderItemId);     
         glayout.addComponent(genderBox, 1, 3);
         glayout.setComponentAlignment(genderBox, Alignment.MIDDLE_LEFT);
         
         final ComboBox civilStatusBox = dropDownComponent.populateCivilStatusList(new ComboBox());
 	civilStatusBox.setWidth("100%");
-        Object civilStatusItemId = civilStatusBox.addItem();
-        civilStatusBox.setValue(civilStatusItemId);
+//        Object civilStatusItemId = civilStatusBox.addItem();
+//        civilStatusBox.setValue(civilStatusItemId);
         glayout.addComponent(civilStatusBox, 2, 3);
         glayout.setComponentAlignment(civilStatusBox, Alignment.MIDDLE_LEFT);
                 
