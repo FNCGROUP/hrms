@@ -363,6 +363,12 @@ public class CompanyModule extends VerticalLayout{
 
             @Override
             public void buttonClick(ClickEvent event) {
+                boolean checkIfEmployeesExistForBranch = queryUpdate.checkIfEmployeesExistForBranch(id);
+                if(checkIfEmployeesExistForBranch == true){  
+                    getWindow().showNotification("There are employees exist on this branch, Contact your DBA!");
+                    return;
+                }
+                
                 boolean result = queryUpdate.updateBranchAddress(id, branchAddress.toString().trim().toLowerCase());
                 if(result == true){
                     companyTable();
