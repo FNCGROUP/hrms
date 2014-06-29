@@ -4,7 +4,6 @@
  */
 package com.openhris.commons;
 
-import com.hrms.modules.EmployeesInfoModule;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;

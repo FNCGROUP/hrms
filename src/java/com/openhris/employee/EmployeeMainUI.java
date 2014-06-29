@@ -112,7 +112,7 @@ public class EmployeeMainUI extends VerticalLayout {
 //                p.getCompany().toUpperCase(), 
 //                p.getTrade().toUpperCase(), 
 //                p.getBranch().toUpperCase()
-            }, new Integer(i));
+            }, i);
             i++;
         }
         employeesTbl.setPageLength(25);

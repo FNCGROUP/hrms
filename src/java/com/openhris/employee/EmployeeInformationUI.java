@@ -20,6 +20,7 @@ import com.vaadin.ui.Window;
 public class EmployeeInformationUI extends VerticalLayout {
     
     EmployeePersonalInformation employeePersonalInformation;	
+    EmployeePositionHistory employeePositionHistory;
 	
     String employeeId;	
     	
@@ -38,6 +39,7 @@ public class EmployeeInformationUI extends VerticalLayout {
 	setImmediate(true);
 	
 	employeePersonalInformation =  new EmployeePersonalInformation(getEmployeeId());
+        employeePositionHistory = new EmployeePositionHistory(getEmployeeId());
 	addComponent(employeeInformationWindow());
     }
     
@@ -74,7 +76,7 @@ public class EmployeeInformationUI extends VerticalLayout {
 	
 	vlayout = new VerticalLayout();
 	vlayout.setCaption("Position History");
-//	vlayout.addComponent(employeePersonalInformation);
+	vlayout.addComponent(employeePositionHistory);
 	ts.addComponent(vlayout);
 	
 	vlayout = new VerticalLayout();
