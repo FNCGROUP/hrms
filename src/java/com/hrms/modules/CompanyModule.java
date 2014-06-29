@@ -408,7 +408,7 @@ public class CompanyModule extends VerticalLayout{
             public void buttonClick(ClickEvent event) {
                 boolean checkIfEmployeesExistForBranch = queryUpdate.checkIfEmployeesExistForBranch(id);
                 if(checkIfEmployeesExistForBranch == true){  
-                    getWindow().showNotification("There are employees exist on this branch, Contact your DBA!");
+                    getWindow().showNotification("There are employees exist on this branch, Contact your DBA!", Window.Notification.TYPE_WARNING_MESSAGE);
                     return;
                 }
                 

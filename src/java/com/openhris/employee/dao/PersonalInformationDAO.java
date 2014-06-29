@@ -107,7 +107,7 @@ public class PersonalInformationDAO {
 	        if(rs.getString("COUNT(*)").equals("0")){
 		    pstmt = conn.prepareStatement("INSERT INTO employee_personal_information (employeeId, dob, pob, gender, citizenship, height, weight, "
                             + "civilStatus, religion, spouseName, spouseOccupation, spouseOfficeAddress, fathersName, fathersOccupation, "
-                            + "mothersName, mothersOccupation, parentAddress, dialectSpeakWrite, contactPerson, skills, hobby) "
+                            + "mothersName, mothersOccupation, parentsAddress, dialectSpeakWrite, contactPerson, skills, hobby) "
                             + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		    pstmt.setString(1, personalInformation.getEmployeeId());
 		    pstmt.setString(2, util.convertDateFormat(personalInformation.getDob().toString()));
@@ -132,7 +132,10 @@ public class PersonalInformationDAO {
                     pstmt.setString(21, personalInformation.getHobby());
 		    pstmt.executeUpdate();
 		} else {
-		    pstmt = conn.prepareStatement("UPDATE employee_personal_information SET dob = ?, pob = ? WHERE employeeId = ?");
+		    pstmt = conn.prepareStatement("UPDATE employee_personal_information SET dob = ?, pob = ?, gender = ?, citizenship = ?, "
+                            + "height = ?, weight = ?, civilStatus = ?, religion = ?, spouseName = ?, spouseOccupation = ?, spouseOfficeAddress = ?, "
+                            + "fathersName = ?, fathersOccupation = ?, mothersName = ?, mothersOccupation = ?, parentsAddress = ?, dialectSpeakWrite = ?, "
+                            + "contactPerson = ?, skills = ?, hobby = ? WHERE employeeId = ?");
 		    pstmt.setString(1, util.convertDateFormat(personalInformation.getDob().toString()));
 		    pstmt.setString(2, personalInformation.getPob());
                     pstmt.setString(3, personalInformation.getGender());

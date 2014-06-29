@@ -6,6 +6,7 @@
 
 package com.openhris.employee;
 
+import com.hrms.utilities.ConvertionUtilities;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.employee.model.PersonalInformation;
 import com.openhris.employee.service.PersonalInformationService;
@@ -41,6 +42,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
     DropDownComponent dropDownComponent = new DropDownComponent();
     PersonalInformation personalInformation;
     PersonalInformationService piService = new PersonalInformationServiceImpl();
+    ConvertionUtilities convertionUtilities = new ConvertionUtilities();
 	
     public EmployeePersonalInformation(){	    
     }	
@@ -117,16 +119,12 @@ public class EmployeePersonalInformation extends VerticalLayout{
         glayout.setComponentAlignment(pobField, Alignment.MIDDLE_LEFT);
                 
         final ComboBox genderBox = dropDownComponent.populateGenderList(new ComboBox());
-	genderBox.setWidth("100%");
-//        Object genderItemId = genderBox.addItem();
-//        genderBox.setValue(genderItemId);     
+	genderBox.setWidth("100%");    
         glayout.addComponent(genderBox, 1, 3);
         glayout.setComponentAlignment(genderBox, Alignment.MIDDLE_LEFT);
         
         final ComboBox civilStatusBox = dropDownComponent.populateCivilStatusList(new ComboBox());
 	civilStatusBox.setWidth("100%");
-//        Object civilStatusItemId = civilStatusBox.addItem();
-//        civilStatusBox.setValue(civilStatusItemId);
         glayout.addComponent(civilStatusBox, 2, 3);
         glayout.setComponentAlignment(civilStatusBox, Alignment.MIDDLE_LEFT);
                 
@@ -135,10 +133,12 @@ public class EmployeePersonalInformation extends VerticalLayout{
         glayout.setComponentAlignment(citizenshipField, Alignment.MIDDLE_LEFT);   
 	
         final TextField heightField = createTextField("Height: ");
+        heightField.setValue(0);
         glayout.addComponent(heightField, 1, 4);
         glayout.setComponentAlignment(heightField, Alignment.MIDDLE_LEFT);
                 
         final TextField weightField = createTextField("Weight: ");
+        weightField.setValue(0);
         glayout.addComponent(weightField, 2, 4);
         glayout.setComponentAlignment(weightField, Alignment.MIDDLE_LEFT);
                 
@@ -199,7 +199,38 @@ public class EmployeePersonalInformation extends VerticalLayout{
 	    fnField.setValue(personalInformation.getFirstname().toUpperCase());
 	    mnField.setValue(personalInformation.getMiddlename().toUpperCase());
 	    lnField.setValue(personalInformation.getLastname().toUpperCase());
-	    companyIdField.setValue(employeeId);
+            companyIdField.setValue(employeeId);
+            dobField.setValue(personalInformation.getDob());
+            pobField.setValue(personalInformation.getPob());
+            
+            if(personalInformation.getCivilStatus() != null){
+                Object civilStatusId = civilStatusBox.addItem();
+                civilStatusBox.setItemCaption(civilStatusId, personalInformation.getCivilStatus());
+                civilStatusBox.setValue(civilStatusId);
+            }
+                
+            if(personalInformation.getGender() != null){
+                Object genderId = genderBox.addItem();
+                genderBox.setItemCaption(genderId, personalInformation.getGender());
+                genderBox.setValue(genderId);
+            }
+            
+            citizenshipField.setValue(personalInformation.getCitizenship());
+            heightField.setValue(personalInformation.getHeight());
+            weightField.setValue(personalInformation.getWeight());
+            religionField.setValue(personalInformation.getReligion());
+            spouseNameField.setValue(personalInformation.getSpouseName());
+            spouseOccupationField.setValue(personalInformation.getSpouseOccupation());
+            spouseOfficeAddressField.setValue(personalInformation.getSpouseOfficeAddress());
+            fathersNameField.setValue(personalInformation.getFathersName());
+            fathersOccupationField.setValue(personalInformation.getFathersOccupation());
+            mothersNameField.setValue(personalInformation.getMothersName());
+            mothersOccupationField.setValue(personalInformation.getMothersOccupation());
+            parentsAddressField.setValue(personalInformation.getParentsAddress());
+            dialectSpeakWriteField.setValue(personalInformation.getDialectSpeakWrite());
+            contactPersonField.setValue(personalInformation.getContactPerson());
+            skillsField.setValue(personalInformation.getSkills());
+            hobbyField.setValue(personalInformation.getHobby());	    
 	}
 	
         Button cancelButton = new Button("CANCEL/CLOSE WINDOW");
@@ -212,13 +243,67 @@ public class EmployeePersonalInformation extends VerticalLayout{
 
 	    @Override
 	    public void buttonClick(Button.ClickEvent event) {
+                if(dobField.getValue() == null || dobField.getValue().toString().isEmpty()){
+                    getWindow().showNotification("Date of Birth Required!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
+                if(heightField.getValue() == null || heightField.getValue().toString().isEmpty()){
+                    getWindow().showNotification("Null/Empty Value for Height is not ALLOWED!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                } else {
+                    if(!convertionUtilities.checkInputIfDouble(heightField.getValue().toString())){
+                        getWindow().showNotification("Enter a numeric format for Height!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                
+                if(weightField.getValue() == null || weightField.getValue().toString().isEmpty()){
+                    getWindow().showNotification("Null/Empty Value for Weight is not ALLOWED!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                } else {
+                    if(!convertionUtilities.checkInputIfDouble(weightField.getValue().toString())){
+                        getWindow().showNotification("Enter a numeric format for Weight!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                
 		personalInformation = new PersonalInformation();
 		personalInformation.setFirstname(fnField.getValue().toString().toLowerCase().trim());
 		personalInformation.setMiddlename(mnField.getValue().toString().toLowerCase().trim());
 		personalInformation.setLastname(lnField.getValue().toString().toLowerCase().trim());
 		personalInformation.setEmployeeId(employeeId);
 		personalInformation.setDob((Date) dobField.getValue());
-		personalInformation.setPob(pobField.getValue().toString().toLowerCase().trim());
+		personalInformation.setPob(pobField.getValue().toString().toLowerCase().trim());                
+                personalInformation.setHeight(convertionUtilities.convertStringToDouble(heightField.getValue().toString()));
+                personalInformation.setWeight(convertionUtilities.convertStringToDouble(weightField.getValue().toString()));
+                
+                if(convertionUtilities.checkInputIfInteger(genderBox.getValue().toString())){
+                    personalInformation.setGender(genderBox.getItemCaption(genderBox.getValue()));
+                } else {
+                    personalInformation.setGender(genderBox.getValue().toString());
+                }
+                
+                if(convertionUtilities.checkInputIfInteger(civilStatusBox.getValue().toString())){
+                    personalInformation.setCivilStatus(civilStatusBox.getItemCaption(civilStatusBox.getValue()));
+                } else {
+                    personalInformation.setCivilStatus(civilStatusBox.getValue().toString());
+                }
+                
+                personalInformation.setCitizenship(citizenshipField.getValue().toString());
+                personalInformation.setReligion(religionField.getValue().toString());
+                personalInformation.setSpouseName(spouseNameField.getValue().toString());
+                personalInformation.setSpouseOccupation(spouseOccupationField.getValue().toString());
+                personalInformation.setSpouseOfficeAddress(spouseOfficeAddressField.getValue().toString());
+                personalInformation.setFathersName(fathersNameField.getValue().toString());
+                personalInformation.setFathersOccupation(fathersOccupationField.getValue().toString());
+                personalInformation.setMothersName(mothersNameField.getValue().toString());
+                personalInformation.setMothersOccupation(mothersOccupationField.getValue().toString());
+                personalInformation.setParentsAddress(parentsAddressField.getValue().toString());
+                personalInformation.setDialectSpeakWrite(dialectSpeakWriteField.getValue().toString());
+                personalInformation.setContactPerson(contactPersonField.getValue().toString());
+                personalInformation.setSkills(skillsField.getValue().toString());
+                personalInformation.setHobby(hobbyField.getValue().toString());
 		
 		boolean result = piService.updatePersonalInformation(personalInformation);
 		if(result){
@@ -247,7 +332,8 @@ public class EmployeePersonalInformation extends VerticalLayout{
 	t.setCaption(str);
 	t.setWidth("100%");
 	t.setStyleName(Reindeer.TEXTFIELD_SMALL);
-	
+        t.setNullSettingAllowed(true);
+        
 	return t;
     }
 	
