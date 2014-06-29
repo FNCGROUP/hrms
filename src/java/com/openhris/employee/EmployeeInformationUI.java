@@ -21,6 +21,7 @@ public class EmployeeInformationUI extends VerticalLayout {
     
     EmployeePersonalInformation employeePersonalInformation;	
     EmployeePositionHistory employeePositionHistory;
+    EmployeeSalaryInformation employeeSalaryInformation;
 	
     String employeeId;	
     	
@@ -40,6 +41,7 @@ public class EmployeeInformationUI extends VerticalLayout {
 	
 	employeePersonalInformation =  new EmployeePersonalInformation(getEmployeeId());
         employeePositionHistory = new EmployeePositionHistory(getEmployeeId());
+        employeeSalaryInformation = new EmployeeSalaryInformation(getEmployeeId());
 	addComponent(employeeInformationWindow());
     }
     
@@ -86,7 +88,7 @@ public class EmployeeInformationUI extends VerticalLayout {
 	
 	vlayout = new VerticalLayout();
 	vlayout.setCaption("Salary Information");
-//	vlayout.addComponent(employeePersonalInformation);
+	vlayout.addComponent(employeeSalaryInformation);
 	ts.addComponent(vlayout);
 	
 	return ts;    

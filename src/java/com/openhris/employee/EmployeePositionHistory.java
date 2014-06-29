@@ -11,7 +11,7 @@ import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.employee.model.PositionHistory;
 import com.openhris.employee.service.PositionHistoryService;
-import com.openhris.employee.serviceprovider.PositionHistoryImpl;
+import com.openhris.employee.serviceprovider.PositionHistoryServiceImpl;
 import com.openhris.service.CompanyService;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class EmployeePositionHistory extends VerticalLayout{
         
-    PositionHistoryService phService = new PositionHistoryImpl();
+    PositionHistoryService phService = new PositionHistoryServiceImpl();
     CompanyService companyService = new CompanyServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
     DropDownComponent dropDown = new DropDownComponent();
@@ -45,6 +45,7 @@ public class EmployeePositionHistory extends VerticalLayout{
     String employeeId;
     int corporateId;
     int tradeId;
+    int branchId;
     GridLayout glayout;
     Table positionHistoryTbl = new Table();
     
@@ -108,6 +109,16 @@ public class EmployeePositionHistory extends VerticalLayout{
                 
             }
         });
+        branch.addListener(new ComboBox.ValueChangeListener() {
+
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                if(event.getProperty().getValue() == null){                    
+                } else {
+                    branchId = companyService.getBranchId(tradeId, branch.getValue().toString());
+                }                
+            }
+        });
         glayout.addComponent(branch, 2, 0);
         
         final TextField department = createTextField("Department: ");
@@ -167,6 +178,7 @@ public class EmployeePositionHistory extends VerticalLayout{
                 positionHistory.setBranch(branch.getValue().toString());
                 positionHistory.setDepartment(department.getValue().toString());
                 positionHistory.setEntryDate((Date) entryDate.getValue());
+                positionHistory.setBranchId(branchId);
                 
                 boolean result = phService.updatePositionHistory(employeeId, positionHistory);
                 if(result){

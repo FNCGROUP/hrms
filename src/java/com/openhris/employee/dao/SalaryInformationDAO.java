@@ -1,0 +1,98 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package com.openhris.employee.dao;
+
+import com.hrms.dbconnection.GetSQLConnection;
+import com.openhris.commons.OpenHrisUtilities;
+import com.openhris.employee.model.Employee;
+import com.openhris.employee.model.EmploymentInformation;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ *
+ * @author jetdario
+ */
+public class SalaryInformationDAO {
+    
+    GetSQLConnection getConnection = new GetSQLConnection(); 
+    OpenHrisUtilities util = new OpenHrisUtilities();
+    
+    public EmploymentInformation getEmployeeSalaryInformation(String employeeId){
+        EmploymentInformation employeeInformation = new EmploymentInformation();
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM employee WHERE employeeId = '"+employeeId+"' ");
+            while(rs.next()){
+                employeeInformation.setEmploymentStatus(rs.getString("employmentStatus"));
+                employeeInformation.setEmploymentWageStatus(rs.getString("employmentWageStatus"));
+                employeeInformation.setEmploymentWageEntry(rs.getString("employmentWageEntry"));
+                employeeInformation.setEmploymentWage(util.convertStringToDouble(rs.getString("employmentWage")));
+                employeeInformation.setAllowance(util.convertStringToDouble(rs.getString("allowance")));
+                employeeInformation.setAllowanceEntry(rs.getString("allowanceEntry"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return employeeInformation;
+    }
+    
+    public boolean updateEmployeeSalaryInformation(String employeeId, EmploymentInformation employeeInformation){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE employee SET employmentStatus = ?, employmentWageStatus = ?, employmentWageEntry = ?, "
+                    + "employmentWage = ?, allowance = ?, allowanceEntry = ? WHERE employeeId = ? ");
+            pstmt.setString(1, employeeInformation.getEmploymentStatus());
+            pstmt.setString(2, employeeInformation.getEmploymentWageStatus());
+            pstmt.setString(3, employeeInformation.getEmploymentWageEntry());
+            pstmt.setDouble(4, employeeInformation.getEmploymentWage());
+            pstmt.setDouble(5, employeeInformation.getAllowance());
+            pstmt.setString(6, employeeInformation.getAllowanceEntry());
+            pstmt.setString(7, employeeId);
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+}

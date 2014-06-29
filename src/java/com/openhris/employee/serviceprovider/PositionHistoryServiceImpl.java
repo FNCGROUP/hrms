@@ -16,7 +16,7 @@ import java.util.List;
  *
  * @author jetdario
  */
-public class PositionHistoryImpl implements PositionHistoryService{
+public class PositionHistoryServiceImpl implements PositionHistoryService{
     
     PositionHistoryDAO phDAO = new PositionHistoryDAO();
 

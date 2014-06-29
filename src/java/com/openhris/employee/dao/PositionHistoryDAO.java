@@ -36,7 +36,7 @@ public class PositionHistoryDAO {
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM employee_position_history WHERE employeeId = '"+employeeId+"' ");
+            rs = stmt.executeQuery("SELECT * FROM employee_position_history WHERE employeeId = '"+employeeId+"' ORDER BY id DESC ");
             while(rs.next()){
                 PositionHistory positionHistory = new PositionHistory();
                 positionHistory.setPositionId(util.convertStringToInteger(rs.getString("id")));
@@ -73,7 +73,7 @@ public class PositionHistoryDAO {
         try {
             conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("INSERT INTO employee_position_history (employeeId, position, corporate, trade, branch, "
-                    + "department, entryDate, branchId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                    + "department, entryDate, branchId) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
             pstmt.setString(1, employeeId);
             pstmt.setString(2, positionHistory.getPosition());
             pstmt.setString(3, positionHistory.getCompany());
