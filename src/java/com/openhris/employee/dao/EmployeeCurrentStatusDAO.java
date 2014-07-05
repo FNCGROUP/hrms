@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  *
  * @author jetdario
  */
-public class RemoveEmployeeDAO {
+public class EmployeeCurrentStatusDAO {
     
     GetSQLConnection getConnection = new GetSQLConnection(); 
     OpenHrisUtilities util = new OpenHrisUtilities();
@@ -36,7 +36,7 @@ public class RemoveEmployeeDAO {
             
             result = true;
         } catch (SQLException ex) {
-            Logger.getLogger(RemoveEmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EmployeeCurrentStatusDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if(conn != null || !conn.isClosed()){
@@ -44,11 +44,11 @@ public class RemoveEmployeeDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(RemoveEmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(EmployeeCurrentStatusDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         return result;
-    }
+    }   
     
 }

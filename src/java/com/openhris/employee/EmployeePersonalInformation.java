@@ -10,10 +10,13 @@ import com.hrms.classes.GlobalVariables;
 import com.hrms.utilities.ConvertionUtilities;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.employee.model.PersonalInformation;
+import com.openhris.employee.model.PositionHistory;
 import com.openhris.employee.service.PersonalInformationService;
-import com.openhris.employee.service.RemoveEmployeeService;
+import com.openhris.employee.service.EmployeeCurrentStatusService;
+import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.employee.serviceprovider.PersonalInformationServiceImpl;
-import com.openhris.employee.serviceprovider.RemoveEmployeeServiceImpl;
+import com.openhris.employee.serviceprovider.EmployeeCurrentStatusServiceImpl;
+import com.openhris.service.EmployeeService;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractLayout;
@@ -28,11 +31,13 @@ import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
 import java.util.Date;
+import java.util.List;
 
 /**
  *
@@ -48,7 +53,8 @@ public class EmployeePersonalInformation extends VerticalLayout{
     PersonalInformation personalInformation;
     PersonalInformationService piService = new PersonalInformationServiceImpl();
     ConvertionUtilities convertionUtilities = new ConvertionUtilities();
-    RemoveEmployeeService reService = new RemoveEmployeeServiceImpl();    
+    EmployeeCurrentStatusService reService = new EmployeeCurrentStatusServiceImpl();    
+    EmployeeService employeeService = new EmployeeServiceImpl();
 	
     Embedded logo;
     TextField fnField;
@@ -397,10 +403,12 @@ public class EmployeePersonalInformation extends VerticalLayout{
         removeBtn.addListener(new Button.ClickListener() {
 
             @Override
-            public void buttonClick(Button.ClickEvent event) {
+            public void buttonClick(Button.ClickEvent event) {                
+                EmployeeMainUI employeeMainUI = new EmployeeMainUI(GlobalVariables.getUserRole(), 0);
                 boolean result = reService.removeEmployee(getEmployeeId());
                 if(result){
                     clearFields();
+                    employeeMainUI.employeesTable(getEmployeeList(0));
                     (window.getParent()).removeWindow(window);
                 } else {
                     getWindow().showNotification("Cannot Remove Employee, Contact your DBA!", Window.Notification.TYPE_ERROR_MESSAGE);
@@ -428,6 +436,10 @@ public class EmployeePersonalInformation extends VerticalLayout{
 	
     private String getUserRole(){
         return userRole;
+    }
+    
+    public List<PositionHistory> getEmployeeList(int branchId){
+        return employeeService.getEmployeePerBranch(branchId);
     }
     
     public void clearFields(){

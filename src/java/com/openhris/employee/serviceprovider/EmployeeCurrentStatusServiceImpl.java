@@ -6,16 +6,16 @@
 
 package com.openhris.employee.serviceprovider;
 
-import com.openhris.employee.dao.RemoveEmployeeDAO;
-import com.openhris.employee.service.RemoveEmployeeService;
+import com.openhris.employee.dao.EmployeeCurrentStatusDAO;
+import com.openhris.employee.service.EmployeeCurrentStatusService;
 
 /**
  *
  * @author jetdario
  */
-public class RemoveEmployeeServiceImpl implements RemoveEmployeeService{
+public class EmployeeCurrentStatusServiceImpl implements EmployeeCurrentStatusService{
 
-    RemoveEmployeeDAO reDAO = new RemoveEmployeeDAO();
+    EmployeeCurrentStatusDAO reDAO = new EmployeeCurrentStatusDAO();
     
     @Override
     public boolean removeEmployee(String employeeId) {

@@ -25,10 +25,13 @@ import com.openhris.company.model.Trade;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.contributions.ContributionComponentContainer;
 import com.openhris.employee.EmployeeMainUI;
+import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.PayrollMainUI;
 import com.openhris.payroll.PayrollRegisterMainUI;
 import com.openhris.service.AdministratorService;
 import com.openhris.service.CompanyService;
+import com.openhris.service.EmployeeService;
 import com.openhris.timekeeping.TimekeepingMainUI;
 import com.vaadin.Application;
 import com.vaadin.event.ItemClickEvent;
@@ -64,6 +67,7 @@ public class MainApp extends Application {
     
     AdministratorService administratorService = new AdministratorServiceImpl();
     CompanyService companyService = new CompanyServiceImpl();
+    EmployeeService employeeService = new EmployeeServiceImpl();
     
     Tree tree = new Tree();
     List<Company> companyList;
@@ -399,7 +403,7 @@ public class MainApp extends Application {
                     tradeId = companyService.getTradeId(String.valueOf(tree.getParent(event.getItemId())).toString(), companyId);
                     branchId = companyService.getBranchId(tradeId, event.getItemId().toString());
                     if(mainMenuBar){
-                        employeeMainUI.employeesTable(branchId);
+                        employeeMainUI.employeesTable(getEmployeeList(branchId));
                     } 
                     
                     timekeepingMainUI.timekeepingTable(branchId, null);
@@ -512,7 +516,7 @@ public class MainApp extends Application {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                employeeMainUI.employeesTable(0);
+                employeeMainUI.employeesTable(getEmployeeList(0));
             }
         });
         if(GlobalVariables.getUserRole().equals("administrator") || 
@@ -833,5 +837,9 @@ public class MainApp extends Application {
             contributionMenuBar = false;
             initMainMenu();
         }
+    }
+    
+    public List<PositionHistory> getEmployeeList(int branchId){
+        return employeeService.getEmployeePerBranch(branchId);
     }
 }

@@ -10,7 +10,7 @@ package com.openhris.employee.service;
  *
  * @author jetdario
  */
-public interface RemoveEmployeeService {
+public interface EmployeeCurrentStatusService {
     
     public boolean removeEmployee(String employeeId);
     

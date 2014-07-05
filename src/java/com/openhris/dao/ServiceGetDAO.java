@@ -841,7 +841,6 @@ public class ServiceGetDAO {
         Statement stmt = null;
         ResultSet rs = null; 
         String querySelectEmployeePerBranch;
-        System.out.println("branch: "+ branchId);
         if(branchId == 0){
             querySelectEmployeePerBranch = "SELECT e.employeeId AS employeeId, e.firstname AS firstname, "
                     + "e.middlename AS middlename, e.lastname AS lastname, "

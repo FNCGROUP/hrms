@@ -73,7 +73,7 @@ public class EmployeeMainUI extends VerticalLayout {
         setSpacing(true);
 	setSizeFull();
         
-        employeesTable(getBranchId());
+        employeesTable(getEmployeeList(getBranchId()));
         
 	hsplit = new HorizontalSplitPanel();        
         hsplit.addStyleName("small blue white");
@@ -92,7 +92,7 @@ public class EmployeeMainUI extends VerticalLayout {
         
     }
     
-    public void employeesTable(int branchId){
+    public void employeesTable(List<PositionHistory> employeeList){
         employeesTbl.removeAllItems();
         employeesTbl.setSizeFull();
         employeesTbl.setSelectable(true);
@@ -100,20 +100,13 @@ public class EmployeeMainUI extends VerticalLayout {
         
         employeesTbl.addContainerProperty("employee id", String.class, null);
         employeesTbl.addContainerProperty("name", String.class, null);
-//        employeesTbl.addContainerProperty("corporate name", String.class, null);
-//        employeesTbl.addContainerProperty("trade name", String.class, null);
-//        employeesTbl.addContainerProperty("branch", String.class, null);
         
-        List<PositionHistory> employeeList = employeeService.getEmployeePerBranch(branchId);
         int i = 0; 
         for(PositionHistory p : employeeList){
             String name = p.getLastname()+", "+p.getFirstname()+" "+p.getMiddlename();
             employeesTbl.addItem(new Object[]{
                 p.getEmployeeId(), 
                 name.toUpperCase() 
-//                p.getCompany().toUpperCase(), 
-//                p.getTrade().toUpperCase(), 
-//                p.getBranch().toUpperCase()
             }, i);
             i++;
         }
@@ -130,7 +123,13 @@ public class EmployeeMainUI extends VerticalLayout {
                 Object itemId = event.getItemId();
                 Item item = employeesTbl.getItem(itemId);
                 
-                if(event.getPropertyId().equals("employee id")){                    		    
+                if(event.getPropertyId().equals("employee id")){   
+                    String currentStatus = employeeService.getEmployeeCurrentStatus(item.getItemProperty("employee id").getValue().toString());
+                    if(currentStatus == null){                        
+                    } else {
+                        getWindow().showNotification("Employee has been removed from the list.", Window.Notification.TYPE_WARNING_MESSAGE);
+                        return;
+                    }
 		    hsplit.setSecondComponent(new EmployeeInformationUI(getUserRole(), item.getItemProperty("employee id").getValue().toString()));
                 }
                 
@@ -524,7 +523,7 @@ public class EmployeeMainUI extends VerticalLayout {
                     resultQueryUpdate = employeeService.updateEmployeeEmploymentInformation(employee_id.getValue().toString(), updateList);
                     if(resultQueryUpdate){
                     (subWindow.getParent()).removeWindow(subWindow);
-                        employeesTable(branchId);                       
+                        employeesTable(getEmployeeList(branchId));                       
                     }else{
                         getWindow().showNotification("SQL ERROR!");
                     }
@@ -639,7 +638,7 @@ public class EmployeeMainUI extends VerticalLayout {
                     resultQueryInsert = employeeService.insertNewEmployee(insertList);
                     if(resultQueryInsert == true){
                         (subWindow.getParent()).removeWindow(subWindow);
-                        employeesTable(branchId);                       
+                        employeesTable(getEmployeeList(branchId));                       
                     }else{
                         getWindow().showNotification("SQL ERROR!");
                     }
@@ -697,7 +696,7 @@ public class EmployeeMainUI extends VerticalLayout {
                         util.convertStringToDouble(aflField.getValue().toString().trim()), 
                         employeeId);
                 if(result == true){
-                    employeesTable(branchId);
+                    employeesTable(getEmployeeList(branchId));
                     (subWindow.getParent()).removeWindow(subWindow);
                 }else{
                     subWindow.getWindow().showNotification("UNABLE TO UPDATE AFL!", Window.Notification.TYPE_ERROR_MESSAGE);
@@ -715,5 +714,9 @@ public class EmployeeMainUI extends VerticalLayout {
     
     public String getUserRole(){
         return userRole;
+    }
+    
+    public List<PositionHistory> getEmployeeList(int branchId){
+        return employeeService.getEmployeePerBranch(branchId);
     }
 }
