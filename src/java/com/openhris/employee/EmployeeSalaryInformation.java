@@ -12,6 +12,7 @@ import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.service.SalaryInformationService;
 import com.openhris.employee.serviceprovider.SalaryInformationServiceImpl;
 import com.vaadin.data.Container;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
@@ -51,7 +52,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
     }
     
     public ComponentContainer layout(){
-        glayout = new GridLayout(3, 3);
+        glayout = new GridLayout(3, 4);
         glayout.setSpacing(true);          
         glayout.setWidth("100%");
 	glayout.setHeight("100%");
@@ -79,6 +80,22 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         final ComboBox employmentAllowanceEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox());
         employmentAllowanceEntry.setWidth("200px");
         glayout.addComponent(employmentAllowanceEntry, 2, 1);
+        
+        final TextField sssField = new TextField("SSS: ");
+        sssField.setWidth("200px");
+        glayout.addComponent(sssField, 0, 2);
+        
+        final TextField phicField = new TextField("Philhealth");
+        phicField.setWidth("200px");
+        glayout.addComponent(phicField, 1, 2);
+        
+        final TextField hdmfField = new TextField("HDMF: ");
+        hdmfField.setWidth("200px");
+        glayout.addComponent(hdmfField, 2, 2);
+        
+        final TextField tinField = new TextField("TIN: ");
+        tinField.setWidth("200px");
+        glayout.addComponent(tinField, 0, 3);
         
         Button updateBtn = new Button("UPDATE SALARY");
         updateBtn.setWidth("100%");
@@ -137,6 +154,11 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                     employmentInformation.setAllowanceEntry(employmentAllowanceEntry.getValue().toString());
                 }
                 
+                employmentInformation.setSssNo((sssField.getValue() == null) ? "N/A" : sssField.getValue().toString().trim());
+                employmentInformation.setPhicNo((phicField.getValue() == null) ? "N/A" : phicField.getValue().toString().trim());
+                employmentInformation.setHdmfNo((hdmfField.getValue() == null) ? "N/A" : hdmfField.getValue().toString().trim());
+                employmentInformation.setTinNo((tinField.getValue() == null) ? "N/A" : tinField.getValue().toString().trim());
+                
                 boolean result = siService.updateEmployeeSalaryInformation(getEmployeeId(), employmentInformation);
                 if(result){
                     getWindow().showNotification("Update Employment Salary Information!", Window.Notification.TYPE_TRAY_NOTIFICATION);
@@ -145,7 +167,8 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                 }
             }
         });
-        glayout.addComponent(updateBtn, 1, 2, 2, 2);
+        glayout.addComponent(updateBtn, 1, 3, 2, 3);
+        glayout.setComponentAlignment(updateBtn, Alignment.BOTTOM_CENTER);
         
         if(employeeId != null){
             EmploymentInformation employmentInformation = siService.getEmployeeSalaryInformation(getEmployeeId());
@@ -168,6 +191,11 @@ public class EmployeeSalaryInformation extends VerticalLayout{
             Object employmentAllowanceEntryId = employmentAllowanceEntry.addItem();
             employmentAllowanceEntry.setItemCaption(employmentAllowanceEntryId, employmentInformation.getAllowanceEntry());
             employmentAllowanceEntry.setValue(employmentAllowanceEntryId);
+            
+            sssField.setValue(employmentInformation.getSssNo());
+            phicField.setValue(employmentInformation.getPhicNo());
+            hdmfField.setValue(employmentInformation.gethdmfNo());
+            tinField.setValue(employmentInformation.getTinNo());
         }
         
         return glayout;

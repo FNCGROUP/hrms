@@ -43,6 +43,10 @@ public class SalaryInformationDAO {
                 employeeInformation.setEmploymentWage(util.convertStringToDouble(rs.getString("employmentWage")));
                 employeeInformation.setAllowance(util.convertStringToDouble(rs.getString("allowance")));
                 employeeInformation.setAllowanceEntry(rs.getString("allowanceEntry"));
+                employeeInformation.setSssNo(rs.getString("sssNo"));
+                employeeInformation.setTinNo(rs.getString("tinNo"));
+                employeeInformation.setPhicNo(rs.getString("phicNo"));
+                employeeInformation.setHdmfNo(rs.getString("hdmfNo"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -68,14 +72,18 @@ public class SalaryInformationDAO {
         
         try {
             pstmt = conn.prepareStatement("UPDATE employee SET employmentStatus = ?, employmentWageStatus = ?, employmentWageEntry = ?, "
-                    + "employmentWage = ?, allowance = ?, allowanceEntry = ? WHERE employeeId = ? ");
+                    + "employmentWage = ?, allowance = ?, allowanceEntry = ?, sssNo = ?, tinNo = ?, phicNo = ?, hdmfNo = ? WHERE employeeId = ? ");
             pstmt.setString(1, employeeInformation.getEmploymentStatus());
             pstmt.setString(2, employeeInformation.getEmploymentWageStatus());
             pstmt.setString(3, employeeInformation.getEmploymentWageEntry());
             pstmt.setDouble(4, employeeInformation.getEmploymentWage());
             pstmt.setDouble(5, employeeInformation.getAllowance());
             pstmt.setString(6, employeeInformation.getAllowanceEntry());
-            pstmt.setString(7, employeeId);
+            pstmt.setString(7, employeeInformation.getSssNo());
+            pstmt.setString(8, employeeInformation.getTinNo());
+            pstmt.setString(9, employeeInformation.getPhicNo());
+            pstmt.setString(10, employeeInformation.gethdmfNo());
+            pstmt.setString(11, employeeId);
             pstmt.executeUpdate();
             
             result = true;
