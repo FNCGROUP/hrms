@@ -23,13 +23,15 @@ public class EmployeeInformationUI extends VerticalLayout {
     EmployeePositionHistory employeePositionHistory;
     EmployeeSalaryInformation employeeSalaryInformation;
 	
-    String employeeId;	
+    private String employeeId;	
+    private String userRole;
     	
     public EmployeeInformationUI(){}
     
-    public EmployeeInformationUI(String employeeId){
+    public EmployeeInformationUI(String userRole, String employeeId){
         this.employeeId = employeeId;
-	
+	this.userRole = userRole;
+        
 	init();	
     }
     
@@ -39,7 +41,7 @@ public class EmployeeInformationUI extends VerticalLayout {
 	setSizeFull();
 	setImmediate(true);
 	
-	employeePersonalInformation =  new EmployeePersonalInformation(getEmployeeId());
+	employeePersonalInformation =  new EmployeePersonalInformation(getUserRole(), getEmployeeId());
         employeePositionHistory = new EmployeePositionHistory(getEmployeeId());
         employeeSalaryInformation = new EmployeeSalaryInformation(getEmployeeId());
 	addComponent(employeeInformationWindow());
@@ -96,6 +98,10 @@ public class EmployeeInformationUI extends VerticalLayout {
     
     public String getEmployeeId(){
 	return employeeId;    
+    }
+    
+    private String getUserRole(){
+        return userRole;
     }
 	
 }

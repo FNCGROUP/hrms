@@ -1170,7 +1170,7 @@ public class ServiceGetDAO {
                     + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
 		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
                     + "FROM payroll_table p INNER JOIN employee e ON p.employeeId = e.employeeId "
-                    + "WHERE e.branchId = "+branchId+" ORDER BY id DESC";
+                    + "WHERE e.branchId = "+branchId+" AND (e.currentStatus != 'removed' OR e.currentStatus IS NULL) ORDER BY id DESC";
         } else {
             queryPayrollList = "SELECT p.id AS id, p.employeeId AS employeeId, p.attendancePeriodFrom AS attendancePeriodFrom, "
                     + "p.attendancePeriodTo AS attendancePeriodTo, p.basicSalary AS basicSalary, p.halfMonthSalary AS halfMonthSalary, "

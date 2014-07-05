@@ -506,7 +506,7 @@ public class MainApp extends Application {
         }
         menu.addComponent(otherMenu);       
         
-        otherMenu = new NativeButton("VIEW ALL EMPLOYEE");
+        otherMenu = new NativeButton("REFRESH / VIEW ALL EMPLOYEE");
         otherMenu.setStyleName("selected");   
         otherMenu.addListener(new Button.ClickListener() {
 

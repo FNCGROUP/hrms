@@ -63,6 +63,8 @@ public class EmployeeMainUI extends VerticalLayout {
     private String userRole; 
     HorizontalSplitPanel hsplit;
     
+    public EmployeeMainUI(){}
+    
     public EmployeeMainUI(final String userRole, int branchId){
         
         this.userRole = userRole;
@@ -71,14 +73,14 @@ public class EmployeeMainUI extends VerticalLayout {
         setSpacing(true);
 	setSizeFull();
         
-        employeesTable(branchId);
+        employeesTable(getBranchId());
         
 	hsplit = new HorizontalSplitPanel();        
         hsplit.addStyleName("small blue white");
         hsplit.setLocked(true);
         hsplit.setSplitPosition(33, Sizeable.UNITS_PERCENTAGE);
 	hsplit.setFirstComponent(employeesTbl);
-	hsplit.setSecondComponent(new EmployeeInformationUI(null));
+	hsplit.setSecondComponent(new EmployeeInformationUI(null, null));
 	
 	hsplit.setSizeFull();
         addComponent(hsplit);
@@ -129,7 +131,7 @@ public class EmployeeMainUI extends VerticalLayout {
                 Item item = employeesTbl.getItem(itemId);
                 
                 if(event.getPropertyId().equals("employee id")){                    		    
-		    hsplit.setSecondComponent(new EmployeeInformationUI(item.getItemProperty("employee id").getValue().toString()));
+		    hsplit.setSecondComponent(new EmployeeInformationUI(getUserRole(), item.getItemProperty("employee id").getValue().toString()));
                 }
                 
                 if(event.getPropertyId().equals("name")){          
@@ -705,5 +707,13 @@ public class EmployeeMainUI extends VerticalLayout {
         vlayout.addComponent(updateAflButton);
         
         return subWindow;
+    }
+    
+    public int getBranchId(){
+        return branchId;
+    }
+    
+    public String getUserRole(){
+        return userRole;
     }
 }

@@ -6,11 +6,14 @@
 
 package com.openhris.employee;
 
+import com.hrms.classes.GlobalVariables;
 import com.hrms.utilities.ConvertionUtilities;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.employee.model.PersonalInformation;
 import com.openhris.employee.service.PersonalInformationService;
+import com.openhris.employee.service.RemoveEmployeeService;
 import com.openhris.employee.serviceprovider.PersonalInformationServiceImpl;
+import com.openhris.employee.serviceprovider.RemoveEmployeeServiceImpl;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractLayout;
@@ -38,17 +41,46 @@ import java.util.Date;
 public class EmployeePersonalInformation extends VerticalLayout{
     
     GridLayout glayout;	
-    String employeeId = null;	
+    private String employeeId = null;
+    private String userRole = null;
+    
     DropDownComponent dropDownComponent = new DropDownComponent();
     PersonalInformation personalInformation;
     PersonalInformationService piService = new PersonalInformationServiceImpl();
     ConvertionUtilities convertionUtilities = new ConvertionUtilities();
+    RemoveEmployeeService reService = new RemoveEmployeeServiceImpl();    
 	
-    public EmployeePersonalInformation(){	    
-    }	
+    Embedded logo;
+    TextField fnField;
+    TextField mnField;
+    TextField lnField;
+    TextField companyIdField;
+    PopupDateField dobField;
+    TextField pobField;
+    ComboBox genderBox;
+    ComboBox civilStatusBox;
+    TextField citizenshipField;
+    TextField heightField;
+    TextField weightField;
+    TextField religionField;
+    TextField spouseNameField;
+    TextField spouseOccupationField;
+    TextField spouseOfficeAddressField;
+    TextField fathersNameField;
+    TextField fathersOccupationField;
+    TextField mothersNameField;
+    TextField mothersOccupationField;
+    TextField parentsAddressField;
+    TextField dialectSpeakWriteField;
+    TextField contactPersonField;
+    TextField skillsField;
+    TextField hobbyField;
     
-    public EmployeePersonalInformation(String employeeId){
+    public EmployeePersonalInformation(){}	
+    
+    public EmployeePersonalInformation(String userRole, String employeeId){
         this.employeeId = employeeId;	    
+        this.userRole = userRole;
 	
 	init();
 	addComponent(layout());
@@ -74,7 +106,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
         panelLayout.setMargin(false);
 	imagePanel.setWidth("100px");
         
-        Embedded logo = new Embedded(null, new ThemeResource("../myTheme/img/fnc.jpg"));
+        logo = new Embedded(null, new ThemeResource("../myTheme/img/fnc.jpg"));
         logo.setImmediate(true);
 	logo.setWidth(90, Sizeable.UNITS_PIXELS);
 	logo.setHeight(90, Sizeable.UNITS_PIXELS);
@@ -89,24 +121,24 @@ public class EmployeePersonalInformation extends VerticalLayout{
 	glayout.addComponent(uploadPhotoBtn, 0, 2);
 	glayout.setComponentAlignment(uploadPhotoBtn, Alignment.MIDDLE_CENTER);
 	
-        final TextField fnField = createTextField("Firstname: ");
+        fnField = createTextField("Firstname: ");
         glayout.addComponent(fnField, 1, 0);
         glayout.setComponentAlignment(fnField, Alignment.MIDDLE_LEFT);
                         
-        final TextField mnField = createTextField("Middlename: ");
+        mnField = createTextField("Middlename: ");
         glayout.addComponent(mnField, 2, 0);
         glayout.setComponentAlignment(mnField, Alignment.MIDDLE_LEFT);
         
-        final TextField lnField = createTextField("Lastname: ");
+        lnField = createTextField("Lastname: ");
         glayout.addComponent(lnField, 3, 0);
         glayout.setComponentAlignment(lnField, Alignment.MIDDLE_LEFT);
                         
-        final TextField companyIdField = createTextField("Employee ID: ");
+        companyIdField = createTextField("Employee ID: ");
 	companyIdField.setEnabled(false);
         glayout.addComponent(companyIdField, 1, 1, 2, 1);
         glayout.setComponentAlignment(companyIdField, Alignment.MIDDLE_LEFT);
                 
-        final PopupDateField dobField = new PopupDateField("Date of Birth: ");
+        dobField = new PopupDateField("Date of Birth: ");
         dobField.addStyleName("mydate");          
         dobField.setDateFormat("yyyy-MM-dd");
         dobField.setWidth("100%");
@@ -114,83 +146,83 @@ public class EmployeePersonalInformation extends VerticalLayout{
         glayout.addComponent(dobField, 1, 2);
         glayout.setComponentAlignment(dobField, Alignment.MIDDLE_LEFT);
                 
-        final TextField pobField = createTextField("Birth Place: ");
+        pobField = createTextField("Birth Place: ");
         glayout.addComponent(pobField, 2, 2, 3, 2);
         glayout.setComponentAlignment(pobField, Alignment.MIDDLE_LEFT);
                 
-        final ComboBox genderBox = dropDownComponent.populateGenderList(new ComboBox());
+        genderBox = dropDownComponent.populateGenderList(new ComboBox());
 	genderBox.setWidth("100%");    
         glayout.addComponent(genderBox, 1, 3);
         glayout.setComponentAlignment(genderBox, Alignment.MIDDLE_LEFT);
         
-        final ComboBox civilStatusBox = dropDownComponent.populateCivilStatusList(new ComboBox());
+        civilStatusBox = dropDownComponent.populateCivilStatusList(new ComboBox());
 	civilStatusBox.setWidth("100%");
         glayout.addComponent(civilStatusBox, 2, 3);
         glayout.setComponentAlignment(civilStatusBox, Alignment.MIDDLE_LEFT);
                 
-	final TextField citizenshipField = createTextField("Citizenship: ");
+	citizenshipField = createTextField("Citizenship: ");
         glayout.addComponent(citizenshipField, 3, 3);
         glayout.setComponentAlignment(citizenshipField, Alignment.MIDDLE_LEFT);   
 	
-        final TextField heightField = createTextField("Height: ");
+        heightField = createTextField("Height: ");
         heightField.setValue(0);
         glayout.addComponent(heightField, 1, 4);
         glayout.setComponentAlignment(heightField, Alignment.MIDDLE_LEFT);
                 
-        final TextField weightField = createTextField("Weight: ");
+        weightField = createTextField("Weight: ");
         weightField.setValue(0);
         glayout.addComponent(weightField, 2, 4);
         glayout.setComponentAlignment(weightField, Alignment.MIDDLE_LEFT);
                 
-        final TextField religionField = createTextField("Religion: ");
+        religionField = createTextField("Religion: ");
         glayout.addComponent(religionField, 3, 4);
         glayout.setComponentAlignment(religionField, Alignment.MIDDLE_LEFT);
                             
-        final TextField spouseNameField = createTextField("Spouse Name: ");
+        spouseNameField = createTextField("Spouse Name: ");
         glayout.addComponent(spouseNameField, 1, 5, 2, 5);
         glayout.setComponentAlignment(spouseNameField, Alignment.MIDDLE_LEFT);
         
-        final TextField spouseOccupationField = createTextField("Spouse Occupation: ");
+        spouseOccupationField = createTextField("Spouse Occupation: ");
         glayout.addComponent(spouseOccupationField, 3, 5);
         glayout.setComponentAlignment(spouseOccupationField, Alignment.MIDDLE_LEFT);
         
-        final TextField spouseOfficeAddressField = createTextField("Spouse Office Address: ");
+        spouseOfficeAddressField = createTextField("Spouse Office Address: ");
         glayout.addComponent(spouseOfficeAddressField, 1, 6, 3, 6);
         glayout.setComponentAlignment(spouseOfficeAddressField, Alignment.MIDDLE_LEFT);
         
-        final TextField fathersNameField = createTextField("Father's Name: ");
+        fathersNameField = createTextField("Father's Name: ");
         glayout.addComponent(fathersNameField, 1, 7, 2, 7);
         glayout.setComponentAlignment(fathersNameField, Alignment.MIDDLE_LEFT);
         
-        final TextField fathersOccupationField = createTextField("Father's Occupation: ");
+        fathersOccupationField = createTextField("Father's Occupation: ");
         glayout.addComponent(fathersOccupationField, 3, 7);
         glayout.setComponentAlignment(fathersOccupationField, Alignment.MIDDLE_LEFT);
         
-        final TextField mothersNameField = createTextField("Mother's Name: ");
+        mothersNameField = createTextField("Mother's Name: ");
         glayout.addComponent(mothersNameField, 1, 8, 2, 8);
         glayout.setComponentAlignment(mothersNameField, Alignment.MIDDLE_LEFT);
         
-        final TextField mothersOccupationField = createTextField("Mother's Occupation: ");
+        mothersOccupationField = createTextField("Mother's Occupation: ");
         glayout.addComponent(mothersOccupationField, 3, 8);
         glayout.setComponentAlignment(mothersOccupationField, Alignment.MIDDLE_LEFT);
         
-        final TextField parentsAddressField = createTextField("Parents Address");
+        parentsAddressField = createTextField("Parents Address");
         glayout.addComponent(parentsAddressField, 1, 9, 3, 9);
         glayout.setComponentAlignment(parentsAddressField, Alignment.MIDDLE_LEFT);
         
-        final TextField dialectSpeakWriteField = createTextField("Language or Dialect you can speak or write: ");
+        dialectSpeakWriteField = createTextField("Language or Dialect you can speak or write: ");
         glayout.addComponent(dialectSpeakWriteField, 1, 10, 3, 10);
         glayout.setComponentAlignment(dialectSpeakWriteField, Alignment.MIDDLE_LEFT);
         
-        final TextField contactPersonField = createTextField("Person to be contacted in case of emergency: (Name, Address, Tel. No.) ");
+        contactPersonField = createTextField("Person to be contacted in case of emergency: (Name, Address, Tel. No.) ");
         glayout.addComponent(contactPersonField, 1, 11, 3, 11);
         glayout.setComponentAlignment(contactPersonField, Alignment.MIDDLE_LEFT);
         
-        final TextField skillsField = createTextField("Skills: ");
+        skillsField = createTextField("Skills: ");
         glayout.addComponent(skillsField, 1, 12, 1, 12);
         glayout.setComponentAlignment(skillsField, Alignment.MIDDLE_LEFT);
         
-        final TextField hobbyField = createTextField("Hobbies");
+        hobbyField = createTextField("Hobbies");
         glayout.addComponent(hobbyField, 2, 12);
         glayout.setComponentAlignment(hobbyField, Alignment.MIDDLE_LEFT);
         
@@ -233,9 +265,28 @@ public class EmployeePersonalInformation extends VerticalLayout{
             hobbyField.setValue(personalInformation.getHobby());	    
 	}
 	
-        Button cancelButton = new Button("CANCEL/CLOSE WINDOW");
-        cancelButton.setWidth("100%");
-        glayout.addComponent(cancelButton, 1, 13);
+        Button removeBtn = new Button("REMOVE EMPLOYEE");
+        removeBtn.setWidth("100%");
+        boolean visible = false;
+        if(getUserRole() == null){
+            visible = false;
+        } else if (getUserRole().equals("hr")){
+            visible = true;
+        }
+        removeBtn.setVisible(visible);
+        removeBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                Window window = getRemoveWindow(getEmployeeId());
+                window.setModal(true);
+                if(window.getParent() == null){
+                    getWindow().addWindow(window);
+                }
+                window.center();
+            }
+        });
+        glayout.addComponent(removeBtn, 1, 13);
         
         Button saveButton = new Button("UPDATE EMPLOYEE's INFORMATION");
         saveButton.setWidth("100%");
@@ -268,13 +319,23 @@ public class EmployeePersonalInformation extends VerticalLayout{
                     }
                 }
                 
+                if(genderBox.getValue() == null || genderBox.getValue().toString().isEmpty()){
+                    getWindow().showNotification("Select a Gender!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
+                if(civilStatusBox.getValue() == null || civilStatusBox.getValue().toString().isEmpty()){
+                    getWindow().showNotification("Select Civil Status!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
 		personalInformation = new PersonalInformation();
 		personalInformation.setFirstname(fnField.getValue().toString().toLowerCase().trim());
 		personalInformation.setMiddlename(mnField.getValue().toString().toLowerCase().trim());
 		personalInformation.setLastname(lnField.getValue().toString().toLowerCase().trim());
 		personalInformation.setEmployeeId(employeeId);
 		personalInformation.setDob((Date) dobField.getValue());
-		personalInformation.setPob(pobField.getValue().toString().toLowerCase().trim());                
+		personalInformation.setPob((pobField.getValue() == null) ? "N/A" : pobField.getValue().toString().toLowerCase().trim());                
                 personalInformation.setHeight(convertionUtilities.convertStringToDouble(heightField.getValue().toString()));
                 personalInformation.setWeight(convertionUtilities.convertStringToDouble(weightField.getValue().toString()));
                 
@@ -290,20 +351,20 @@ public class EmployeePersonalInformation extends VerticalLayout{
                     personalInformation.setCivilStatus(civilStatusBox.getValue().toString());
                 }
                 
-                personalInformation.setCitizenship(citizenshipField.getValue().toString());
-                personalInformation.setReligion(religionField.getValue().toString());
-                personalInformation.setSpouseName(spouseNameField.getValue().toString());
-                personalInformation.setSpouseOccupation(spouseOccupationField.getValue().toString());
-                personalInformation.setSpouseOfficeAddress(spouseOfficeAddressField.getValue().toString());
-                personalInformation.setFathersName(fathersNameField.getValue().toString());
-                personalInformation.setFathersOccupation(fathersOccupationField.getValue().toString());
-                personalInformation.setMothersName(mothersNameField.getValue().toString());
-                personalInformation.setMothersOccupation(mothersOccupationField.getValue().toString());
-                personalInformation.setParentsAddress(parentsAddressField.getValue().toString());
-                personalInformation.setDialectSpeakWrite(dialectSpeakWriteField.getValue().toString());
-                personalInformation.setContactPerson(contactPersonField.getValue().toString());
-                personalInformation.setSkills(skillsField.getValue().toString());
-                personalInformation.setHobby(hobbyField.getValue().toString());
+                personalInformation.setCitizenship((citizenshipField.getValue() == null) ? "N/A" : citizenshipField.getValue().toString());
+                personalInformation.setReligion((religionField.getValue() == null)? "N/A" : religionField.getValue().toString());
+                personalInformation.setSpouseName((spouseNameField.getValue() == null) ? "N/A" : spouseNameField.getValue().toString());
+                personalInformation.setSpouseOccupation((spouseOccupationField.getValue() == null) ? "N/A" : spouseOccupationField.getValue().toString());
+                personalInformation.setSpouseOfficeAddress((spouseOfficeAddressField.getValue() == null) ? "N/A" : spouseOfficeAddressField.getValue().toString());
+                personalInformation.setFathersName((fathersNameField.getValue() == null) ? "N/A" : fathersNameField.getValue().toString());
+                personalInformation.setFathersOccupation((fathersOccupationField.getValue() == null) ? "N/A" : fathersOccupationField.getValue().toString());
+                personalInformation.setMothersName((mothersNameField.getValue() == null) ? "N/A" : mothersNameField.getValue().toString());
+                personalInformation.setMothersOccupation((mothersOccupationField.getValue() == null) ? "N/A" : mothersOccupationField.getValue().toString());
+                personalInformation.setParentsAddress((parentsAddressField.getValue() == null) ? "N/A" : parentsAddressField.getValue().toString());
+                personalInformation.setDialectSpeakWrite((dialectSpeakWriteField.getValue() == null) ? "N/A" : dialectSpeakWriteField.getValue().toString());
+                personalInformation.setContactPerson((contactPersonField.getValue() == null) ? "N/A" : contactPersonField.getValue().toString());
+                personalInformation.setSkills((skillsField.getValue() == null) ? "N/A" : skillsField.getValue().toString());
+                personalInformation.setHobby((hobbyField.getValue() == null) ? "N/A" : hobbyField.getValue().toString());
 		
 		boolean result = piService.updatePersonalInformation(personalInformation);
 		if(result){
@@ -323,6 +384,34 @@ public class EmployeePersonalInformation extends VerticalLayout{
         return glayout;    
     }
     
+    private Window getRemoveWindow(String employeeId){
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setSpacing(true);
+        vlayout.setMargin(true);
+
+        final Window window = new Window("REMOVE EMPLOYEE", vlayout);
+        window.setWidth("350px");
+        
+        Button removeBtn = new Button("Are you sure your want to remove this Employee?");
+        removeBtn.setWidth("100%");
+        removeBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                boolean result = reService.removeEmployee(getEmployeeId());
+                if(result){
+                    clearFields();
+                    (window.getParent()).removeWindow(window);
+                } else {
+                    getWindow().showNotification("Cannot Remove Employee, Contact your DBA!", Window.Notification.TYPE_ERROR_MESSAGE);
+                }
+            }
+        });
+        window.addComponent(removeBtn);
+        
+        return window;
+    }
+    
     public String getEmployeeId(){
 	return employeeId;    
     }
@@ -337,4 +426,39 @@ public class EmployeePersonalInformation extends VerticalLayout{
 	return t;
     }
 	
+    private String getUserRole(){
+        return userRole;
+    }
+    
+    public void clearFields(){
+        fnField.setValue("");
+        mnField.setValue("");
+        lnField.setValue("");
+        companyIdField.setValue("");
+        dobField.setValue(new Date());
+        pobField.setValue("");
+        
+        genderBox.removeAllItems();
+        genderBox = dropDownComponent.populateGenderList(genderBox);
+        
+        civilStatusBox.removeAllItems();
+        civilStatusBox = dropDownComponent.populateCivilStatusList(civilStatusBox);
+        
+        citizenshipField.setValue("");
+        heightField.setValue("");
+        weightField.setValue("");
+        religionField.setValue("");
+        spouseNameField.setValue("");
+        spouseOccupationField.setValue("");
+        spouseOfficeAddressField.setValue("");
+        fathersNameField.setValue("");
+        fathersOccupationField.setValue("");
+        mothersNameField.setValue("");
+        mothersOccupationField.setValue("");
+        parentsAddressField.setValue("");
+        dialectSpeakWriteField.setValue("");
+        contactPersonField.setValue("");
+        skillsField.setValue("");
+        hobbyField.setValue("");
+    }
 }
