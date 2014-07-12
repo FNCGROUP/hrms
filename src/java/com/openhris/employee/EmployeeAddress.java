@@ -45,6 +45,7 @@ public class EmployeeAddress extends VerticalLayout {
     TextField provinceField;
     TextField zipCodeField;
     
+    Object addressTypeId;
     int classAddressId = 0;
     
     public EmployeeAddress(String employeeId){
@@ -113,7 +114,14 @@ public class EmployeeAddress extends VerticalLayout {
                 Address address = new Address();
                 address.setAddressId(classAddressId);
                 address.setEmployeeId(getEmployeeId());
-                address.setType(addressType.getValue().toString().trim().toLowerCase());
+                
+                if(util.checkInputIfInteger(addressType.getValue().toString())){
+                    address.setType(addressType.getItemCaption(addressTypeId));
+                } else {
+                    address.setType(addressType.getValue().toString().trim().toLowerCase());
+                }
+                
+                
                 address.setStreet(streetField.getValue().toString().trim().toLowerCase());
                 address.setCity(cityField.getValue().toString().trim().toLowerCase());
                 address.setProvince((provinceField.getValue() == null) ? " " : provinceField.getValue().toString().trim().toLowerCase());
@@ -180,10 +188,16 @@ public class EmployeeAddress extends VerticalLayout {
                 if(event.getPropertyId().equals("type") || event.getPropertyId().equals("address")){
                     Address address = eaService.getEmployeeAddressbyId(addressId);
                     classAddressId = addressId;
-                    
-                    Object addressTypeId = addressType.addItem();
+                                        
+                    addressType.removeAllItems();
+                    addressTypeId = addressType.addItem();
                     addressType.setItemCaption(addressTypeId, address.getType());
                     addressType.setValue(addressTypeId);
+                    if(address.getType().equals("city address")){
+                        addressType.addItem("home address");
+                    } else {
+                        addressType.addItem("city address");
+                    }
                     
                     streetField.setValue(address.getStreet());
                     cityField.setValue(address.getCity());
@@ -248,4 +262,5 @@ public class EmployeeAddress extends VerticalLayout {
         zipCodeField.setValue("");
         classAddressId = 0;
     }
+    
 }

@@ -210,7 +210,7 @@ public class Constant {
     }
     
     public static String[] createConstantAddressType(){
-        String[] addressType = {"City Address", "Home Address"};
+        String[] addressType = {"city address", "home address"};
         return addressType;
     }
     
