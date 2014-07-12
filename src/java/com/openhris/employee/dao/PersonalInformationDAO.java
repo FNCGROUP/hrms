@@ -9,6 +9,9 @@ package com.openhris.employee.dao;
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.employee.model.PersonalInformation;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,6 +47,7 @@ public class PersonalInformationDAO {
 	    while(rs.next()){
 		if(rs.getString("id") == null || rs.getString("id").isEmpty()){			
 		} else {
+                    personalInformation.setImage(rs.getBytes("image"));
 		    personalInformation.setDob(util.parsingDate(rs.getString("dob")));
 		    personalInformation.setPob(rs.getString("pob"));
 		    personalInformation.setGender(rs.getString("gender"));
@@ -182,4 +186,46 @@ public class PersonalInformationDAO {
         }
 	return result;
     }    
+
+    public boolean uploadImageForEmployee(FileInputStream inputStream, File file, String employeeId){        
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        PreparedStatement pstmt = null;
+        Boolean result = false;
+        
+        try {
+            stmt = conn.createStatement();
+	    rs = stmt.executeQuery("SELECT COUNT(*) FROM employee_personal_information WHERE employeeId = '"+employeeId+"' ");
+	    while(rs.next()){
+                if(rs.getString("COUNT(*)").equals("0")){
+                    pstmt = conn.prepareStatement("INSERT INTO employee_personal_information (employeeId, image) VALUES(?, ?)");
+                    pstmt.setString(1, employeeId);
+                    pstmt.setBinaryStream(2, (InputStream) inputStream, (int) file.length());                    
+                    pstmt.executeUpdate();
+                } else {
+                    pstmt = conn.prepareStatement("UPDATE employee_personal_information SET image = ? WHERE employeeId = ? ");
+                    pstmt.setBinaryStream(1, (InputStream) inputStream, (int) file.length());
+                    pstmt.setString(2, employeeId);
+                    pstmt.executeUpdate();                    
+                }
+                
+                result = true;
+            }
+                        
+        } catch (SQLException ex) {
+            Logger.getLogger(PersonalInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PersonalInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+               
+        return result;
+    }
 }

@@ -7,6 +7,8 @@
 package com.openhris.employee.service;
 
 import com.openhris.employee.model.PersonalInformation;
+import java.io.File;
+import java.io.FileInputStream;
 import java.util.List;
 
 /**
@@ -19,4 +21,5 @@ public interface PersonalInformationService {
     
     public boolean updatePersonalInformation(PersonalInformation personalInformation);
 	
+    public boolean uploadImageForEmployee(FileInputStream inputStream, File file, String employeeId);
 }

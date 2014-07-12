@@ -6,12 +6,11 @@
 
 package com.openhris.employee;
 
+import com.vaadin.Application;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.VerticalLayout;
-import com.vaadin.ui.Window;
 
 /**
  *
@@ -22,15 +21,15 @@ public class EmployeeInformationUI extends VerticalLayout {
     EmployeePersonalInformation employeePersonalInformation;	
     EmployeePositionHistory employeePositionHistory;
     EmployeeSalaryInformation employeeSalaryInformation;
+    Application application;
 	
     private String employeeId;	
-    private String userRole;
     	
     public EmployeeInformationUI(){}
     
-    public EmployeeInformationUI(String userRole, String employeeId){
+    public EmployeeInformationUI(String employeeId, Application application){
         this.employeeId = employeeId;
-	this.userRole = userRole;
+        this.application = application;
         
 	init();	
     }
@@ -40,8 +39,8 @@ public class EmployeeInformationUI extends VerticalLayout {
 //	setMargin(true);	
 	setSizeFull();
 	setImmediate(true);
-	
-	employeePersonalInformation =  new EmployeePersonalInformation(getUserRole(), getEmployeeId());
+	       
+	employeePersonalInformation =  new EmployeePersonalInformation(getEmployeeId(), getThisApplication());
         employeePositionHistory = new EmployeePositionHistory(getEmployeeId());
         employeeSalaryInformation = new EmployeeSalaryInformation(getEmployeeId());
 	addComponent(employeeInformationWindow());
@@ -98,10 +97,9 @@ public class EmployeeInformationUI extends VerticalLayout {
     
     public String getEmployeeId(){
 	return employeeId;    
-    }
+    }    
     
-    private String getUserRole(){
-        return userRole;
+    public Application getThisApplication(){
+	 return application;
     }
-	
 }

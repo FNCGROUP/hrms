@@ -9,6 +9,8 @@ package com.openhris.employee.serviceprovider;
 import com.openhris.employee.dao.PersonalInformationDAO;
 import com.openhris.employee.model.PersonalInformation;
 import com.openhris.employee.service.PersonalInformationService;
+import java.io.File;
+import java.io.FileInputStream;
 
 /**
  *
@@ -26,6 +28,11 @@ public class PersonalInformationServiceImpl implements PersonalInformationServic
     @Override
     public boolean updatePersonalInformation(PersonalInformation personalInformation) {
 	return piDAO.updatePersonalInformation(personalInformation);
+    }
+
+    @Override
+    public boolean uploadImageForEmployee(FileInputStream inputStream, File file, String employeeId) {
+        return piDAO.uploadImageForEmployee(inputStream, file, employeeId);
     }
     
     

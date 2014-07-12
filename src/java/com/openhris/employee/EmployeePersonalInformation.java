@@ -9,15 +9,18 @@ package com.openhris.employee;
 import com.hrms.classes.GlobalVariables;
 import com.hrms.utilities.ConvertionUtilities;
 import com.openhris.commons.DropDownComponent;
+import com.openhris.commons.UploadImage;
 import com.openhris.employee.model.PersonalInformation;
 import com.openhris.employee.model.PositionHistory;
-import com.openhris.employee.service.PersonalInformationService;
 import com.openhris.employee.service.EmployeeCurrentStatusService;
+import com.openhris.employee.service.PersonalInformationService;
+import com.openhris.employee.serviceprovider.EmployeeCurrentStatusServiceImpl;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.employee.serviceprovider.PersonalInformationServiceImpl;
-import com.openhris.employee.serviceprovider.EmployeeCurrentStatusServiceImpl;
 import com.openhris.service.EmployeeService;
+import com.vaadin.Application;
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.terminal.StreamResource;
 import com.vaadin.terminal.ThemeResource;
 import com.vaadin.ui.AbstractLayout;
 import com.vaadin.ui.Alignment;
@@ -33,9 +36,12 @@ import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
+import com.vaadin.ui.Upload;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +53,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
     
     GridLayout glayout;	
     private String employeeId = null;
-    private String userRole = null;
+    private Application application;
     
     DropDownComponent dropDownComponent = new DropDownComponent();
     PersonalInformation personalInformation;
@@ -56,7 +62,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
     EmployeeCurrentStatusService reService = new EmployeeCurrentStatusServiceImpl();    
     EmployeeService employeeService = new EmployeeServiceImpl();
 	
-    Embedded logo;
+    Embedded avatar;
     TextField fnField;
     TextField mnField;
     TextField lnField;
@@ -84,9 +90,9 @@ public class EmployeePersonalInformation extends VerticalLayout{
     
     public EmployeePersonalInformation(){}	
     
-    public EmployeePersonalInformation(String userRole, String employeeId){
-        this.employeeId = employeeId;	    
-        this.userRole = userRole;
+    public EmployeePersonalInformation(String employeeId, Application application){
+        this.employeeId = employeeId;	
+        this.application = application;
 	
 	init();
 	addComponent(layout());
@@ -106,24 +112,42 @@ public class EmployeePersonalInformation extends VerticalLayout{
         glayout.setWidth("600px");
 	glayout.setHeight("100%");
 	
-        Panel imagePanel = new Panel();
+        final Panel imagePanel = new Panel();
         imagePanel.setStyleName("light");
         AbstractLayout panelLayout = (AbstractLayout) imagePanel.getContent();
         panelLayout.setMargin(false);
 	imagePanel.setWidth("100px");
         
-        logo = new Embedded(null, new ThemeResource("../myTheme/img/fnc.jpg"));
-        logo.setImmediate(true);
-	logo.setWidth(90, Sizeable.UNITS_PIXELS);
-	logo.setHeight(90, Sizeable.UNITS_PIXELS);
-        logo.addStyleName("logo-img");
-        imagePanel.addComponent(logo);        
-        glayout.addComponent(logo, 0, 0, 0, 1);
+        avatar = new Embedded(null, new ThemeResource("../myTheme/img/fnc.jpg"));
+        avatar.setImmediate(true);
+	avatar.setWidth(90, Sizeable.UNITS_PIXELS);
+	avatar.setHeight(90, Sizeable.UNITS_PIXELS);
+        avatar.addStyleName("logo-img");
+        imagePanel.addComponent(avatar);        
+        glayout.addComponent(avatar, 0, 0, 0, 1);
         glayout.setComponentAlignment(imagePanel, Alignment.MIDDLE_CENTER);
                         
-	Button uploadPhotoBtn = new Button("UPDATE");
+	Button uploadPhotoBtn = new Button("Upload..");
 	uploadPhotoBtn.setWidth("100%");
 	uploadPhotoBtn.setStyleName(Reindeer.BUTTON_SMALL);
+        uploadPhotoBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                if(getEmployeeId() == null){
+                    getWindow().showNotification("You did not select and Employee!", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                }
+                
+                Window uploadImage = new UploadImage(imagePanel, avatar, getEmployeeId());
+                uploadImage.setWidth("450px");
+                if(uploadImage.getParent() == null){
+                    getWindow().addWindow(uploadImage);
+                }
+                uploadImage.setModal(true);
+                uploadImage.center();
+            }
+        });
 	glayout.addComponent(uploadPhotoBtn, 0, 2);
 	glayout.setComponentAlignment(uploadPhotoBtn, Alignment.MIDDLE_CENTER);
 	
@@ -232,8 +256,23 @@ public class EmployeePersonalInformation extends VerticalLayout{
         glayout.addComponent(hobbyField, 2, 12);
         glayout.setComponentAlignment(hobbyField, Alignment.MIDDLE_LEFT);
         
-	if(employeeId != null){	    
+	if(employeeId != null){	            
 	    personalInformation = piService.getPersonalInformationData(employeeId);
+            final byte[] image = personalInformation.getImage();
+            if(image != null){
+                StreamResource.StreamSource imageSource = new StreamResource.StreamSource(){
+
+                    @Override
+                    public InputStream getStream() {
+                        return new ByteArrayInputStream(image);
+                    }
+                        
+                };
+                
+                StreamResource imageResource = new StreamResource(imageSource, personalInformation.getFirstname()+".jpg", getThisApplication());
+                imageResource.setCacheTime(0);
+                avatar.setSource(imageResource);
+            } 
 	    fnField.setValue(personalInformation.getFirstname().toUpperCase());
 	    mnField.setValue(personalInformation.getMiddlename().toUpperCase());
 	    lnField.setValue(personalInformation.getLastname().toUpperCase());
@@ -274,9 +313,9 @@ public class EmployeePersonalInformation extends VerticalLayout{
         Button removeBtn = new Button("REMOVE EMPLOYEE");
         removeBtn.setWidth("100%");
         boolean visible = false;
-        if(getUserRole() == null){
+        if(GlobalVariables.getUserRole()== null){
             visible = false;
-        } else if (getUserRole().equals("hr")){
+        } else if (GlobalVariables.getUserRole().equals("hr")){
             visible = true;
         }
         removeBtn.setVisible(visible);
@@ -419,11 +458,11 @@ public class EmployeePersonalInformation extends VerticalLayout{
         
         return window;
     }
-    
+            
     public String getEmployeeId(){
 	return employeeId;    
     }
-    
+        
     private TextField createTextField(String str){
 	TextField t = new TextField();
 	t.setCaption(str);
@@ -433,13 +472,13 @@ public class EmployeePersonalInformation extends VerticalLayout{
         
 	return t;
     }
-	
-    private String getUserRole(){
-        return userRole;
-    }
-    
+	    
     public List<PositionHistory> getEmployeeList(int branchId){
         return employeeService.getEmployeePerBranch(branchId);
+    }
+    
+    public Application getThisApplication(){
+        return application;
     }
     
     public void clearFields(){

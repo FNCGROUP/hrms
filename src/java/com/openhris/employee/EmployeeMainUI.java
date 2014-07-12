@@ -130,7 +130,8 @@ public class EmployeeMainUI extends VerticalLayout {
                         getWindow().showNotification("Employee has been removed from the list.", Window.Notification.TYPE_WARNING_MESSAGE);
                         return;
                     }
-		    hsplit.setSecondComponent(new EmployeeInformationUI(getUserRole(), item.getItemProperty("employee id").getValue().toString()));
+                    
+		    hsplit.setSecondComponent(new EmployeeInformationUI(item.getItemProperty("employee id").getValue().toString(), getApplication()));
                 }
                 
                 if(event.getPropertyId().equals("name")){          

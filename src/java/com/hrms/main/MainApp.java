@@ -399,8 +399,8 @@ public class MainApp extends Application {
             public void itemClick(ItemClickEvent event) {                
                 if(tree.getParent(tree.getParent(event.getItemId())) == null){                    
                 } else {
-                    companyId = companyService.getCorporateId(String.valueOf(tree.getParent(tree.getParent(event.getItemId()))).toString());
-                    tradeId = companyService.getTradeId(String.valueOf(tree.getParent(event.getItemId())).toString(), companyId);
+                    companyId = companyService.getCorporateId(String.valueOf(tree.getParent(tree.getParent(event.getItemId()))));
+                    tradeId = companyService.getTradeId(String.valueOf(tree.getParent(event.getItemId())), companyId);
                     branchId = companyService.getBranchId(tradeId, event.getItemId().toString());
                     if(mainMenuBar){
                         employeeMainUI.employeesTable(getEmployeeList(branchId));

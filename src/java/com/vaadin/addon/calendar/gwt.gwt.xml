@@ -20,4 +20,6 @@
     <inherits name="com.vaadin.terminal.gwt.DefaultWidgetSet" />
 
     <inherits name="com.vaadin.addon.calendar.gwt.CalendarWidgetset" />
+
+    <inherits name="com.vaadin.addon.tableexport.widgetset.Tableexport_for_vaadinWidgetset" />
 </module>
