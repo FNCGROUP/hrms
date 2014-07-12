@@ -7,16 +7,18 @@
 package com.hrms.main;           
 
 import com.hrms.admin.classes.AdvanceUserAccessControl;
-import com.openhris.administrator.model.UserAccessControl;
 import com.hrms.admin.module.AdvanceUserAccessModule;
 import com.hrms.admin.module.CreateNewUser;
 import com.hrms.beans.LoginBean;
 import com.hrms.classes.GlobalVariables;
 import com.hrms.dbconnection.AuthenticateLogin;
 import com.hrms.modules.*;
+import com.openhris.administrator.ChangePassword;
 import com.openhris.administrator.UserAdvanceAccessMainUI;
 import com.openhris.administrator.UserToolbarMenuAccessMainUI;
 import com.openhris.administrator.UsersMainUI;
+import com.openhris.administrator.commons.SettingsButton;
+import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.company.model.Branch;
@@ -36,9 +38,9 @@ import com.openhris.timekeeping.TimekeepingMainUI;
 import com.vaadin.Application;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.Sizeable;
+import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
-import com.vaadin.ui.*;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -77,7 +79,7 @@ public class MainApp extends Application {
     int companyId;
     int tradeId;
     int branchId = 0;;
-    int userId;
+    private int userId;
     
     CompanyModule companyModule;
     
@@ -200,8 +202,20 @@ public class MainApp extends Application {
         right.addComponent(logoutButton);
         
         settingsButton = new Button("Settings");
+//        settingsButton = new SettingsButton(getUserId());
         settingsButton.setStyleName("borderless");
-        //settingsButton.setIcon(new ThemeResource("../myTheme/img/settings.png"));
+        settingsButton.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                Window subWindow = new ChangePassword(getUserId());
+                if(window.getParent() == null){
+                    window.getWindow().addWindow(subWindow);
+                }
+                subWindow.setModal(true);
+                subWindow.center();
+            }
+        });
         right.addComponent(settingsButton);
         
         vlayout.addComponent(toolbar);
@@ -676,8 +690,6 @@ public class MainApp extends Application {
             public void selectedTabChange(SelectedTabChangeEvent event) {
                 userToolbarMenuAccessMainUI.userToolbarMenuAccessTable();
                 userAdvanceAccessMainUI.userAdvanceAccessTable();
-//                createNewUser.userTable();
-//                advanceUserAccess.advanceUserAccessTable();
             }
         });
         
@@ -841,5 +853,9 @@ public class MainApp extends Application {
     
     public List<PositionHistory> getEmployeeList(int branchId){
         return employeeService.getEmployeePerBranch(branchId);
+    }
+    
+    public int getUserId(){
+        return userId;
     }
 }

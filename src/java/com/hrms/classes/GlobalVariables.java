@@ -45,7 +45,7 @@ public class GlobalVariables implements TransactionListener{
     public static String getUserRole(){
         return instance.get().userRole;
     }
-
+    
     @Override
     public void transactionStart(Application application, Object transactionData) {
         // Set the thread local instance
