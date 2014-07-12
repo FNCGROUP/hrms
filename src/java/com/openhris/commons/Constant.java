@@ -46,6 +46,7 @@ public class Constant {
     public static final Map<Integer, String> MAP_CONSTANT_PAYROLL_PERIOD = createConstantPayrollPeriodList();
     public static final String[] CONSTANT_ARRAY_PAYROLL_REPORT_TYPE = createConstantPayrollReportTypeList();
     public static final Map<Integer, String> MAP_CONSTANT_USER_ROLE = createConstantUserRoleList();
+    public static final String[] CONSTANT_ADDRESS_TYPE = createConstantAddressType();
     
     private static Map<Integer, String> createConstantMapDependent(){
         Map<Integer, String> map = new HashMap<Integer, String>();
@@ -206,6 +207,11 @@ public class Constant {
 		"SSS Report Sbarro", "SSS Loans Payable","Philhealth Report", "HDMF Report", "HDMF Savings", "HDMF Loans Payable", 
 		"Witholding Tax", "Attendance Report", "Bank Debit Memo", "Allowances"};
         return reportTypeArray;
+    }
+    
+    public static String[] createConstantAddressType(){
+        String[] addressType = {"City Address", "Home Address"};
+        return addressType;
     }
     
     public Map<Integer, String> createConstantAllCorporation(){

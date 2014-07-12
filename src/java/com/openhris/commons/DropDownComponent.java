@@ -294,4 +294,18 @@ public class DropDownComponent extends ComboBox {
 	
 	return gender;
     }
+    
+    public ComboBox populateAddressType(ComboBox addressType){
+        addressType.removeAllItems();
+        addressType.setWidth("100%");
+        addressType.setCaption("Address Type: ");
+        addressType.setNullSelectionAllowed(false);
+        String[] type = Constant.CONSTANT_ADDRESS_TYPE;
+        for(int i = 0; i < type.length; i++){
+            addressType.addItem(type[i]);
+        }
+        addressType.setImmediate(true);
+        
+        return addressType;
+    }
 }

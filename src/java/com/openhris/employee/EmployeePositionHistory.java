@@ -242,7 +242,7 @@ public class EmployeePositionHistory extends VerticalLayout{
                         getWindow().addWindow(window);
                     }
                     window.center();
-                }
+                }                
             }
         });
         
@@ -272,6 +272,8 @@ public class EmployeePositionHistory extends VerticalLayout{
                 }
             }
         });
+        removeBtn.setImmediate(true);
+        
         window.addComponent(removeBtn);
         
         return window;
