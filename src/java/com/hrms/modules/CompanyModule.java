@@ -15,7 +15,7 @@ import com.hrms.queries.GetSQLQuery;
 import com.hrms.queries.GetSQLQueryUpdate;
 import com.openhris.company.model.Branch;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
-import com.openhris.service.CompanyService;
+import com.openhris.company.service.CompanyService;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;

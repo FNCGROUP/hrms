@@ -10,7 +10,7 @@ import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.model.PositionHistory;
-import com.openhris.service.EmployeeService;
+import com.openhris.employee.service.EmployeeService;
 import java.util.Date;
 import java.util.List;
 

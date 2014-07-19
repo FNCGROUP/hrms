@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.service;
+package com.openhris.timekeeping.service;
 
 import com.openhris.timekeeping.model.Timekeeping;
 import java.util.List;

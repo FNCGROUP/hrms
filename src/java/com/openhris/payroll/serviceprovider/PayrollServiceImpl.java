@@ -10,7 +10,7 @@ import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.Payroll;
 import com.openhris.payroll.model.PayrollRegister;
-import com.openhris.service.PayrollService;
+import com.openhris.payroll.service.PayrollService;
 import java.util.List;
 
 /**

@@ -6,7 +6,7 @@ package com.openhris.payroll.model;
 
 import com.openhris.employee.model.Employee;
 import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
-import com.openhris.service.PayrollService;
+import com.openhris.payroll.service.PayrollService;
 import java.util.Date;
 
 /**

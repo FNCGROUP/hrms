@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.service;
+package com.openhris.administrator.service;
 
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.model.User;

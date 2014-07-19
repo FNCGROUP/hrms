@@ -14,7 +14,7 @@ import com.openhris.company.model.Trade;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceInsertDAO;
 import com.openhris.dao.ServiceUpdateDAO;
-import com.openhris.service.AdministratorService;
+import com.openhris.administrator.service.AdministratorService;
 import java.util.List;
 
 /**

@@ -10,7 +10,7 @@ import com.openhris.company.model.Company;
 import com.openhris.company.model.Trade;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceUpdateDAO;
-import com.openhris.service.CompanyService;
+import com.openhris.company.service.CompanyService;
 import java.util.List;
 
 /**

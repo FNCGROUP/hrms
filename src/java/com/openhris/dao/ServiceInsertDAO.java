@@ -14,7 +14,7 @@ import com.openhris.contributions.model.Sss;
 import com.openhris.employee.model.PositionHistory;
 import com.openhris.payroll.model.Payroll;
 import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
-import com.openhris.service.PayrollService;
+import com.openhris.payroll.service.PayrollService;
 import com.openhris.timekeeping.model.Timekeeping;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

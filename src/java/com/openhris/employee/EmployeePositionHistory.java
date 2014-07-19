@@ -12,7 +12,7 @@ import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.employee.model.PositionHistory;
 import com.openhris.employee.service.PositionHistoryService;
 import com.openhris.employee.serviceprovider.PositionHistoryServiceImpl;
-import com.openhris.service.CompanyService;
+import com.openhris.company.service.CompanyService;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;

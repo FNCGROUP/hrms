@@ -12,7 +12,7 @@ import com.hrms.queries.GetSQLQuery;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.employee.model.PositionHistory;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
-import com.openhris.service.EmployeeService;
+import com.openhris.employee.service.EmployeeService;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
 import com.vaadin.event.FieldEvents;

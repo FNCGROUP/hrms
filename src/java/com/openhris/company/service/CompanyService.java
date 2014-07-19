@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.service;
+package com.openhris.company.service;
 
 import com.openhris.company.model.Branch;
 import com.openhris.company.model.Company;

@@ -17,7 +17,7 @@ import com.openhris.employee.service.PersonalInformationService;
 import com.openhris.employee.serviceprovider.EmployeeCurrentStatusServiceImpl;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.employee.serviceprovider.PersonalInformationServiceImpl;
-import com.openhris.service.EmployeeService;
+import com.openhris.employee.service.EmployeeService;
 import com.vaadin.Application;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.StreamResource;

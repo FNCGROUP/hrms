@@ -7,7 +7,7 @@ package com.openhris.administrator;
 import com.openhris.administrator.model.UserAdvanceAccess;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.service.AdministratorService;
+import com.openhris.administrator.service.AdministratorService;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;

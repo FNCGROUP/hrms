@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.service;
+package com.openhris.payroll.service;
 
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.Payroll;

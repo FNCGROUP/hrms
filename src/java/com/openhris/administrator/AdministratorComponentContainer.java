@@ -6,7 +6,7 @@ package com.openhris.administrator;
 
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.service.AdministratorService;
+import com.openhris.administrator.service.AdministratorService;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
