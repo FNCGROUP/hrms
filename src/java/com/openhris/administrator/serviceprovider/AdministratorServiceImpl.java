@@ -4,13 +4,11 @@
  */
 package com.openhris.administrator.serviceprovider;
 
+import com.openhris.administrator.dao.AdministratorDAO;
 import com.openhris.administrator.model.User;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.model.UserAdvanceAccess;
 import com.openhris.administrator.model.UserToolbarMenuAccess;
-import com.openhris.company.model.Branch;
-import com.openhris.company.model.Company;
-import com.openhris.company.model.Trade;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceInsertDAO;
 import com.openhris.dao.ServiceUpdateDAO;
@@ -26,6 +24,7 @@ public class AdministratorServiceImpl implements AdministratorService {
     ServiceGetDAO serviceGet = new ServiceGetDAO();
     ServiceInsertDAO serviceInsert = new ServiceInsertDAO();
     ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
+    AdministratorDAO adminDAO = new AdministratorDAO();
     
     @Override
     public List<UserAccessControl> getUserAccessControl(String username) {
@@ -53,8 +52,8 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public boolean updateUserPassword(int id, String password) {
-        return serviceUpdate.updateUserPassword(id, password);
+    public boolean updateUserPassword(int userId, String password) {
+        return adminDAO.updateUserPassword(userId, password);
     }
 
     @Override
@@ -115,6 +114,11 @@ public class AdministratorServiceImpl implements AdministratorService {
     @Override
     public boolean allowAccessOfUserAdvanceAccess(int userId, String menu, boolean isAllowed) {
         return serviceUpdate.allowAccessOfUserAdvanceAccess(userId, menu, isAllowed);
+    }
+
+    @Override
+    public boolean checkEnteredPasswordIfCorrect(int userId, String password) {
+        return adminDAO.checkEnteredPasswordIfCorrect(userId, password);
     }
     
 }

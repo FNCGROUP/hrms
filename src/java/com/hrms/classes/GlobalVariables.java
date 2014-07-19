@@ -19,6 +19,7 @@ public class GlobalVariables implements TransactionListener{
     private Double employmentWage;
     private String username;
     private String userRole;
+    private boolean logoutAfterPasswordChange;
     
     private static ThreadLocal<GlobalVariables> instance = new ThreadLocal<GlobalVariables>();
     
@@ -44,6 +45,14 @@ public class GlobalVariables implements TransactionListener{
     
     public static String getUserRole(){
         return instance.get().userRole;
+    }
+    
+    public static void setLogoutAfterPasswordChange(boolean logoutAfterPasswordChange){
+        instance.get().logoutAfterPasswordChange = logoutAfterPasswordChange;
+    }
+    
+    public static boolean isLogoutAfterPasswordChange(){
+        return instance.get().logoutAfterPasswordChange;
     }
     
     @Override

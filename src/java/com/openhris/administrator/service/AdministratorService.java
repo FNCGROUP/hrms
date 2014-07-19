@@ -8,9 +8,6 @@ import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.model.User;
 import com.openhris.administrator.model.UserAdvanceAccess;
 import com.openhris.administrator.model.UserToolbarMenuAccess;
-import com.openhris.company.model.Branch;
-import com.openhris.company.model.Company;
-import com.openhris.company.model.Trade;
 import java.util.List;
 
 /**
@@ -36,7 +33,7 @@ public interface AdministratorService {
     
     public boolean updateUserRole(int id, String role);
     
-    public boolean updateUserPassword(int id, String password);
+    public boolean updateUserPassword(int userId, String password);
     
     public boolean removeUser(int id);
         
@@ -61,4 +58,6 @@ public interface AdministratorService {
     public boolean allowAccessOfUserToolbarMenu(int userId, String menu, boolean isAllowed);
     
     public boolean allowAccessOfUserAdvanceAccess(int userId, String menu, boolean isAllowed);
+    
+    public boolean checkEnteredPasswordIfCorrect(int userId, String password);
 }

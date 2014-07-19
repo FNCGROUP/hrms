@@ -6,10 +6,13 @@
 
 package com.openhris.administrator;
 
+import com.hrms.classes.GlobalVariables;
+import com.openhris.administrator.commons.CheckIfWindowIsClose;
+import com.openhris.administrator.service.AdministratorService;
+import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.PasswordField;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import com.vaadin.ui.themes.Reindeer;
@@ -20,8 +23,9 @@ import com.vaadin.ui.themes.Reindeer;
  */
 public class ChangePassword extends Window{
     
-    
+    AdministratorService adminService = new AdministratorServiceImpl();
     private int userId;
+    boolean logout = false;
     
     public ChangePassword(int userId){
         this.userId = userId;
@@ -42,13 +46,13 @@ public class ChangePassword extends Window{
         vlayout.setSizeFull();
         vlayout.setImmediate(true);
         
-        PasswordField currentPassword = createPasswordField("Current Password: ");
+        final PasswordField currentPassword = createPasswordField("Current Password: ");
         vlayout.addComponent(currentPassword);
         
-        PasswordField newPassword = createPasswordField("New Password: ");
+        final PasswordField newPassword = createPasswordField("New Password: ");
         vlayout.addComponent(newPassword);
         
-        PasswordField rePassword = createPasswordField("Re-enter Password: ");
+        final PasswordField rePassword = createPasswordField("Re-enter Password: ");
         vlayout.addComponent(rePassword);        
         
         Button changeBtn = new Button("UPDATE PASSWORD");
@@ -57,7 +61,26 @@ public class ChangePassword extends Window{
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                getWindow().showNotification("Password Changed!");
+                if(!adminService.checkEnteredPasswordIfCorrect(getUserId(), currentPassword.getValue().toString().toLowerCase().trim())){
+                    getWindow().showNotification("Incorrect Password, contact your Administrator!", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                }
+                
+                if(!newPassword.getValue().toString().toLowerCase().trim().equals(rePassword.getValue().toString().toLowerCase().trim())){
+                    getWindow().showNotification("Entered Password do not Match!", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                }
+                
+                boolean result = adminService.updateUserPassword(getUserId(), rePassword.getValue().toString().toLowerCase().trim());
+                if(result){
+                    GlobalVariables.setLogoutAfterPasswordChange(true);
+                    close();                        
+                } else {
+                    GlobalVariables.setLogoutAfterPasswordChange(false);
+                    getWindow().showNotification("Change Password SQL Error!, Contact your DBA", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
             }
         });
         vlayout.addComponent(changeBtn);
@@ -78,5 +101,8 @@ public class ChangePassword extends Window{
         
 	return p;
     }
-    
+        
+    public boolean getLogout(){
+        return logout;
+    }
 }

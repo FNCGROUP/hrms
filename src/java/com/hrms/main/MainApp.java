@@ -17,23 +17,24 @@ import com.openhris.administrator.ChangePassword;
 import com.openhris.administrator.UserAdvanceAccessMainUI;
 import com.openhris.administrator.UserToolbarMenuAccessMainUI;
 import com.openhris.administrator.UsersMainUI;
+import com.openhris.administrator.commons.CheckIfWindowIsClose;
 import com.openhris.administrator.commons.SettingsButton;
 import com.openhris.administrator.model.UserAccessControl;
+import com.openhris.administrator.service.AdministratorService;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.company.model.Branch;
 import com.openhris.company.model.Company;
 import com.openhris.company.model.Trade;
+import com.openhris.company.service.CompanyService;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.contributions.ContributionComponentContainer;
 import com.openhris.employee.EmployeeMainUI;
 import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.service.EmployeeService;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.PayrollMainUI;
 import com.openhris.payroll.PayrollRegisterMainUI;
-import com.openhris.administrator.service.AdministratorService;
-import com.openhris.company.service.CompanyService;
-import com.openhris.employee.service.EmployeeService;
 import com.openhris.timekeeping.TimekeepingMainUI;
 import com.vaadin.Application;
 import com.vaadin.event.ItemClickEvent;
@@ -192,9 +193,9 @@ public class MainApp extends Application {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                userAuthenticate = false;
-                authenticateLogin(userAuthenticate);
-                //setAccountVisibleFalse();
+//                userAuthenticate = false;
+//                authenticateLogin(userAuthenticate);
+                authenticateLogin(false);
                 close();
             }
             
@@ -202,18 +203,28 @@ public class MainApp extends Application {
         right.addComponent(logoutButton);
         
         settingsButton = new Button("Settings");
-//        settingsButton = new SettingsButton(getUserId());
         settingsButton.setStyleName("borderless");
         settingsButton.addListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Window subWindow = new ChangePassword(getUserId());
+                final Window subWindow = new ChangePassword(getUserId());
                 if(window.getParent() == null){
                     window.getWindow().addWindow(subWindow);
                 }
                 subWindow.setModal(true);
-                subWindow.center();
+                subWindow.center();                
+                
+                subWindow.addListener(new Window.CloseListener() {
+
+                    @Override
+                    public void windowClose(Window.CloseEvent e) {
+                        if(GlobalVariables.isLogoutAfterPasswordChange()){
+                            authenticateLogin(false);
+                            close();
+                        }
+                    }
+                });
             }
         });
         right.addComponent(settingsButton);
@@ -347,8 +358,8 @@ public class MainApp extends Application {
                 GlobalVariables.getUserRole().equals("audit")){
             companyList = companyService.getAllCorporation();
         } else {
-            userId = administratorService.getUserId(GlobalVariables.getUsername());
-            companyList = companyService.getCorporateListAssignedForUser(userId);
+//            userId = administratorService.getUserId(GlobalVariables.getUsername());
+            companyList = companyService.getCorporateListAssignedForUser(getUserId());
         }        
         
         VerticalLayout vlayout = new VerticalLayout();
@@ -375,7 +386,7 @@ public class MainApp extends Application {
                         GlobalVariables.getUserRole().equals("audit")){
                     tradeList = companyService.getTradeByCorporateId(companyId);
                 } else {
-                    tradeList = companyService.getTradeListAssignedForUser(userId, companyId);
+                    tradeList = companyService.getTradeListAssignedForUser(getUserId(), companyId);
                 }                
 		
 		for(Trade t : tradeList){
@@ -393,7 +404,7 @@ public class MainApp extends Application {
                         GlobalVariables.getUserRole().equals("audit")){
                         branchList = companyService.getBranchByTrade(tradeId, companyId);
                     } else {
-                        branchList = companyService.getBranchListAssignedForUser(userId, tradeId);
+                        branchList = companyService.getBranchListAssignedForUser(getUserId(), tradeId);
                     }
                     
                     branchList = companyService.getBranchByTrade(tradeId, companyId);
@@ -732,6 +743,7 @@ public class MainApp extends Application {
                     enableToolBar();
                     initMainMenu();
                     (subWindow.getParent()).removeWindow(subWindow);
+                    userId = administratorService.getUserId(username.getValue().toString().toLowerCase().trim());
                 }else{
                     (subWindow.getParent()).showNotification("Incorrect username/password!");
                     return;
