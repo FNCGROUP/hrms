@@ -540,7 +540,7 @@ public class EmployeeMainUI extends VerticalLayout {
                 @Override
                 public void buttonClick(Button.ClickEvent event) {
                     boolean resultQueryInsert, result1, result2, checkId;
-                    Boolean checkResultForDuplicate;
+                    boolean checkResultForDuplicate;
                     result1 = util.checkInputIfDouble(employmentWage.getValue().toString().trim());
                     result2 = util.checkInputIfDouble(employmentAllowance.getValue().toString().trim());
 

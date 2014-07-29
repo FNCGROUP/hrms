@@ -327,7 +327,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
         boolean visible = false;
         if(GlobalVariables.getUserRole()== null){
             visible = false;
-        } else if (GlobalVariables.getUserRole().equals("hr")){
+        } else if (GlobalVariables.getUserRole().equals("hr") || GlobalVariables.getUserRole().equals("administrator")){
             visible = true;
         }
         removeBtn.setVisible(visible);

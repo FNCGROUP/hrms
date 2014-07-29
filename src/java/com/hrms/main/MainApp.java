@@ -379,7 +379,7 @@ public class MainApp extends Application {
             @Override
             public void nodeExpand(Tree.ExpandEvent event) {
                 companyName = event.getItemId().toString();
-		companyId = companyService.getCorporateId(event.getItemId().toString());
+		companyId = companyService.getCorporateId(event.getItemId().toString().toLowerCase());
                 
                 if(GlobalVariables.getUserRole().equals("administrator") || 
                         GlobalVariables.getUserRole().equals("hr") || 
