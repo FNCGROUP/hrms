@@ -65,7 +65,9 @@ public class PersonalInformationDAO {
 		    personalInformation.setMothersOccupation(rs.getString("mothersOccupation"));
 		    personalInformation.setParentsAddress(rs.getString("parentsAddress"));
 		    personalInformation.setDialectSpeakWrite(rs.getString("dialectSpeakWrite"));
-		    personalInformation.setContactPerson(rs.getString("contactPerson"));
+		    personalInformation.setContactPersonName(rs.getString("contactPerson"));
+                    personalInformation.setContactPersonAddress(rs.getString("contactPersonAddress"));
+                    personalInformation.setContactPersonNo(rs.getString("contactPersonNo"));
 		    personalInformation.setSkills(rs.getString("skills"));
 		    personalInformation.setHobby(rs.getString("hobby"));
 		}    
@@ -109,8 +111,9 @@ public class PersonalInformationDAO {
 	        if(rs.getString("COUNT(*)").equals("0")){
 		    pstmt = conn.prepareStatement("INSERT INTO employee_personal_information (employeeId, dob, pob, gender, citizenship, height, weight, "
                             + "civilStatus, religion, spouseName, spouseOccupation, spouseOfficeAddress, fathersName, fathersOccupation, "
-                            + "mothersName, mothersOccupation, parentsAddress, dialectSpeakWrite, contactPerson, skills, hobby) "
-                            + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                            + "mothersName, mothersOccupation, parentsAddress, dialectSpeakWrite, contactPerson, contactPersonAddress, "
+                            + "contactPersonNo, skills, hobby) "
+                            + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 		    pstmt.setString(1, personalInformation.getEmployeeId());
 		    pstmt.setString(2, util.convertDateFormat(personalInformation.getDob().toString()));
 		    pstmt.setString(3, personalInformation.getPob());
@@ -129,15 +132,17 @@ public class PersonalInformationDAO {
                     pstmt.setString(16, personalInformation.getMothersOccupation());
                     pstmt.setString(17, personalInformation.getParentsAddress());
                     pstmt.setString(18, personalInformation.getDialectSpeakWrite());
-                    pstmt.setString(19, personalInformation.getContactPerson());
-                    pstmt.setString(20, personalInformation.getSkills());
-                    pstmt.setString(21, personalInformation.getHobby());
+                    pstmt.setString(19, personalInformation.getContactPersonName());
+                    pstmt.setString(20, personalInformation.getContactPersonAddress());
+                    pstmt.setString(21, personalInformation.getContactPersonNo());
+                    pstmt.setString(22, personalInformation.getSkills());
+                    pstmt.setString(23, personalInformation.getHobby());
 		    pstmt.executeUpdate();
 		} else {
 		    pstmt = conn.prepareStatement("UPDATE employee_personal_information SET dob = ?, pob = ?, gender = ?, citizenship = ?, "
                             + "height = ?, weight = ?, civilStatus = ?, religion = ?, spouseName = ?, spouseOccupation = ?, spouseOfficeAddress = ?, "
                             + "fathersName = ?, fathersOccupation = ?, mothersName = ?, mothersOccupation = ?, parentsAddress = ?, dialectSpeakWrite = ?, "
-                            + "contactPerson = ?, skills = ?, hobby = ? WHERE employeeId = ?");
+                            + "contactPerson = ?, contactPersonAddress = ?, contactPersonNo = ?, skills = ?, hobby = ? WHERE employeeId = ?");
 		    pstmt.setString(1, util.convertDateFormat(personalInformation.getDob().toString()));
 		    pstmt.setString(2, personalInformation.getPob());
                     pstmt.setString(3, personalInformation.getGender());
@@ -155,10 +160,12 @@ public class PersonalInformationDAO {
                     pstmt.setString(15, personalInformation.getMothersOccupation());
                     pstmt.setString(16, personalInformation.getParentsAddress());
                     pstmt.setString(17, personalInformation.getDialectSpeakWrite());
-                    pstmt.setString(18, personalInformation.getContactPerson());
-                    pstmt.setString(19, personalInformation.getSkills());
-                    pstmt.setString(20, personalInformation.getHobby());
-		    pstmt.setString(21, personalInformation.getEmployeeId());
+                    pstmt.setString(18, personalInformation.getContactPersonName());
+                    pstmt.setString(19, personalInformation.getContactPersonAddress());
+                    pstmt.setString(20, personalInformation.getContactPersonNo());
+                    pstmt.setString(21, personalInformation.getSkills());
+                    pstmt.setString(22, personalInformation.getHobby());
+		    pstmt.setString(23, personalInformation.getEmployeeId());
 		    pstmt.executeUpdate(); 	
 		}	    
 	    }	    

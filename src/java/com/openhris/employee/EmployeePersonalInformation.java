@@ -84,7 +84,9 @@ public class EmployeePersonalInformation extends VerticalLayout{
     TextField mothersOccupationField;
     TextField parentsAddressField;
     TextField dialectSpeakWriteField;
-    TextField contactPersonField;
+    TextField contactPersonNameField;
+    TextField contactPersonAddressField;
+    TextField contactPersonNoField;
     TextField skillsField;
     TextField hobbyField;
     
@@ -107,7 +109,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
     }
     
     public ComponentContainer layout(){
-	glayout = new GridLayout(4, 18);
+	glayout = new GridLayout(4, 19);
         glayout.setSpacing(true);          
         glayout.setWidth("600px");
 	glayout.setHeight("100%");
@@ -194,12 +196,12 @@ public class EmployeePersonalInformation extends VerticalLayout{
         glayout.addComponent(citizenshipField, 3, 3);
         glayout.setComponentAlignment(citizenshipField, Alignment.MIDDLE_LEFT);   
 	
-        heightField = createTextField("Height: ");
+        heightField = createTextField("Height(cm):");
         heightField.setValue(0);
         glayout.addComponent(heightField, 1, 4);
         glayout.setComponentAlignment(heightField, Alignment.MIDDLE_LEFT);
                 
-        weightField = createTextField("Weight: ");
+        weightField = createTextField("Weight(kg): ");
         weightField.setValue(0);
         glayout.addComponent(weightField, 2, 4);
         glayout.setComponentAlignment(weightField, Alignment.MIDDLE_LEFT);
@@ -228,7 +230,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
         glayout.addComponent(fathersOccupationField, 3, 7);
         glayout.setComponentAlignment(fathersOccupationField, Alignment.MIDDLE_LEFT);
         
-        mothersNameField = createTextField("Mother's Name: ");
+        mothersNameField = createTextField("Mother's Maiden Name: ");
         glayout.addComponent(mothersNameField, 1, 8, 2, 8);
         glayout.setComponentAlignment(mothersNameField, Alignment.MIDDLE_LEFT);
         
@@ -244,16 +246,24 @@ public class EmployeePersonalInformation extends VerticalLayout{
         glayout.addComponent(dialectSpeakWriteField, 1, 10, 3, 10);
         glayout.setComponentAlignment(dialectSpeakWriteField, Alignment.MIDDLE_LEFT);
         
-        contactPersonField = createTextField("Person to be contacted in case of emergency: (Name, Address, Tel. No.) ");
-        glayout.addComponent(contactPersonField, 1, 11, 3, 11);
-        glayout.setComponentAlignment(contactPersonField, Alignment.MIDDLE_LEFT);
+        contactPersonNameField = createTextField("Contact Person: ");
+        glayout.addComponent(contactPersonNameField, 1, 11);
+        glayout.setComponentAlignment(contactPersonNameField, Alignment.MIDDLE_LEFT);
+        
+        contactPersonAddressField = createTextField("Contact Person's Address: ");
+        glayout.addComponent(contactPersonAddressField, 2, 11, 3, 11);
+        glayout.setComponentAlignment(contactPersonAddressField, Alignment.MIDDLE_LEFT);
+        
+        contactPersonNoField = createTextField("Contact Person's Tel No: ");
+        glayout.addComponent(contactPersonNoField, 1, 12);
+        glayout.setComponentAlignment(contactPersonNoField, Alignment.MIDDLE_LEFT);
         
         skillsField = createTextField("Skills: ");
-        glayout.addComponent(skillsField, 1, 12, 1, 12);
+        glayout.addComponent(skillsField, 2, 12);
         glayout.setComponentAlignment(skillsField, Alignment.MIDDLE_LEFT);
         
         hobbyField = createTextField("Hobbies");
-        glayout.addComponent(hobbyField, 2, 12);
+        glayout.addComponent(hobbyField, 3, 12);
         glayout.setComponentAlignment(hobbyField, Alignment.MIDDLE_LEFT);
         
 	if(employeeId != null){	            
@@ -305,7 +315,9 @@ public class EmployeePersonalInformation extends VerticalLayout{
             mothersOccupationField.setValue(personalInformation.getMothersOccupation());
             parentsAddressField.setValue(personalInformation.getParentsAddress());
             dialectSpeakWriteField.setValue(personalInformation.getDialectSpeakWrite());
-            contactPersonField.setValue(personalInformation.getContactPerson());
+            contactPersonNameField.setValue(personalInformation.getContactPersonName());
+            contactPersonAddressField.setValue(personalInformation.getContactPersonAddress());
+            contactPersonNoField.setValue(personalInformation.getContactPersonNo());
             skillsField.setValue(personalInformation.getSkills());
             hobbyField.setValue(personalInformation.getHobby());	    
 	}
@@ -407,7 +419,9 @@ public class EmployeePersonalInformation extends VerticalLayout{
                 personalInformation.setMothersOccupation((mothersOccupationField.getValue() == null) ? "N/A" : mothersOccupationField.getValue().toString());
                 personalInformation.setParentsAddress((parentsAddressField.getValue() == null) ? "N/A" : parentsAddressField.getValue().toString());
                 personalInformation.setDialectSpeakWrite((dialectSpeakWriteField.getValue() == null) ? "N/A" : dialectSpeakWriteField.getValue().toString());
-                personalInformation.setContactPerson((contactPersonField.getValue() == null) ? "N/A" : contactPersonField.getValue().toString());
+                personalInformation.setContactPersonName((contactPersonNameField.getValue() == null) ? "N/A" : contactPersonNameField.getValue().toString());
+                personalInformation.setContactPersonAddress((contactPersonAddressField.getValue() == null) ? "N/A" : contactPersonAddressField.getValue().toString());
+                personalInformation.setContactPersonNo((contactPersonNoField.getValue() == null) ? "N/A" : contactPersonNoField.getValue().toString());
                 personalInformation.setSkills((skillsField.getValue() == null) ? "N/A" : skillsField.getValue().toString());
                 personalInformation.setHobby((hobbyField.getValue() == null) ? "N/A" : hobbyField.getValue().toString());
 		
@@ -508,7 +522,9 @@ public class EmployeePersonalInformation extends VerticalLayout{
         mothersOccupationField.setValue("");
         parentsAddressField.setValue("");
         dialectSpeakWriteField.setValue("");
-        contactPersonField.setValue("");
+        contactPersonNameField.setValue("");
+        contactPersonAddressField.setValue("");
+        contactPersonNoField.setValue("");
         skillsField.setValue("");
         hobbyField.setValue("");
     }

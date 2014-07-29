@@ -15,7 +15,7 @@ public class Credentials {
     private String url = "jdbc:mysql://localhost:3306/fnc_hris_db";
     //private String url = "jdbc:postgresql://localhost:5432/ancom2013"
     //private String url = "jdbc:mysql://ec2-174-129-38-223.compute-1.amazonaws.com/3306/hrms";
-    private String username = "fnc";
+    private String username = "fnc_hris";
     private String password = "fncgroups09";
     
     public String getDriver(){

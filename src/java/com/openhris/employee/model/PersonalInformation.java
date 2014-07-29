@@ -30,7 +30,9 @@ public class PersonalInformation extends Employee {
 	private String mothersOccupation;
 	private String parentsAddress;
 	private String dialectSpeakWrite;
-	private String contactPerson;
+	private String contactPersonName;
+        private String contactPersonAddress;
+        private String contactPersonNo;
 	private String skills;
 	private String hobby;
 
@@ -88,8 +90,14 @@ public class PersonalInformation extends Employee {
 	public String getDialectSpeakWrite(){ return dialectSpeakWrite; }
 	public void setDialectSpeakWrite(String dialectSpeakWrite){ this.dialectSpeakWrite = dialectSpeakWrite; }
 	
-	public String getContactPerson(){ return contactPerson; }
-	public void setContactPerson(String contactPerson){ this.contactPerson = contactPerson; }
+	public String getContactPersonName(){ return contactPersonName; }
+	public void setContactPersonName(String contactPersonName){ this.contactPersonName = contactPersonName; }
+        
+        public String getContactPersonAddress(){ return contactPersonAddress; }
+	public void setContactPersonAddress(String contactPersonAddress){ this.contactPersonAddress = contactPersonAddress; }
+        
+        public String getContactPersonNo(){ return contactPersonNo; }
+	public void setContactPersonNo(String contactPersonNo){ this.contactPersonNo = contactPersonNo; }
 	
 	public String getSkills(){ return skills; }
 	public void setSkills(String skills){ this.skills = skills; }

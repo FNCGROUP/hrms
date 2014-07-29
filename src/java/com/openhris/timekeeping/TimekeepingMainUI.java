@@ -155,6 +155,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                 Date parsedAttendanceDateTo = util.parsingDate(attendanceDateTo);
                 Date parsedPayrollDate = util.parsingDate(util.convertDateFormat(payrollDate.getValue().toString()));
                 
+                Date previousPayrollDate = timekeepingService.getPreviousPayrollDate(employeeId);
                 boolean attendanceDateFromExist = timekeepingService.checkAttendanceDateIfExist(attendanceDateFrom, employeeId);
                 boolean attendanceDateToExist = timekeepingService.checkAttendanceDateIfExist(attendanceDateTo, employeeId);
                 
@@ -163,6 +164,13 @@ public class TimekeepingMainUI extends VerticalLayout {
                     return;
                 }
 
+                System.out.println("previous: "+previousPayrollDate +" payroll date: " + parsedPayrollDate);
+                
+                if(parsedPayrollDate.before(previousPayrollDate)){
+                    getWindow().showNotification("Entered payroll date entry is not allowed!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
                 if(parsedAttendanceDateTo.before(parsedAttendanceDateFrom)){
                     getWindow().showNotification("Error Attendance Date Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
                     return;
@@ -590,7 +598,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                 0.0, 0.0, 0.0, 
                 0.0, 0.0, 0.0, 
                 0.0, 0.0
-           }, new Integer(i));                       
+           }, i);                       
         }                
         table.setPageLength(table.size());        
         
@@ -617,22 +625,22 @@ public class TimekeepingMainUI extends VerticalLayout {
                         List<String> tkeepList = new ArrayList<String>(Arrays.asList(attStr));
                         
                         Timekeeping t = new Timekeeping();
-                        t.setAttendanceDate(util.parsingDate(tkeepList.get(0).toString()));
-                        t.setPolicy(tkeepList.get(1).toString());
-                        t.setHoliday(tkeepList.get(2).toString());
-                        t.setPremium(util.convertStringToBoolean(tkeepList.get(3).toString()));
-                        t.setLates(util.convertStringToDouble(tkeepList.get(4).toString()));
-                        t.setUndertime(util.convertStringToDouble(tkeepList.get(5).toString()));
-                        t.setOvertime(util.convertStringToDouble(tkeepList.get(6).toString()));
-                        t.setNightDifferential(util.convertStringToDouble(tkeepList.get(7).toString()));
-                        t.setLateDeduction(util.convertStringToDouble(tkeepList.get(8).toString()));
-                        t.setUndertimeDeduction(util.convertStringToDouble(tkeepList.get(9).toString()));
-                        t.setOvertimePaid(util.convertStringToDouble(tkeepList.get(10).toString()));
-                        t.setNightDifferentialPaid(util.convertStringToDouble(tkeepList.get(11).toString()));
-                        t.setLegalHolidayPaid(util.convertStringToDouble(tkeepList.get(12).toString()));
-                        t.setSpecialHolidayPaid(util.convertStringToDouble(tkeepList.get(13).toString()));
-                        t.setWorkingDayOffPaid(util.convertStringToDouble(tkeepList.get(14).toString()));
-                        t.setNonWorkingHolidayPaid(util.convertStringToDouble(tkeepList.get(15).toString()));
+                        t.setAttendanceDate(util.parsingDate(tkeepList.get(0)));
+                        t.setPolicy(tkeepList.get(1));
+                        t.setHoliday(tkeepList.get(2));
+                        t.setPremium(util.convertStringToBoolean(tkeepList.get(3)));
+                        t.setLates(util.convertStringToDouble(tkeepList.get(4)));
+                        t.setUndertime(util.convertStringToDouble(tkeepList.get(5)));
+                        t.setOvertime(util.convertStringToDouble(tkeepList.get(6)));
+                        t.setNightDifferential(util.convertStringToDouble(tkeepList.get(7)));
+                        t.setLateDeduction(util.convertStringToDouble(tkeepList.get(8)));
+                        t.setUndertimeDeduction(util.convertStringToDouble(tkeepList.get(9)));
+                        t.setOvertimePaid(util.convertStringToDouble(tkeepList.get(10)));
+                        t.setNightDifferentialPaid(util.convertStringToDouble(tkeepList.get(11)));
+                        t.setLegalHolidayPaid(util.convertStringToDouble(tkeepList.get(12)));
+                        t.setSpecialHolidayPaid(util.convertStringToDouble(tkeepList.get(13)));
+                        t.setWorkingDayOffPaid(util.convertStringToDouble(tkeepList.get(14)));
+                        t.setNonWorkingHolidayPaid(util.convertStringToDouble(tkeepList.get(15)));
                         attendanceList.add(t);
                     }
                     
@@ -1125,6 +1133,11 @@ public class TimekeepingMainUI extends VerticalLayout {
 
             @Override
             public void itemClick(ItemClickEvent event) {
+                if(employeesName.getValue() == null || employeesName.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Select an Employee!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
                 Object itemId = event.getItemId();
                 Item item = timekeepingTbl.getItem(itemId);
                 

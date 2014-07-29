@@ -5,6 +5,7 @@
 package com.openhris.timekeeping.service;
 
 import com.openhris.timekeeping.model.Timekeeping;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -20,4 +21,6 @@ public interface TimekeepingService {
     public boolean checkAttendanceDateIfExist(String date, String employeeId);
     
     public List<Timekeeping> getTimekeepingRowData(String date, int salaryId);
+    
+    public Date getPreviousPayrollDate(String employeeId);
 }

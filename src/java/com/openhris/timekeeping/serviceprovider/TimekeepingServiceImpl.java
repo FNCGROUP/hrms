@@ -6,8 +6,10 @@ package com.openhris.timekeeping.serviceprovider;
 
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceInsertDAO;
-import com.openhris.timekeeping.service.TimekeepingService;
+import com.openhris.timekeeping.dao.TimekeepingDAO;
 import com.openhris.timekeeping.model.Timekeeping;
+import com.openhris.timekeeping.service.TimekeepingService;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -17,6 +19,7 @@ import java.util.List;
 public class TimekeepingServiceImpl implements TimekeepingService {
 
     ServiceGetDAO serviceGet = new ServiceGetDAO();
+    TimekeepingDAO timekeepingDAO = new TimekeepingDAO();
     
     @Override
     public List<Timekeeping> getAttendancePerPayroll() {
@@ -37,4 +40,9 @@ public class TimekeepingServiceImpl implements TimekeepingService {
     public List<Timekeeping> getTimekeepingRowData(String date, int payrollId) {
         return serviceGet.getTimekeepingRowData(date, payrollId);
     }    
+
+    @Override
+    public Date getPreviousPayrollDate(String employeeId) {
+        return timekeepingDAO.getPreviousPayrollDate(employeeId);
+    }
 }
