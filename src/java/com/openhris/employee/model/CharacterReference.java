@@ -10,11 +10,15 @@ package com.openhris.employee.model;
  */
 public class CharacterReference extends Employee {
     
+        private int characterReferenceId;
         private String name;
 	private String occupation;
 	private String address;
 	private String contactNo;
 
+        public int getCharacterReferenceId(){ return characterReferenceId; }
+        public void setCharacterReferenceId(int characterReferenceId){ this.characterReferenceId = characterReferenceId; }
+        
 	public String getName(){ return name; }
 	public void setName(String name){ this.name = name; }
 	
