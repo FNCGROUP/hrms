@@ -238,7 +238,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                         sssReportSbarro(util.convertDateFormat(payrollDate.getValue().toString()));
                     }
                 }else if(reportType.getValue().equals("HDMF Report")){
-                    if(day != 15){
+                    if(day == 15){
                         String fileName = "HdmfReport_";
                         reports.deleteFile(fileName);
                         hdmfReport(util.convertDateFormat(payrollDate.getValue().toString()));
@@ -250,7 +250,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     reports.deleteFile(fileName);
                     hdmfSavingsReport(util.convertDateFormat(payrollDate.getValue().toString()));
                 }else if(reportType.getValue().equals("Philhealth Report")){
-                    if(day != 15){
+                    if(day == 15){
                         String fileName = "PhicReport_";
                         reports.deleteFile(fileName);
                         phicReport(util.convertDateFormat(payrollDate.getValue().toString()));
@@ -622,7 +622,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                               
                 if(event.getPropertyId().equals("id")){
                     String amount = item.getItemProperty("amount").getValue().toString();                
-                    Double removedAdvances = Double.valueOf(util.removeCommaFromString(amount)).doubleValue();
+                    Double removedAdvances = Double.parseDouble(util.removeCommaFromString(amount));
                     int advanceId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
                         
                     Window subWindow = removeAdvances(payrollId, 

@@ -41,7 +41,8 @@ public class GenerateCompanyId {
         ResultSet rs;
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT RIGHT(employeeId,4) AS employeeId FROM employee ORDER BY id DESC LIMIT 1");
+            rs = stmt.executeQuery("SELECT RIGHT(employeeId,4) AS employeeId FROM employee "
+                    + "WHERE (currentStatus IS NULL OR currentStatus != 'removed') ORDER BY id DESC LIMIT 1");
             while(rs.next()){
                 if(rs.getString("employeeId") == null){
                     fourthDigit = 1001;

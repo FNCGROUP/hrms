@@ -377,7 +377,7 @@ public class MainApp extends Application {
         tree.addListener(new Tree.ExpandListener() {
 
             @Override
-            public void nodeExpand(Tree.ExpandEvent event) {
+            public void nodeExpand(Tree.ExpandEvent event) {                        
                 companyName = event.getItemId().toString();
 		companyId = companyService.getCorporateId(event.getItemId().toString().toLowerCase());
                 
@@ -388,7 +388,7 @@ public class MainApp extends Application {
                 } else {
                     tradeList = companyService.getTradeListAssignedForUser(getUserId(), companyId);
                 }                
-		
+		                
 		for(Trade t : tradeList){
                     tree.addItem(t.getTradeName());
                     tree.setParent(t.getTradeName(), companyName);
@@ -414,7 +414,7 @@ public class MainApp extends Application {
                         tree.setParent(b.getBranchName(), tradeName);
                         tree.setChildrenAllowed(b.getBranchName(), false);
                     }
-                }
+                } 
             }
         });
         
@@ -422,7 +422,7 @@ public class MainApp extends Application {
 
             @Override
             public void itemClick(ItemClickEvent event) {                
-                if(tree.getParent(tree.getParent(event.getItemId())) == null){                    
+                if(tree.getParent(tree.getParent(event.getItemId())) == null){   
                 } else {
                     companyId = companyService.getCorporateId(String.valueOf(tree.getParent(tree.getParent(event.getItemId()))));
                     tradeId = companyService.getTradeId(String.valueOf(tree.getParent(event.getItemId())), companyId);

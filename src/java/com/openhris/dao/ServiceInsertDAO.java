@@ -4,24 +4,19 @@
  */
 package com.openhris.dao;
 
-import com.hrms.beans.EmployeesInfoBean;
 import com.hrms.classes.GenerateCompanyId;
 import com.hrms.dbconnection.GetSQLConnection;
-import com.hrms.utilities.ConvertionUtilities;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.contributions.model.Phic;
 import com.openhris.contributions.model.Sss;
 import com.openhris.employee.model.PositionHistory;
 import com.openhris.payroll.model.Payroll;
-import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
-import com.openhris.payroll.service.PayrollService;
 import com.openhris.timekeeping.model.Timekeeping;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -267,15 +262,18 @@ public class ServiceInsertDAO {
         return result;
     }
     
-    public boolean checkForDuplicateEntry(String firstname, String middlename, String lastname){
+    public boolean checkForDuplicateEntry(String firstname, 
+            String middlename, 
+            String lastname){
         Connection conn = getConnection.connection();
         Statement stmt = null;
         ResultSet rs = null;
         Boolean result = true;
+        
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT COUNT(*) AS result FROM employee WHERE firstname = '"+firstname+"' AND middlename = '"+middlename+"' "
-                    + "AND lastname = '"+lastname+"' ");
+                    + "AND lastname = '"+lastname+"' AND currentStatus IS NULL");
             while(rs.next()){
                 if(rs.getString("result").equals("0")){
                     result = false;

@@ -3,8 +3,12 @@
 	<property name="ireport.zoom" value="1.2100000000000004"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="BRANCH_ID" class="java.lang.String"/>
-	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
+	<parameter name="BRANCH_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PAYROLL_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT * FROM payroll_register WHERE branchId = $P{BRANCH_ID} AND 
 payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'previous' OR actionTaken IS NULL ) ORDER BY employmentWageEntry, name ASC]]>

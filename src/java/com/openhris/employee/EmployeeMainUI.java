@@ -9,12 +9,12 @@ import com.hrms.classes.CorporateName;
 import com.hrms.classes.TradeName;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
+import com.openhris.company.service.CompanyService;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.model.PositionHistory;
-import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
-import com.openhris.company.service.CompanyService;
 import com.openhris.employee.service.EmployeeService;
+import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
@@ -25,12 +25,14 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.Window.Notification;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -62,6 +64,7 @@ public class EmployeeMainUI extends VerticalLayout {
     
     private String userRole; 
     HorizontalSplitPanel hsplit;
+    Label errorLabel = new Label("<p style=\"color: red\">*Duplicate Entry!</p>", Label.CONTENT_RAW);
     
     public EmployeeMainUI(){}
     
@@ -153,7 +156,9 @@ public class EmployeeMainUI extends VerticalLayout {
         final Window subWindow = new Window("New Employee");
         subWindow.setWidth("535px");
         
-        GridLayout grid = new GridLayout(3, 10);
+        errorLabel.setVisible(false);
+        
+        GridLayout grid = new GridLayout(3, 11);
         grid.setSpacing(true);          
         grid.setSizeFull();
         
@@ -367,170 +372,7 @@ public class EmployeeMainUI extends VerticalLayout {
                 branch.setValue(tradeStatusId);
                 
                 department.setValue(ph.getDepartment());
-            }
-            
-            NativeButton updateButton = new NativeButton("UPDATE EMPLOYEE");
-            updateButton.setWidth("100%");
-            updateButton.setHeight("40px");
-            updateButton.addListener(new Button.ClickListener() {
-
-                @Override
-                public void buttonClick(Button.ClickEvent event) {
-                    boolean resultQueryUpdate, result1, result2, checkId;
-                    Boolean checkResultForDuplicate;
-                    result1 = util.checkInputIfDouble(employmentWage.getValue().toString().trim());
-                    result2 = util.checkInputIfDouble(employmentAllowance.getValue().toString().trim());
-                    
-                    if(corporation.getValue() == null){
-                        getWindow().showNotification("Select Corporation!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    if(trade.getValue() == null){
-                        getWindow().showNotification("Select Trade!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    if(branch.getValue() == null){
-                        getWindow().showNotification("Select Branch!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    if(dependent.getValue() == null){
-                        getWindow().showNotification("Select # of dependent!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if(employmentStatus.getValue() == null){
-                        getWindow().showNotification("Select Employment Status!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if(employmentWageStatus.getValue() == null){
-                        getWindow().showNotification("Select Employment Wage Status!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if(employmentWageEntry.getValue() == null){
-                        getWindow().showNotification("Select Employment Wage Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if(employmentAllowance.getValue() == null || employmentAllowance.getValue().toString().trim().equals("")){
-                        employmentAllowanceEntry.setValue(0.0);
-                    }
-
-                    if(employmentAllowanceEntry.getValue() == null){
-                        getWindow().showNotification("Select N/A if no allowance!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if(department.getValue() == null){
-                        getWindow().showNotification("Select Department!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    if(result1 == false || result2 == false){
-                        getWindow().showNotification("Invalid Input for EmploymentWage/EmploymentAllowanceEntry", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    String divCorporation;
-                    if(util.checkInputIfInteger(corporation.getValue().toString())){
-                        divCorporation = corporation.getItemCaption(corporation.getValue());
-                    } else {
-                        divCorporation = corporation.getValue().toString();
-                    }
-                    int corporate_id = companyService.getCorporateId(divCorporation);
-                    
-                    String divTrade;
-                    if(util.checkInputIfInteger(trade.getValue().toString())){
-                        divTrade = trade.getItemCaption(trade.getValue());
-                    } else {
-                        divTrade = trade.getValue().toString();
-                    }
-                    int trade_id = companyService.getTradeId(divTrade, corporate_id);
-                    
-                    String divBranch;
-                    if(util.checkInputIfInteger(branch.getValue().toString())){
-                        divBranch = branch.getItemCaption(branch.getValue());
-                    } else {
-                        divBranch = branch.getValue().toString();
-                    }
-                    int branch_id = companyService.getBranchId(trade_id, divBranch);                              
-                    
-                    String divTotalDependent;
-                    String divEmploymentStatus;
-                    String divWageStatus;
-                    String divWageEntry;
-                    String divAllowanceEntry;                    
-                    
-                    if(util.checkInputIfInteger(dependent.getValue().toString())){
-                        divTotalDependent = dependent.getItemCaption(dependent.getValue());
-                    } else {
-                        divTotalDependent = dependent.getValue().toString();
-                    }
-                    
-                    if(util.checkInputIfInteger(employmentStatus.getValue().toString())){
-                        divEmploymentStatus = employmentStatus.getItemCaption(employmentStatus.getValue());
-                    } else {
-                        divEmploymentStatus = employmentStatus.getValue().toString();
-                    }
-                    
-                    if(util.checkInputIfInteger(employmentWageStatus.getValue().toString())){
-                        divWageStatus = employmentWageStatus.getItemCaption(employmentWageStatus.getValue());
-                    } else {
-                        divWageStatus  = employmentWageStatus.getValue().toString();
-                    }
-                    
-                    if(util.checkInputIfInteger(employmentWageEntry.getValue().toString())){
-                        divWageEntry = employmentWageEntry.getItemCaption(employmentWageEntry.getValue());
-                    } else {
-                        divWageEntry  = employmentWageEntry.getValue().toString();
-                    }
-                    
-                    if(util.checkInputIfInteger(employmentAllowanceEntry.getValue().toString())){
-                        divAllowanceEntry = employmentAllowanceEntry.getItemCaption(employmentAllowanceEntry.getValue());
-                    } else {
-                        divAllowanceEntry  = employmentAllowanceEntry.getValue().toString();
-                    }
-                    
-                    List<PositionHistory> updateList = new ArrayList<PositionHistory>();
-                    PositionHistory ph = new PositionHistory();
-                    ph.setFirstname(firstname.getValue().toString().trim());
-                    ph.setMiddlename(middlename.getValue().toString().trim());
-                    ph.setLastname(lastname.getValue().toString().trim());
-                    ph.setCompany(divCorporation);
-                    ph.setTrade(divTrade);
-                    ph.setBranch(divBranch);
-                    ph.setBranchId(branch_id);
-                    ph.setDepartment(department.getValue().toString().trim());
-                    ph.setTotalDependent(divTotalDependent);
-                    ph.setPosition(position.getValue().toString().trim());
-                    ph.setEntryDate(util.parsingDate(util.convertDateFormat(entryDate.getValue().toString())));
-                    ph.setSssNo(sssNo.getValue().toString().trim());
-                    ph.setTinNo(tinNo.getValue().toString().trim());
-                    ph.setPhicNo(phicNo.getValue().toString().trim());
-                    ph.setHdmfNo(hdmfNo.getValue().toString().trim());
-                    ph.setEmploymentStatus(divEmploymentStatus);
-                    ph.setEmploymentWageStatus(divWageStatus);
-                    ph.setEmploymentWageEntry(divWageEntry);
-                    ph.setEmploymentWage(Double.parseDouble(employmentWage.getValue().toString().trim()));
-                    ph.setAllowance(Double.parseDouble(employmentAllowance.getValue().toString().trim()));
-                    ph.setAllowanceEntry(divAllowanceEntry);
-                    ph.setBankAccountNo(bankAccountNo.getValue().toString().trim());
-                    updateList.add(ph);
-                    
-                    resultQueryUpdate = employeeService.updateEmployeeEmploymentInformation(employee_id.getValue().toString(), updateList);
-                    if(resultQueryUpdate){
-                    (subWindow.getParent()).removeWindow(subWindow);
-                        employeesTable(getEmployeeList(branchId));                       
-                    }else{
-                        getWindow().showNotification("SQL ERROR!");
-                    }
-                }
-            });
-            grid.addComponent(updateButton, 1, 9, 2, 9);
+            }            
         } else {
             NativeButton saveButton = new NativeButton("SAVE NEW EMPLOYEE");
             saveButton.setWidth("100%");
@@ -595,8 +437,18 @@ public class EmployeeMainUI extends VerticalLayout {
 
                     if(result1 == false || result2 == false){
                         getWindow().showNotification("Invalid Input for EmploymentWage/EmploymentAllowanceEntry", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
                     }
 
+                    checkResultForDuplicate = employeeService.checkForDuplicateEmployee(
+                            firstname.getValue().toString().trim().toLowerCase(), 
+                            middlename.getValue().toString().trim().toLowerCase(), 
+                            lastname.getValue().toString().trim().toLowerCase());
+                    if(checkResultForDuplicate){         
+                        errorLabel.setVisible(true);
+                        return;
+                    }
+                    
                     int corporate_id = companyService.getCorporateId(corporation.getValue().toString());
                     int trade_id = companyService.getTradeId(trade.getValue().toString(), corporateId);
                     int branch_id = companyService.getBranchId(tradeId, branch.getValue().toString());
@@ -624,18 +476,9 @@ public class EmployeeMainUI extends VerticalLayout {
                     ph.setEmploymentWage(Double.parseDouble(employmentWage.getValue().toString().trim()));
                     ph.setAllowance(Double.parseDouble(employmentAllowance.getValue().toString().trim()));
                     ph.setAllowanceEntry(employmentAllowanceEntry.getValue().toString().trim());
-                    ph.setBankAccountNo(bankAccountNo.getValue().toString().trim());
-                    
-                    checkResultForDuplicate = employeeService.checkForDuplicateEmployee(
-                            ph.getFirstname(), 
-                            ph.getMiddlename(), 
-                            ph.getLastname());
-                    if(checkResultForDuplicate){
-                        getWindow().showNotification("ERROR! Duplicate Entry in Database!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                    
+                    ph.setBankAccountNo(bankAccountNo.getValue().toString().trim());                    
                     insertList.add(ph);
+                    
                     resultQueryInsert = employeeService.insertNewEmployee(insertList);
                     if(resultQueryInsert == true){
                         (subWindow.getParent()).removeWindow(subWindow);
@@ -644,10 +487,9 @@ public class EmployeeMainUI extends VerticalLayout {
                         getWindow().showNotification("SQL ERROR!");
                     }
                 }
-                
-
             });
             grid.addComponent(saveButton, 1, 9, 2, 9);
+            grid.addComponent(errorLabel, 1, 10, 2, 10);
         }
         
         NativeButton cancelButton = new NativeButton("CANCEL");
