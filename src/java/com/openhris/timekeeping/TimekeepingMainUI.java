@@ -4,7 +4,6 @@
  */
 package com.openhris.timekeeping;
 
-import com.hrms.classes.GlobalVariables;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.payroll.ProcessPayrollComputation;
 import com.openhris.commons.DropDownComponent;
@@ -163,8 +162,6 @@ public class TimekeepingMainUI extends VerticalLayout {
                     getWindow().showNotification("Attendance Date Range Already Exist", Window.Notification.TYPE_ERROR_MESSAGE);
                     return;
                 }
-
-                System.out.println("previous: "+previousPayrollDate +" payroll date: " + parsedPayrollDate);
                 
                 if(parsedPayrollDate.before(previousPayrollDate)){
                     getWindow().showNotification("Entered payroll date entry is not allowed!", Window.Notification.TYPE_ERROR_MESSAGE);

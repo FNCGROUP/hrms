@@ -5,7 +5,6 @@
 package com.openhris.timekeeping.serviceprovider;
 
 import com.openhris.dao.ServiceGetDAO;
-import com.openhris.dao.ServiceInsertDAO;
 import com.openhris.timekeeping.dao.TimekeepingDAO;
 import com.openhris.timekeeping.model.Timekeeping;
 import com.openhris.timekeeping.service.TimekeepingService;

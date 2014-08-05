@@ -444,8 +444,12 @@ public class EmployeeMainUI extends VerticalLayout {
                             firstname.getValue().toString().trim().toLowerCase(), 
                             middlename.getValue().toString().trim().toLowerCase(), 
                             lastname.getValue().toString().trim().toLowerCase());
-                    if(checkResultForDuplicate){         
-                        errorLabel.setVisible(true);
+                    if(checkResultForDuplicate){      
+                        try{                           
+                            errorLabel.setVisible(true);
+                        } catch (Exception e){
+                            e.printStackTrace(System.out);                            
+                        }                        
                         return;
                     }
                     

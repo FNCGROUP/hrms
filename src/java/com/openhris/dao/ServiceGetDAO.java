@@ -1782,7 +1782,7 @@ public class ServiceGetDAO {
         List<User> userList = new ArrayList<User>();
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM user_access_control ");
+            rs = stmt.executeQuery("SELECT * FROM user_access_control WHERE currentStatus IS NULL");
             while(rs.next()){
                 User user = new User();
                 user.setId(util.convertStringToInteger(rs.getString("uId")));

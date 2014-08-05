@@ -179,9 +179,7 @@ public class ProcessPayrollComputation {
             payroll.setAmountToBeReceive(amountToBeReceive);  
             payrollList.add(payroll);
 
-            double adjustment = sal.getAdjustmentFromPreviousPayroll(employeeId);            
-//            System.out.println("for adjustments: " +forAdjustments);
-//	    System.out.println("employee ID: " +employeeId);
+            double adjustment = sal.getAdjustmentFromPreviousPayroll(employeeId); 
 	    
             result = serviceInsert.insertPayrollAndAttendance(payrollList, 
                     timekeepingList, 
