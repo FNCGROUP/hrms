@@ -17,27 +17,26 @@ import java.util.List;
  */
 public class TimekeepingServiceImpl implements TimekeepingService {
 
-    ServiceGetDAO serviceGet = new ServiceGetDAO();
     TimekeepingDAO timekeepingDAO = new TimekeepingDAO();
     
     @Override
     public List<Timekeeping> getAttendancePerPayroll() {
-        return serviceGet.getAllAttendancePerPayroll();
+        return timekeepingDAO.getAllAttendancePerPayroll();
     }
 
     @Override
     public List<Timekeeping> getAttendanceByBranchAndEmployee(int branchId, String employeeId) {
-        return serviceGet.getAttendanceByBranchAndEmployee(branchId, employeeId);
+        return timekeepingDAO.getAttendanceByBranchAndEmployee(branchId, employeeId);
     }
 
     @Override
     public boolean checkAttendanceDateIfExist(String date, String employeeId) {
-        return serviceGet.checkAttendanceDateIfExist(date, employeeId);
+        return timekeepingDAO.checkAttendanceDateIfExist(date, employeeId);
     }
 
     @Override
     public List<Timekeeping> getTimekeepingRowData(String date, int payrollId) {
-        return serviceGet.getTimekeepingRowData(date, payrollId);
+        return timekeepingDAO.getTimekeepingRowData(date, payrollId);
     }    
 
     @Override

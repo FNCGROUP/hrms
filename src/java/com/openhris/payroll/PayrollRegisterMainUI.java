@@ -311,6 +311,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         payrollRegisterTbl.setImmediate(true);
         payrollRegisterTbl.setSelectable(true);
         payrollRegisterTbl.setColumnCollapsingAllowed(true);
+        payrollRegisterTbl.addStyleName("employees-table-layout");
         
         payrollRegisterTbl.addContainerProperty("id", String.class, null);
         payrollRegisterTbl.addContainerProperty("name", String.class, null);
