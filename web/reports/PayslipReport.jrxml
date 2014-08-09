@@ -42,6 +42,7 @@ payrollDate = $P{PAYROLL_DATE} AND (rowStatus != 'removed' OR rowStatus IS NULL)
 	<field name="branch" class="java.lang.String"/>
 	<field name="tradeName" class="java.lang.String"/>
 	<field name="corporateName" class="java.lang.String"/>
+	<field name="currentStatus" class="java.lang.String"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>

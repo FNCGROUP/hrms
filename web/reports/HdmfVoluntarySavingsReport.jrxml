@@ -6,7 +6,7 @@
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT e.hdmfNo AS hdmfNo, CONCAT_WS(', ', setNameToUpper(e.lastname), CONCAT_WS(' ', setNameToUpper(e.firstname), setNameToUpper(e.middlename))) AS name, adv.amount AS amount, b.name AS branch,  tn.name AS tradeName, cn.name AS corporateName, tn.hdmfNo AS erHdmfNo, b.address AS address, s.payrollDate AS payrollDate FROM employee e INNER JOIN salary s ON e.employeeId = s.employeeId INNER JOIN advances adv ON s.id = adv.salaryId INNER JOIN branch b ON e.branchId = b.id INNER JOIN trade_name tn ON b.tradeId = tn.id INNER JOIN corporate_name cn ON tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND adv.advancesType = 'pag-ibig ii' AND adv.rowStatus IS NULL ORDER BY e.lastname ASC]]>
+		<![CDATA[SELECT e.hdmfNo AS hdmfNo, CONCAT_WS(', ', setNameToUpper(e.lastname), CONCAT_WS(' ', setNameToUpper(e.firstname), setNameToUpper(e.middlename))) AS name, adv.amount AS amount, b.name AS branch,  tn.name AS tradeName, cn.name AS corporateName, tn.hdmfNo AS erHdmfNo, b.address AS address, s.payrollDate AS payrollDate FROM employee e INNER JOIN payroll_table s ON e.employeeId = s.employeeId INNER JOIN advance_table adv ON s.id = adv.payrollId INNER JOIN branch_table b ON e.branchId = b.id INNER JOIN trade_table tn ON b.tradeId = tn.id INNER JOIN corporate_table cn ON tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND adv.advanceType = 'pag-ibig ii' AND adv.rowStatus IS NULL ORDER BY e.lastname ASC]]>
 	</queryString>
 	<field name="hdmfNo" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>

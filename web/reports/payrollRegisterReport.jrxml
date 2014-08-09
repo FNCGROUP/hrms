@@ -11,7 +11,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT * FROM payroll_register WHERE branchId = $P{BRANCH_ID} AND 
-payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'previous' OR actionTaken IS NULL ) ORDER BY employmentWageEntry, name ASC]]>
+payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'previous' OR actionTaken IS NULL ) ORDER BY employmentWageEntry, name ASC ]]>
 	</queryString>
 	<field name="salaryId" class="java.lang.Integer"/>
 	<field name="name" class="java.lang.String"/>
