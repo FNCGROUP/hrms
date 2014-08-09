@@ -7,6 +7,7 @@ package com.openhris.payroll.service;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.Payroll;
 import com.openhris.payroll.model.PayrollRegister;
+import com.openhris.timekeeping.model.Timekeeping;
 import java.util.List;
 
 /**
@@ -76,5 +77,11 @@ public interface PayrollService {
             double amountReceivable, 
             double amountToBeReceive);
     
-    public double getPreviousAmountReceived(int payrollId);    
+    public double getPreviousAmountReceived(int payrollId); 
+    
+    public boolean insertPayrollAndAttendance(List<Payroll> insertPayrollList, 
+            List<Timekeeping> insertAttendanceList, 
+            boolean EDIT_PAYROLL, 
+            double adjustments, 
+            int previousPayrollId);
 }

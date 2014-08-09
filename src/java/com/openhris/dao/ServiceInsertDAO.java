@@ -10,6 +10,7 @@ import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.contributions.model.Phic;
 import com.openhris.contributions.model.Sss;
 import com.openhris.employee.model.PositionHistory;
+import com.openhris.payroll.dao.PayrollDAO;
 import com.openhris.payroll.model.Payroll;
 import com.openhris.timekeeping.model.Timekeeping;
 import java.sql.Connection;
@@ -30,6 +31,7 @@ public class ServiceInsertDAO {
     GetSQLConnection getConnection = new GetSQLConnection(); 
     OpenHrisUtilities util = new OpenHrisUtilities();
     ServiceGetDAO serviceGet = new ServiceGetDAO();
+    PayrollDAO payrollDAO = new PayrollDAO();
     
     public boolean insertNewEmployee(List<PositionHistory> insertList){
         Connection conn = getConnection.connection();
@@ -110,157 +112,6 @@ public class ServiceInsertDAO {
         }
         return result;
     }
-        
-    public boolean insertPayrollAndAttendance(List<Payroll> insertPayrollList, 
-            List<Timekeeping> insertAttendanceList, 
-            boolean EDIT_PAYROLL, 
-            double adjustments, 
-            int previousPayrollId){
-        Connection conn = getConnection.connection();
-        boolean result = false;
-        PreparedStatement pstmt = null;
-        Statement stmt = null;
-        ResultSet rs = null;
-        try {
-            conn.setAutoCommit(false);
-            for(Payroll p : insertPayrollList){
-                pstmt = conn.prepareStatement("INSERT INTO payroll_table(employeeId, attendancePeriodFrom, attendancePeriodTo, "
-                        + "basicSalary, halfMonthSalary, phic, sss, hdmf, absences, numberOfDays, taxableSalary, tax, "
-                        + "cashBond, totalLatesDeduction, totalUndertimeDeduction, totalOvertimePaid, totalNightDifferentialPaid, "
-                        + "totalLegalHolidayPaid, totalSpecialHolidayPaid, totalWorkingDayOffPaid, allowance, "
-                        + "allowanceForLiquidation, netSalary, adjustments, amountToBeReceive, amountReceivable, branchId, "
-			+ "payrollPeriod, payrollDate) "
-                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-                pstmt.setString(1, p.getEmployeeId());
-                pstmt.setString(2, util.convertDateFormat(p.getAttendancePeriodFrom().toString()));
-                pstmt.setString(3, util.convertDateFormat(p.getAttendancePeriodTo().toString()));
-                pstmt.setDouble(4, p.getBasicSalary());
-                pstmt.setDouble(5, p.getHalfMonthSalary());
-                pstmt.setDouble(6, p.getPhic());
-                pstmt.setDouble(7, p.getSss());
-                pstmt.setDouble(8, p.getHdmf());
-                pstmt.setDouble(9, p.getAbsences());
-                pstmt.setInt(10, p.getNumOfDays());
-                pstmt.setDouble(11, p.getTaxableSalary());
-                pstmt.setDouble(12, p.getTax());
-                pstmt.setDouble(13, p.getCashBond());
-                pstmt.setDouble(14, p.getTotalLatesDeduction());
-                pstmt.setDouble(15, p.getTotalUndertimeDeduction());
-                pstmt.setDouble(16, p.getTotalOvertimePaid());
-                pstmt.setDouble(17, p.getTotalNightDifferentialPaid());
-                pstmt.setDouble(18, p.getTotalLegalHolidayPaid());
-                pstmt.setDouble(19, p.getTotalSpecialHolidayPaid());
-                pstmt.setDouble(20, p.getTotalWorkingDayOffPaid());
-                pstmt.setDouble(21, p.getAllowance());
-                pstmt.setDouble(22, p.getAllowanceForLiquidation());
-                pstmt.setDouble(23, p.getNetSalary());
-		pstmt.setDouble(24, adjustments);
-                pstmt.setDouble(25, p.getAmountToBeReceive() + adjustments);
-                pstmt.setDouble(26, p.getAmountReceivable() + adjustments);
-                pstmt.setInt(27, p.getBranchId());
-                pstmt.setString(28, p.getPayrollPeriod());
-                pstmt.setString(29, util.convertDateFormat(p.getPayrollDate().toString()));                
-                pstmt.executeUpdate();
-                
-                int payrollId = 0;            
-                stmt = conn.createStatement();
-                rs = stmt.executeQuery("SELECT last_insert_id() AS id FROM payroll_table ");
-                while(rs.next()){
-                    payrollId = Integer.parseInt(rs.getString("id"));
-                }
-                
-                for(Timekeeping t : insertAttendanceList){
-                    pstmt = conn.prepareStatement("INSERT INTO timekeeping_table(payrollId, attendanceDate, policy, "
-                            + "holiday, premium, lates, undertime, overtime, nightDifferential, latesDeduction, "
-                            + "undertimeDeduction, overtimePaid, nightDifferentialPaid, legalHolidayPaid, "
-                            + "specialHolidayPaid, workingDayOffPaid, psHolidayPaid) "
-                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
-                    pstmt.setInt(1, payrollId);
-                    pstmt.setString(2, util.convertDateFormat(t.getAttendanceDate().toString()));
-                    pstmt.setString(3, t.getPolicy());
-                    pstmt.setString(4, t.getHoliday());
-                    pstmt.setString(5, String.valueOf(t.isPremium()).toString());
-                    pstmt.setDouble(6, t.getLates());
-                    pstmt.setDouble(7, t.getUndertime());
-                    pstmt.setDouble(8, t.getOvertime());
-                    pstmt.setDouble(9, t.getNightDifferential());
-                    pstmt.setDouble(10, t.getLateDeduction());
-                    pstmt.setDouble(11, t.getUndertimeDeduction());
-                    pstmt.setDouble(12, t.getOvertimePaid());
-                    pstmt.setDouble(13, t.getNightDifferentialPaid());
-                    pstmt.setDouble(14, t.getLegalHolidayPaid());
-                    pstmt.setDouble(15, t.getSpecialHolidayPaid());
-                    pstmt.setDouble(16, t.getWorkingDayOffPaid());
-                    pstmt.setDouble(17, t.getNonWorkingHolidayPaid());
-                    pstmt.executeUpdate();
-                }
-                
-//                if(adjustments != 0){
-//                    double amountReceivable = Math.round((p.getAmountReceivable() + adjustments)*100.0)/100.0;
-//                    double amountToBeReceive = amountReceivable;
-//
-//                    pstmt = conn.prepareStatement("UPDATE payroll_table SET amountToBeReceive = ?, "
-//			    + "amountReceivable = ?, "
-//			    + "adjustments = ? "
-//                            + "WHERE id = ? ");
-//                    pstmt.setDouble(1, amountToBeReceive);
-//                    pstmt.setDouble(2, amountReceivable);
-//		    pstmt.setDouble(3, adjustments);
-//                    pstmt.setInt(4, payrollId);
-//                    pstmt.executeUpdate();
-//                }           
-				
-		if(previousPayrollId != 0){
-		    double previousAmountReceived = serviceGet.getPreviousAmountReceived(previousPayrollId);
-		    double forAdjustment = Math.round((p.getAmountReceivable() - previousAmountReceived)*100.0)/100.0;
-		    
-		    pstmt = conn.prepareStatement("INSERT INTO adjustments(payrollId, amount, remarks, datePosted) VALUES(?, ?, ?, now())");
-		    pstmt.setInt(1, payrollId);
-		    pstmt.setDouble(2, forAdjustment);
-		    pstmt.setString(3, "edit timekeeping table");
-		    pstmt.executeUpdate();
-		    
-		    pstmt = conn.prepareStatement("UPDATE payroll_table SET forAdjustments = ?, "
-			    + "amountToBeReceive = ?, "
-			    + "amountReceivable = ? "
-			    + "WHERE id = ?");
-		    pstmt.setDouble(1, forAdjustment);
-		    pstmt.setDouble(2, p.getAmountReceivable());
-		    pstmt.setDouble(3, previousAmountReceived);
-		    pstmt.setInt(4, payrollId);
-		    pstmt.executeUpdate();
-		    
-		    pstmt = conn.prepareStatement("UPDATE payroll_table SET actionTaken = 'adjusted' WHERE id = '"+payrollId+"' ");
-                    pstmt.executeUpdate();
-                
-                    pstmt = conn.prepareStatement("UPDATE payroll_table SET actionTaken = 'previous' WHERE id = '"+previousPayrollId+"' ");
-                    pstmt.executeUpdate();
-		}
-            }  
-            conn.commit();
-            System.out.println("Transaction commit...");
-            result = true;
-        } catch (SQLException ex) {
-            try {
-                conn.rollback();
-                System.out.println("Connection rollback...");
-            } catch (SQLException ex1) {
-                Logger.getLogger(ServiceInsertDAO.class.getName()).log(Level.SEVERE, null, ex1);
-            } 
-            Logger.getLogger(ServiceInsertDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if(conn != null || !conn.isClosed()){
-                    pstmt.close();
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(ServiceInsertDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        return result;
-    }
     
     public boolean checkForDuplicateEntry(String firstname, 
             String middlename, 
@@ -296,30 +147,6 @@ public class ServiceInsertDAO {
         return result;
     }
     
-    public boolean insertAdvanceType(String advanceType){
-        Connection conn = getConnection.connection();
-        boolean result = false;
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = conn.prepareStatement("INSERT INTO advance_type(advanceType) VALUES(?)");
-            pstmt.setString(1, advanceType);
-            pstmt.executeUpdate();
-        } catch (SQLException ex) {
-            Logger.getLogger(ServiceInsertDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {
-            try {
-                if(conn != null || !conn.isClosed()){
-                    pstmt.close();
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(ServiceInsertDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        return result;
-    }
-
     public boolean insertNewSssData(List<Sss> sssList){
         Boolean result = false;
         Connection conn = getConnection.connection();

@@ -181,7 +181,7 @@ public class ProcessPayrollComputation {
 
             double adjustment = sal.getAdjustmentFromPreviousPayroll(employeeId); 
 	    
-            result = serviceInsert.insertPayrollAndAttendance(payrollList, 
+            result = payrollService.insertPayrollAndAttendance(payrollList, 
                     timekeepingList, 
                     editPayroll, 
                     adjustment, 

@@ -7,10 +7,12 @@ package com.openhris.payroll.serviceprovider;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceInsertDAO;
 import com.openhris.dao.ServiceUpdateDAO;
+import com.openhris.payroll.dao.PayrollDAO;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.Payroll;
 import com.openhris.payroll.model.PayrollRegister;
 import com.openhris.payroll.service.PayrollService;
+import com.openhris.timekeeping.model.Timekeeping;
 import java.util.List;
 
 /**
@@ -19,23 +21,21 @@ import java.util.List;
  */
 public class PayrollServiceImpl implements PayrollService {
 
-    ServiceGetDAO serviceGet = new ServiceGetDAO();
-    ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
-    ServiceInsertDAO serviceInsert = new ServiceInsertDAO();
+    PayrollDAO payrollDAO = new PayrollDAO();
     
     @Override
     public List<Payroll> getPayrollByBranchAndEmployee(int branchId, String employeeId) {
-        return serviceGet.getPayrollByBranchAndEmployee(branchId, employeeId);
+        return payrollDAO.getPayrollByBranchAndEmployee(branchId, employeeId);
     }
 
     @Override
     public boolean removeSelectedRow(int id) {
-        return serviceUpdate.removeSelectedRow(id);
+        return payrollDAO.removeSelectedRow(id);
     }
 
     @Override
     public List<Advances> getAdvancesByPayroll(int payrollId) {
-        return serviceGet.getAdvancesByPayroll(payrollId);
+        return payrollDAO.getAdvancesByPayroll(payrollId);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class PayrollServiceImpl implements PayrollService {
         Double amountToBeReceive, 
         Double amountReceivable, 
         String remarks) {
-            return serviceUpdate.removeAdvancesById(advanceId, 
+            return payrollDAO.removeAdvancesById(advanceId, 
                     payrollId, removedAmount, 
                     amountToBeReceive, 
                     amountReceivable, 
@@ -54,29 +54,29 @@ public class PayrollServiceImpl implements PayrollService {
 
     @Override
     public List<String> getAdvanceTypeList() {
-        return serviceGet.getAdvanceTypeLists();
+        return payrollDAO.getAdvanceTypeLists();
     }
 
     @Override
     public boolean insertAdvanceType(String advanceType) {
-        return serviceInsert.insertAdvanceType(advanceType);
+        return payrollDAO.insertAdvanceType(advanceType);
     }
 
     @Override
     public boolean updateSalaryByAdvances(List<Advances> advanceceList) {
-        return serviceUpdate.updateSalaryByAdvances(advanceceList);
+        return payrollDAO.updateSalaryByAdvances(advanceceList);
     }
 
     @Override
     public double getTotalAdvancesByPayroll(int payrollId) {
-        return serviceGet.getTotalAdvancesByPayroll(payrollId);
+        return payrollDAO.getTotalAdvancesByPayroll(payrollId);
     }
 
     @Override
     public List<PayrollRegister> getPayrollRegisterByBranch(int branchId, 
         String payrollDate, 
         boolean prev) {
-            return serviceGet.getPayrollRegisterByBranch(branchId, 
+            return payrollDAO.getPayrollRegisterByBranch(branchId, 
                     payrollDate, 
                     prev);
     }
@@ -87,7 +87,7 @@ public class PayrollServiceImpl implements PayrollService {
         double netPay, 
         double amountToBeReceive, 
         double amountReceive) {
-            return serviceUpdate.updatePhicContribution(payrollId, 
+            return payrollDAO.updatePhicContribution(payrollId, 
                     phicAmount, 
                     netPay, 
                     amountToBeReceive, 
@@ -96,17 +96,17 @@ public class PayrollServiceImpl implements PayrollService {
 
     @Override
     public String getPayrollPeriodByPayrollId(int payrollId) {
-        return serviceGet.getPayrollPeriodByPayrollId(payrollId);
+        return payrollDAO.getPayrollPeriodByPayrollId(payrollId);
     }
 
     @Override
     public String getPayrollDateByPayrollId(int payrollId) {
-        return serviceGet.getPayrollDateByPayrollId(payrollId);
+        return payrollDAO.getPayrollDateByPayrollId(payrollId);
     }
 
     @Override
     public boolean updatePayrollDate(int payrollId, String date) {
-        return serviceUpdate.updatePayrollDate(payrollId, date);
+        return payrollDAO.updatePayrollDate(payrollId, date);
     }
 
     @Override
@@ -115,7 +115,7 @@ public class PayrollServiceImpl implements PayrollService {
         double netPay, 
         double amountToBeReceive, 
         double amountReceive) {
-            return serviceUpdate.updateTaxWitheldAmount(payrollId, 
+            return payrollDAO.updateTaxWitheldAmount(payrollId, 
                     newTaxWitheldAmount, 
                     netPay, 
                     amountToBeReceive, 
@@ -128,7 +128,7 @@ public class PayrollServiceImpl implements PayrollService {
         double netPay, 
         double amountToBeReceive, 
         double amountReceive) {
-            return serviceUpdate.updateHdmfContribution(payrollId, 
+            return payrollDAO.updateHdmfContribution(payrollId, 
                     hdmfContribution, 
                     netPay, 
                     amountToBeReceive, 
@@ -141,7 +141,7 @@ public class PayrollServiceImpl implements PayrollService {
         double netPay, 
         double amountToBeReceive, 
         double amountReceive) {
-            return serviceUpdate.updateSssContribution(payrollId, 
+            return payrollDAO.updateSssContribution(payrollId, 
                     sssContribution, 
                     netPay, 
                     amountToBeReceive, 
@@ -150,12 +150,12 @@ public class PayrollServiceImpl implements PayrollService {
 
     @Override
     public boolean lockPayroll(int payrollId) {
-        return serviceUpdate.lockPayroll(payrollId);
+        return payrollDAO.lockPayroll(payrollId);
     }
 
     @Override
     public double getAdjustmentFromPreviousPayroll(String employeeId) {
-        return serviceGet.getAdjustmentFromPreviousPayroll(employeeId);
+        return payrollDAO.getAdjustmentFromPreviousPayroll(employeeId);
     }
 
     @Override
@@ -168,7 +168,20 @@ public class PayrollServiceImpl implements PayrollService {
 
     @Override
     public double getPreviousAmountReceived(int payrollId) {
-        return serviceGet.getPreviousAmountReceived(payrollId);
+        return payrollDAO.getPreviousAmountReceived(payrollId);
+    }
+
+    @Override
+    public boolean insertPayrollAndAttendance(List<Payroll> insertPayrollList, 
+            List<Timekeeping> insertAttendanceList, 
+            boolean EDIT_PAYROLL, 
+            double adjustments, 
+            int previousPayrollId) {
+        return payrollDAO.insertPayrollAndAttendance(insertPayrollList, 
+                insertAttendanceList, 
+                EDIT_PAYROLL, 
+                adjustments, 
+                previousPayrollId);
     }
     
 }

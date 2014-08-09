@@ -8,7 +8,6 @@ package com.openhris.timekeeping.dao;
 
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.dao.ServiceGetDAO;
 import com.openhris.timekeeping.model.Timekeeping;
 import java.sql.Connection;
 import java.sql.ResultSet;
