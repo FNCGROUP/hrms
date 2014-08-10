@@ -1087,7 +1087,7 @@ public class TimekeepingMainUI extends VerticalLayout {
         timekeepingTbl.removeAllItems();
         timekeepingTbl.setSizeFull();
         timekeepingTbl.setSelectable(true);
-        timekeepingTbl.addStyleName("employees-table-layout");
+        timekeepingTbl.addStyleName("hris-table-layout");
         
         timekeepingTbl.addContainerProperty("id", Integer.class, null);
         timekeepingTbl.addContainerProperty("from", String.class, null);

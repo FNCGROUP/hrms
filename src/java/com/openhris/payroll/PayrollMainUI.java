@@ -125,7 +125,7 @@ public class PayrollMainUI extends VerticalLayout {
         payrollTbl.setSizeFull();
         payrollTbl.setImmediate(true);
         payrollTbl.setSelectable(true);
-        payrollTbl.addStyleName("employees-table-layout");
+        payrollTbl.addStyleName("hris-table-layout");
         
         payrollTbl.addContainerProperty("id", String.class, null);        
         payrollTbl.addContainerProperty("start date", String.class, null);

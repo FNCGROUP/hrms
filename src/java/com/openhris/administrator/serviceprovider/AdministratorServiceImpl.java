@@ -9,9 +9,6 @@ import com.openhris.administrator.model.User;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.model.UserAdvanceAccess;
 import com.openhris.administrator.model.UserToolbarMenuAccess;
-import com.openhris.dao.ServiceGetDAO;
-import com.openhris.dao.ServiceInsertDAO;
-import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.administrator.service.AdministratorService;
 import java.util.List;
 
@@ -21,9 +18,6 @@ import java.util.List;
  */
 public class AdministratorServiceImpl implements AdministratorService {
 
-    ServiceGetDAO serviceGet = new ServiceGetDAO();
-    ServiceInsertDAO serviceInsert = new ServiceInsertDAO();
-    ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
     AdministratorDAO adminDAO = new AdministratorDAO();
     
     @Override
@@ -33,22 +27,22 @@ public class AdministratorServiceImpl implements AdministratorService {
 
     @Override
     public List<User> getUserList() {
-        return serviceGet.getUserList();
+        return adminDAO.getUserList();
     }
 
     @Override
     public boolean insertNewUser(String username, String password, String role, String employeeId) {
-        return serviceInsert.insertNewUser(username, password, role, employeeId);
+        return adminDAO.insertNewUser(username, password, role, employeeId);
     }
 
     @Override
     public boolean checkUsernameIfExist(String username) {
-        return serviceInsert.checkUsernameIfExist(username);
+        return adminDAO.checkUsernameIfExist(username);
     }
 
     @Override
     public boolean updateUserRole(int id, String role) {
-        return serviceUpdate.updateUserRole(id, role);
+        return adminDAO.updateUserRole(id, role);
     }
 
     @Override
@@ -58,62 +52,62 @@ public class AdministratorServiceImpl implements AdministratorService {
 
     @Override
     public boolean removeUser(int id) {
-        return serviceUpdate.removeUser(id);
+        return adminDAO.removeUser(id);
     }
 
     @Override
     public boolean insertNewBranchForAccessToUser(int userId, int tradeId, int branchId) {
-        return serviceInsert.insertNewBranchForAccessToUser(userId, tradeId, branchId);
+        return adminDAO.insertNewBranchForAccessToUser(userId, tradeId, branchId);
     }
 
     @Override
     public boolean checkBranchAssignedToUserIfExist(int branchId, int userId) {
-        return serviceGet.checkBranchAssignedToUserIfExist(branchId, userId);
+        return adminDAO.checkBranchAssignedToUserIfExist(branchId, userId);
     }
 
     @Override
     public boolean insertNewCorporateForAccessToUser(int userId, int corporateId) {
-        return serviceInsert.insertNewCorporateForAccessToUser(userId, corporateId);
+        return adminDAO.insertNewCorporateForAccessToUser(userId, corporateId);
     }
 
     @Override
     public boolean insertNewTradeForAccessToUser(int userId, int corporateId, int tradeId) {
-        return serviceInsert.insertNewTradeForAccessToUser(userId, corporateId, tradeId);
+        return adminDAO.insertNewTradeForAccessToUser(userId, corporateId, tradeId);
     }
 
     @Override
     public boolean checkTradeAssignedToUserIfExist(int tradeId, int userId) {
-        return serviceGet.checkTradeAssignedToUserIfExist(tradeId, userId);
+        return adminDAO.checkTradeAssignedToUserIfExist(tradeId, userId);
     }
 
     @Override
     public boolean checkCorporateAssignedToUserIfExist(int corporateId, int userId) {
-        return serviceGet.checkCorporateAssignedToUserIfExist(corporateId, userId);
+        return adminDAO.checkCorporateAssignedToUserIfExist(corporateId, userId);
     }
 
     @Override
     public int getUserId(String username) {
-        return serviceGet.getUserId(username);
+        return adminDAO.getUserId(username);
     }
 
     @Override
     public List<UserToolbarMenuAccess> getListOfUserToolbarMenuAccess() {
-        return serviceGet.getListOfUserToolbarMenuAccess();
+        return adminDAO.getListOfUserToolbarMenuAccess();
     }
 
     @Override
     public List<UserAdvanceAccess> getListOfUserAdvanceAccess() {
-        return serviceGet.getListOfUserAdvanceAccess();
+        return adminDAO.getListOfUserAdvanceAccess();
     }
 
     @Override
     public boolean allowAccessOfUserToolbarMenu(int userId, String menu, boolean isAllowed) {
-        return serviceUpdate.allowAccessOfUserToolbarMenu(userId, menu, isAllowed);
+        return adminDAO.allowAccessOfUserToolbarMenu(userId, menu, isAllowed);
     }
 
     @Override
     public boolean allowAccessOfUserAdvanceAccess(int userId, String menu, boolean isAllowed) {
-        return serviceUpdate.allowAccessOfUserAdvanceAccess(userId, menu, isAllowed);
+        return adminDAO.allowAccessOfUserAdvanceAccess(userId, menu, isAllowed);
     }
 
     @Override

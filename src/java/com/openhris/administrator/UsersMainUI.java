@@ -32,6 +32,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
+import com.vaadin.ui.themes.Reindeer;
 import java.util.List;
 
 /**
@@ -107,6 +108,7 @@ public class UsersMainUI extends VerticalLayout {
         username = new TextField("Username: ");
         username.setWidth("100%");
         username.setNullSettingAllowed(false);
+        username.setStyleName(Reindeer.TEXTFIELD_SMALL);
         glayout.addComponent(username, 1, 0);
         
         userRole = dropDown.populateUserRoleList(new ComboBox());
@@ -115,11 +117,13 @@ public class UsersMainUI extends VerticalLayout {
         password1 = new PasswordField("Password: ");
         password1.setWidth("100%");
         password1.setNullSettingAllowed(false);
+        password1.setStyleName(Reindeer.TEXTFIELD_SMALL);
         glayout.addComponent(password1, 0, 1);
         
         password2 = new PasswordField("Confirm Password: ");
         password2.setWidth("100%");
         password2.setNullSettingAllowed(false);
+        password2.setStyleName(Reindeer.TEXTFIELD_SMALL);
         glayout.addComponent(password2, 1, 1);
         
         Button saveNewUserButton = new Button("ADD NEW USER");
@@ -169,6 +173,7 @@ public class UsersMainUI extends VerticalLayout {
         usersTbl.setSizeFull();
         usersTbl.setImmediate(true);
         usersTbl.setSelectable(true);
+        usersTbl.addStyleName("hris-table-layout");
         
         usersTbl.addContainerProperty("id", String.class, null);
         usersTbl.addContainerProperty("name", String.class, null);
@@ -251,6 +256,8 @@ public class UsersMainUI extends VerticalLayout {
         employeesName.removeAllItems();
         employeesName.setWidth("100%");
         employeesName.setNullSelectionAllowed(false);
+        employeesName.setStyleName("my-combobox");
+//        employeesName.addStyleName("combobox-height-style");
         List<Employee> employeesList = employeeService.getEmployeePerBranchForDropDownList(branchId);        
         for(Employee e : employeesList){
             String name = e.getLastname()+ ", " + e.getFirstname() + " " + e.getMiddlename();
@@ -317,7 +324,7 @@ public class UsersMainUI extends VerticalLayout {
         vlayout.setSpacing(true);
         vlayout.setMargin(true);
         
-        final Window subWindow = new Window("REMOVE USER ACCOUNT", vlayout);
+        final Window subWindow = new Window("CHANGE USE PASSWORD", vlayout);
         subWindow.setWidth("300px");
         
         final PasswordField newPassword1 = new PasswordField("Password: ");

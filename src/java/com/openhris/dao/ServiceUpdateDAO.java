@@ -246,34 +246,7 @@ public class ServiceUpdateDAO {
         
         return result;
     }
-          
-    public boolean updateUserRole(int id, String role){
-        boolean result = false;
-        Connection conn = getConnection.connection();
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = conn.prepareStatement("UPDATE user_ SET userRole = ? WHERE id = ?");
-            pstmt.setString(1, role);
-            pstmt.setInt(2, id);
-            pstmt.executeUpdate();
-            
-            result = true;
-        } catch (SQLException ex) {
-            Logger.getLogger(ServiceUpdateDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            try {
-                if(conn != null || !conn.isClosed()){
-                    pstmt.close();
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(ServiceUpdateDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        return result;
-    }
-    
+         
     public boolean updateUserPassword(int id, String password){
         boolean result = false;
         Connection conn = getConnection.connection();
@@ -301,32 +274,6 @@ public class ServiceUpdateDAO {
         return result;
     }
     
-    public boolean removeUser(int id){
-        boolean result = false;
-        Connection conn = getConnection.connection();
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = conn.prepareStatement("DELETE FROM user_ WHERE id = ?");
-            pstmt.setInt(1, id);
-            pstmt.executeUpdate();
-            
-            result = true;
-        } catch (SQLException ex) {
-            Logger.getLogger(ServiceUpdateDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            try {
-                if(conn != null || !conn.isClosed()){
-                    pstmt.close();
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(ServiceUpdateDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        return result;
-    }
-
     public boolean removeCorporateAssignedForUser(int corporateId, int userId){
         boolean result = false;
         Connection conn = getConnection.connection();
@@ -408,58 +355,4 @@ public class ServiceUpdateDAO {
         return result;
     }
 
-    public boolean allowAccessOfUserToolbarMenu(int userId, String menu, boolean isAllowed){
-        boolean result = false;
-        Connection conn = getConnection.connection();
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = conn.prepareStatement("UPDATE user_toolbar_menu_access SET "+menu+" = ? WHERE userId = ?");
-            pstmt.setString(1, String.valueOf(isAllowed).toString());
-            pstmt.setInt(2, userId);
-            pstmt.executeUpdate();
-            
-            result = true;
-        } catch (SQLException ex) {
-            Logger.getLogger(ServiceUpdateDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            try {
-                if(conn != null || !conn.isClosed()){
-                    pstmt.close();
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(ServiceUpdateDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        return result;
-    }
-    
-    public boolean allowAccessOfUserAdvanceAccess(int userId, String menu, boolean isAllowed){
-        boolean result = false;
-        Connection conn = getConnection.connection();
-        PreparedStatement pstmt = null;
-        try {
-            pstmt = conn.prepareStatement("UPDATE user_advance_access SET "+menu+" = ? WHERE userId = ?");
-            pstmt.setString(1, String.valueOf(isAllowed).toString());
-            pstmt.setInt(2, userId);
-            pstmt.executeUpdate();
-            
-            result = true;
-        } catch (SQLException ex) {
-            Logger.getLogger(ServiceUpdateDAO.class.getName()).log(Level.SEVERE, null, ex);
-        } finally{
-            try {
-                if(conn != null || !conn.isClosed()){
-                    pstmt.close();
-                    conn.close();
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(ServiceUpdateDAO.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        
-        return result;
-    }
-    
 }

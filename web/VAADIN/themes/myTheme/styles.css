@@ -47,6 +47,32 @@ root {
     font-size: 9px;
 }
 
+.hris-table-layout{
+    font-size: 11px;
+}
+
+.v-filterselect-my-combobox .v-filterselect-input{
+    /*min-height: 28px;*/
+    font-size: 10px;
+}
+
+.v-filterselect-my-combobox .v-filterselect-button {
+    /*min-height: 28px;*/
+    font-size: 10px;
+}
+
+.v-filterselect-combobox-height-style {
+    min-height: 5px;
+}
+
+.v-filterselect-combobox-height-style .v-filterselect-input {
+    min-height: 5px;
+}
+
+.v-filterselect-combobox-height-style .v-filterselect-button {
+    min-height: 5px;
+}
+
 .logo-img{
     -moz-box-shadow: inset -5px -5px 5px #888;
     -webkit-box-shadow: inset -5px -5px 5px #888;
