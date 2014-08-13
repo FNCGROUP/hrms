@@ -163,7 +163,7 @@ public class ProcessPayrollComputation {
                 hdmfContribution = contributionUtil.getHdmf(basicSalary);
                 netSalary = payroll.getGrossPay() - (phicContribution + hdmfContribution + tax);
             }else{              
-                sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate.toString());
+                sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate);
                 netSalary = payroll.getGrossPay() - (sssContribution + tax);
             } 
             

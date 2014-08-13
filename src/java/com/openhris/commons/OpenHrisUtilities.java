@@ -203,4 +203,9 @@ public class OpenHrisUtilities {
         }
         return currentDateFormat.parse(dateConvert);
     }
+    
+    public double roundOffToTwoDecimalPlaces(double amount){
+        DecimalFormat df = new DecimalFormat("0.00");
+        return new Double(df.format(amount));
+    }
 }

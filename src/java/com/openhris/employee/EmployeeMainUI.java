@@ -543,7 +543,7 @@ public class EmployeeMainUI extends VerticalLayout {
                         util.convertStringToDouble(aflField.getValue().toString().trim()), 
                         employeeId);
                 if(result == true){
-                    employeesTable(getEmployeeList(branchId));
+//                    employeesTable(getEmployeeList(branchId));
                     (subWindow.getParent()).removeWindow(subWindow);
                 }else{
                     subWindow.getWindow().showNotification("UNABLE TO UPDATE AFL!", Window.Notification.TYPE_ERROR_MESSAGE);
