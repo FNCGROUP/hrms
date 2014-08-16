@@ -33,17 +33,17 @@ public class PayrollComputation {
     PayrollService payrollService = new PayrollServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
     
-    DecimalFormat df = new DecimalFormat("0.00");
     double totalAbsences;
     
     public double getBasicSalary(double salary, String wageEntry){
         double basic_salary;    
         if(wageEntry.equals("daily")){            
-            basic_salary = Math.round((((salary * 314) / 12)*100.0)/100.0);
+//            basic_salary = Math.round((((salary * 314) / 12)*100.0)/100.0);
+            basic_salary = util.roundOffToTwoDecimalPlaces((salary * 314) / 12);
         }else{
             basic_salary = salary;
         }
-        return new Double(df.format(basic_salary));    
+        return basic_salary;    
     }
     
     public double getHalfMonthSalary(String wageEntry, List policyList, double wage, List dateList, String employeeId){
@@ -55,7 +55,7 @@ public class PayrollComputation {
             for(int i = 0; i < policyList.size(); i++){
                 if(policyList.get(i).equals("null") || policyList.get(i).equals("working-day-off") || 
                         policyList.get(i).equals("working-holiday") || policyList.get(i).equals("paid-vacation-leave") || 
-                        policyList.get(i).equals("paid-sick-leave") || policyList.get(i).toString().isEmpty()){
+                        policyList.get(i).equals("paid-sick-leave") || policyList.get(i).toString().isEmpty()){                    
                     halfMonthSalary = halfMonthSalary + wage;                   
                 }
             }            
@@ -67,17 +67,19 @@ public class PayrollComputation {
                 Boolean checkResultNewEmployee = checkEntryDateIfBetweenDateLists(dateList, dateEmployed);
                 if(checkResultNewEmployee == true){
                     int numberOfDays = getNumberOfDaysForMonthlyEmployee(dateList, policyList);
-                    double salaryPerDay = new Double(df.format((wage/314) * 12));
+//                    double salaryPerDay = new Double(df.format((wage/314) * 12);
+                    double salaryPerDay = util.roundOffToTwoDecimalPlaces((wage/314)*12);
                     halfMonthSalary = salaryPerDay * numberOfDays;
                 }else{
                     halfMonthSalary = wage / 2;
                 }
             }else{  
-                String dateResigned = util.convertDateFormat(employeeService.getEmploymentEndDate(employeeId).toString());
+                String dateResigned = util.convertDateFormat(employeeService.getEmploymentEndDate(employeeId));
                 boolean checkResultResignedEmployee = checkEntryDateIfBetweenDateLists(dateList, dateResigned);
                 if(checkResultResignedEmployee == true){
                     int numberOfDays = getNumberOfDaysForMonthlyEmployee(dateList, policyList);
-                    double salaryPerDay = new Double(df.format((wage/314) * 12));
+//                    double salaryPerDay = new Double(df.format((wage/314) * 12));
+                    double salaryPerDay = util.roundOffToTwoDecimalPlaces((wage/314)*12);
                     halfMonthSalary = salaryPerDay * numberOfDays;
                 }else{
                     halfMonthSalary = wage / 2;
@@ -85,7 +87,8 @@ public class PayrollComputation {
             }
             
         }
-        return new Double(df.format(halfMonthSalary));
+//        return new Double(df.format(halfMonthSalary));
+        return util.roundOffToTwoDecimalPlaces(halfMonthSalary);
     }
     
     public double getTaxableSalary(double wage, String wageEntry, List policyList, double halfMonthSalary){        
@@ -103,7 +106,8 @@ public class PayrollComputation {
                 }
             }             
         }else{
-            wage = new Double(df.format((wage * 12)/314));
+//            wage = new Double(df.format((wage * 12)/314));
+            wage = util.roundOffToTwoDecimalPlaces((wage * 12)/314);
             for(int i = 0; i < policyList.size(); i++){
                 if(policyList.get(i).equals("absent") || policyList.get(i).equals("unpaid-vacation-leave") || 
                         policyList.get(i).equals("unpaid-sick-leave") || policyList.get(i).equals("suspended")){
@@ -114,7 +118,8 @@ public class PayrollComputation {
             totalAbsences = absences;
         }
         
-        return new Double(df.format(taxableSalary));
+//        return new Double(df.format(taxableSalary));
+        return util.roundOffToTwoDecimalPlaces(taxableSalary);
     }  
     
     private Integer getMonthDifference(Date date1, Date date2){   
@@ -161,7 +166,8 @@ public class PayrollComputation {
                 Logger.getLogger(com.openhris.payroll.PayrollComputation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-        return new Double(df.format(tax));
+//        return new Double(df.format(tax));
+        return util.roundOffToTwoDecimalPlaces(tax);
     }
     
     public double getAllowance(List policyList, String allowanceEntry, Double allowance){
@@ -174,7 +180,8 @@ public class PayrollComputation {
                 }
             }            
         }else{
-            double allowance_entry_per_day = new Double(df.format((allowance * 12)/314));
+//            double allowance_entry_per_day = new Double(df.format((allowance * 12)/314));
+            double allowance_entry_per_day = util.roundOffToTwoDecimalPlaces((allowance * 12)/314);
             Double halfAllowance = allowance / 2;
             for(int i = 0; i < policyList.size(); i++){
                 if(policyList.get(i).equals("absent") || policyList.get(i).equals("paternity-leave") || 
@@ -187,12 +194,14 @@ public class PayrollComputation {
             }
             halfmonth_allowance = halfAllowance;
         }
-        return new Double(df.format(halfmonth_allowance));
+//        return new Double(df.format(halfmonth_allowance));
+        return util.roundOffToTwoDecimalPlaces(halfmonth_allowance);
     }
     
     public double getAllowanceForLiquidationDeduction(List policyList, Double allowanceForLiquidation){
         double allowanceToBeDeductedPerDay = 0;
-        double allowance_entry_per_day = new Double(df.format((allowanceForLiquidation * 12)/314));
+//        double allowance_entry_per_day = new Double(df.format((allowanceForLiquidation * 12)/314));
+        double allowance_entry_per_day = util.roundOffToTwoDecimalPlaces((allowanceForLiquidation * 12)/314);
         for(int i = 0; i < policyList.size(); i++){
             if(policyList.get(i).equals("absent") || policyList.get(i).equals("unpaid-vacation-leave") || 
                         policyList.get(i).equals("unpaid-sick-leave") || policyList.get(i).equals("suspended")){
@@ -200,7 +209,8 @@ public class PayrollComputation {
             }
         }
         
-        return new Double(df.format(allowanceToBeDeductedPerDay));
+//        return new Double(df.format(allowanceToBeDeductedPerDay));
+        return util.roundOffToTwoDecimalPlaces(allowanceToBeDeductedPerDay);
     }
     
     public Integer getNumberOfDays(List dateList, List policyList){
@@ -244,7 +254,8 @@ public class PayrollComputation {
     }
     
     public double getTotalAbsences(){
-        return new Double(df.format(totalAbsences));
+//        return new Double(df.format(totalAbsences));
+        return util.roundOffToTwoDecimalPlaces(totalAbsences);
     }
     
     public double getAdjustmentFromPreviousPayroll(String employeeId){

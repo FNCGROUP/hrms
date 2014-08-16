@@ -235,4 +235,33 @@ public class TimekeepingDAO {
         
         return attendanceList;
     }
+    
+    public double getNonWorkingHolidayPay(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double nonWorkingHolidayPay = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT SUM(psHolidayPaid) AS nonWorkingHolidayPay FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                nonWorkingHolidayPay = util.convertStringToDouble(rs.getString("nonWorkingHolidayPay"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return nonWorkingHolidayPay;
+    }
 }

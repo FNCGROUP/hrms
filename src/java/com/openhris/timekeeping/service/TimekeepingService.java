@@ -23,4 +23,6 @@ public interface TimekeepingService {
     public List<Timekeeping> getTimekeepingRowData(String date, int salaryId);
     
     public Date getPreviousPayrollDate(String employeeId);
+    
+    public double getNonWorkingHolidayPay(int payrollId);
 }

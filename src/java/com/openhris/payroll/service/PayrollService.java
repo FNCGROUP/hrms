@@ -79,7 +79,7 @@ public interface PayrollService {
     
     public double getPreviousAmountReceived(int payrollId); 
     
-    public boolean insertPayrollAndAttendance(List<Payroll> insertPayrollList, 
+    public boolean insertPayrollAndAttendance(Payroll payroll, 
             List<Timekeeping> insertAttendanceList, 
             boolean EDIT_PAYROLL, 
             double adjustments, 

@@ -4,7 +4,6 @@
  */
 package com.openhris.timekeeping.serviceprovider;
 
-import com.openhris.dao.ServiceGetDAO;
 import com.openhris.timekeeping.dao.TimekeepingDAO;
 import com.openhris.timekeeping.model.Timekeeping;
 import com.openhris.timekeeping.service.TimekeepingService;
@@ -42,5 +41,10 @@ public class TimekeepingServiceImpl implements TimekeepingService {
     @Override
     public Date getPreviousPayrollDate(String employeeId) {
         return timekeepingDAO.getPreviousPayrollDate(employeeId);
+    }
+
+    @Override
+    public double getNonWorkingHolidayPay(int payrollId) {
+        return timekeepingDAO.getNonWorkingHolidayPay(payrollId);
     }
 }

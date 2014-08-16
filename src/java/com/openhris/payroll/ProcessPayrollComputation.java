@@ -7,15 +7,14 @@ package com.openhris.payroll;
 import com.hrms.utilities.ContributionUtilities;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.ServiceInsertDAO;
+import com.openhris.employee.service.EmployeeService;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.model.Payroll;
-import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
-import com.openhris.employee.service.EmployeeService;
 import com.openhris.payroll.service.PayrollService;
+import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.openhris.timekeeping.model.Timekeeping;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ public class ProcessPayrollComputation {
     PayrollComputation sal = new PayrollComputation();    
     ContributionUtilities contributionUtil = new ContributionUtilities();
     ServiceInsertDAO serviceInsert = new ServiceInsertDAO();
-    PayrollService payrollService = new PayrollServiceImpl();
+    PayrollService payrollService = new PayrollServiceImpl();    
     DecimalFormat df = new DecimalFormat("0.00");
         
     String employeeId;
@@ -47,6 +46,7 @@ public class ProcessPayrollComputation {
     List<Timekeeping> timekeepingList = new ArrayList<Timekeeping>();
     List<String> dateList = new ArrayList<String>();
     List<String> policyList = new ArrayList<String>();
+    List<String> holidayList = new ArrayList<String>();
     
     double totalLates;
     double totalUndertime;
@@ -83,6 +83,7 @@ public class ProcessPayrollComputation {
         for(Timekeeping t : tkeep){
             dateList.add(util.convertDateFormat(t.getAttendanceDate().toString()));
             policyList.add(t.getPolicy());
+            holidayList.add(t.getHoliday());
             
             totalLates = totalLates + t.getLates();
             totalUndertime = totalUndertime + t.getUndertime();
@@ -123,19 +124,21 @@ public class ProcessPayrollComputation {
             payroll.setTotalLegalHolidayPaid(totalLegalHolidayPaid);
             payroll.setTotalSpecialHolidayPaid(totalSpecialHolidayPaid);
             payroll.setTotalWorkingDayOffPaid(totalWorkingDayOffPaid);
-            payroll.setTotalNonWorkingHolidayPaid(totalNonWorkingHolidayPaid);
-
+            payroll.setTotalNonWorkingHolidayPaid(getTotalNonWorkingHolidayPay());
+            
             double basicSalary = sal.getBasicSalary(employmentWage, employmentWageEntry);
             payroll.setBasicSalary(basicSalary);
 
-            double halfMonthSalary = sal.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, employeeId);
+            double halfMonthSalary = sal.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, employeeId) + getTotalNonWorkingHolidayPay();
             payroll.setHalfMonthSalary(halfMonthSalary);
-	    
-            double taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, payroll.getGrossPay());
-            payroll.setTaxableSalary(payroll.getGrossPay());
+	    double grossPay = (payroll.getHalfMonthSalary() + payroll.getTotalOvertimePaid() + payroll.getTotalLegalHolidayPaid() + 
+                    payroll.getTotalSpecialHolidayPaid() + payroll.getTotalNightDifferentialPaid() + payroll.getTotalWorkingDayOffPaid() + 
+                    payroll.getTotalNonWorkingHolidayPaid()) - (payroll.getAbsences() + payroll.getTotalLatesDeduction() + payroll.getTotalUndertimeDeduction());
+            double taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, grossPay);
+            payroll.setTaxableSalary(grossPay);
             payroll.setAbsences(sal.getTotalAbsences());
             
-            double tax = sal.getTax(totalDependent, payroll.getGrossPay()); //get tax          
+            double tax = sal.getTax(totalDependent, grossPay); //get tax          
             if(employmentWageStatus.equals("minimum") || tax < 0){
                 tax = 0;
             }        
@@ -161,10 +164,10 @@ public class ProcessPayrollComputation {
             if(payrollPeriod.equals("15th of the month")){ 
                 phicContribution = contributionUtil.getPhilhealth(basicSalary);
                 hdmfContribution = contributionUtil.getHdmf(basicSalary);
-                netSalary = payroll.getGrossPay() - (phicContribution + hdmfContribution + tax);
+                netSalary = grossPay - (phicContribution + hdmfContribution + tax);
             }else{              
-                sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate);
-                netSalary = payroll.getGrossPay() - (sssContribution + tax);
+                sssContribution = contributionUtil.getSss(grossPay, employeeId, payrollDate);
+                netSalary = grossPay - (sssContribution + tax);
             } 
             
             payroll.setSss(sssContribution);
@@ -177,11 +180,11 @@ public class ProcessPayrollComputation {
 
             double amountToBeReceive = amountReceivable;
             payroll.setAmountToBeReceive(amountToBeReceive);  
-            payrollList.add(payroll);
+//            payrollList.add(payroll);
 
             double adjustment = sal.getAdjustmentFromPreviousPayroll(employeeId); 
 	    
-            result = payrollService.insertPayrollAndAttendance(payrollList, 
+            result = payrollService.insertPayrollAndAttendance(payroll, 
                     timekeepingList, 
                     editPayroll, 
                     adjustment, 
@@ -192,4 +195,8 @@ public class ProcessPayrollComputation {
         
         return result;
     }    
+    
+    private double getTotalNonWorkingHolidayPay(){
+        return totalNonWorkingHolidayPaid;
+    }
 }

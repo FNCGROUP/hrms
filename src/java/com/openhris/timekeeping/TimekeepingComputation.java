@@ -4,6 +4,7 @@
  */
 package com.openhris.timekeeping;
 
+import com.openhris.commons.OpenHrisUtilities;
 import java.text.DecimalFormat;
 
 /**
@@ -16,7 +17,7 @@ public class TimekeepingComputation {
 //    private Double addition;
     private String policy;
     private String holiday;
-    DecimalFormat df = new DecimalFormat("0.00");
+    OpenHrisUtilities util = new OpenHrisUtilities();
     
     public double processEmployeesLates(String policy, String holiday, int lates, Double wage){
         double rate = getHolidayRate(holiday, wage);
@@ -29,7 +30,8 @@ public class TimekeepingComputation {
             lateDeduction = lateDeductionPerMinute + wdo;
         }
         
-        return new Double(df.format(lateDeduction));
+//        return new Double(df.format(lateDeduction));
+        return util.roundOffToTwoDecimalPlaces(lateDeduction);
     }
     
     public double processEmployeesUndertime(String policy, String holiday, int undertime, Double wage){
@@ -43,7 +45,8 @@ public class TimekeepingComputation {
             undertimeDeduction = undertimeDeductionPerMinute + wdo;
         }
         
-        return new Double(df.format(undertimeDeduction));
+//        return new Double(df.format(undertimeDeduction));
+        return util.roundOffToTwoDecimalPlaces(undertimeDeduction);
     }
     
     public double processEmployeesOvertime(String policy, String holiday, int overtime, Double wage){
@@ -57,7 +60,8 @@ public class TimekeepingComputation {
             overtimeAddition = overtimeAdditionPerMinute + wdo;
         }
         
-        return new Double(df.format(overtimeAddition));
+//        return new Double(df.format(overtimeAddition));
+        return util.roundOffToTwoDecimalPlaces(overtimeAddition);
     }
     
     public double processEmployeesNightDifferential(String policy, String holiday, int nightDifferential, Double wage){
@@ -71,7 +75,8 @@ public class TimekeepingComputation {
             premiumAddition = premiumAdditionPerMinute + wdo;
         }
         
-        return new Double(df.format(premiumAddition));
+//        return new Double(df.format(premiumAddition));
+        return util.roundOffToTwoDecimalPlaces(premiumAddition);
     }
     
     public double processAdditionalHolidayPay(String holiday, Double wage){
@@ -82,7 +87,8 @@ public class TimekeepingComputation {
             rate = wage * .3;
         }
         
-        return new Double(df.format(rate));
+//        return new Double(df.format(rate));
+        return util.roundOffToTwoDecimalPlaces(rate);
     }
     
     public double processAdditionalWorkingDayOff(Double wage, String employmentWageStatus){
@@ -93,7 +99,19 @@ public class TimekeepingComputation {
             rate = wage * 1.3;
         }
         
-        return new Double(df.format(rate));
+//        return new Double(df.format(rate));
+        return util.roundOffToTwoDecimalPlaces(rate);
+    }
+    
+    public double processMultiplePremium(double wage, String employmentWageStatus){
+        Double rate;
+        if(employmentWageStatus.equals("daily")){
+            rate = wage * .3;
+        }else{
+            rate = wage * 1.3;
+        }
+        
+        return util.roundOffToTwoDecimalPlaces(rate);
     }
     
     private double getHolidayRate(String holiday, Double wage){
@@ -106,28 +124,32 @@ public class TimekeepingComputation {
             rate = wage + (wage * .3);
         }
         
-        return new Double(df.format(rate));
+//        return new Double(df.format(rate));
+        return util.roundOffToTwoDecimalPlaces(rate);
     }
     
     private double calculateDeductionPerMinute(int lates, Double rate){
         double lateDeductionPerMinute;
         double ratePerMinute = rate / 480;
         lateDeductionPerMinute = lates * ratePerMinute;
-        return new Double(df.format(lateDeductionPerMinute));
+//        return new Double(df.format(lateDeductionPerMinute));
+        return util.roundOffToTwoDecimalPlaces(lateDeductionPerMinute);
     }
     
     private double calculateOvertimePerMinute(int overtime, Double rate){
         double overtimeAdditionPerMinute;
         double ratePerMinute = rate / 480;
         overtimeAdditionPerMinute = ((overtime * ratePerMinute) + ((overtime * ratePerMinute) * .25));
-        return new Double(df.format(overtimeAdditionPerMinute));
+//        return new Double(df.format(overtimeAdditionPerMinute));
+        return util.roundOffToTwoDecimalPlaces(overtimeAdditionPerMinute);
     }
     
     private double calculateNightDifferentialPerMinute(int nightDifferential, Double rate){
         double overtimePremiumPerMinute;
         double ratePerMinute = rate / 480;
         overtimePremiumPerMinute = nightDifferential * ratePerMinute;
-        return new Double(df.format(overtimePremiumPerMinute));
+//        return new Double(df.format(overtimePremiumPerMinute));
+        return util.roundOffToTwoDecimalPlaces(overtimePremiumPerMinute);
     }
     
 }

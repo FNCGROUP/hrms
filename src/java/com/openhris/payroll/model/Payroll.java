@@ -7,6 +7,8 @@ package com.openhris.payroll.model;
 import com.openhris.employee.model.Employee;
 import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.openhris.payroll.service.PayrollService;
+import com.openhris.timekeeping.service.TimekeepingService;
+import com.openhris.timekeeping.serviceprovider.TimekeepingServiceImpl;
 import java.util.Date;
 
 /**
@@ -51,6 +53,8 @@ public class Payroll extends Employee {
     String rowStatus;
     String actionTaken;
 
+    TimekeepingService tkService = new TimekeepingServiceImpl();
+    
     public int getId(){
         return id;
     }
@@ -84,8 +88,9 @@ public class Payroll extends Employee {
     }
 
     public double getGrossPay(){
-        return grossPay = (halfMonthSalary + totalOvertimePaid + totalLegalHolidayPaid + totalSpecialHolidayPaid + 
-                totalNightDifferentialPaid + totalWorkingDayOffPaid) - (absences + totalLatesDeduction + totalUndertimeDeduction);
+        return grossPay = (getHalfMonthSalary() + getTotalOvertimePaid() + getTotalLegalHolidayPaid() + getTotalSpecialHolidayPaid() + 
+                getTotalNightDifferentialPaid() + getTotalWorkingDayOffPaid() + getTotalNonWorkingHolidayPaid()) - 
+                (getAbsences() + getTotalLatesDeduction() + getTotalUndertimeDeduction());
     }
     
     public double getAbsences() {

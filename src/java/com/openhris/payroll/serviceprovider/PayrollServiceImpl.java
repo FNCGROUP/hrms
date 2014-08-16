@@ -169,12 +169,12 @@ public class PayrollServiceImpl implements PayrollService {
     }
 
     @Override
-    public boolean insertPayrollAndAttendance(List<Payroll> insertPayrollList, 
+    public boolean insertPayrollAndAttendance(Payroll payroll, 
             List<Timekeeping> insertAttendanceList, 
             boolean EDIT_PAYROLL, 
             double adjustments, 
             int previousPayrollId) {
-        return payrollDAO.insertPayrollAndAttendance(insertPayrollList, 
+        return payrollDAO.insertPayrollAndAttendance(payroll, 
                 insertAttendanceList, 
                 EDIT_PAYROLL, 
                 adjustments, 
