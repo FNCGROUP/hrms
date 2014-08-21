@@ -61,7 +61,7 @@ public class ContributionUtilities extends VerticalLayout {
         try {
             java.util.Date date = conUtil.parsingDate(payrollDate);
             Calendar cal = Calendar.getInstance();
-            String calDate = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH)) + "-" + 15;
+            String calDate = cal.get(Calendar.YEAR) + "-" + (cal.get(Calendar.MONTH)+1) + "-" + 15;
             
             stmt = conn.createStatement();
             rs = stmt.executeQuery(" SELECT id, halfMonthSalary, absences, totalOvertimePaid, totalLegalHolidayPaid, "
@@ -86,11 +86,11 @@ public class ContributionUtilities extends VerticalLayout {
             while(rs.next()){
                 sssContribution = Double.parseDouble(rs.getString("sssContribution"));
             }            
-            System.out.println("prev payroll date: " +calDate);
-            System.out.println("previous: " +previousGrossPay);
-            System.out.println("salary: " +salary);
-            System.out.println("grossPay: " +grossPay);
-            System.out.println("sss: " +sssContribution);
+//            System.out.println("prev payroll date: " +calDate);
+//            System.out.println("previous: " +previousGrossPay);
+//            System.out.println("salary: " +salary);
+//            System.out.println("grossPay: " +grossPay);
+//            System.out.println("sss: " +sssContribution);
         } catch (SQLException ex) {
             Logger.getLogger(ContributionUtilities.class.getName()).log(Level.SEVERE, null, ex);
         } finally{

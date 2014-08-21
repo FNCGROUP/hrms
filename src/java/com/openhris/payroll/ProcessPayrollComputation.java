@@ -132,8 +132,8 @@ public class ProcessPayrollComputation {
             double halfMonthSalary = sal.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, employeeId) + getTotalNonWorkingHolidayPay();
             payroll.setHalfMonthSalary(halfMonthSalary);
 	    double grossPay = (payroll.getHalfMonthSalary() + payroll.getTotalOvertimePaid() + payroll.getTotalLegalHolidayPaid() + 
-                    payroll.getTotalSpecialHolidayPaid() + payroll.getTotalNightDifferentialPaid() + payroll.getTotalWorkingDayOffPaid() + 
-                    payroll.getTotalNonWorkingHolidayPaid()) - (payroll.getAbsences() + payroll.getTotalLatesDeduction() + payroll.getTotalUndertimeDeduction());
+                    payroll.getTotalSpecialHolidayPaid() + payroll.getTotalNightDifferentialPaid() + payroll.getTotalWorkingDayOffPaid()) - 
+                    (payroll.getAbsences() + payroll.getTotalLatesDeduction() + payroll.getTotalUndertimeDeduction());
             double taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, grossPay);
             payroll.setTaxableSalary(grossPay);
             payroll.setAbsences(sal.getTotalAbsences());

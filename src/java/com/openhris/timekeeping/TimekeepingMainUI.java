@@ -435,8 +435,12 @@ public class TimekeepingMainUI extends VerticalLayout {
                         }
                     } else if(policyStr.equals("holiday")) {
                         if(event.getProperty().getValue().equals("legal-holiday")){
-                            additionalHolidayPay = tcal.processAdditionalHolidayPay(event.getProperty().getValue().toString(), employmentWage);
-                            item.getItemProperty("psday").setValue(new Double(df.format(additionalHolidayPay))); 
+                            if(employmentWageEntry.equals("daily")){
+                                additionalHolidayPay = tcal.processAdditionalHolidayPay(event.getProperty().getValue().toString(), employmentWage);
+                                item.getItemProperty("psday").setValue(new Double(df.format(additionalHolidayPay))); 
+                            } else {
+                                item.getItemProperty("psday").setValue(0.0);
+                            }
                         } else {
                             item.getItemProperty("psday").setValue(0.0);
                         }
