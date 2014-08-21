@@ -91,24 +91,24 @@ public class TimekeepingComputation {
         return util.roundOffToTwoDecimalPlaces(rate);
     }
     
-    public double processAdditionalWorkingDayOff(Double wage, String employmentWageStatus){
-        Double rate;
-        if(employmentWageStatus.equals("daily")){
-            rate = wage * .3;
-        }else{
-            rate = wage * 1.3;
-        }
-        
+    public double processAdditionalWorkingDayOff(Double wage){
+        Double rate = wage * 1.3;        
 //        return new Double(df.format(rate));
         return util.roundOffToTwoDecimalPlaces(rate);
     }
     
-    public double processMultiplePremium(double wage, String employmentWageStatus){
-        Double rate;
-        if(employmentWageStatus.equals("daily")){
-            rate = wage * .3;
+    public double processMultiplePremiumPay(String holiday, double wage){
+        double rate = 0;
+        double wdo = 0;
+        double premium;
+        if(holiday.equals("legal-holiday")){
+            wdo = wage * 1.3;
+            premium = wdo * 2;
+            rate = premium - wdo;
         }else{
-            rate = wage * 1.3;
+            wdo = wage * 1.3;
+            premium = wdo * 1.3;
+            rate = premium - wdo;
         }
         
         return util.roundOffToTwoDecimalPlaces(rate);

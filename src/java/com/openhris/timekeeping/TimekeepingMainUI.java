@@ -379,15 +379,15 @@ public class TimekeepingMainUI extends VerticalLayout {
                         overtime.setEnabled(true);
                         nightDifferential.setEnabled(true);
                     } else if(event.getProperty().getValue().equals("working-day-off")){
-                        holidays.setEnabled(false);
+                        holidays.setEnabled(true);
                         lates.setEnabled(true);
                         undertime.setEnabled(true);
                         overtime.setEnabled(true);
                         nightDifferential.setEnabled(true);
                         
-                        additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(employmentWage, employmentWageEntry);
+                        additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(employmentWage);
                         item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
-                    }else {
+                    } else {
                         holidays.setEnabled(false);
                         lates.setEnabled(false);
                         undertime.setEnabled(false);
@@ -406,7 +406,9 @@ public class TimekeepingMainUI extends VerticalLayout {
                     Item item = table.getItem(itemId);
                     
                     String policyStr = item.getItemProperty("policy").toString();                    
-                    double additionalHolidayPay;
+                    double additionalHolidayPay = 0;
+                    double multiplePremiumPay = 0;
+                    double additionalWorkingDayOffPay = 0;
                     
                     premium.setValue(false);
                     lates.setValue("0");
@@ -444,7 +446,21 @@ public class TimekeepingMainUI extends VerticalLayout {
                         } else {
                             item.getItemProperty("psday").setValue(0.0);
                         }
-                    }                    
+                    } else if(policyStr.equals("working-day-off")) {
+                        if(event.getProperty().getValue() == null){
+                            item.getItemProperty("psday").setValue(0.0);
+                        } else if(event.getProperty().getValue().equals("legal-holiday")){
+                            additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(employmentWage);
+                            item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
+                            multiplePremiumPay = tcal.processMultiplePremiumPay(event.getProperty().getValue().toString(), employmentWage);
+                            item.getItemProperty("psday").setValue(multiplePremiumPay);
+                        } else {
+                            additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(employmentWage);
+                            item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
+                            multiplePremiumPay = tcal.processMultiplePremiumPay(event.getProperty().getValue().toString(), employmentWage);
+                            item.getItemProperty("psday").setValue(multiplePremiumPay);
+                        }
+                    }                   
                 }
             });
             holidays.setImmediate(true);
@@ -1249,9 +1265,9 @@ public class TimekeepingMainUI extends VerticalLayout {
                         event.getProperty().getValue().toString().equals("working-holiday")){
                     holidayType.setVisible(true);
                 } else if(event.getProperty().getValue().toString().equals("working-day-off")){
-                    System.out.println("employment wage: " + employmentWage);
-                    System.out.println("employment wage entry: " + employmentWageEntry);
-                    double additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(employmentWage, employmentWageEntry);
+//                    System.out.println("employment wage: " + employmentWage);
+//                    System.out.println("employment wage entry: " + employmentWageEntry);
+                    double additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(employmentWage);
                     System.out.println("wdo pay: " + additionalWorkingDayOffPay);
                     item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
                 } else{
