@@ -32,7 +32,8 @@ public class TimekeepingDAO {
         Connection conn = getConnection.connection();
         Statement stmt = null;
         ResultSet rs = null;
-        Date date = new Date();
+        String d = "2009-08-24";
+        Date date = util.parsingDate(d);
         
         try {
             stmt = conn.createStatement();
