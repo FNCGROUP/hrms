@@ -286,7 +286,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                         
         final String[] holidayList = {"legal-holiday", "special-holiday"};        
         if(employmentWageEntry.equals("monthly")){
-            employmentWage = (employmentWage * 12) / 314;
+            employmentWage = util.roundOffToTwoDecimalPlaces((employmentWage * 12) / 314);
         }
                 
         for(int i = 0; i < dateList.size(); i++){ 
