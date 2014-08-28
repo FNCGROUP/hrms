@@ -131,14 +131,14 @@ public class ProcessPayrollComputation {
 
             double halfMonthSalary = sal.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, employeeId) + getTotalNonWorkingHolidayPay();
             payroll.setHalfMonthSalary(halfMonthSalary);
-	    double grossPay = (payroll.getHalfMonthSalary() + payroll.getTotalOvertimePaid() + payroll.getTotalLegalHolidayPaid() + 
-                    payroll.getTotalSpecialHolidayPaid() + payroll.getTotalNightDifferentialPaid() + payroll.getTotalWorkingDayOffPaid()) - 
-                    (payroll.getAbsences() + payroll.getTotalLatesDeduction() + payroll.getTotalUndertimeDeduction());
-            double taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, grossPay);
-            payroll.setTaxableSalary(grossPay);
+//	    double grossPay = (payroll.getHalfMonthSalary() + payroll.getTotalOvertimePaid() + payroll.getTotalLegalHolidayPaid() + 
+//                    payroll.getTotalSpecialHolidayPaid() + payroll.getTotalNightDifferentialPaid() + payroll.getTotalWorkingDayOffPaid()) - 
+//                    (payroll.getAbsences() + payroll.getTotalLatesDeduction() + payroll.getTotalUndertimeDeduction());
+            double taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, payroll.getGrossPay());
+            payroll.setTaxableSalary(payroll.getGrossPay());            
             payroll.setAbsences(sal.getTotalAbsences());
             
-            double tax = sal.getTax(totalDependent, grossPay); //get tax          
+            double tax = sal.getTax(totalDependent, payroll.getGrossPay()); //get tax          
             if(employmentWageStatus.equals("minimum") || tax < 0){
                 tax = 0;
             }        
@@ -156,7 +156,7 @@ public class ProcessPayrollComputation {
             double afl = (allowanceForLiquidation/2) - sal.getAllowanceForLiquidationDeduction(policyList, allowanceForLiquidation);
             payroll.setAllowanceForLiquidation(afl);
 
-            double netSalary;
+            double netSalary = 0;
             double sssContribution = 0;
             double phicContribution = 0;
             double hdmfContribution = 0;
@@ -164,12 +164,12 @@ public class ProcessPayrollComputation {
             if(payrollPeriod.equals("15th of the month")){ 
                 phicContribution = contributionUtil.getPhilhealth(basicSalary);
                 hdmfContribution = contributionUtil.getHdmf(basicSalary);
-                netSalary = grossPay - (phicContribution + hdmfContribution + tax);
+                netSalary = payroll.getGrossPay() - (phicContribution + hdmfContribution + tax);
             }else{              
-                sssContribution = contributionUtil.getSss(grossPay, employeeId, payrollDate);
-                netSalary = grossPay - (sssContribution + tax);
+                sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate);
+                netSalary = payroll.getGrossPay() - (sssContribution + tax);
             } 
-            
+                        
             payroll.setSss(sssContribution);
             payroll.setPhic(phicContribution);
             payroll.setHdmf(hdmfContribution);
