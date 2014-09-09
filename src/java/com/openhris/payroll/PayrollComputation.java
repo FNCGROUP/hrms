@@ -213,7 +213,7 @@ public class PayrollComputation {
         return util.roundOffToTwoDecimalPlaces(allowanceToBeDeductedPerDay);
     }
     
-    public Integer getNumberOfDays(List dateList, List policyList){
+    public int getNumberOfDays(List dateList, List policyList){
         int numberOfDays = dateList.size();
         int count = 0;
         for(int i = 0; i < policyList.size(); i++){

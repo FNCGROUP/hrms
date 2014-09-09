@@ -5,7 +5,6 @@
 package com.openhris.timekeeping;
 
 import com.openhris.commons.OpenHrisUtilities;
-import java.text.DecimalFormat;
 
 /**
  *

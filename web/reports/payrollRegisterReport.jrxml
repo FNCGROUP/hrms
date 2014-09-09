@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="payrollRegisterReport" language="groovy" pageWidth="975" pageHeight="637" orientation="Landscape" columnWidth="960" leftMargin="5" rightMargin="10" topMargin="20" bottomMargin="20" uuid="7597f17b-009e-422f-a85f-5fabd44ba177">
 	<property name="ireport.zoom" value="1.2100000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="73"/>
 	<parameter name="BRANCH_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -11,7 +11,7 @@
 	</parameter>
 	<queryString>
 		<![CDATA[SELECT * FROM payroll_register WHERE branchId = $P{BRANCH_ID} AND 
-payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'previous' OR actionTaken IS NULL ) ORDER BY employmentWageEntry, name ASC ]]>
+payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'previous' OR actionTaken IS NULL ) ORDER BY employmentWageEntry, name ASC]]>
 	</queryString>
 	<field name="salaryId" class="java.lang.Integer"/>
 	<field name="name" class="java.lang.String"/>

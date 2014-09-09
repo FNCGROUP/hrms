@@ -89,8 +89,7 @@ public class Payroll extends Employee {
 
     public double getGrossPay(){
         return grossPay = (getHalfMonthSalary() + getTotalOvertimePaid() + getTotalLegalHolidayPaid() + getTotalSpecialHolidayPaid() + 
-                getTotalNightDifferentialPaid() + getTotalWorkingDayOffPaid() + getTotalNonWorkingHolidayPaid()) - 
-                (getAbsences() + getTotalLatesDeduction() + getTotalUndertimeDeduction());
+                getTotalNightDifferentialPaid() + getTotalWorkingDayOffPaid()) - (getAbsences() + getTotalLatesDeduction() + getTotalUndertimeDeduction());
     }
     
     public double getAbsences() {
