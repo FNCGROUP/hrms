@@ -330,7 +330,7 @@ public class CompanyModule extends VerticalLayout{
                 boolean result = query.saveBranchName(tradeId, branch_name);
                 if(result == true){
                     companyTable();
-                    getWindow().showNotification("Added BRANCH on "+branch_name.toUpperCase(), Window.Notification.TYPE_HUMANIZED_MESSAGE);
+//                    getWindow().showNotification("Added BRANCH on "+branch_name.toUpperCase(), Window.Notification.TYPE_HUMANIZED_MESSAGE);
                     (subWindow.getParent()).removeWindow(subWindow);                    
                 }else{
                     getWindow().showNotification("SQL Error");

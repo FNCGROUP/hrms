@@ -55,7 +55,7 @@ public class TimekeepingComputation {
         if(policy == null || policy.equals("working-holiday") || policy.isEmpty()){
             overtimeAddition = overtimeAdditionPerMinute;
         }else if(policy.equals("working-day-off")){
-            double wdo = overtimeAdditionPerMinute * .3;
+            double wdo = overtimeAdditionPerMinute * 1.3;
             overtimeAddition = overtimeAdditionPerMinute + wdo;
         }
         

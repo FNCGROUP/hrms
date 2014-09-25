@@ -150,7 +150,7 @@ public class ProcessPayrollComputation {
             int numberOfDays = sal.getNumberOfDays(dateList, policyList);
             payroll.setNumOfDays(numberOfDays);
 
-            double afl = (allowanceForLiquidation/2) - sal.getAllowanceForLiquidationDeduction(policyList, allowanceForLiquidation);
+            double afl = sal.getAllowanceForLiquidationDeduction(dateList, policyList, allowanceForLiquidation);
             payroll.setAllowanceForLiquidation(afl);
 
             double netSalary = 0;

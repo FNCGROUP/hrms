@@ -198,19 +198,24 @@ public class PayrollComputation {
         return util.roundOffToTwoDecimalPlaces(halfmonth_allowance);
     }
     
-    public double getAllowanceForLiquidationDeduction(List policyList, Double allowanceForLiquidation){
+    public double getAllowanceForLiquidationDeduction(List dateList, List policyList, Double allowanceForLiquidation){
+        int numberOfDays = dateList.size();
+        double allowance_for_liquidation = 0;
         double allowanceToBeDeductedPerDay = 0;
-//        double allowance_entry_per_day = new Double(df.format((allowanceForLiquidation * 12)/314));
         double allowance_entry_per_day = util.roundOffToTwoDecimalPlaces((allowanceForLiquidation * 12)/314);
         for(int i = 0; i < policyList.size(); i++){
             if(policyList.get(i).equals("absent") || policyList.get(i).equals("unpaid-vacation-leave") || 
-                        policyList.get(i).equals("unpaid-sick-leave") || policyList.get(i).equals("suspended")){
+                    policyList.get(i).equals("unpaid-sick-leave") || policyList.get(i).equals("suspended") || 
+                    policyList.get(i).equals("day-off")){
                 allowanceToBeDeductedPerDay =  allowanceToBeDeductedPerDay + allowance_entry_per_day;
             }
         }
-        
-//        return new Double(df.format(allowanceToBeDeductedPerDay));
-        return util.roundOffToTwoDecimalPlaces(allowanceToBeDeductedPerDay);
+//        System.out.println("afl before deduction: " + allowance_for_liquidation);
+        allowance_for_liquidation = (numberOfDays * allowance_entry_per_day) - allowanceToBeDeductedPerDay;
+//        System.out.println("afl per day: " + allowance_entry_per_day);
+//        System.out.println("afl deduction: " + allowanceToBeDeductedPerDay);
+//        System.out.println("afl after deduction: " + allowance_for_liquidation);
+        return util.roundOffToTwoDecimalPlaces(allowance_for_liquidation);
     }
     
     public int getNumberOfDays(List dateList, List policyList){
