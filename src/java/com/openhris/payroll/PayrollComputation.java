@@ -205,13 +205,12 @@ public class PayrollComputation {
         double allowance_entry_per_day = util.roundOffToTwoDecimalPlaces((allowanceForLiquidation * 12)/314);
         for(int i = 0; i < policyList.size(); i++){
             if(policyList.get(i).equals("absent") || policyList.get(i).equals("unpaid-vacation-leave") || 
-                    policyList.get(i).equals("unpaid-sick-leave") || policyList.get(i).equals("suspended") || 
-                    policyList.get(i).equals("day-off")){
+                    policyList.get(i).equals("unpaid-sick-leave") || policyList.get(i).equals("suspended")){
                 allowanceToBeDeductedPerDay =  allowanceToBeDeductedPerDay + allowance_entry_per_day;
             }
         }
 //        System.out.println("afl before deduction: " + allowance_for_liquidation);
-        allowance_for_liquidation = (numberOfDays * allowance_entry_per_day) - allowanceToBeDeductedPerDay;
+        allowance_for_liquidation = (allowanceForLiquidation/2) - allowanceToBeDeductedPerDay;
 //        System.out.println("afl per day: " + allowance_entry_per_day);
 //        System.out.println("afl deduction: " + allowanceToBeDeductedPerDay);
 //        System.out.println("afl after deduction: " + allowance_for_liquidation);
