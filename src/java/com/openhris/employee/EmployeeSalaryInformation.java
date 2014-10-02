@@ -8,10 +8,13 @@ package com.openhris.employee;
 
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
+import com.openhris.company.service.CompanyService;
+import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.service.SalaryInformationService;
 import com.openhris.employee.serviceprovider.SalaryInformationServiceImpl;
 import com.vaadin.data.Container;
+import com.vaadin.data.Property;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -30,9 +33,17 @@ public class EmployeeSalaryInformation extends VerticalLayout{
     SalaryInformationService siService = new SalaryInformationServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
     DropDownComponent dropDown = new DropDownComponent();
+    CompanyService companyService = new CompanyServiceImpl();
+    
+    ComboBox corporate = new ComboBox("Corporate: ");
+    ComboBox trade = new ComboBox("Trade: ");
+    ComboBox branch = new ComboBox("Branch: ");
     
     GridLayout glayout;    
     String employeeId;
+    int corporateId;
+    int tradeId;
+    int branchId;
     
     public EmployeeSalaryInformation(){        
     }
@@ -52,7 +63,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
     }
     
     public ComponentContainer layout(){
-        glayout = new GridLayout(3, 4);
+        glayout = new GridLayout(3, 5);
         glayout.setSpacing(true);          
         glayout.setWidth("100%");
 	glayout.setHeight("100%");
@@ -170,6 +181,23 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         glayout.addComponent(updateBtn, 1, 3, 2, 3);
         glayout.setComponentAlignment(updateBtn, Alignment.BOTTOM_CENTER);
         
+        Button setContributionBtn = new Button("SET EMPLOYEE'S CONTRIBUTION MAIN BRANCH");
+        setContributionBtn.setWidth("100%");
+        setContributionBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                Window subWindow = setContributionMainBranch();
+                if(subWindow.getParent() == null){
+                    getWindow().addWindow(subWindow);
+                }
+                subWindow.setModal(true);
+                subWindow.center();
+            }
+        });
+        glayout.addComponent(setContributionBtn, 1, 4, 2, 4);
+        glayout.setComponentAlignment(setContributionBtn, Alignment.BOTTOM_CENTER);
+        
         if(employeeId != null){
             EmploymentInformation employmentInformation = siService.getEmployeeSalaryInformation(getEmployeeId());
             
@@ -203,6 +231,70 @@ public class EmployeeSalaryInformation extends VerticalLayout{
     
     private String getEmployeeId(){
         return employeeId;
+    }
+    
+    private Window setContributionMainBranch(){
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setMargin(true);
+        vlayout.setSpacing(true);
+        
+        Window subWindow = new Window("Set Branch", vlayout);
+        subWindow.setWidth("300px");
+        
+        corporate = dropDown.populateCorporateComboBox(new ComboBox());
+        corporate.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                if(corporate.getValue() == null){                    
+                } else {
+                    corporateId = companyService.getCorporateId(corporate.getValue().toString());
+                    trade = dropDown.populateTradeComboBox(trade, corporateId);
+                }
+            }
+        });
+        corporate.setWidth("100%");
+        subWindow.addComponent(corporate);
+                
+        trade.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                if(trade.getValue() == null){                    
+                } else {
+                    tradeId = companyService.getTradeId(trade.getValue().toString(), corporateId);
+                    branch = dropDown.populateBranchComboBox(branch, tradeId, corporateId);
+                }                
+            }
+        });
+        trade.setWidth("100%");
+        subWindow.addComponent(trade);
+        
+        branch.setWidth("100%");
+        branch.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                if(branch.getValue() == null){                    
+                } else {
+                    branchId = companyService.getBranchId(tradeId, branch.getValue().toString());
+                }
+            }
+        });
+        subWindow.addComponent(branch);
+                
+        Button updateBtn = new Button("SET BRANCH");
+        updateBtn.setWidth("100%");
+        updateBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+        });
+        subWindow.addComponent(updateBtn);
+        
+        return subWindow;
     }
     
 }

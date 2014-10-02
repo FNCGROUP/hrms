@@ -17,8 +17,6 @@ import com.openhris.administrator.ChangePassword;
 import com.openhris.administrator.UserAdvanceAccessMainUI;
 import com.openhris.administrator.UserToolbarMenuAccessMainUI;
 import com.openhris.administrator.UsersMainUI;
-import com.openhris.administrator.commons.CheckIfWindowIsClose;
-import com.openhris.administrator.commons.SettingsButton;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.service.AdministratorService;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
@@ -358,7 +356,6 @@ public class MainApp extends Application {
                 GlobalVariables.getUserRole().equals("audit")){
             companyList = companyService.getAllCorporation();
         } else {
-//            userId = administratorService.getUserId(GlobalVariables.getUsername());
             companyList = companyService.getCorporateListAssignedForUser(getUserId());
         }        
         

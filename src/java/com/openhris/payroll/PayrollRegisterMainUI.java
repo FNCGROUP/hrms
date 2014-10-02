@@ -6,7 +6,6 @@ package com.openhris.payroll;
 
 import com.hrms.beans.AdvancesTypeBean;
 import com.hrms.dbconnection.GetSQLConnection;
-import com.hrms.modules.PayrollRegisterModule;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
@@ -290,7 +289,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 OpenHrisReports reports = new OpenHrisReports(getBranchId(), util.convertDateFormat(payrollDate.getValue().toString()));
-                Window subWindow = reports.payrollRegisterTable(true);
+                Window subWindow = reports.payrollRegisterTable(true, payrollRegisterTbl);
                 subWindow.setModal(true);
                 if(subWindow.getParent() == null){
                     getWindow().addWindow(subWindow);
