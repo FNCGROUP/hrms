@@ -146,6 +146,9 @@ public class ProcessPayrollComputation {
                 taxableSalary = taxableSalary - (sssContribution);
             }
             
+            payroll.setSss(sssContribution);
+            payroll.setPhic(phicContribution);
+            payroll.setHdmf(hdmfContribution);
             payroll.setTaxableSalary(taxableSalary);            
             payroll.setAbsences(sal.getTotalAbsences());            
             
@@ -166,11 +169,7 @@ public class ProcessPayrollComputation {
 
             double afl = sal.getAllowanceForLiquidationDeduction(dateList, policyList, allowanceForLiquidation);
             payroll.setAllowanceForLiquidation(afl);
-                                    
-            payroll.setSss(sssContribution);
-            payroll.setPhic(phicContribution);
-            payroll.setHdmf(hdmfContribution);
-            
+                                                
             double netSalary = taxableSalary - tax;
             payroll.setNetSalary(netSalary);
 
