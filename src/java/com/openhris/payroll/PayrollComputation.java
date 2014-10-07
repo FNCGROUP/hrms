@@ -106,7 +106,6 @@ public class PayrollComputation {
                 }
             }             
         }else{
-//            wage = new Double(df.format((wage * 12)/314));
             wage = util.roundOffToTwoDecimalPlaces((wage * 12)/314);
             for(int i = 0; i < policyList.size(); i++){
                 if(policyList.get(i).equals("absent") || policyList.get(i).equals("unpaid-vacation-leave") || 

@@ -19,7 +19,8 @@
 (SELECT ROUND(SUM(legalHolidayPaid), 2) FROM timekeeping_table Where payrollId = s.id) AS legalHolidayPaid, 
 (SELECT ROUND(SUM(specialHolidayPaid), 2) FROM timekeeping_table Where payrollId = s.id) AS specialHolidayPaid, 
 (SELECT ROUND(SUM(workingDayOffPaid), 2) FROM timekeeping_table Where payrollId = s.id) AS workingDayOffPaid, b.name AS branch, tn.name AS tradeName, cn.name AS corporateName, b.address AS address, s.payrollDate AS payrollDate, s.attendancePeriodFrom AS startDate, 
-s.attendancePeriodTo AS cutOffDate
+s.attendancePeriodTo AS cutOffDate, 
+s.numberOfDays AS numberOfDays
 FROM payroll_table s INNER JOIN employee e ON s.employeeId = e.employeeId INNER JOIN branch_table b ON e.branchId = b.id INNER JOIN trade_table tn ON b.tradeId = tn.id INNER JOIN corporate_table cn ON 
 tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} ORDER BY e.employmentWageEntry, e.lastname ASC]]>
 	</queryString>
@@ -45,6 +46,7 @@ tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{P
 	<field name="payrollDate" class="java.sql.Date"/>
 	<field name="startDate" class="java.sql.Date"/>
 	<field name="cutOffDate" class="java.sql.Date"/>
+	<field name="numberOfDays" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -111,14 +113,14 @@ tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{P
 	<columnHeader>
 		<band height="37" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="9547e7ed-5aa1-4b9f-82ce-9b327572df9a" x="71" y="0" width="117" height="35"/>
+				<reportElement uuid="9547e7ed-5aa1-4b9f-82ce-9b327572df9a" x="71" y="0" width="110" height="35"/>
 				<textElement verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="dda899c7-9007-4789-8f1c-d7b65840ef2c" x="262" y="0" width="40" height="35"/>
+				<reportElement uuid="dda899c7-9007-4789-8f1c-d7b65840ef2c" x="267" y="1" width="35" height="35"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -200,30 +202,37 @@ tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{P
 			<staticText>
 				<reportElement uuid="1c7a2dad-9336-4ba9-b194-4b1c40e444e3" x="1" y="0" width="70" height="34"/>
 				<textElement verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="7"/>
 				</textElement>
 				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="6ecad1f6-27ed-47a3-b050-1ce66e46a8c0" x="217" y="0" width="45" height="34"/>
+				<reportElement uuid="6ecad1f6-27ed-47a3-b050-1ce66e46a8c0" x="201" y="1" width="35" height="34"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isBold="false"/>
+					<font size="7" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Absences]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b09c827f-e739-4b9c-aa89-b635515249bb" x="236" y="1" width="31" height="33"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[No. of Days]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement uuid="ec06e552-352a-40c9-a3f2-8cd94492809b" x="71" y="0" width="117" height="20"/>
+				<reportElement uuid="ec06e552-352a-40c9-a3f2-8cd94492809b" x="71" y="0" width="110" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="###0">
-				<reportElement uuid="a628ec39-4990-4773-9e5b-ae237ea3855a" x="262" y="0" width="40" height="20"/>
+				<reportElement uuid="a628ec39-4990-4773-9e5b-ae237ea3855a" x="267" y="1" width="35" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -302,23 +311,30 @@ tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{P
 			<textField>
 				<reportElement uuid="a728e91c-ff76-4aa9-89ed-0ab103f9abd7" x="1" y="1" width="70" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="0bdac53c-7a65-4ff2-a334-1efe857c6acc" x="188" y="0" width="29" height="20"/>
+				<reportElement uuid="0bdac53c-7a65-4ff2-a334-1efe857c6acc" x="181" y="1" width="20" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="8"/>
+					<font size="7"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{entry}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="60b32534-ad20-4556-b292-a6717502df57" x="217" y="0" width="45" height="20"/>
+				<reportElement uuid="60b32534-ad20-4556-b292-a6717502df57" x="201" y="1" width="35" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="8" isBold="false"/>
+					<font size="7" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{absences}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="7e2f056c-27d4-4329-a482-9fb2b8cc78a0" x="236" y="1" width="31" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{numberOfDays}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

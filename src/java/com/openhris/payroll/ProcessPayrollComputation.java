@@ -131,11 +131,25 @@ public class ProcessPayrollComputation {
             
             double halfMonthSalary = sal.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, employeeId) + getTotalNonWorkingHolidayPay();
             payroll.setHalfMonthSalary(halfMonthSalary);
-            double taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, payroll.getGrossPay());
-            payroll.setTaxableSalary(payroll.getGrossPay());            
-            payroll.setAbsences(sal.getTotalAbsences());
             
-            double tax = sal.getTax(totalDependent, payroll.getGrossPay()); //get tax          
+            double taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, payroll.getGrossPay());
+            double sssContribution = 0;
+            double phicContribution = 0;
+            double hdmfContribution = 0;
+            
+            if(payrollPeriod.equals("15th of the month")){ 
+                phicContribution = contributionUtil.getPhilhealth(basicSalary);
+                hdmfContribution = contributionUtil.getHdmf(basicSalary);
+                taxableSalary = taxableSalary - (phicContribution + hdmfContribution);
+            }else{              
+                sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate);
+                taxableSalary = taxableSalary - (sssContribution);
+            }
+            
+            payroll.setTaxableSalary(taxableSalary);            
+            payroll.setAbsences(sal.getTotalAbsences());            
+            
+            double tax = sal.getTax(totalDependent, taxableSalary); //get tax          
             if(employmentWageStatus.equals("minimum") || tax < 0){
                 tax = 0;
             }        
@@ -152,32 +166,19 @@ public class ProcessPayrollComputation {
 
             double afl = sal.getAllowanceForLiquidationDeduction(dateList, policyList, allowanceForLiquidation);
             payroll.setAllowanceForLiquidation(afl);
-
-            double netSalary = 0;
-            double sssContribution = 0;
-            double phicContribution = 0;
-            double hdmfContribution = 0;
-            
-            if(payrollPeriod.equals("15th of the month")){ 
-                phicContribution = contributionUtil.getPhilhealth(basicSalary);
-                hdmfContribution = contributionUtil.getHdmf(basicSalary);
-                netSalary = payroll.getGrossPay() - (phicContribution + hdmfContribution + tax);
-            }else{              
-                sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate);
-                netSalary = payroll.getGrossPay() - (sssContribution + tax);
-            } 
-                        
+                                    
             payroll.setSss(sssContribution);
             payroll.setPhic(phicContribution);
             payroll.setHdmf(hdmfContribution);
+            
+            double netSalary = taxableSalary - tax;
             payroll.setNetSalary(netSalary);
 
             double amountReceivable = new Double(df.format(netSalary + allowance + afl));  
             payroll.setAmountReceivable(amountReceivable);
 
             double amountToBeReceive = amountReceivable;
-            payroll.setAmountToBeReceive(amountToBeReceive);  
-//            payrollList.add(payroll);
+            payroll.setAmountToBeReceive(amountToBeReceive); 
 
             double adjustment = sal.getAdjustmentFromPreviousPayroll(employeeId); 
 	    
