@@ -108,6 +108,10 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         tinField.setWidth("200px");
         glayout.addComponent(tinField, 0, 3);
         
+        final ComboBox employeeDependent = dropDown.populateTotalDependent(new ComboBox());
+        employeeDependent.setWidth("100%");
+        glayout.addComponent(employeeDependent, 0, 4);
+        
         Button updateBtn = new Button("UPDATE SALARY");
         updateBtn.setWidth("100%");
         updateBtn.addListener(new Button.ClickListener() {
@@ -170,6 +174,12 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                 employmentInformation.setHdmfNo((hdmfField.getValue() == null) ? "N/A" : hdmfField.getValue().toString().trim());
                 employmentInformation.setTinNo((tinField.getValue() == null) ? "N/A" : tinField.getValue().toString().trim());
                 
+                if(util.checkInputIfInteger(employeeDependent.getValue().toString())){
+                    employmentInformation.setTotalDependent(employeeDependent.getItemCaption(employeeDependent.getValue()));
+                } else {
+                    employmentInformation.setTotalDependent(employeeDependent.getValue().toString());
+                }
+                
                 boolean result = siService.updateEmployeeSalaryInformation(getEmployeeId(), employmentInformation);
                 if(result){
                     getWindow().showNotification("Update Employment Salary Information!", Window.Notification.TYPE_TRAY_NOTIFICATION);
@@ -180,7 +190,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         });
         glayout.addComponent(updateBtn, 1, 3, 2, 3);
         glayout.setComponentAlignment(updateBtn, Alignment.BOTTOM_CENTER);
-        
+                
         Button setContributionBtn = new Button("SET EMPLOYEE'S CONTRIBUTION MAIN BRANCH");
         setContributionBtn.setWidth("100%");
         setContributionBtn.addListener(new Button.ClickListener() {
@@ -224,6 +234,10 @@ public class EmployeeSalaryInformation extends VerticalLayout{
             phicField.setValue(employmentInformation.getPhicNo());
             hdmfField.setValue(employmentInformation.gethdmfNo());
             tinField.setValue(employmentInformation.getTinNo());
+            
+            Object employeeTotalDependentId = employeeDependent.addItem();
+            employeeDependent.setItemCaption(employeeTotalDependentId, employmentInformation.getTotalDependent());
+            employeeDependent.setValue(employeeTotalDependentId);
         }
         
         return glayout;
@@ -283,7 +297,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         });
         subWindow.addComponent(branch);
                 
-        Button updateBtn = new Button("SET BRANCH");
+        Button updateBtn = new Button("SET BRANCH for CONTRIBUTION");
         updateBtn.setWidth("100%");
         updateBtn.addListener(new Button.ClickListener() {
 

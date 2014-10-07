@@ -47,6 +47,7 @@ public class SalaryInformationDAO {
                 employeeInformation.setTinNo(rs.getString("tinNo"));
                 employeeInformation.setPhicNo(rs.getString("phicNo"));
                 employeeInformation.setHdmfNo(rs.getString("hdmfNo"));
+                employeeInformation.setTotalDependent(rs.getString("totalDependent"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,7 +73,8 @@ public class SalaryInformationDAO {
         
         try {
             pstmt = conn.prepareStatement("UPDATE employee SET employmentStatus = ?, employmentWageStatus = ?, employmentWageEntry = ?, "
-                    + "employmentWage = ?, allowance = ?, allowanceEntry = ?, sssNo = ?, tinNo = ?, phicNo = ?, hdmfNo = ? WHERE employeeId = ? ");
+                    + "employmentWage = ?, allowance = ?, allowanceEntry = ?, sssNo = ?, tinNo = ?, phicNo = ?, hdmfNo = ?, totalDependent = ? "
+                    + "WHERE employeeId = ? ");
             pstmt.setString(1, employeeInformation.getEmploymentStatus());
             pstmt.setString(2, employeeInformation.getEmploymentWageStatus());
             pstmt.setString(3, employeeInformation.getEmploymentWageEntry());
@@ -83,7 +85,8 @@ public class SalaryInformationDAO {
             pstmt.setString(8, employeeInformation.getTinNo());
             pstmt.setString(9, employeeInformation.getPhicNo());
             pstmt.setString(10, employeeInformation.gethdmfNo());
-            pstmt.setString(11, employeeId);
+            pstmt.setString(11, employeeInformation.getTotalDependent());
+            pstmt.setString(12, employeeId);
             pstmt.executeUpdate();
             
             result = true;
