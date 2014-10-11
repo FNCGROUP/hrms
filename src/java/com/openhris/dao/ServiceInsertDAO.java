@@ -88,6 +88,11 @@ public class ServiceInsertDAO {
                 pstmt.setDouble(2, ph.getEmploymentWage());
                 pstmt.setString(3, util.convertDateFormat(ph.getEntryDate().toString()));
                 pstmt.executeUpdate();
+                
+                pstmt = conn.prepareStatement("INSERT INTO employee_contribution_main(employeeId, branchId) VALUES(?, ?)");
+                pstmt.setString(1, employeeId);
+                pstmt.setInt(2, ph.getBranchId());
+                pstmt.executeUpdate();
             }
             conn.commit();
             System.out.println("Transaction commit...");

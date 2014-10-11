@@ -18,4 +18,5 @@ public interface SalaryInformationService {
     
     public boolean updateEmployeeSalaryInformation(String employeeId, EmploymentInformation employmentInformation);
     
+    public boolean updateEmployeeContributionBranch(String employeeId, int branchId, String remarks);    
 }

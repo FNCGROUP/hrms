@@ -400,9 +400,9 @@ public class PayrollDAO {
                 PayrollRegister pr = new PayrollRegister();
                 pr.setId(util.convertStringToInteger(rs.getString("salaryId")));
                 pr.setName(rs.getString("name"));
-                pr.setNumOfDays(util.convertStringToInteger(rs.getString("numberOfDays")));
-                pr.setRatePerDay(util.convertStringToDouble(rs.getString("ratePerDay")));
+                pr.setNumOfDays(util.convertStringToInteger(rs.getString("numberOfDays")));                
                 pr.setBasicSalary(util.convertStringToDouble(rs.getString("basicSalary")));
+                pr.setRatePerDay(util.convertStringToDouble(rs.getString("ratePerDay")));
                 pr.setHalfMonthSalary(util.convertStringToDouble(rs.getString("halfMonthSalary")));
                 pr.setTotalOvertimePaid(util.convertStringToDouble(rs.getString("overtimePay")));
                 pr.setTotalLegalHolidayPaid(util.convertStringToDouble(rs.getString("legalHolidayPay")));

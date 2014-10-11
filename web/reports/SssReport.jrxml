@@ -2,11 +2,11 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SssReport" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2c4b265e-0d10-40fe-9eac-7fe89e85ae4f">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="0"/>
+	<property name="ireport.y" value="25"/>
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT * FROM sss_schedule WHERE branchId = $P{BRANCH_ID} AND payrollDate = $P{PAYROLL_DATE} AND (actionTaken IS NULL OR actionTaken = 'previous') ORDER BY name ASC]]>
+		<![CDATA[SELECT * FROM sss_schedule WHERE (SELECT branchId FROM employee_contribution_main WHERE employeeId = sss_schedule.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND payrollDate = $P{PAYROLL_DATE} AND (actionTaken IS NULL OR actionTaken = 'previous') ORDER BY name ASC]]>
 	</queryString>
 	<field name="sssNo" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>
@@ -24,6 +24,7 @@
 	<field name="lastname" class="java.lang.String"/>
 	<field name="actionTaken" class="java.lang.String"/>
 	<field name="currentStatus" class="java.lang.String"/>
+	<field name="employeeId" class="java.lang.String"/>
 	<variable name="totalEeShare" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{eeShare}]]></variableExpression>
 	</variable>

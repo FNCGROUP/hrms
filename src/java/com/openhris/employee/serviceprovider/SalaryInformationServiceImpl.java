@@ -27,5 +27,10 @@ public class SalaryInformationServiceImpl implements SalaryInformationService{
     public boolean updateEmployeeSalaryInformation(String employeeId, EmploymentInformation employmentInformation) {
         return siDAO.updateEmployeeSalaryInformation(employeeId, employmentInformation);
     }
+
+    @Override
+    public boolean updateEmployeeContributionBranch(String employeeId, int branchId, String remarks) {
+        return siDAO.updateEmployeeContributionBranch(employeeId, branchId, remarks);
+    }
     
 }

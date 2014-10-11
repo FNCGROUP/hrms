@@ -20,6 +20,7 @@ import com.openhris.administrator.UsersMainUI;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.service.AdministratorService;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
+import com.openhris.commons.AboutHris;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.company.model.Branch;
 import com.openhris.company.model.Company;
@@ -151,6 +152,8 @@ public class MainApp extends Application {
             @Override
             public void buttonClick(ClickEvent event) {
                 Window subWindow = aboutHrms();
+//                AboutHris aboutHris = new AboutHris();
+//                Window subWindow = aboutHris.aboutHris();
                 if(subWindow.getParent() == null){
                     window.getWindow().addWindow(subWindow);
                 }
@@ -761,11 +764,11 @@ public class MainApp extends Application {
         final Window subWindow = new Window("About HRMS", vlayout);
         subWindow.setWidth("300px");
                 
-        Label version = new Label("Version: <b>BETA</b>");
+        Label version = new Label("Version: <b>1.0</b>");
         version.setContentMode(Label.CONTENT_XHTML);
         subWindow.addComponent(version);
         
-        Label title = new Label("Title: <b>Human Resource Management System</b>");
+        Label title = new Label("Title: <b>Human Resource Information System</b>");
         title.setContentMode(Label.CONTENT_XHTML);
         subWindow.addComponent(title);
         

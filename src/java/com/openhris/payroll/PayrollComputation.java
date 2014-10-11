@@ -62,14 +62,20 @@ public class PayrollComputation {
         }else{
             String dateEmployed = employeeService.getEmploymentEntryDate(employeeId);            
             boolean checkIfResigned = employeeService.getEmployeeCurrentStatus(employeeId) != null;
+            int count = 0;
+            
+            for(int i = 0; i < policyList.size(); i++){
+                if(policyList.get(i).equals("day-off")){
+                    count++;
+                }
+            }
             
             if(checkIfResigned == false){
                 Boolean checkResultNewEmployee = checkEntryDateIfBetweenDateLists(dateList, dateEmployed);
                 if(checkResultNewEmployee == true){
                     int numberOfDays = getNumberOfDaysForMonthlyEmployee(dateList, policyList);
-//                    double salaryPerDay = new Double(df.format((wage/314) * 12);
                     double salaryPerDay = util.roundOffToTwoDecimalPlaces((wage/314)*12);
-                    halfMonthSalary = salaryPerDay * numberOfDays;
+                    halfMonthSalary = salaryPerDay * (numberOfDays - count);
                 }else{
                     halfMonthSalary = wage / 2;
                 }
@@ -78,9 +84,8 @@ public class PayrollComputation {
                 boolean checkResultResignedEmployee = checkEntryDateIfBetweenDateLists(dateList, dateResigned);
                 if(checkResultResignedEmployee == true){
                     int numberOfDays = getNumberOfDaysForMonthlyEmployee(dateList, policyList);
-//                    double salaryPerDay = new Double(df.format((wage/314) * 12));
                     double salaryPerDay = util.roundOffToTwoDecimalPlaces((wage/314)*12);
-                    halfMonthSalary = salaryPerDay * numberOfDays;
+                    halfMonthSalary = salaryPerDay * (numberOfDays - count);
                 }else{
                     halfMonthSalary = wage / 2;
                 }

@@ -435,7 +435,6 @@ public class EmployeePersonalInformation extends VerticalLayout{
 	});
         glayout.addComponent(saveButton, 2, 13, 3, 13);
                         
-//        glayout.setColumnExpandRatio(0, .10f);
         glayout.setColumnExpandRatio(1, .10f);
         glayout.setColumnExpandRatio(2, .10f);
         glayout.setColumnExpandRatio(3, .10f);

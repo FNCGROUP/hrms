@@ -19,7 +19,6 @@ import com.openhris.employee.service.EmployeeService;
 import com.openhris.payroll.service.PayrollService;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
-import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.AbstractSelect;
@@ -28,7 +27,6 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
@@ -304,13 +302,13 @@ public class PayrollMainUI extends VerticalLayout {
                 if(event.getPropertyId().equals("phic")){
                     int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
                     double phicAmount = Double.parseDouble(item.getItemProperty("phic").toString());
-                    double netSalary = Double.parseDouble(item.getItemProperty("net pay").toString());
+                    double netPay = Double.parseDouble(item.getItemProperty("net pay").toString());
                     double amountToBeReceive = Double.parseDouble(item.getItemProperty("amount to be receive").toString());
                     double amountReceivable = Double.parseDouble(item.getItemProperty("amount received").toString());
                     
                     Window subWindow = updatePhicContribution(payrollId, 
                             phicAmount, 
-                            netSalary, 
+                            netPay, 
                             amountToBeReceive, 
                             amountReceivable);
                     if(subWindow.getParent() == null){
@@ -323,13 +321,13 @@ public class PayrollMainUI extends VerticalLayout {
                 if(event.getPropertyId().equals("hdmf")){
                     int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
                     double hdmfContribution = Double.parseDouble(item.getItemProperty("hdmf").toString());
-                    double netSalary = Double.parseDouble(item.getItemProperty("net pay").toString());
+                    double netPay = Double.parseDouble(item.getItemProperty("net pay").toString());
                     double amountToBeReceive = Double.parseDouble(item.getItemProperty("amount to be receive").toString());
                     double amountReceivable = Double.parseDouble(item.getItemProperty("amount received").toString());
                     
                     Window subWindow = updateHdmfContribution(payrollId, 
                             hdmfContribution, 
-                            netSalary, 
+                            netPay, 
                             amountToBeReceive, 
                             amountReceivable);
                     if(subWindow.getParent() == null){
@@ -472,7 +470,7 @@ public class PayrollMainUI extends VerticalLayout {
     
     private Window updatePhicContribution(final int payrollId, 
             final double phicAmount, 
-            final double netSalary, 
+            final double netPay, 
             final double amountToBeReceive, 
             final double amountReceive){
         
@@ -501,7 +499,7 @@ public class PayrollMainUI extends VerticalLayout {
                     return;
                 }
                 
-                double newNetSalary = (netSalary + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                double newNetSalary = (netPay + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                 double newAmountToBeReceive = (amountToBeReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                 double newAmountReceive = (amountReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                 
@@ -527,7 +525,7 @@ public class PayrollMainUI extends VerticalLayout {
     
     private Window updateHdmfContribution(final int payrollId, 
             final double hdmfContribution, 
-            final double netSalary, 
+            final double netPay, 
             final double amountToBeReceive, 
             final double amountReceive){
         
@@ -556,7 +554,7 @@ public class PayrollMainUI extends VerticalLayout {
                     return;
                 }
                 
-                double newNetSalary = (netSalary + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                double newNetSalary = (netPay + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                 double newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                 double newAmountReceive = (amountReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                 

@@ -205,7 +205,7 @@ public class OpenHrisUtilities {
     }
     
     public double roundOffToTwoDecimalPlaces(double amount){
-        DecimalFormat df = new DecimalFormat("0.00");
+        DecimalFormat df = new DecimalFormat("##0.00");
         return new Double(df.format(amount));
     }
 }

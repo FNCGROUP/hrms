@@ -131,8 +131,13 @@ public class ProcessPayrollComputation {
             
             double halfMonthSalary = sal.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, employeeId) + getTotalNonWorkingHolidayPay();
             payroll.setHalfMonthSalary(halfMonthSalary);
-            
-            double taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, payroll.getGrossPay());
+                      
+            double taxableSalary = 0;
+            if(employmentWageEntry.equals("daily")){
+                taxableSalary = payroll.getGrossPay();
+            } else {
+                taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, payroll.getGrossPay());
+            }
             double sssContribution = 0;
             double phicContribution = 0;
             double hdmfContribution = 0;

@@ -69,7 +69,8 @@ public class Constant {
         Map<Integer, String> map = new HashMap<Integer, String>();
         map.put(0, "regular");
         map.put(1, "contractual");
-        map.put(2, "trainee");
+        map.put(2, "probationary");
+        map.put(3, "trainee");
         return Collections.unmodifiableMap(map);
     }
     

@@ -19,7 +19,9 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
+import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -112,7 +114,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         employeeDependent.setWidth("100%");
         glayout.addComponent(employeeDependent, 0, 4);
         
-        Button updateBtn = new Button("UPDATE SALARY");
+        Button updateBtn = new Button("UPDATE SALARY INFORMATION");
         updateBtn.setWidth("100%");
         updateBtn.addListener(new Button.ClickListener() {
 
@@ -252,7 +254,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         vlayout.setMargin(true);
         vlayout.setSpacing(true);
         
-        Window subWindow = new Window("Set Branch", vlayout);
+        final Window subWindow = new Window("Set Branch", vlayout);
         subWindow.setWidth("300px");
         
         corporate = dropDown.populateCorporateComboBox(new ComboBox());
@@ -296,14 +298,48 @@ public class EmployeeSalaryInformation extends VerticalLayout{
             }
         });
         subWindow.addComponent(branch);
-                
+            
+        final ComboBox remarks = new ComboBox("Remarks");
+        remarks.setWidth("100%");
+        remarks.setNullSelectionItemId(false);
+        remarks.addItem("Transfer to new Branch.");
+        remarks.addItem("Wrong Entry");
+        subWindow.addComponent(remarks);
+        
         Button updateBtn = new Button("SET BRANCH for CONTRIBUTION");
         updateBtn.setWidth("100%");
         updateBtn.addListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    if(corporate.getValue() == null){
+                        getWindow().showNotification("Select Corporation!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                
+                    if(trade.getValue() == null){
+                        getWindow().showNotification("Select Trade!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                    
+                    if(branch.getValue() == null){
+                        getWindow().showNotification("Select Branch!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                    
+                    if(remarks.getValue() == null){
+                        getWindow().showNotification("Remarks required!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                    
+                    boolean result = siService.updateEmployeeContributionBranch(getEmployeeId(), branchId, remarks.getValue().toString());
+                    if(result){
+                        getWindow().showNotification("Successfully transferred to new Branch!");
+                        (subWindow.getParent()).removeWindow(subWindow);
+                    } else {
+                        getWindow().showNotification("SQL Error, Contact your DBA!");
+                        (subWindow.getParent()).removeWindow(subWindow);
+                    }                           
             }
         });
         subWindow.addComponent(updateBtn);
