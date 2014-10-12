@@ -90,9 +90,13 @@ public class TimekeepingComputation {
         return util.roundOffToTwoDecimalPlaces(rate);
     }
     
-    public double processAdditionalWorkingDayOff(Double wage){
-        Double rate = wage * 1.3;        
-//        return new Double(df.format(rate));
+    public double processAdditionalWorkingDayOff(Double wage, String wageEntry){
+        double rate = 0;
+        if(wageEntry.equals("daily")){
+            rate = wage * .3; 
+        } else {
+            rate = wage * 1.3; 
+        }     
         return util.roundOffToTwoDecimalPlaces(rate);
     }
     

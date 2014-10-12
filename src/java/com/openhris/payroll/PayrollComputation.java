@@ -14,7 +14,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DecimalFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -55,7 +54,8 @@ public class PayrollComputation {
             for(int i = 0; i < policyList.size(); i++){
                 if(policyList.get(i).equals("null") || policyList.get(i).equals("working-day-off") || 
                         policyList.get(i).equals("working-holiday") || policyList.get(i).equals("paid-vacation-leave") || 
-                        policyList.get(i).equals("paid-sick-leave") || policyList.get(i).toString().isEmpty()){                    
+                        policyList.get(i).equals("paid-sick-leave") || policyList.get(i).equals("paternity-leave") || 
+                        policyList.get(i).toString().isEmpty()){                    
                     halfMonthSalary = halfMonthSalary + wage;                   
                 }
             }            
@@ -213,11 +213,7 @@ public class PayrollComputation {
                 allowanceToBeDeductedPerDay =  allowanceToBeDeductedPerDay + allowance_entry_per_day;
             }
         }
-//        System.out.println("afl before deduction: " + allowance_for_liquidation);
         allowance_for_liquidation = (allowanceForLiquidation/2) - allowanceToBeDeductedPerDay;
-//        System.out.println("afl per day: " + allowance_entry_per_day);
-//        System.out.println("afl deduction: " + allowanceToBeDeductedPerDay);
-//        System.out.println("afl after deduction: " + allowance_for_liquidation);
         return util.roundOffToTwoDecimalPlaces(allowance_for_liquidation);
     }
     

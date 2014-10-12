@@ -22,7 +22,7 @@
 s.attendancePeriodTo AS cutOffDate, 
 s.numberOfDays AS numberOfDays
 FROM payroll_table s INNER JOIN employee e ON s.employeeId = e.employeeId INNER JOIN branch_table b ON e.branchId = b.id INNER JOIN trade_table tn ON b.tradeId = tn.id INNER JOIN corporate_table cn ON 
-tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} ORDER BY e.employmentWageEntry, e.lastname ASC]]>
+tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND e.currentStatus IS NULL ORDER BY e.employmentWageEntry, e.lastname ASC]]>
 	</queryString>
 	<field name="id" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>
