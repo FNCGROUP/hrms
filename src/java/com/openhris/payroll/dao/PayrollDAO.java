@@ -907,13 +907,14 @@ public class PayrollDAO {
                             date = rs.getString("datePosted");
                         }
 
-                        pstmt = conn.prepareStatement("INSERT INTO advance_table(payrollId, amount, advanceType, particulars, datePosted) "
-                                + "VALUES(?, ?, ?, ?, ?)");
+                        pstmt = conn.prepareStatement("INSERT INTO advance_table(payrollId, amount, advanceType, particulars, datePosted, remarks) "
+                                + "VALUES(?, ?, ?, ?, ?, ?)");
                         pstmt.setInt(1, payrollId);
                         pstmt.setDouble(2, previousAmountOfAdvances);
                         pstmt.setString(3, advanceType);
                         pstmt.setString(4, particulars);
                         pstmt.setString(5, date);
+                        pstmt.setString(6, "from adjustment of previous payroll with payrollId:"+previousPayrollId);
                         pstmt.executeUpdate();
                     }
 		}
