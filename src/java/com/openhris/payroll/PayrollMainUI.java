@@ -891,7 +891,7 @@ public class PayrollMainUI extends VerticalLayout {
                               
                 if(event.getPropertyId().equals("id")){
                     String amount = item.getItemProperty("amount").getValue().toString();                
-                    Double removedAdvances = Double.valueOf(util.removeCommaFromString(amount)).doubleValue();
+                    Double removedAdvances = Double.valueOf(util.removeCommaFromString(amount));
                     int advanceId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
                         
                     Window subWindow = removeAdvances(payrollId, advanceId, removedAdvances, 

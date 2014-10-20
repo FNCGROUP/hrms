@@ -21,6 +21,8 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -40,8 +42,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
     ComboBox corporate = new ComboBox("Corporate: ");
     ComboBox trade = new ComboBox("Trade: ");
     ComboBox branch = new ComboBox("Branch: ");
-    
-    GridLayout glayout;    
+      
     String employeeId;
     int corporateId;
     int tradeId;
@@ -55,6 +56,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         
         init();
         addComponent(layout());
+        addComponent(layout2());
     }
     
     public void init(){
@@ -65,7 +67,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
     }
     
     public ComponentContainer layout(){
-        glayout = new GridLayout(3, 5);
+        GridLayout glayout = new GridLayout(3, 5);
         glayout.setSpacing(true);          
         glayout.setWidth("100%");
 	glayout.setHeight("100%");
@@ -111,7 +113,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         glayout.addComponent(tinField, 0, 3);
         
         final ComboBox employeeDependent = dropDown.populateTotalDependent(new ComboBox());
-        employeeDependent.setWidth("100%");
+        employeeDependent.setWidth("200px");
         glayout.addComponent(employeeDependent, 0, 4);
         
         Button updateBtn = new Button("UPDATE SALARY INFORMATION");
@@ -241,6 +243,19 @@ public class EmployeeSalaryInformation extends VerticalLayout{
             employeeDependent.setItemCaption(employeeTotalDependentId, employmentInformation.getTotalDependent());
             employeeDependent.setValue(employeeTotalDependentId);
         }
+        
+        return glayout;
+    }
+    
+    public ComponentContainer layout2(){
+        GridLayout glayout = new GridLayout();
+        glayout.setSpacing(true);          
+        glayout.setWidth("200px");
+	glayout.setHeight("100%");
+        
+        Label label = new Label("Status: ");
+        glayout.addComponent(label);
+        glayout.setComponentAlignment(label, Alignment.MIDDLE_LEFT);
         
         return glayout;
     }

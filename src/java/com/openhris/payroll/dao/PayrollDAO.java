@@ -8,9 +8,6 @@ package com.openhris.payroll.dao;
 
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.dao.ServiceGetDAO;
-import com.openhris.dao.ServiceInsertDAO;
-import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.Payroll;
 import com.openhris.payroll.model.PayrollRegister;
@@ -153,6 +150,34 @@ public class PayrollDAO {
         return result;
     }
     
+    public double getAdvancesByPayrollId(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double advances = 0;
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT SUM(amount) AS amount FROM advance_table WHERE rowStatus IS NULL AND payrollId = "+payrollId+" ");
+            while(rs.next()){
+                advances = util.convertStringToDouble(rs.getString("amount"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return advances;
+    }
+    
     public List<Advances> getAdvancesByPayroll(int payrollId){
         Connection conn = getConnection.connection();
         Statement stmt = null;
@@ -209,7 +234,7 @@ public class PayrollDAO {
             pstmt.executeUpdate();
             
             amountReceivable = amountReceivable + removedAmount;
-            amountToBeReceive = Math.round((amountToBeReceive + removedAmount)*100.0)/100.0;
+            amountToBeReceive = amountToBeReceive + removedAmount;
             
             pstmt = conn.prepareStatement(queryUpdate);
             pstmt.setDouble(1, amountToBeReceive);
@@ -769,7 +794,6 @@ public class PayrollDAO {
         ResultSet rs = null;
         try {
             conn.setAutoCommit(false);
-//            for(Payroll p : insertPayrollList){
                 pstmt = conn.prepareStatement("INSERT INTO payroll_table(employeeId, attendancePeriodFrom, attendancePeriodTo, "
                         + "basicSalary, halfMonthSalary, phic, sss, hdmf, absences, numberOfDays, taxableSalary, tax, "
                         + "cashBond, totalLatesDeduction, totalUndertimeDeduction, totalOvertimePaid, totalNightDifferentialPaid, "
@@ -844,7 +868,9 @@ public class PayrollDAO {
 				
 		if(previousPayrollId != 0){
 		    double previousAmountReceived = getPreviousAmountReceived(previousPayrollId);
-		    double forAdjustment = Math.round((payroll.getAmountReceivable() - previousAmountReceived)*100.0)/100.0;
+                    double previousAmountOfAdvances = getAdvancesByPayrollId(previousPayrollId);
+		    double forAdjustment = (payroll.getAmountReceivable() - previousAmountOfAdvances) - previousAmountReceived;
+                    double amountToBeReceive = previousAmountReceived + forAdjustment;
 		    
 		    pstmt = conn.prepareStatement("INSERT INTO adjustments(payrollId, amount, remarks, datePosted) VALUES(?, ?, ?, now())");
 		    pstmt.setInt(1, payrollId);
@@ -857,18 +883,41 @@ public class PayrollDAO {
 			    + "amountReceivable = ? "
 			    + "WHERE id = ?");
 		    pstmt.setDouble(1, forAdjustment);
-		    pstmt.setDouble(2, payroll.getAmountReceivable());
+		    pstmt.setDouble(2, amountToBeReceive);
 		    pstmt.setDouble(3, previousAmountReceived);
 		    pstmt.setInt(4, payrollId);
 		    pstmt.executeUpdate();
 		    
-		    pstmt = conn.prepareStatement("UPDATE payroll_table SET actionTaken = 'adjusted' WHERE id = '"+payrollId+"' ");
+		    pstmt = conn.prepareStatement("UPDATE payroll_table SET actionTaken = 'adjusted' WHERE id = "+payrollId+" ");
                     pstmt.executeUpdate();
                 
-                    pstmt = conn.prepareStatement("UPDATE payroll_table SET actionTaken = 'previous' WHERE id = '"+previousPayrollId+"' ");
+                    pstmt = conn.prepareStatement("UPDATE payroll_table SET actionTaken = 'previous' WHERE id = "+previousPayrollId+" ");
                     pstmt.executeUpdate();
+                             
+                    if(previousAmountOfAdvances != 0){
+                        String advanceType = null;
+                        String particulars = null;
+                        String date = null;
+                        
+                        stmt = conn.createStatement();
+                        rs = stmt.executeQuery("SELECT * FROM advance_table WHERE payrollId = "+previousPayrollId+"");
+                        while(rs.next()){
+                            advanceType = rs.getString("advanceType");
+                            particulars = rs.getString("particulars");
+                            date = rs.getString("datePosted");
+                        }
+
+                        pstmt = conn.prepareStatement("INSERT INTO advance_table(payrollId, amount, advanceType, particulars, datePosted) "
+                                + "VALUES(?, ?, ?, ?, ?)");
+                        pstmt.setInt(1, payrollId);
+                        pstmt.setDouble(2, previousAmountOfAdvances);
+                        pstmt.setString(3, advanceType);
+                        pstmt.setString(4, particulars);
+                        pstmt.setString(5, date);
+                        pstmt.executeUpdate();
+                    }
 		}
-//            }  
+ 
             conn.commit();
             System.out.println("Transaction commit...");
             result = true;
