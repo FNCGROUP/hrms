@@ -8,7 +8,8 @@
 	<queryString>
 		<![CDATA[SELECT e.phicNo AS philhealthNo, CONCAT_WS(', ', setNameToUpper(e.lastname), CONCAT_WS(' ', setNameToUpper(e.firstname), setNameToUpper(e.middlename))) AS name, s.phic AS philhealth, b.name AS branch, tn.name AS tradeName, cn.name AS corporateName, tn.phicNo AS erPhicNo, b.address AS address, s.payrollDate AS payrollDate FROM employee e INNER JOIN payroll_table s ON e.employeeId = s.employeeId INNER JOIN branch_table b ON e.branchId = b.id INNER JOIN trade_table tn ON b.tradeId = tn.id INNER JOIN corporate_table cn ON 
 tn.corporateId = cn.id WHERE (SELECT branchId FROM employee_contribution_main 
-WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE}]]>
+WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND 
+(s.actionTaken = 'adjusted' OR s.actionTaken IS NULL)]]>
 	</queryString>
 	<field name="philhealthNo" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>

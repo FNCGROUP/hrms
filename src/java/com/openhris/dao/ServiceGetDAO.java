@@ -428,7 +428,8 @@ public class ServiceGetDAO {
             rs = stmt.executeQuery("SELECT b.name FROM branch_table b "
                 + "INNER JOIN trade_table tn ON b.tradeId = tn.id  "
 		+ "INNER JOIN corporate_table cn ON tn.corporateId = cn.id WHERE "
-		+ "tn.id = "+tradeId+" AND cn.id = "+corporateId+" AND b.actionTaken IS NULL");
+		+ "tn.id = "+tradeId+" AND cn.id = "+corporateId+" "
+                    + "AND b.actionTaken IS NULL ORDER BY b.name ASC");
             while(rs.next()){
                 Branch branch = new Branch();
 		branch.setBranchName(rs.getString("name"));
@@ -488,7 +489,7 @@ public class ServiceGetDAO {
         String branchName = null;
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery(" SELECT name FROM branch_table WHERE id = "+branchId+" ");
+            rs = stmt.executeQuery(" SELECT name FROM branch_table WHERE id = "+branchId+" ORDER BY name ASC");
             while(rs.next()){
                 branchName = rs.getString("name");
             }

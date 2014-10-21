@@ -245,9 +245,21 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                         getWindow().showNotification("HDMF Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
                     }
                 }else if(reportType.getValue().equals("HDMF Savings")){
-                    String fileName = "HdmfVoluntarySavingsReport_";
-                    reports.deleteFile(fileName);
-                    hdmfSavingsReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    if(day == 15){
+                        String fileName = "HdmfVoluntarySavingsReport_";
+                        reports.deleteFile(fileName);
+                        hdmfSavingsReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    } else {
+                        getWindow().showNotification("HDMF Savings Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
+                    }
+                }else if(reportType.getValue().equals("HDMF Loans Payable")){
+                    if(day == 15){
+                        String fileName = "HdmfLoanReport_";
+                        reports.deleteFile(fileName);
+                        hdmfLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    } else {
+                        getWindow().showNotification("HDMF Loan Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
+                    }
                 }else if(reportType.getValue().equals("Philhealth Report")){
                     if(day == 15){
                         String fileName = "PhicReport_";
@@ -269,13 +281,13 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     reports.deleteFile(fileName);
                     bankDebitMemoReport(util.convertDateFormat(payrollDate.getValue().toString()));
                 }else if(reportType.getValue().equals("SSS Loans Payable")){
-                    String fileName = "SssLoanReport_";
-                    reports.deleteFile(fileName);
-                    sssLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
-                }else{
-                    String fileName = "HdmfLoanReport_";
-                    reports.deleteFile(fileName);
-                    hdmfLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    if(day == 15){
+                        getWindow().showNotification("SSS Loan Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
+                    }else{
+                        String fileName = "SssLoanReport_";
+                        reports.deleteFile(fileName);
+                        sssLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    }
                 }
             }
         });
@@ -955,7 +967,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
             e.getMessage();
        }
    }
-   
+      
    private void sssReport(String payrollDate){
 	Connection conn = getConnection.connection();   
         File reportFile = new File("C:/reportsJasper/SssReport.jasper");
@@ -1330,11 +1342,9 @@ public class PayrollRegisterMainUI extends VerticalLayout {
    private void hdmfLoanReport(String payrollDate){
 	Connection conn = getConnection.connection();   
         File reportFile = new File("C:/reportsJasper/HdmfLoanReport.jasper");
-	int tradeId = companyService.getTradeIdByBranchId(branchId);
-	int corporateId = companyService.getCorporateIdByTradeId(tradeId);
 
         final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", corporateId);
+        hm.put("BRANCH_ID", branchId);
         hm.put("PAYROLL_DATE", payrollDate);
 
         try{

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HdmfLoanReport" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ab9d7e45-d28d-4177-8cfd-7b62e301b54f">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="23"/>
+	<property name="ireport.y" value="53"/>
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
@@ -19,7 +19,8 @@ FROM employee e INNER JOIN payroll_table s ON e.employeeId = s.employeeId
 INNER JOIN advance_table a ON s.id = a.payrollId INNER JOIN branch_table b ON e.branchId = b.id 
 INNER JOIN trade_table tn ON b.tradeId = tn.id 
 INNER JOIN corporate_table cn ON tn.corporateId = cn.id WHERE (SELECT branchId FROM employee_contribution_main 
-WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND a.advanceType = 'hdmf loan' AND a.rowStatus IS NULL ORDER BY e.lastname ASC]]>
+WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND a.advanceType = 'hdmf loan' AND a.rowStatus IS NULL AND 
+(s.actionTaken = 'adjusted' OR s.actionTaken IS NULL)ORDER BY e.lastname ASC]]>
 	</queryString>
 	<field name="amount" class="java.lang.Double"/>
 	<field name="hdmfNo" class="java.lang.String"/>
