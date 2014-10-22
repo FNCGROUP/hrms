@@ -7,6 +7,7 @@ package com.openhris.company.service;
 import com.openhris.company.model.Branch;
 import com.openhris.company.model.Company;
 import com.openhris.company.model.Trade;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -50,4 +51,8 @@ public interface CompanyService {
     public boolean removeTradeAssignedForUser(int tradeId, int userId);
     
     public boolean removeBranchAssignedForUser(int branchId, int userId);
+    
+    public ArrayList<ArrayList<ArrayList<String>>> getNestedListOfCorporations();
+    
+    public List<Branch> getBranchByTradeId(int tradeId);
 }

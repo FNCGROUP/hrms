@@ -5,12 +5,14 @@
 package com.openhris.company.serviceprovider;
 
 import com.hrms.dbconnection.GetSQLConnection;
+import com.openhris.company.dao.CompanyDAO;
 import com.openhris.company.model.Branch;
 import com.openhris.company.model.Company;
 import com.openhris.company.model.Trade;
+import com.openhris.company.service.CompanyService;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceUpdateDAO;
-import com.openhris.company.service.CompanyService;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,6 +24,7 @@ public class CompanyServiceImpl implements CompanyService {
     GetSQLConnection getConnection = new GetSQLConnection();
     ServiceGetDAO serviceGet = new ServiceGetDAO();
     ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
+    CompanyDAO companyDAO = new CompanyDAO();
 
     @Override
     public List<Company> getAllCorporation() {
@@ -111,6 +114,16 @@ public class CompanyServiceImpl implements CompanyService {
     @Override
     public String getCorporateById(int corporateId) {
 	return serviceGet.getCorporateById(corporateId);
+    }
+
+    @Override
+    public ArrayList<ArrayList<ArrayList<String>>> getNestedListOfCorporations() {
+        return companyDAO.getCompanyTreeMap();
+    }
+
+    @Override
+    public List<Branch> getBranchByTradeId(int tradeId) {
+        return companyDAO.getBranchByTradeId(tradeId);
     }
     
 }

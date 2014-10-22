@@ -22,6 +22,7 @@ import com.openhris.administrator.service.AdministratorService;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.openhris.commons.AboutHris;
 import com.openhris.commons.DropDownComponent;
+import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.model.Branch;
 import com.openhris.company.model.Company;
 import com.openhris.company.model.Trade;
@@ -41,6 +42,7 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -70,6 +72,7 @@ public class MainApp extends Application {
     AdministratorService administratorService = new AdministratorServiceImpl();
     CompanyService companyService = new CompanyServiceImpl();
     EmployeeService employeeService = new EmployeeServiceImpl();
+    OpenHrisUtilities util = new OpenHrisUtilities();
     
     Tree tree = new Tree();
     List<Company> companyList;
@@ -369,32 +372,29 @@ public class MainApp extends Application {
         treeLabel.setStyleName("section");
         vlayout.addComponent(treeLabel);
         
+        tree.setImmediate(true);
 	tree.addStyleName("tree-layout");
         for(Company c : companyList){							
-            tree.addItem(c.getCompanyName());			
+            tree.addItem(c.getCompanyName());
+                
+            if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr") || 
+                GlobalVariables.getUserRole().equals("audit")){
+                tradeList = companyService.getTradeByCorporateId(c.getCompanyId());
+            } else {
+                tradeList = companyService.getTradeListAssignedForUser(getUserId(), c.getCompanyId());
+            }                
+		                
+            for(Trade t : tradeList){
+                tree.addItem(t.getTradeName());
+                tree.setParent(t.getTradeName(), c.getCompanyName());                
+            }
 	}
         
         tree.addListener(new Tree.ExpandListener() {
 
             @Override
-            public void nodeExpand(Tree.ExpandEvent event) {                        
-                companyName = event.getItemId().toString();
-		companyId = companyService.getCorporateId(event.getItemId().toString().toLowerCase());
-                
-                if(GlobalVariables.getUserRole().equals("administrator") || 
-                        GlobalVariables.getUserRole().equals("hr") || 
-                        GlobalVariables.getUserRole().equals("audit")){
-                    tradeList = companyService.getTradeByCorporateId(companyId);
-                } else {
-                    tradeList = companyService.getTradeListAssignedForUser(getUserId(), companyId);
-                }                
-		                
-		for(Trade t : tradeList){
-                    tree.addItem(t.getTradeName());
-                    tree.setParent(t.getTradeName(), companyName);
-                                       
-		}
-                
+            public void nodeExpand(Tree.ExpandEvent event) {                
                 if(tree.getParent(event.getItemId()) != null){
                     companyId = companyService.getCorporateId(tree.getParent(event.getItemId()).toString());
                     tradeId = companyService.getTradeId(event.getItemId().toString(), companyId);
@@ -409,24 +409,88 @@ public class MainApp extends Application {
                     
                     branchList = companyService.getBranchByTrade(tradeId, companyId);
                     String tradeName = companyService.getTradeById(tradeId);
-                    for(Branch b : branchList){
-                        tree.addItem(b.getBranchName());
-                        tree.setParent(b.getBranchName(), tradeName);
-                        tree.setChildrenAllowed(b.getBranchName(), false);
+                    for(Branch b : branchList){       
+                        if(util.checkForDuplicatedBranch(b.getBranchName())){
+                            tree.addItem(b.getBranchName()+" - "+b.getBranchId());
+                            tree.setParent(b.getBranchName()+" - "+b.getBranchId(), tradeName);
+                            tree.setChildrenAllowed(b.getBranchName()+" - "+b.getBranchId(), false);
+                        } else {
+                            tree.addItem(b.getBranchName());
+                            tree.setParent(b.getBranchName(), tradeName);
+                            tree.setChildrenAllowed(b.getBranchName(), false);
+                        }                        
                     }
                 } 
             }
         });
         
+//        for(Company c : companyList){							
+//            tree.addItem(c.getCompanyName());			
+//	}
+//        
+//        tree.addListener(new Tree.ExpandListener() {
+//
+//            @Override
+//            public void nodeExpand(Tree.ExpandEvent event) {                        
+//                companyName = event.getItemId().toString();
+//		companyId = companyService.getCorporateId(event.getItemId().toString().toLowerCase());
+//                
+//                if(GlobalVariables.getUserRole().equals("administrator") || 
+//                        GlobalVariables.getUserRole().equals("hr") || 
+//                        GlobalVariables.getUserRole().equals("audit")){
+//                    tradeList = companyService.getTradeByCorporateId(companyId);
+//                } else {
+//                    tradeList = companyService.getTradeListAssignedForUser(getUserId(), companyId);
+//                }                
+//		                
+//		for(Trade t : tradeList){
+//                    tree.addItem(t.getTradeName());
+//                    tree.setParent(t.getTradeName(), companyName);
+//                                       
+//		}
+//                
+//                if(tree.getParent(event.getItemId()) != null){
+//                    companyId = companyService.getCorporateId(tree.getParent(event.getItemId()).toString());
+//                    tradeId = companyService.getTradeId(event.getItemId().toString(), companyId);
+//                        
+//                    if(GlobalVariables.getUserRole().equals("administrator") || 
+//                        GlobalVariables.getUserRole().equals("hr") || 
+//                        GlobalVariables.getUserRole().equals("audit")){
+//                        branchList = companyService.getBranchByTrade(tradeId, companyId);
+//                    } else {
+//                        branchList = companyService.getBranchListAssignedForUser(getUserId(), tradeId);
+//                    }
+//                    
+//                    branchList = companyService.getBranchByTrade(tradeId, companyId);
+//                    String tradeName = companyService.getTradeById(tradeId);
+//                    for(Branch b : branchList){
+//                        tree.addItem(b.getBranchName());
+//                        tree.setParent(b.getBranchName(), tradeName);
+//                        tree.setChildrenAllowed(b.getBranchName(), false);
+//                    }
+//                } 
+//            }
+//        });
+        
         tree.addListener(new ItemClickEvent.ItemClickListener() {
 
             @Override
-            public void itemClick(ItemClickEvent event) {                
-                if(tree.getParent(tree.getParent(event.getItemId())) == null){   
+            public void itemClick(ItemClickEvent event) {    
+                if(tree.getParent(event.getItemId()) == null){                    
+                } else if(tree.getParent(tree.getParent(event.getItemId())) == null){   
                 } else {
                     companyId = companyService.getCorporateId(String.valueOf(tree.getParent(tree.getParent(event.getItemId()))));
                     tradeId = companyService.getTradeId(String.valueOf(tree.getParent(event.getItemId())), companyId);
-                    branchId = companyService.getBranchId(tradeId, event.getItemId().toString());
+                                        
+                    String[] split = event.getItemId().toString().split(" - ");
+                    if(util.checkForDuplicatedBranch(split[0])){
+                        branchId = companyService.getBranchId(tradeId, split[0]);
+                        System.out.println("branch: "+split[0]);
+                        System.out.println("branchId: "+branchId);
+                    } else {
+                        branchId = companyService.getBranchId(tradeId, event.getItemId().toString());
+                    }                                 
+                    
                     if(mainMenuBar){
                         employeeMainUI.employeesTable(getEmployeeList(branchId));
                     } 
@@ -442,7 +506,7 @@ public class MainApp extends Application {
                 }
                 
             }
-        });
+        });        
         vlayout.addComponent(tree);
         
         menu.addComponent(vlayout);
