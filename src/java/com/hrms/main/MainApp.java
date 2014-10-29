@@ -197,8 +197,6 @@ public class MainApp extends Application {
 
             @Override
             public void buttonClick(ClickEvent event) {
-//                userAuthenticate = false;
-//                authenticateLogin(userAuthenticate);
                 authenticateLogin(false);
                 close();
             }

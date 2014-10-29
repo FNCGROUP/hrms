@@ -292,7 +292,7 @@ public class TimekeepingMainUI extends VerticalLayout {
         for(int i = 0; i < dateList.size(); i++){ 
             Object itemId = new Integer(i);
             final ComboBox holidays = dropDown.populateAttendanceHolidayDropDownList(new ComboBox());
-            holidays.setEnabled(true);
+            holidays.setEnabled(false);
             holidays.setWidth("120px");
             holidays.setNullSelectionAllowed(false);
             holidays.setData(itemId);
@@ -453,12 +453,12 @@ public class TimekeepingMainUI extends VerticalLayout {
                             additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(employmentWage, employmentWageEntry);
                             item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
                             multiplePremiumPay = tcal.processMultiplePremiumPay(event.getProperty().getValue().toString(), employmentWage);
-                            item.getItemProperty("psday").setValue(multiplePremiumPay);
+                            item.getItemProperty("lholiday").setValue(multiplePremiumPay);
                         } else {
                             additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(employmentWage, employmentWageEntry);
                             item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
                             multiplePremiumPay = tcal.processMultiplePremiumPay(event.getProperty().getValue().toString(), employmentWage);
-                            item.getItemProperty("psday").setValue(multiplePremiumPay);
+                            item.getItemProperty("sholiday").setValue(multiplePremiumPay);
                         }
                     }                   
                 }

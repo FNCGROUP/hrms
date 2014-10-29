@@ -157,7 +157,7 @@ public class CompanyModule extends VerticalLayout{
                     String tradeName = item.getItemProperty("trade name").getValue().toString();
                     String branchName = item.getItemProperty("branch").getValue().toString();
                     String branchAddress = item.getItemProperty("address").toString();
-                    Integer branchId = query.getBranchId(branchName, tradeName, corporateName);
+                    int branchId = query.getBranchId(branchName, tradeName, corporateName);
                     
                     Window subWindow = branchAddressWindow(branchId, branchName, branchAddress);
                     if(subWindow.getParent() == null){
@@ -343,19 +343,37 @@ public class CompanyModule extends VerticalLayout{
         return subWindow;
     }
     
-    private Window branchAddressWindow(final Integer id, final String name, String address){
-        VerticalLayout subWindowLayout = new VerticalLayout();
-        subWindowLayout.setSpacing(true);
-        subWindowLayout.setMargin(true);
-        
-        final Window subWindow = new Window("Add Branch Address to "+name.toUpperCase(), subWindowLayout);
+    private Window branchAddressWindow(final int branchId, final String name, String address){
+        final Window subWindow = new Window("Add Branch Address to "+name.toUpperCase());
         subWindow.setWidth("300px");        
         
+        GridLayout glayout = new GridLayout(2, 5);
+        glayout.setSizeFull();
+        glayout.setSpacing(true);
+        
+        final CheckBox editBranchName = new CheckBox("Edit");
+        glayout.setImmediate(true);
+        glayout.addComponent(editBranchName, 1, 0);
+        glayout.setComponentAlignment(editBranchName, Alignment.BOTTOM_RIGHT);
+        
+        TextField branchName = new TextField("Branch: ");
+        branchName.setWidth("210px");
+        branchName.setValue(name);
+        branchName.setEnabled(false);
+        branchName.setImmediate(true);
+        glayout.addComponent(branchName, 0, 0);
+        
+        final CheckBox editBranchAddress = new CheckBox("Edit");
+        glayout.setImmediate(true);
+        glayout.addComponent(editBranchAddress, 1, 1);
+        glayout.setComponentAlignment(editBranchAddress, Alignment.BOTTOM_RIGHT);
+        
         final TextField branchAddress = new TextField();
-        branchAddress.setNullSettingAllowed(false);
-        branchAddress.setWidth("100%");
+        branchAddress.setWidth("210px");
         branchAddress.setValue(address);
-        subWindow.addComponent(branchAddress);
+        branchAddress.setEnabled(false);
+        branchAddress.setImmediate(true);
+        glayout.addComponent(branchAddress, 0 , 1);
         
         Button save = new Button("SAVE");
         save.setWidth("100%");
@@ -363,7 +381,7 @@ public class CompanyModule extends VerticalLayout{
 
             @Override
             public void buttonClick(ClickEvent event) {                
-                boolean result = queryUpdate.updateBranchAddress(id, branchAddress.toString().trim().toLowerCase());
+                boolean result = queryUpdate.updateBranchAddress(branchId, branchAddress.toString().trim().toLowerCase());
                 if(result == true){
                     companyTable();
                     (subWindow.getParent()).removeWindow(subWindow);
@@ -373,7 +391,7 @@ public class CompanyModule extends VerticalLayout{
             }
             
         });
-        subWindow.addComponent(save);
+//        subWindow.addComponent(save);
         
         Button delete = new Button("DELETE "+name.toUpperCase());
         delete.setWidth("100%");
@@ -381,7 +399,7 @@ public class CompanyModule extends VerticalLayout{
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Window window = removeBranch(id, name, subWindow);
+                Window window = removeBranch(branchId, name, subWindow);
                 if(window.getParent() == null){
                     getWindow().addWindow(window);
                 }
@@ -391,7 +409,8 @@ public class CompanyModule extends VerticalLayout{
             }
             
         });
-        subWindow.addComponent(delete);
+//        subWindow.addComponent(delete);
+        subWindow.addComponent(glayout);
         
         return subWindow;
     }

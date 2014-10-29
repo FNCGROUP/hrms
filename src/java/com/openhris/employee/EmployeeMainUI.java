@@ -11,6 +11,7 @@ import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.service.CompanyService;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
+import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.model.PositionHistory;
 import com.openhris.employee.service.EmployeeService;
@@ -32,7 +33,6 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.Window.Notification;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -59,11 +59,13 @@ public class EmployeeMainUI extends VerticalLayout {
     ComboBox corporation;
     ComboBox trade;
     ComboBox branch;
+    ComboBox employeesName = new ComboBox();
     
     OpenHrisUtilities util = new OpenHrisUtilities();
     
     private String userRole; 
     HorizontalSplitPanel hsplit;
+    VerticalLayout vlayout = new VerticalLayout();
     Label errorLabel = new Label("<p style=\"color: red\">*Duplicate Entry!</p>", Label.CONTENT_RAW);
     
     public EmployeeMainUI(){}
@@ -76,7 +78,13 @@ public class EmployeeMainUI extends VerticalLayout {
         setSpacing(true);
 	setSizeFull();
         
+//        vlayout.setSizeFull();
+//        vlayout.setImmediate(true);
         employeesTable(getEmployeeList(getBranchId()));
+//        vlayout.addComponent(employeesTbl);
+//        
+//        employeeComboBox(0);
+//        vlayout.addComponent(employeesName);
         
 	hsplit = new HorizontalSplitPanel();        
         hsplit.addStyleName("small blue white");
@@ -94,7 +102,7 @@ public class EmployeeMainUI extends VerticalLayout {
         branchNames.setUserRole(userRole);
         
     }
-    
+        
     public void employeesTable(List<PositionHistory> employeeList){
         employeesTbl.removeAllItems();
         employeesTbl.setSizeFull();
@@ -565,5 +573,30 @@ public class EmployeeMainUI extends VerticalLayout {
     
     public List<PositionHistory> getEmployeeList(int branchId){
         return employeeService.getEmployeePerBranch(branchId);
+    }
+    
+    public void employeeComboBox(final int branchId){      
+        this.branchId = branchId;
+        employeesName.removeAllItems();
+        employeesName.setWidth("100%");
+        employeesName.setCaption("Employees: ");
+        employeesName.setNullSelectionAllowed(false);
+        List<Employee> employeesList = employeeService.getEmployeePerBranchForDropDownList(branchId);        
+        for(Employee e : employeesList){
+            String name = e.getLastname()+ ", " + e.getFirstname() + " " + e.getMiddlename();
+            employeesName.addItem(name.toUpperCase());
+        }
+        employeesName.addListener(new ComboBox.ValueChangeListener() {
+
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+//                if(event.getProperty().getValue() == null){                    
+//                } else {
+//                    employeeId = employeeService.getEmployeeId(employeesName.getValue().toString());
+//                    timekeepingTable(branchId, employeeId);
+//                }
+            }
+        });
+        employeesName.setImmediate(true);
     }
 }
