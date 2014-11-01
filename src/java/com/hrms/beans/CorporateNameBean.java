@@ -34,7 +34,7 @@ public class CorporateNameBean {
         Boolean result = false;
         PreparedStatement pstmt;
         
-        String queryUpdate = " UPDATE corporate_name SET name = ? WHERE id = ? ";
+        String queryUpdate = " UPDATE corporate_table SET name = ? WHERE id = ? ";
         try {
             pstmt = conn.prepareStatement(queryUpdate);
             pstmt.setString(1, corporateName);

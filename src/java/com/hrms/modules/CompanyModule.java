@@ -107,7 +107,7 @@ public class CompanyModule extends VerticalLayout{
                 if(event.getPropertyId().equals("corporate name")){
                     if(userRole.equals("administrator") || userRole.equals("hr")){
                         int tradeId = query.getCoporateId(item.getItemProperty("corporate name").toString().toLowerCase());
-                        Window subWindow = editCorporateName(tradeId, item.getItemProperty("corporate name").toString().toLowerCase());
+                        Window subWindow = updateCorporateName(tradeId, item.getItemProperty("corporate name").toString().toLowerCase());
                         if(subWindow.getParent() == null){
                             getWindow().addWindow(subWindow);
                         }
@@ -129,7 +129,7 @@ public class CompanyModule extends VerticalLayout{
                     if(userRole.equals("administrator") || userRole.equals("hr")){
                         int tradeId = query.getTradeId(item.getItemProperty("trade name").toString().toLowerCase(), 
                                 item.getItemProperty("corporate name").toString().toLowerCase());
-                        Window subWindow = addTradeContributionIdNo(tradeId, item.getItemProperty("trade name").toString().toLowerCase());
+                        Window subWindow = updateTradeContributionIdNo(tradeId, item.getItemProperty("trade name").toString().toLowerCase());
                         if(subWindow.getParent() == null){
                             getWindow().addWindow(subWindow);
                         }
@@ -159,7 +159,7 @@ public class CompanyModule extends VerticalLayout{
                     String branchAddress = item.getItemProperty("address").toString();
                     int branchId = query.getBranchId(branchName, tradeName, corporateName);
                     
-                    Window subWindow = branchAddressWindow(branchId, branchName, branchAddress);
+                    Window subWindow = updateBranchWindow(branchId, branchName, branchAddress);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow);
                     }
@@ -343,36 +343,84 @@ public class CompanyModule extends VerticalLayout{
         return subWindow;
     }
     
-    private Window branchAddressWindow(final int branchId, final String name, String address){
+    private Window updateBranchWindow(final int branchId, final String name, String address){
         final Window subWindow = new Window("Add Branch Address to "+name.toUpperCase());
         subWindow.setWidth("300px");        
         
-        GridLayout glayout = new GridLayout(2, 5);
+        GridLayout glayout = new GridLayout(2, 3);
         glayout.setSizeFull();
         glayout.setSpacing(true);
         
         final CheckBox editBranchName = new CheckBox("Edit");
-        glayout.setImmediate(true);
+        editBranchName.setImmediate(true);
         glayout.addComponent(editBranchName, 1, 0);
-        glayout.setComponentAlignment(editBranchName, Alignment.BOTTOM_RIGHT);
+        glayout.setComponentAlignment(editBranchName, Alignment.BOTTOM_RIGHT);        
         
-        TextField branchName = new TextField("Branch: ");
+        final TextField branchName = new TextField("Branch: ");
         branchName.setWidth("210px");
         branchName.setValue(name);
         branchName.setEnabled(false);
-        branchName.setImmediate(true);
+        branchName.setImmediate(true);        
+        editBranchName.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                branchName.setEnabled(event.getButton().booleanValue());
+            }
+        });
+        branchName.addListener(new Field.ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                if(branchName.getValue() == null || branchName.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Enter Branch name.", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                }
+                
+                boolean result = companyService.updateBranchName(branchId, 
+                        branchName.getValue().toString().trim().toLowerCase());
+                if(result){
+                    (subWindow.getParent()).removeWindow(subWindow);
+                    companyTable();
+                }
+            }
+        });
         glayout.addComponent(branchName, 0, 0);
         
         final CheckBox editBranchAddress = new CheckBox("Edit");
-        glayout.setImmediate(true);
+        editBranchAddress.setImmediate(true);
         glayout.addComponent(editBranchAddress, 1, 1);
         glayout.setComponentAlignment(editBranchAddress, Alignment.BOTTOM_RIGHT);
         
-        final TextField branchAddress = new TextField();
+        final TextField branchAddress = new TextField("Address: ");
         branchAddress.setWidth("210px");
         branchAddress.setValue(address);
         branchAddress.setEnabled(false);
-        branchAddress.setImmediate(true);
+        branchAddress.setImmediate(true);        
+        editBranchAddress.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(ClickEvent event) {
+                branchAddress.setEnabled(event.getButton().booleanValue());
+            }
+        });        
+        branchAddress.addListener(new Field.ValueChangeListener() {
+
+            @Override
+            public void valueChange(ValueChangeEvent event) {
+                if(branchAddress.getValue() == null || branchAddress.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Enter Branch address.", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                }
+                
+                boolean result = companyService.updateBranchAddress(branchId, 
+                        branchAddress.getValue().toString().trim().toLowerCase());
+                if(result){
+                    (subWindow.getParent()).removeWindow(subWindow);
+                    companyTable();
+                }
+            }
+        });
         glayout.addComponent(branchAddress, 0 , 1);
         
         Button save = new Button("SAVE");
@@ -409,7 +457,7 @@ public class CompanyModule extends VerticalLayout{
             }
             
         });
-//        subWindow.addComponent(delete);
+        glayout.addComponent(delete, 0 ,2, 1, 2);
         subWindow.addComponent(glayout);
         
         return subWindow;
@@ -447,7 +495,7 @@ public class CompanyModule extends VerticalLayout{
         return subWindow;
     }
     
-    private Window addTradeContributionIdNo(final int id, final String tradeName){
+    private Window updateTradeContributionIdNo(final int id, final String tradeName){
         tradeNameBean.getTradeContributionId(id);
         final Window subWindow = new Window("Add/Edit Trade's ID");
         subWindow.setWidth("300px");
@@ -487,6 +535,7 @@ public class CompanyModule extends VerticalLayout{
                     tradeField.setEnabled(false);
                     editTradeName.setValue(false);
                     subWindow.getWindow().showNotification("TRADE NAME UPDATED!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                    companyTable();
                 }else{
                     subWindow.getWindow().showNotification("ERROR TRADE ENTRY!", Window.Notification.TYPE_ERROR_MESSAGE);
                 }
@@ -527,6 +576,7 @@ public class CompanyModule extends VerticalLayout{
                     sssField.setEnabled(false);
                     editSss.setValue(false);
                     subWindow.getWindow().showNotification("SSS ID # UPDATED!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                    companyTable();
                 }else{
                     subWindow.getWindow().showNotification("ERROR SSS ID ENTRY!", Window.Notification.TYPE_ERROR_MESSAGE);
                 }
@@ -567,6 +617,7 @@ public class CompanyModule extends VerticalLayout{
                     hdmfField.setEnabled(false);
                     editHdmf.setValue(false);
                     subWindow.getWindow().showNotification("HDMF ID # UPDATED!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                    companyTable();
                 }else{
                     subWindow.getWindow().showNotification("ERROR HDMF ID ENTRY!", Window.Notification.TYPE_ERROR_MESSAGE);
                 }
@@ -607,6 +658,7 @@ public class CompanyModule extends VerticalLayout{
                     phicField.setEnabled(false);
                     editPhic.setValue(false);
                     subWindow.getWindow().showNotification("PHIC ID # UPDATED!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                    companyTable();
                 }else{
                     subWindow.getWindow().showNotification("ERROR PHIC ID ENTRY!", Window.Notification.TYPE_ERROR_MESSAGE);
                 }
@@ -647,6 +699,7 @@ public class CompanyModule extends VerticalLayout{
                     tinField.setEnabled(false);
                     editTin.setValue(false);
                     subWindow.getWindow().showNotification("TIN ID # UPDATED!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                    companyTable();
                 }else{
                     subWindow.getWindow().showNotification("ERROR TIN ID ENTRY!", Window.Notification.TYPE_ERROR_MESSAGE);
                 }
@@ -660,7 +713,7 @@ public class CompanyModule extends VerticalLayout{
         return subWindow;
     }
     
-    private Window editCorporateName(final int id, String coporateName){
+    private Window updateCorporateName(final int id, String coporateName){
         final Window subWindow = new Window("Edit Corporate Name");
         subWindow.setWidth("300px");
         
@@ -695,10 +748,10 @@ public class CompanyModule extends VerticalLayout{
                 }
                 
                 boolean result = corporateNameBean.updateCorporateName(corporateField.getValue().toString(), id);
-                if(result == true){
-                    corporateField.setEnabled(false);
-                    editCorporateName.setValue(false);
+                if(result == true){                    
                     subWindow.getWindow().showNotification("CORPORATE NAME UPDATED!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                    (subWindow.getParent()).removeWindow(subWindow);
+                    companyTable();
                 }else{
                     subWindow.getWindow().showNotification("ERROR CORPORATE ENTRY!", Window.Notification.TYPE_ERROR_MESSAGE);
                 }

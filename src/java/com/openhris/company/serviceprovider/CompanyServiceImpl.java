@@ -125,5 +125,16 @@ public class CompanyServiceImpl implements CompanyService {
     public List<Branch> getBranchByTradeId(int tradeId) {
         return companyDAO.getBranchByTradeId(tradeId);
     }
+
+    @Override
+    public boolean updateBranchName(int branchId, 
+            String name) {
+        return companyDAO.updateBranchName(branchId, name);
+    }
+
+    @Override
+    public boolean updateBranchAddress(int branchId, String address) {
+        return companyDAO.updateBranchAddress(branchId, address);
+    }
     
 }

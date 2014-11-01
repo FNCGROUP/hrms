@@ -55,4 +55,8 @@ public interface CompanyService {
     public ArrayList<ArrayList<ArrayList<String>>> getNestedListOfCorporations();
     
     public List<Branch> getBranchByTradeId(int tradeId);
+    
+    public boolean updateBranchName(int branchId, String name);
+    
+    public boolean updateBranchAddress(int branchId, String address);
 }

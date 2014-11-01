@@ -71,7 +71,7 @@ public class TradeNameBean {
         Boolean result = false;
         PreparedStatement pstmt;
         
-        String queryUpdate = " UPDATE trade_name SET name = ? WHERE id = ? ";
+        String queryUpdate = " UPDATE trade_table SET name = ? WHERE id = ? ";
         try {
             pstmt = conn.prepareStatement(queryUpdate);
             pstmt.setString(1, tradeName);

@@ -13,6 +13,7 @@ import com.openhris.company.model.Company;
 import com.openhris.company.model.Trade;
 import com.openhris.dao.ServiceGetDAO;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -172,4 +173,61 @@ public class CompanyDAO {
         return branchLists;
     }
     
+    public boolean updateBranchName(int branchId, 
+            String name){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE branch_table SET name = ? WHERE id = ? ");
+            pstmt.setString(1, name);
+            pstmt.setInt(2, branchId);
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public boolean updateBranchAddress(int branchId, 
+            String address){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE branch_table SET address = ? WHERE id = ? ");
+            pstmt.setString(1, address);
+            pstmt.setInt(2, branchId);
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
 }
