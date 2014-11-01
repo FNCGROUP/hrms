@@ -4,6 +4,7 @@
  */
 package com.openhris.payroll.service;
 
+import com.openhris.payroll.model.Adjustment;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.Payroll;
 import com.openhris.payroll.model.PayrollRegister;
@@ -84,4 +85,20 @@ public interface PayrollService {
             boolean EDIT_PAYROLL, 
             double adjustments, 
             int previousPayrollId);
+    
+    public List<Adjustment> getListOfAdjustmentFromPayrollId(int payrollId);
+    
+    public boolean removeAdjustmentById(int adjustmentId, 
+            double amountToBeReceive, 
+            double amountReceived, 
+            double adjustments, 
+            int payrollId);
+    
+    public double getForAdjustmentFromPreviousPayroll(int previousPayrollId);
+    
+    public boolean insertAdjustmentToPayroll(int payrollId, 
+            double amountToBeReceive, 
+            double amountReceived, 
+            double adjustment, 
+            String remarks);
 }

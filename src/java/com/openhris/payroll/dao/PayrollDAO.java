@@ -8,6 +8,7 @@ package com.openhris.payroll.dao;
 
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
+import com.openhris.payroll.model.Adjustment;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.Payroll;
 import com.openhris.payroll.model.PayrollRegister;
@@ -700,7 +701,7 @@ public class PayrollDAO {
         return result;        
     }
     
-    public Boolean lockPayroll(int payrollId){
+    public boolean lockPayroll(int payrollId){
         Connection conn = getConnection.connection();
         Boolean result = false;     
         PreparedStatement pstmt = null;
@@ -725,17 +726,17 @@ public class PayrollDAO {
     }
     
     public double getAdjustmentFromPreviousPayroll(String employeeId){
-        double forAdjustments = 0;
+        double adjustment = 0;
         Connection conn = getConnection.connection();
         Statement stmt = null;
         ResultSet rs = null;
         try {
             stmt = conn.createStatement();
-	    rs = stmt.executeQuery("SELECT ifnull(forAdjustments, 0) AS forAdjustments "
+	    rs = stmt.executeQuery("SELECT ifnull(SUM(forAdjustments), 0) AS forAdjustments "
 		    + "FROM payroll_table WHERE employeeId = '"+employeeId+"' "
                     + "ORDER BY payrollDate DESC, id DESC LIMIT 1");
             while(rs.next()){
-                forAdjustments = util.convertStringToDouble(rs.getString("forAdjustments"));                
+                adjustment = util.convertStringToDouble(rs.getString("forAdjustments"));                
             }
         } catch (SQLException ex) {
             Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -751,7 +752,192 @@ public class PayrollDAO {
             }
         }
         
-        return forAdjustments;
+        return adjustment;
+    }
+    
+    public List<Adjustment> getListOfAdjustmentFromPayrollId(int payrollId){
+        List<Adjustment> adjustmentList = new ArrayList<Adjustment>();
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM adjustments WHERE payrollId = "+payrollId+" ");
+            while(rs.next()){
+                Adjustment adjustment = new Adjustment();
+                adjustment.setAdjustmentId(util.convertStringToInteger(rs.getString("id")));
+                adjustment.setAmount(util.convertStringToDouble(rs.getString("amount")));
+                adjustment.setRemarks(rs.getString("remarks"));
+                adjustmentList.add(adjustment);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return adjustmentList;
+    }
+    
+    public double getTotalAdjustmentByPayrollId(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double totalAdjustment = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT SUM(amount) AS totalAdjustment FROM adjustments WHERE payrollId = "+payrollId+" ");
+            while(rs.next()){
+                totalAdjustment = util.roundOffToTwoDecimalPlaces(util.convertStringToDouble(rs.getString("totalAdjustment")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return totalAdjustment;
+    }
+    
+    public boolean removeAdjustmentById(int adjustmentId, 
+            double amountToBeReceive,
+            double amountReceived, 
+            double adjustment, 
+            int payrollId){
+        Connection conn = getConnection.connection();
+        boolean result = false;     
+        PreparedStatement pstmt = null;        
+        amountToBeReceive = amountToBeReceive - adjustment;
+        amountReceived = amountReceived - adjustment;
+        double totalAdjustment = getTotalAdjustmentByPayrollId(payrollId) - adjustment;
+        try {
+            pstmt = conn.prepareStatement("UPDATE payroll_table SET amountToBeReceive = ?, amountReceivable = ?, adjustments = ? "
+                    + "WHERE id = ? ");
+            pstmt.setDouble(1, amountToBeReceive);
+            pstmt.setDouble(2, amountReceived);
+            pstmt.setDouble(3, totalAdjustment);
+            pstmt.setInt(4, payrollId);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("DELETE FROM adjustments WHERE id = "+adjustmentId+" ");
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public boolean insertAdjustmentToPayroll(int payrollId, 
+            double amountToBeReceive, 
+            double amountReceived, 
+            double adjustment,
+            String remarks){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        amountToBeReceive = amountToBeReceive + adjustment;
+        amountReceived = amountReceived + adjustment;
+        double new_adjustment = getTotalAdjustmentByPayrollId(payrollId) + adjustment;
+        
+        try {
+            conn.setAutoCommit(false);
+            pstmt = conn.prepareStatement("INSERT INTO adjustments(payrollId, amount, remarks, datePosted) VALUES(?, ?, ?, now()) ");
+            pstmt.setInt(1, payrollId);
+            pstmt.setDouble(2, adjustment);
+            pstmt.setString(3, remarks);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("UPDATE payroll_table SET amountToBeReceive = ? , amountReceivable = ?, "
+                    + "adjustments = ? WHERE id = ? ");
+            pstmt.setDouble(1, amountToBeReceive);
+            pstmt.setDouble(2, amountReceived);
+            pstmt.setDouble(3, new_adjustment);
+            pstmt.setInt(4, payrollId);
+            pstmt.executeUpdate();
+            
+            conn.commit();
+            System.out.println("Transaction commit...");
+            result = true;
+        } catch (SQLException ex) {
+            try {
+                conn.rollback();
+                System.out.println("Connection rollback...");
+            } catch (SQLException ex1) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public double getForAdjustmentFromPreviousPayroll(int previousPayrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double forAdjustment = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT forAdjustments FROM payroll_table WHERE id = "+previousPayrollId+" ");
+            while(rs.next()){
+                forAdjustment = util.roundOffToTwoDecimalPlaces(util.convertStringToDouble(rs.getString("forAdjustments")));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return forAdjustment;
     }
     
     public double getPreviousAmountReceived(int payrollId){
@@ -865,19 +1051,21 @@ public class PayrollDAO {
                     pstmt.setDouble(17, t.getNonWorkingHolidayPaid());
                     pstmt.executeUpdate();
                 }                          
-				
+			                
+                if(getForAdjustmentFromPreviousPayroll(getPreviousPayrollId(payroll.getEmployeeId())) != 0){                    
+                    pstmt = conn.prepareStatement("INSERT INTO adjustments(payrollId, amount, remarks, datePosted) VALUES(?, ?, ?, now())");
+                    pstmt.setInt(1, payrollId);
+                    pstmt.setDouble(2, getForAdjustmentFromPreviousPayroll(getPreviousPayrollId(payroll.getEmployeeId())));
+                    pstmt.setString(3, "edit timekeeping table");
+                    pstmt.executeUpdate();
+                }
+                
 		if(previousPayrollId != 0){
 		    double previousAmountReceived = getPreviousAmountReceived(previousPayrollId);
                     double previousAmountOfAdvances = getAdvancesByPayrollId(previousPayrollId);
 		    double forAdjustment = (payroll.getAmountReceivable() - previousAmountOfAdvances) - previousAmountReceived;
                     double amountToBeReceive = previousAmountReceived + forAdjustment;
-		    
-		    pstmt = conn.prepareStatement("INSERT INTO adjustments(payrollId, amount, remarks, datePosted) VALUES(?, ?, ?, now())");
-		    pstmt.setInt(1, payrollId);
-		    pstmt.setDouble(2, forAdjustment);
-		    pstmt.setString(3, "edit timekeeping table");
-		    pstmt.executeUpdate();
-		    
+		    		    
 		    pstmt = conn.prepareStatement("UPDATE payroll_table SET forAdjustments = ?, "
 			    + "amountToBeReceive = ?, "
 			    + "amountReceivable = ? "
@@ -942,5 +1130,34 @@ public class PayrollDAO {
         }
         
         return result;
+    }
+    
+    public int getPreviousPayrollId(String employeeId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        int previousPayrollId = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT id FROM payroll_table WHERE employeeId = '"+employeeId+"' ORDER BY id DESC LIMIT 1 ");
+            while(rs.next()){
+                previousPayrollId = util.convertStringToInteger(rs.getString("id"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return previousPayrollId;
     }
 }

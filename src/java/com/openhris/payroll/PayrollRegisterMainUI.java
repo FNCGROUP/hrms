@@ -6,19 +6,21 @@ package com.openhris.payroll;
 
 import com.hrms.beans.AdvancesTypeBean;
 import com.hrms.dbconnection.GetSQLConnection;
+import com.hrms.queries.AdjustmentsDAO;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.commons.reports.OpenHrisReports;
+import com.openhris.company.service.CompanyService;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.dao.ServiceUpdateDAO;
+import com.openhris.employee.service.EmployeeService;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
+import com.openhris.payroll.model.Adjustment;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.PayrollRegister;
-import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
-import com.openhris.company.service.CompanyService;
-import com.openhris.employee.service.EmployeeService;
 import com.openhris.payroll.service.PayrollService;
+import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -32,13 +34,16 @@ import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
+import static java.awt.SystemColor.window;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -76,6 +81,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     
     Table payrollRegisterTbl = new Table();
     Table advancesTbl = new Table();
+    Table adjustmentTbl = new Table();
     ComboBox employeesName = new ComboBox("Employees: ");
     
     public PayrollRegisterMainUI(final int branchId){
@@ -425,23 +431,45 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                 Object itemId = event.getItemId();
                 Item item = payrollRegisterTbl.getItem(itemId);
                 
-                if(event.getPropertyId().equals("advances to o/e")){
-                    if(!UserAccessControl.isAdvances()){
-                        getWindow().showNotification("You are not allowed to add/delete advances!", Window.Notification.TYPE_WARNING_MESSAGE);
+                if(event.getPropertyId().equals("adjustments")){
+                    if(!UserAccessControl.isAdjustment()){
+                        getWindow().showNotification("You are not allowed to add adjustments", Window.Notification.TYPE_WARNING_MESSAGE);
                         return;
                     }
                     
-                    int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
-                    double amountToBeReceive = Double.parseDouble(item.getItemProperty("amount to be receive").toString());
-                    double amountReceivable = Double.parseDouble(item.getItemProperty("amount received").toString());
-                    
-                    Window subWindow = addAdvances(payrollId, amountToBeReceive, amountReceivable);
+                    int payrollId = Integer.parseInt(item.getItemProperty("id").toString());
+                    double amountToBeReceive = util.convertStringToDouble(item.getItemProperty("amount to be receive").getValue().toString());
+                    double amountReceive = util.convertStringToDouble(item.getItemProperty("amount received").getValue().toString());
+                    double adjustments = util.convertStringToDouble(item.getItemProperty("adjustments").getValue().toString());
+                            
+                    Window subWindow = addAdjustment(payrollId, 
+                            amountToBeReceive, 
+                            amountReceive, 
+                            adjustments);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow);
                     }
                     subWindow.setModal(true);
                     subWindow.center();
                 }
+                
+//                if(event.getPropertyId().equals("advances to o/e")){
+//                    if(!UserAccessControl.isAdvances()){
+//                        getWindow().showNotification("You are not allowed to add/delete advances!", Window.Notification.TYPE_WARNING_MESSAGE);
+//                        return;
+//                    }
+//                    
+//                    int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
+//                    double amountToBeReceive = Double.parseDouble(item.getItemProperty("amount to be receive").toString());
+//                    double amountReceivable = Double.parseDouble(item.getItemProperty("amount received").toString());
+//                    
+//                    Window subWindow = addAdvances(payrollId, amountToBeReceive, amountReceivable);
+//                    if(subWindow.getParent() == null){
+//                        getWindow().addWindow(subWindow);
+//                    }
+//                    subWindow.setModal(true);
+//                    subWindow.center();
+//                }
             }
         });
         
@@ -616,7 +644,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
             advancesTbl.addItem(new Object[]{
                 a.getAdvanceId(), a.getAmount(), a.getAdvanceType(), 
                 a.getParticulars(), util.convertDateFormat(a.getDatePosted().toString())
-            }, new Integer(i));
+            }, i);
             i++;
         }
         advancesTbl.setPageLength(advancesTbl.size());
@@ -700,6 +728,181 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         vlayout.addComponent(removeAdvances);
         
         subWindow.addComponent(vlayout);
+        return subWindow;
+    }
+    
+    private Window addAdjustment(final int payrollId, 
+            final double amountToBeReceive, 
+            final double amountReceived, 
+            double adjustment){
+        final Window subWindow = new Window("ADJUSTMENTS");
+        subWindow.setWidth("300px");
+        
+        TabSheet ts = new TabSheet();
+        ts.addStyleName("bar");
+        
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setMargin(true);
+        vlayout.setSpacing(true);
+        vlayout.setCaption("Post Adjustments");
+        
+        final TextField amount = new TextField("Amount: ");
+        amount.setWidth("100%");
+        vlayout.addComponent(amount);
+        
+        final TextField remarks = new TextField("Remarks");
+        remarks.setWidth("100%");
+        vlayout.addComponent(remarks);
+        
+        Button saveAdjustments = new Button("POST ADJUSTMENTS");
+        saveAdjustments.setWidth("100%");
+        saveAdjustments.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                if(amount.getValue() == null || amount.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Enter Amount for adjustment.", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                } else {
+                    if(!util.checkInputIfDouble(amount.getValue().toString().trim())){
+                        getWindow().showNotification("Enter a numeric value for amount.", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                
+                if(remarks.getValue() == null || remarks.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Add remarks for adjustment.", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
+                double amountForAdjustment = util.convertStringToDouble(amount.getValue().toString().trim());
+                String remarksForAdjustment = remarks.getValue().toString().trim().toLowerCase();
+                boolean result = payrollService.insertAdjustmentToPayroll(payrollId, 
+                        amountToBeReceive, 
+                        amountReceived, 
+                        amountForAdjustment, 
+                        remarksForAdjustment);
+                if(result){
+                    getWindow().showNotification("Successfully added adjustment.", Window.Notification.TYPE_HUMANIZED_MESSAGE);
+                    payrollRegisterTable(branchId, payroll_date, false);
+                    (subWindow.getParent()).removeWindow(subWindow);
+                }
+            }
+        });
+        vlayout.addComponent(saveAdjustments);
+        
+        ts.addComponent(vlayout);
+        
+        vlayout = new VerticalLayout();
+        vlayout.setMargin(true);
+        vlayout.setSpacing(true);
+        vlayout.setCaption("Remove Adjustments");
+        
+        Label label = new Label("Remarks: ");
+        vlayout.addComponent(label);
+        
+        adjustmentTable(payrollId, amountToBeReceive, amountReceived, subWindow);
+        vlayout.addComponent(adjustmentTbl);
+                
+        ts.addComponent(vlayout);
+        subWindow.addComponent(ts);
+        
+        return subWindow;
+    }
+    
+    private Table adjustmentTable(final int payrollId, 
+            final double amountToBeReceive, 
+            final double amountReceived, 
+            final Window window){
+        adjustmentTbl.removeAllItems();
+        adjustmentTbl.setWidth("100%");
+        adjustmentTbl.setImmediate(true);
+        adjustmentTbl.setSelectable(true);
+        
+        adjustmentTbl.addContainerProperty("id", Integer.class, null);
+        adjustmentTbl.addContainerProperty("amount", Double.class, null);
+        adjustmentTbl.addContainerProperty("remarks", String.class, null);
+        
+        int i = 0;
+        List<Adjustment> adjustmentList = payrollService.getListOfAdjustmentFromPayrollId(payrollId);
+        for(Adjustment adj : adjustmentList){
+            adjustmentTbl.addItem(new Object[]{  
+                adj.getAdjustmentId(), 
+                adj.getAmount(), 
+                adj.getRemarks()
+            }, i);
+            i++;
+        }
+        
+        adjustmentTbl.setPageLength(adjustmentTbl.size());
+        
+        for(Object listener : adjustmentTbl.getListeners(ItemClickEvent.class)){
+            adjustmentTbl.removeListener(ItemClickEvent.class, listener);
+        }
+        
+        adjustmentTbl.addListener(new ItemClickEvent.ItemClickListener() {
+
+            @Override
+            public void itemClick(ItemClickEvent event) {
+                Object itemId = event.getItemId();
+                final Item item = adjustmentTbl.getItem(itemId);
+                
+                double adjustments = util.convertStringToDouble(item.getItemProperty("amount").getValue().toString());
+                
+                if(event.getPropertyId().equals("id")){
+                    Window subWindow = removeAdjustment(util.convertStringToInteger(item.getItemProperty("id").getValue().toString()), 
+                            amountToBeReceive, 
+                            amountReceived, 
+                            adjustments, 
+                            payrollId, 
+                            window);
+                    if(subWindow.getParent() == null){
+                        getWindow().addWindow(subWindow);                        
+                    }
+                    subWindow.setModal(true);
+                    subWindow.center();
+                }                
+                
+            }
+        });
+        
+        return adjustmentTbl;
+    }
+    
+    private Window removeAdjustment(final int adjustmentId, 
+            final double amountToBeReceive, 
+            final double amountReceive, 
+            final double adjustment, 
+            final int payrollId, 
+            final Window window){
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setMargin(true);
+        vlayout.setSpacing(true);
+        
+        final Window subWindow = new Window("REMOVE ADVANCES", vlayout);
+        subWindow.setWidth("200px");
+        
+        Button removeAdjBtn = new Button("REMOVE ADJUSTMENT?");
+        removeAdjBtn.setWidth("100%");
+        removeAdjBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                boolean result = payrollService.removeAdjustmentById(adjustmentId, 
+                        amountToBeReceive, 
+                        amountReceive, 
+                        adjustment, 
+                        payrollId);
+                if(result){
+                    (subWindow.getParent()).removeWindow(subWindow);
+                    (window.getParent()).removeWindow(window);
+                    adjustmentTable(payrollId, 0, 0, subWindow);
+                    payrollRegisterTable(getBranchId(), payroll_date, false);
+                }
+            }
+        });
+        subWindow.addComponent(removeAdjBtn);
+        
         return subWindow;
     }
     

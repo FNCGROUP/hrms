@@ -201,4 +201,8 @@ public class ProcessPayrollComputation {
     private double getTotalNonWorkingHolidayPay(){
         return totalNonWorkingHolidayPaid;
     }
+    
+    private String getEmployeeId(){
+        return employeeId;
+    }
 }

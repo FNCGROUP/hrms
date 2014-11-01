@@ -5,6 +5,7 @@
 package com.openhris.payroll.serviceprovider;
 
 import com.openhris.payroll.dao.PayrollDAO;
+import com.openhris.payroll.model.Adjustment;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.Payroll;
 import com.openhris.payroll.model.PayrollRegister;
@@ -179,6 +180,42 @@ public class PayrollServiceImpl implements PayrollService {
                 EDIT_PAYROLL, 
                 adjustments, 
                 previousPayrollId);
+    }
+
+    @Override
+    public List<Adjustment> getListOfAdjustmentFromPayrollId(int payrollId) {
+        return payrollDAO.getListOfAdjustmentFromPayrollId(payrollId);
+    }
+
+    @Override
+    public boolean removeAdjustmentById(int adjustmentId, 
+            double amountToBeReceive, 
+            double amountReceived, 
+            double adjustments, 
+            int payrollId) {
+        return payrollDAO.removeAdjustmentById(adjustmentId, 
+                amountToBeReceive, 
+                amountReceived, 
+                adjustments, 
+                payrollId);
+    }
+
+    @Override
+    public double getForAdjustmentFromPreviousPayroll(int previousPayrollId) {
+        return payrollDAO.getForAdjustmentFromPreviousPayroll(previousPayrollId);
+    }
+
+    @Override
+    public boolean insertAdjustmentToPayroll(int payrollId, 
+            double amountToBeReceive, 
+            double amountReceived, 
+            double adjustment, 
+            String remarks) {
+        return payrollDAO.insertAdjustmentToPayroll(payrollId, 
+                amountToBeReceive, 
+                amountReceived, 
+                adjustment, 
+                remarks);
     }
     
 }
