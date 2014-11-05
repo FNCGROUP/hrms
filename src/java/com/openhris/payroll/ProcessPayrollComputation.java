@@ -191,7 +191,7 @@ public class ProcessPayrollComputation {
                     editPayroll, 
                     adjustment, 
                     previousPayrollId);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             e.printStackTrace(System.out);
         }
         

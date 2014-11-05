@@ -36,7 +36,8 @@ public class SalaryInformationDAO {
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM employee WHERE employeeId = '"+employeeId+"' ");
+            rs = stmt.executeQuery("SELECT * FROM employee WHERE employeeId = '"+employeeId+"' "
+                    + "AND (currentStatus IS NULL OR currentStatus = 'resigned') ");
             while(rs.next()){
                 employeeInformation.setEmploymentStatus(rs.getString("employmentStatus"));
                 employeeInformation.setEmploymentWageStatus(rs.getString("employmentWageStatus"));
@@ -49,6 +50,9 @@ public class SalaryInformationDAO {
                 employeeInformation.setPhicNo(rs.getString("phicNo"));
                 employeeInformation.setHdmfNo(rs.getString("hdmfNo"));
                 employeeInformation.setTotalDependent(rs.getString("totalDependent"));
+                employeeInformation.setEntryDate(util.parsingDate(rs.getString("entryDate")));
+                employeeInformation.setBankAccountNo(rs.getString("bankAccountNo"));
+                employeeInformation.setCurrentStatus((rs.getString("currentStatus") == null ? "employed" : rs.getString("currentStatus")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);

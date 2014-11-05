@@ -26,6 +26,7 @@ public class EmploymentInformation extends Employee {
 	private String position;
 	private String department;
 	private String bankAccountNo;
+        private String currentStatus;
 	
 	public String getEmploymentStatus(){ return employmentStatus; }
 	public void setEmploymentStatus(String employmentStatus){ this.employmentStatus = employmentStatus; }
@@ -65,5 +66,7 @@ public class EmploymentInformation extends Employee {
 	
 	public String getBankAccountNo(){ return bankAccountNo; }
 	public void setBankAccountNo(String bankAccountNo){ this.bankAccountNo = bankAccountNo; }
-	    
+        
+        public String getCurrentStatus(){ return currentStatus; }        
+        public void setCurrentStatus(String currentStatus){ this.currentStatus = currentStatus; }
 }
