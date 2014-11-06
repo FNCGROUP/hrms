@@ -27,6 +27,7 @@ public class EmploymentInformation extends Employee {
 	private String department;
 	private String bankAccountNo;
         private String currentStatus;
+        private Date endDate;
 	
 	public String getEmploymentStatus(){ return employmentStatus; }
 	public void setEmploymentStatus(String employmentStatus){ this.employmentStatus = employmentStatus; }
@@ -69,4 +70,7 @@ public class EmploymentInformation extends Employee {
         
         public String getCurrentStatus(){ return currentStatus; }        
         public void setCurrentStatus(String currentStatus){ this.currentStatus = currentStatus; }
+        
+        public Date getEndDate(){ return endDate; }
+        public void setEndDate(Date endDate) { this.endDate = endDate; }
 }

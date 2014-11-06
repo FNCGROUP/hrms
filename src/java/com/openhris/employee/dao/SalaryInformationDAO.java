@@ -8,7 +8,6 @@ package com.openhris.employee.dao;
 
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.EmploymentInformation;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -53,6 +52,7 @@ public class SalaryInformationDAO {
                 employeeInformation.setEntryDate(util.parsingDate(rs.getString("entryDate")));
                 employeeInformation.setBankAccountNo(rs.getString("bankAccountNo"));
                 employeeInformation.setCurrentStatus((rs.getString("currentStatus") == null ? "employed" : rs.getString("currentStatus")));
+                employeeInformation.setEndDate((util.parsingDate(rs.getString("endDate")) == null) ? new Date() : util.parsingDate(rs.getString("endDate")));
             }
         } catch (SQLException ex) {
             Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,6 +122,105 @@ public class SalaryInformationDAO {
             pstmt.setString(1, employeeId);
             pstmt.setInt(2, branchId);
             pstmt.setString(3, remarks.toLowerCase());
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public boolean editEmploymentDateEntry(String employeeId, String entryDate){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            conn.setAutoCommit(false);
+            pstmt = conn.prepareStatement("UPDATE employee SET entryDate = ? WHERE employeeId = ? ");
+            pstmt.setString(1, entryDate);
+            pstmt.setString(2, employeeId);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("UPDATE employee_position_history SET entryDate = ? WHERE employeeId = ? ORDER BY id DESC");
+            pstmt.setString(1, entryDate);
+            pstmt.setString(2, employeeId);
+            pstmt.executeUpdate();
+            
+            conn.commit();
+            System.out.println("Transaction commit...");
+            result = true;
+        } catch (SQLException ex) {
+            try {
+                conn.rollback();
+                System.out.println("Connection rollback...");
+            } catch (SQLException ex1) {
+                Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public boolean insertEndDate(String employeeId, String endDate){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE employee SET endDate = ?, currentStatus = ? WHERE employeeId = ? ");
+            pstmt.setString(1, endDate);
+            pstmt.setString(2, "resigned");
+            pstmt.setString(3, employeeId);
+            pstmt.executeUpdate();
+                        
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public boolean updateBankAccountNo(String employeeId, String bankAccountNo){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE employee SET bankAccountNo = ? WHERE employeeId = ? ");
+            pstmt.setString(1, bankAccountNo);
+            pstmt.setString(2, employeeId);
             pstmt.executeUpdate();
             
             result = true;

@@ -6,6 +6,7 @@
 
 package com.openhris.employee;
 
+import com.hrms.classes.GlobalVariables;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.service.CompanyService;
@@ -16,7 +17,6 @@ import com.openhris.employee.serviceprovider.SalaryInformationServiceImpl;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.Button.ClickListener;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
@@ -48,6 +48,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
     int corporateId;
     int tradeId;
     int branchId;
+    boolean userRoleResult = false;
     
     public EmployeeSalaryInformation(){        
     }
@@ -55,8 +56,14 @@ public class EmployeeSalaryInformation extends VerticalLayout{
     public EmployeeSalaryInformation(String employeeId){
         this.employeeId = employeeId;
         
+        if(GlobalVariables.getUserRole().equals("hr")){
+            userRoleResult = true;
+        }
+        
         init();
         addComponent(layout());
+        addComponent(new Label("<br />", Label.CONTENT_XHTML));
+        addComponent(new Label("__________________________________________________________________________________________________", Label.CONTENT_XHTML));
         addComponent(new Label("<br />", Label.CONTENT_XHTML));
         addComponent(layout2());
     }
@@ -261,23 +268,93 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         employmentStatusField.setWidth("200px");        
         glayout.addComponent(employmentStatusField, 0, 0);
         
-        PopupDateField entryDate = new PopupDateField("Employment Entry: ");
+        final PopupDateField entryDate = new PopupDateField("Employment Entry: ");
         entryDate.addStyleName("mydate");          
         entryDate.setDateFormat("yyyy-MM-dd");
         entryDate.setWidth("200px");
-        entryDate.setResolution(DateField.RESOLUTION_DAY);                
+        entryDate.setResolution(DateField.RESOLUTION_DAY);         
         glayout.addComponent(entryDate, 1, 0);
         glayout.setComponentAlignment(entryDate, Alignment.MIDDLE_LEFT);                
         
-        Button changeDateEntry = new Button("UPDATE DATE ENTRY");
+        Button changeDateEntry = new Button("EDIT DATE ENTRY");
         changeDateEntry.setWidth("200px");
+        changeDateEntry.setEnabled(userRoleResult);
         changeDateEntry.setImmediate(true);
-        changeDateEntry.addListener(updateDateEntryBtn);
+        changeDateEntry.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                if(entryDate.getValue() == null || entryDate.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Enter Date Entry.", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
+                Window window = editDateEntryWindow(util.convertDateFormat(entryDate.getValue().toString().trim().toLowerCase()));
+                if(window.getParent() == null){
+                    getWindow().addWindow(window);
+                }
+                window.setModal(true);
+                window.center();
+            }
+        });
         glayout.addComponent(changeDateEntry, 2, 0);
         glayout.setComponentAlignment(changeDateEntry, Alignment.BOTTOM_LEFT);
+                
+        final CheckBox editBankAccountNo = new CheckBox("Edit Bank Account No.");
+        editBankAccountNo.setImmediate(true);
+        editBankAccountNo.setEnabled(userRoleResult);
+        glayout.addComponent(editBankAccountNo, 0, 2);
+        glayout.setComponentAlignment(editBankAccountNo, Alignment.BOTTOM_LEFT);
         
         final TextField bankAccountNo = new TextField("Bank Account No: ");
-        bankAccountNo.setWidth("200px");        
+        bankAccountNo.setWidth("200px");           
+        bankAccountNo.setImmediate(true);
+        glayout.addComponent(bankAccountNo, 0, 1);
+                
+        final PopupDateField endDate = new PopupDateField("Exit Date: ");
+        endDate.addStyleName("mydate");          
+        endDate.setDateFormat("yyyy-MM-dd");
+        endDate.setWidth("200px");        
+        endDate.setResolution(DateField.RESOLUTION_DAY);                
+        glayout.addComponent(endDate, 1, 1);
+        glayout.setComponentAlignment(endDate, Alignment.MIDDLE_LEFT);
+        
+        Button endDateBtn = new Button("SUBMIT");
+        endDateBtn.setWidth("200px");
+        endDateBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                if(endDate.getValue() == null || endDate.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Enter End Date.", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
+                Window window = confirmedResignedWindow(util.convertDateFormat(endDate.getValue().toString().trim().toLowerCase()));
+                if(window.getParent() == null){
+                    getWindow().addWindow(window);
+                }
+                window.setModal(true);
+                window.center();
+            }
+        });
+        endDateBtn.setEnabled(userRoleResult);
+        glayout.addComponent(endDateBtn, 2, 1);
+        glayout.setComponentAlignment(endDateBtn, Alignment.BOTTOM_LEFT);
+        
+        if(getEmployeeId() != null){
+            EmploymentInformation employmentInformation = siService.getEmployeeSalaryInformation(getEmployeeId());
+            
+            employmentStatusField.setValue(employmentInformation.getCurrentStatus().toUpperCase());            
+            entryDate.setValue((employmentInformation.getEntryDate() == null) ? "" : employmentInformation.getEntryDate());  
+            endDate.setValue(employmentInformation.getEndDate());
+            bankAccountNo.setValue((employmentInformation.getBankAccountNo() == null) ? "" : employmentInformation.getBankAccountNo());    
+            bankAccountNo.setReadOnly(true);
+        }
+        employmentStatusField.setReadOnly(true);
+        entryDate.setReadOnly(!userRoleResult);
+        endDate.setReadOnly(!userRoleResult);
+               
         bankAccountNo.addListener(new Field.ValueChangeListener() {
 
             @Override
@@ -285,40 +362,17 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                 if(event.getProperty().getValue() == null || event.getProperty().getValue().toString().trim().isEmpty()){
                     getWindow().showNotification("Enter Bank Account No.", Window.Notification.TYPE_ERROR_MESSAGE);
                     return;
-                } else {
-                    getWindow().showNotification("Test Verified!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                } 
+                
+                boolean result = siService.updateBankAccountNo(getEmployeeId(), bankAccountNo.getValue().toString().trim().toLowerCase());
+                if(result){
+                    bankAccountNo.setReadOnly(result);
+                    editBankAccountNo.setValue(!result);
+                    getWindow().showNotification("Bank Account No. updated!", Window.Notification.TYPE_TRAY_NOTIFICATION);
                 }
             }
         });
-        bankAccountNo.setImmediate(true);
-        glayout.addComponent(bankAccountNo, 0, 1);
-                
-        PopupDateField endDate = new PopupDateField("Exit Date: ");
-        endDate.addStyleName("mydate");          
-        endDate.setDateFormat("yyyy-MM-dd");
-        endDate.setWidth("200px");
-        endDate.setResolution(DateField.RESOLUTION_DAY);                
-        glayout.addComponent(endDate, 1, 1);
-        glayout.setComponentAlignment(endDate, Alignment.MIDDLE_LEFT);
         
-        Button endDateBtn = new Button("SUBMIT");
-        endDateBtn.setWidth("200px");
-        endDateBtn.addListener(exitDateBtn);
-        glayout.addComponent(endDateBtn, 2, 1);
-        glayout.setComponentAlignment(endDateBtn, Alignment.BOTTOM_LEFT);
-        
-        if(getEmployeeId() != null){
-            EmploymentInformation employmentInformation = siService.getEmployeeSalaryInformation(getEmployeeId());
-            
-            employmentStatusField.setValue(employmentInformation.getCurrentStatus().toUpperCase());
-            employmentStatusField.setReadOnly(true);
-            entryDate.setValue((employmentInformation.getEntryDate() == null) ? "" : employmentInformation.getEntryDate());
-            bankAccountNo.setValue(employmentInformation.getBankAccountNo());    
-            bankAccountNo.setReadOnly(true);
-        }
-        
-        CheckBox editBankAccountNo = new CheckBox("Edit Bank Account No.");
-        editBankAccountNo.setImmediate(true);
         editBankAccountNo.addListener(new Button.ClickListener() {
 
             @Override
@@ -326,9 +380,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                 bankAccountNo.setReadOnly(!event.getButton().booleanValue());
             }
         });
-        glayout.addComponent(editBankAccountNo, 0, 2);
-        glayout.setComponentAlignment(editBankAccountNo, Alignment.BOTTOM_LEFT);
-        
+                
         return glayout;
     }
     
@@ -432,21 +484,59 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         subWindow.addComponent(updateBtn);
         
         return subWindow;
+    }     
+    
+    private Window editDateEntryWindow(final String entryDate){
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setWidth("100%");
+        vlayout.setMargin(true);
+        vlayout.setSpacing(true);
+        
+        final Window window = new Window("EDIT DATE ENTRY", vlayout);
+        window.setResizable(false);
+        
+        Button editBtn = new Button("EDIT DATE ENTRY?");
+        editBtn.setWidth("100%");
+        editBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                boolean result = siService.editEmploymentDateEntry(getEmployeeId(), entryDate);
+                if(result){
+                    getWindow().showNotification("Update Entry Date.", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                    (window.getParent()).removeWindow(window);
+                }
+            }
+        });
+        window.addComponent(editBtn);
+        
+        return window;
     }
     
-    ClickListener updateDateEntryBtn = new Button.ClickListener() {
+    private Window confirmedResignedWindow(final String endDate){
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setWidth("100%");
+        vlayout.setMargin(true);
+        vlayout.setSpacing(true);
+        
+        final Window window = new Window("END DATE (RESIGN)", vlayout);
+        window.setResizable(false);
+        
+        Button editBtn = new Button("CONFIRM ACTION?");
+        editBtn.setWidth("100%");
+        editBtn.addListener(new Button.ClickListener() {
 
-        @Override
-        public void buttonClick(Button.ClickEvent event) {
-            getWindow().showNotification("Button TEST!");
-        }
-    };
-    
-    ClickListener exitDateBtn = new Button.ClickListener() {
-
-        @Override
-        public void buttonClick(Button.ClickEvent event) {
-            getWindow().showNotification("Exit Date Button!");
-        }
-    };
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                boolean result = siService.insertEndDate(getEmployeeId(), endDate);
+                if(result){
+                    getWindow().showNotification("Resigned.", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                    (window.getParent()).removeWindow(window);
+                }
+            }
+        });
+        window.addComponent(editBtn);
+        
+        return window;
+    }
 }

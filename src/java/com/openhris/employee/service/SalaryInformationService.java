@@ -7,6 +7,7 @@
 package com.openhris.employee.service;
 
 import com.openhris.employee.model.EmploymentInformation;
+import java.util.Date;
 
 /**
  *
@@ -19,4 +20,10 @@ public interface SalaryInformationService {
     public boolean updateEmployeeSalaryInformation(String employeeId, EmploymentInformation employmentInformation);
     
     public boolean updateEmployeeContributionBranch(String employeeId, int branchId, String remarks);    
+    
+    public boolean editEmploymentDateEntry(String employeeId, String entryDate);
+    
+    public boolean insertEndDate(String employeeId, String endDate);
+    
+    public boolean updateBankAccountNo(String employeeId, String bankAccountNo);
 }

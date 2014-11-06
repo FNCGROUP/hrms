@@ -9,6 +9,7 @@ package com.openhris.employee.serviceprovider;
 import com.openhris.employee.dao.SalaryInformationDAO;
 import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.service.SalaryInformationService;
+import java.util.Date;
 
 /**
  *
@@ -31,6 +32,21 @@ public class SalaryInformationServiceImpl implements SalaryInformationService{
     @Override
     public boolean updateEmployeeContributionBranch(String employeeId, int branchId, String remarks) {
         return siDAO.updateEmployeeContributionBranch(employeeId, branchId, remarks);
+    }
+
+    @Override
+    public boolean editEmploymentDateEntry(String employeeId, String entryDate) {
+        return siDAO.editEmploymentDateEntry(employeeId, entryDate);
+    }
+
+    @Override
+    public boolean insertEndDate(String employeeId, String endDate) {
+        return siDAO.insertEndDate(employeeId, endDate);
+    }
+
+    @Override
+    public boolean updateBankAccountNo(String employeeId, String bankAccountNo) {
+        return siDAO.updateBankAccountNo(employeeId, bankAccountNo);
     }
     
 }

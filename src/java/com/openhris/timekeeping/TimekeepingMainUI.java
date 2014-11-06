@@ -199,7 +199,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                         return;
                     }
                     if(parsedEndDate.before(parsedAttendanceDateTo)){
-                        attendanceDateTo = parsedEndDate.toString();
+                        attendanceDateTo = util.convertDateFormat(parsedEndDate.toString());
                     } 
                     dateList = obtainPayrollDateList(attendanceDateFrom, attendanceDateTo);
                 }
