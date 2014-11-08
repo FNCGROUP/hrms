@@ -732,7 +732,7 @@ public class PayrollDAO {
         ResultSet rs = null;
         try {
             stmt = conn.createStatement();
-	    rs = stmt.executeQuery("SELECT ifnull(SUM(forAdjustments), 0) AS forAdjustments "
+	    rs = stmt.executeQuery("SELECT ifnull(forAdjustments, 0) AS forAdjustments "
 		    + "FROM payroll_table WHERE employeeId = '"+employeeId+"' "
                     + "ORDER BY payrollDate DESC, id DESC LIMIT 1");
             while(rs.next()){
