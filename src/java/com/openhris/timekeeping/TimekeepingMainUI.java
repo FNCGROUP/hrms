@@ -187,8 +187,8 @@ public class TimekeepingMainUI extends VerticalLayout {
                         dateList = obtainPayrollDateList(util.convertDateFormat(attendanceDateFrom), attendanceDateTo);
                     }else{
                         dateList = obtainPayrollDateList(attendanceDateFrom, attendanceDateTo);
-                        if(dateList.size() < 14){
-                            getWindow().showNotification("Payroll Date Range is less than 14 days!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        if(dateList.size() < 12){
+                            getWindow().showNotification("Payroll Date Range is less than 12 days!", Window.Notification.TYPE_ERROR_MESSAGE);
                             return;
                         }
                     }
