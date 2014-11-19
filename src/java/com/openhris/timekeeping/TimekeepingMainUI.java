@@ -302,7 +302,7 @@ public class TimekeepingMainUI extends VerticalLayout {
         if(employmentWageEntry.equals("monthly")){
             employmentWage = util.roundOffToTwoDecimalPlaces((employmentWage * 12) / 314);
         }
-        System.out.println("employment wage: "+employmentWage);        
+        
         for(int i = 0; i < dateList.size(); i++){ 
             Object itemId = new Integer(i);
             final ComboBox holidays = dropDown.populateAttendanceHolidayDropDownList(new ComboBox());
