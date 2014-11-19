@@ -211,7 +211,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                         util.convertDateFormat(payrollDate.getValue().toString()), 
                         util.convertDateFormat(attendancePeriodFrom.getValue().toString()), 
                         util.convertDateFormat(attendancePeriodTo.getValue().toString()));
-                subWindow.setWidth("65%");
+                subWindow.setWidth("80%");
                 subWindow.setModal(true);
                 if(subWindow.getParent() == null){
                     getWindow().addWindow(subWindow);
@@ -234,11 +234,13 @@ public class TimekeepingMainUI extends VerticalLayout {
             final String attendancePeriodFrom, 
             final String attendancePeriodTo){
         final Window subWindow = new Window("ATTENDANCE TABLE for " +name);
-        final Table table = new Table();
+        subWindow.setSizeFull();
         
+        final Table table = new Table();        
         table.removeAllItems();
         table.setEnabled(true);
-        table.setWidth("100%");
+//        table.setWidth("100%");
+        table.setSizeFull();
         table.setImmediate(true);
         table.setColumnCollapsingAllowed(true);
                 
@@ -275,10 +277,15 @@ public class TimekeepingMainUI extends VerticalLayout {
         table.setColumnAlignment("wdo", Table.ALIGN_RIGHT);
         table.setColumnAlignment("psday", Table.ALIGN_RIGHT);
         
-        table.setColumnCollapsed("l/min", true);
-        table.setColumnCollapsed("u/min", true);
-        table.setColumnCollapsed("o/min", true);
-        table.setColumnCollapsed("nd/min", true);
+        table.setColumnWidth("lates", 70);
+        table.setColumnWidth("undertime", 70);
+        table.setColumnWidth("overtime", 70);
+        table.setColumnWidth("night differential", 70);
+        table.setColumnWidth("l/min", 40);
+        table.setColumnWidth("u/min", 40);
+        table.setColumnWidth("o/min", 40);
+        table.setColumnWidth("nd/min", 50);
+        
         table.setColumnCollapsed("lholiday", true);
         table.setColumnCollapsed("sholiday", true);
         table.setColumnCollapsed("wdo", true);

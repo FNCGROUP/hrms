@@ -319,7 +319,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         glayout.addComponent(endDate, 1, 1);
         glayout.setComponentAlignment(endDate, Alignment.MIDDLE_LEFT);
         
-        Button endDateBtn = new Button("SUBMIT");
+        Button endDateBtn = new Button("RESIGN");
         endDateBtn.setWidth("200px");
         endDateBtn.addListener(new Button.ClickListener() {
 
