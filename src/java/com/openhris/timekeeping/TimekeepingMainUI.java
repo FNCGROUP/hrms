@@ -217,6 +217,13 @@ public class TimekeepingMainUI extends VerticalLayout {
                     getWindow().addWindow(subWindow);
                 }
                 subWindow.center();
+                subWindow.addListener(new Window.CloseListener() {
+
+                    @Override
+                    public void windowClose(Window.CloseEvent e) {
+                        employmentWage = employeeService.getEmploymentWage(employeeId);
+                    }
+                });
             }
         });
         comboBoxGrid.addComponent(openAttendanceTableWindowButton, 2, 1);
@@ -295,7 +302,7 @@ public class TimekeepingMainUI extends VerticalLayout {
         if(employmentWageEntry.equals("monthly")){
             employmentWage = util.roundOffToTwoDecimalPlaces((employmentWage * 12) / 314);
         }
-                
+        System.out.println("employment wage: "+employmentWage);        
         for(int i = 0; i < dateList.size(); i++){ 
             Object itemId = new Integer(i);
             final ComboBox holidays = dropDown.populateAttendanceHolidayDropDownList(new ComboBox());
@@ -880,9 +887,9 @@ public class TimekeepingMainUI extends VerticalLayout {
                     
                     if(!event.getText().isEmpty()){
                         lateDeduction = tcal.processEmployeesLates(policyStr, holidayStr, Integer.parseInt(event.getText().trim()), employmentWage);
-			System.out.println("wage: " + employmentWage);
-			System.out.println("policy" + policyStr);
-			System.out.println("late deduction: " + lateDeduction);
+//			System.out.println("wage: " + employmentWage);
+//			System.out.println("policy" + policyStr);
+//			System.out.println("late deduction: " + lateDeduction);
                         item.getItemProperty("l/min").setValue(df.format(lateDeduction + (lateDeduction*premiumRate)));
                     }else{
                         item.getItemProperty("l/min").setValue(0.0);
