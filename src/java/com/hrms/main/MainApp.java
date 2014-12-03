@@ -20,6 +20,7 @@ import com.openhris.administrator.UsersMainUI;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.service.AdministratorService;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
+import com.openhris.calendar.CalendarMainUI;
 import com.openhris.commons.AboutHris;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
@@ -93,7 +94,7 @@ public class MainApp extends Application {
     UsersMainUI usersMainUI;
     UserToolbarMenuAccessMainUI userToolbarMenuAccessMainUI;
     UserAdvanceAccessMainUI userAdvanceAccessMainUI;    
-    CompanyEventModule companyEventModule;
+    CalendarMainUI calendarMainUI;
     
     AdvanceUserAccessModule advanceUserAccess = new AdvanceUserAccessModule();
     CreateNewUser createNewUser;
@@ -271,7 +272,7 @@ public class MainApp extends Application {
                     payrollMenuBar = true;
                 } else if (event.getButton().getCaption().equals("LOANS")) {
                     loansMenuBar = true;
-                } else if (event.getButton().getCaption().equals("EVENTS")) {
+                } else if (event.getButton().getCaption().equals("CALENDAR")) {
                     eventsMenuBar = true;
                 } else if (event.getButton().getCaption().equals("ADMINISTRATOR")) {
                     contributionMenuBar = true;
@@ -321,7 +322,9 @@ public class MainApp extends Application {
         }
         left.addComponent(mainButton);
         
-        mainButton = new NativeButton("EVENTS");
+        mainButton = new NativeButton("CALENDAR", change);
+        mainButton.setStyleName("selected");
+        mainButton.setData(buildCalendarComponent());
         if(GlobalVariables.getUserRole().equals("administrator")){
             mainButton.setVisible(true);
         } else {
@@ -421,55 +424,7 @@ public class MainApp extends Application {
                 } 
             }
         });
-        
-//        for(Company c : companyList){							
-//            tree.addItem(c.getCompanyName());			
-//	}
-//        
-//        tree.addListener(new Tree.ExpandListener() {
-//
-//            @Override
-//            public void nodeExpand(Tree.ExpandEvent event) {                        
-//                companyName = event.getItemId().toString();
-//		companyId = companyService.getCorporateId(event.getItemId().toString().toLowerCase());
-//                
-//                if(GlobalVariables.getUserRole().equals("administrator") || 
-//                        GlobalVariables.getUserRole().equals("hr") || 
-//                        GlobalVariables.getUserRole().equals("audit")){
-//                    tradeList = companyService.getTradeByCorporateId(companyId);
-//                } else {
-//                    tradeList = companyService.getTradeListAssignedForUser(getUserId(), companyId);
-//                }                
-//		                
-//		for(Trade t : tradeList){
-//                    tree.addItem(t.getTradeName());
-//                    tree.setParent(t.getTradeName(), companyName);
-//                                       
-//		}
-//                
-//                if(tree.getParent(event.getItemId()) != null){
-//                    companyId = companyService.getCorporateId(tree.getParent(event.getItemId()).toString());
-//                    tradeId = companyService.getTradeId(event.getItemId().toString(), companyId);
-//                        
-//                    if(GlobalVariables.getUserRole().equals("administrator") || 
-//                        GlobalVariables.getUserRole().equals("hr") || 
-//                        GlobalVariables.getUserRole().equals("audit")){
-//                        branchList = companyService.getBranchByTrade(tradeId, companyId);
-//                    } else {
-//                        branchList = companyService.getBranchListAssignedForUser(getUserId(), tradeId);
-//                    }
-//                    
-//                    branchList = companyService.getBranchByTrade(tradeId, companyId);
-//                    String tradeName = companyService.getTradeById(tradeId);
-//                    for(Branch b : branchList){
-//                        tree.addItem(b.getBranchName());
-//                        tree.setParent(b.getBranchName(), tradeName);
-//                        tree.setChildrenAllowed(b.getBranchName(), false);
-//                    }
-//                } 
-//            }
-//        });
-        
+                
         tree.addListener(new ItemClickEvent.ItemClickListener() {
 
             @Override
@@ -711,20 +666,20 @@ public class MainApp extends Application {
         return ts;
     }
         
-    ComponentContainer buildEventsComponent(){
-        companyEventModule = new CompanyEventModule(GlobalVariables.getUsername(), GlobalVariables.getUserRole());
+    ComponentContainer buildCalendarComponent(){
+        calendarMainUI = new CalendarMainUI();
         InlineDateField sample = new InlineDateField();
         sample.setValue(new Date());
         sample.setImmediate(true);
         
         TabSheet ts = new TabSheet();
-        ts.setSizeFull();
+//        ts.setSizeFull();
         ts.addStyleName("bar");
         
         VerticalLayout calendarMenuGrid = new VerticalLayout();
         calendarMenuGrid.setSizeFull();
-        calendarMenuGrid.setCaption("Events");
-        calendarMenuGrid.addComponent(companyEventModule);
+        calendarMenuGrid.setCaption("Calendar");
+        calendarMenuGrid.addComponent(calendarMainUI);      
         ts.addComponent(calendarMenuGrid);
                 
         return ts;
@@ -806,6 +761,7 @@ public class MainApp extends Application {
                     initMainMenu();
                     (subWindow.getParent()).removeWindow(subWindow);
                     userId = administratorService.getUserId(username.getValue().toString().toLowerCase().trim());
+                    hsplit.setSecondComponent(buildCalendarComponent());
                 }else{
                     (subWindow.getParent()).showNotification("Incorrect username/password!");
                     return;

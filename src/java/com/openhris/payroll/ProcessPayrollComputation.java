@@ -52,11 +52,13 @@ public class ProcessPayrollComputation {
     double totalUndertime;
     double totalOvertime;
     double totalNightDifferential;
+    double totalDutyManager;
     
     double totalLatesDeduction;
     double totalUndertimeDeduction;
     double totalOvertimePay;
     double totalNightDifferetinalPay;
+    double totalDutyManagerPay;
     double totalLegalHolidayPaid;
     double totalSpecialHolidayPaid;
     double totalWorkingDayOffPaid;
@@ -89,11 +91,13 @@ public class ProcessPayrollComputation {
             totalUndertime = totalUndertime + t.getUndertime();
             totalOvertime = totalOvertime = t.getOvertime();
             totalNightDifferential = totalNightDifferential + t.getNightDifferential();
+            totalDutyManager = totalDutyManager + t.getDutyManager();
             
             totalLatesDeduction = totalLatesDeduction + t.getLateDeduction();
             totalUndertimeDeduction = totalUndertimeDeduction + t.getUndertimeDeduction();
             totalOvertimePay = totalOvertimePay + t.getOvertimePaid();
             totalNightDifferetinalPay = totalNightDifferetinalPay + t.getNightDifferentialPaid();
+            totalDutyManagerPay = totalDutyManagerPay + t.getDutyManagerPaid();
             
             totalLegalHolidayPaid = totalLegalHolidayPaid + t.getLegalHolidayPaid();
             totalSpecialHolidayPaid = totalSpecialHolidayPaid + t.getSpecialHolidayPaid();
@@ -121,6 +125,7 @@ public class ProcessPayrollComputation {
             payroll.setTotalUndertimeDeduction(totalUndertimeDeduction);
             payroll.setTotalOvertimePaid(totalOvertimePay);
             payroll.setTotalNightDifferentialPaid(totalNightDifferetinalPay);
+            payroll.setTotalDutyManagerPaid(totalDutyManagerPay);
             payroll.setTotalLegalHolidayPaid(totalLegalHolidayPaid);
             payroll.setTotalSpecialHolidayPaid(totalSpecialHolidayPaid);
             payroll.setTotalWorkingDayOffPaid(totalWorkingDayOffPaid);

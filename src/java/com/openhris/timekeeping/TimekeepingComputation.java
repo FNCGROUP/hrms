@@ -78,6 +78,24 @@ public class TimekeepingComputation {
         return util.roundOffToTwoDecimalPlaces(premiumAddition);
     }
     
+    public double processEmployeeDutyManager(String policy, 
+            String holiday, 
+            int dutyManager, Double wage){
+        double rate = getHolidayRate(holiday, wage);
+        double dutyManagerPayPerMinute = calculateDutyManagerPerMinute(dutyManager, rate);
+        double totalDutyManagerPay = 0.0;
+        
+        if(policy == null || policy.isEmpty()){
+            totalDutyManagerPay = dutyManagerPayPerMinute;
+        } else if(policy.equals("working-holiday") ){ 
+            totalDutyManagerPay = dutyManagerPayPerMinute * .1;
+        }else if(policy.equals("working-day-off")){
+            totalDutyManagerPay = dutyManagerPayPerMinute *.3;
+        }
+        
+        return util.roundOffToTwoDecimalPlaces(totalDutyManagerPay);
+    }
+    
     public double processAdditionalHolidayPay(String holiday, Double wage){
         Double rate;
         if(holiday.equals("legal-holiday")){
@@ -155,4 +173,11 @@ public class TimekeepingComputation {
         return util.roundOffToTwoDecimalPlaces(overtimePremiumPerMinute);
     }
     
+    private double calculateDutyManagerPerMinute(int dutyManager, double rate){
+        double dutyManagerPerMinute;
+        double ratePerMinute = rate /480;
+        dutyManagerPerMinute = dutyManager * ratePerMinute;
+        
+        return util.roundOffToTwoDecimalPlaces(dutyManagerPerMinute);
+    }
 }

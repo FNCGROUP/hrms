@@ -44,9 +44,10 @@ public class PayrollDAO {
                     + "p.phic AS phic, p.sss AS sss, p.hdmf AS hdmf, p.absences AS absences, p.numberOfDays AS numberOfDays, "
                     + "p.taxableSalary AS taxableSalary, p.tax AS tax, p.cashBond AS cashBond, p.totalLatesDeduction AS totalLatesDeduction, "
                     + "p.totalUndertimeDeduction AS totalUndertimeDeduction, p.totalOvertimePaid AS totalOvertimePaid, "
-                    + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalLegalHolidayPaid AS totalLegalHolidayPaid, "
-                    + "p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, "
-                    + "p.allowance AS allowance, p.allowanceForLiquidation AS allowanceForLiquidation, p.netSalary AS netSalary, "
+                    + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
+                    + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
+                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.allowance AS allowance, "
+                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.netSalary AS netSalary, "
                     + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
                     + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
 		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
@@ -58,9 +59,10 @@ public class PayrollDAO {
                     + "p.phic AS phic, p.sss AS sss, p.hdmf AS hdmf, p.absences AS absences, p.numberOfDays AS numberOfDays, "
                     + "p.taxableSalary AS taxableSalary, p.tax AS tax, p.cashBond AS cashBond, p.totalLatesDeduction AS totalLatesDeduction, "
                     + "p.totalUndertimeDeduction AS totalUndertimeDeduction, p.totalOvertimePaid AS totalOvertimePaid, "
-                    + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalLegalHolidayPaid AS totalLegalHolidayPaid, "
-                    + "p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, "
-                    + "p.allowance AS allowance, p.allowanceForLiquidation AS allowanceForLiquidation, p.netSalary AS netSalary, "
+                    + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
+                    + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
+                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.allowance AS allowance, "
+                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.netSalary AS netSalary, "
                     + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
                     + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
 		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
@@ -92,6 +94,7 @@ public class PayrollDAO {
                 p.setTotalUndertimeDeduction(util.convertStringToDouble(rs.getString("totalUndertimeDeduction")));
                 p.setTotalOvertimePaid(util.convertStringToDouble(rs.getString("totalOvertimePaid")));
                 p.setTotalNightDifferentialPaid(util.convertStringToDouble(rs.getString("totalNightDifferentialPaid")));
+                p.setTotalDutyManagerPaid(util.convertStringToDouble(rs.getString("totalDutyManagerPaid")));
                 p.setTotalLegalHolidayPaid(util.convertStringToDouble(rs.getString("totalLegalHolidayPaid")));
                 p.setTotalSpecialHolidayPaid(util.convertStringToDouble(rs.getString("totalSpecialHolidayPaid")));
                 p.setTotalWorkingDayOffPaid(util.convertStringToDouble(rs.getString("totalWorkingDayOffPaid")));
@@ -434,6 +437,7 @@ public class PayrollDAO {
                 pr.setTotalLegalHolidayPaid(util.convertStringToDouble(rs.getString("legalHolidayPay")));
                 pr.setTotalSpecialHolidayPaid(util.convertStringToDouble(rs.getString("specialHolidayPay")));
                 pr.setTotalNightDifferentialPaid(util.convertStringToDouble(rs.getString("nightDifferentialPay")));
+                pr.setTotalDutyManagerPaid(util.convertStringToDouble(rs.getString("dutyManagerPay")));
                 pr.setTotalWorkingDayOffPaid(util.convertStringToDouble(rs.getString("workingDayOffPay")));
                 pr.setAbsences(util.convertStringToDouble(rs.getString("absences")));
                 pr.setTotalLatesDeduction(util.convertStringToDouble(rs.getString("totalLatesDeduction")));
@@ -983,10 +987,10 @@ public class PayrollDAO {
                 pstmt = conn.prepareStatement("INSERT INTO payroll_table(employeeId, attendancePeriodFrom, attendancePeriodTo, "
                         + "basicSalary, halfMonthSalary, phic, sss, hdmf, absences, numberOfDays, taxableSalary, tax, "
                         + "cashBond, totalLatesDeduction, totalUndertimeDeduction, totalOvertimePaid, totalNightDifferentialPaid, "
-                        + "totalLegalHolidayPaid, totalSpecialHolidayPaid, totalWorkingDayOffPaid, totalNonWorkingHolidayPaid, allowance, "
-                        + "allowanceForLiquidation, netSalary, adjustments, amountToBeReceive, amountReceivable, branchId, "
-			+ "payrollPeriod, payrollDate) "
-                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        + "totalDutyManagerPaid, totalLegalHolidayPaid, totalSpecialHolidayPaid, totalWorkingDayOffPaid, "
+                        + "totalNonWorkingHolidayPaid, allowance, allowanceForLiquidation, netSalary, adjustments, amountToBeReceive, "
+                        + "amountReceivable, branchId, payrollPeriod, payrollDate) "
+                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 pstmt.setString(1, payroll.getEmployeeId());
                 pstmt.setString(2, util.convertDateFormat(payroll.getAttendancePeriodFrom().toString()));
                 pstmt.setString(3, util.convertDateFormat(payroll.getAttendancePeriodTo().toString()));
@@ -1004,19 +1008,20 @@ public class PayrollDAO {
                 pstmt.setDouble(15, payroll.getTotalUndertimeDeduction());
                 pstmt.setDouble(16, payroll.getTotalOvertimePaid());
                 pstmt.setDouble(17, payroll.getTotalNightDifferentialPaid());
-                pstmt.setDouble(18, payroll.getTotalLegalHolidayPaid());
-                pstmt.setDouble(19, payroll.getTotalSpecialHolidayPaid());
-                pstmt.setDouble(20, payroll.getTotalWorkingDayOffPaid());
-                pstmt.setDouble(21, payroll.getTotalNonWorkingHolidayPaid());
-                pstmt.setDouble(22, payroll.getAllowance());
-                pstmt.setDouble(23, payroll.getAllowanceForLiquidation());
-                pstmt.setDouble(24, payroll.getNetSalary());
-		pstmt.setDouble(25, adjustments);
-                pstmt.setDouble(26, payroll.getAmountToBeReceive() + adjustments);
-                pstmt.setDouble(27, payroll.getAmountReceivable() + adjustments);
-                pstmt.setInt(28, payroll.getBranchId());
-                pstmt.setString(29, payroll.getPayrollPeriod());
-                pstmt.setString(30, util.convertDateFormat(payroll.getPayrollDate().toString()));                
+                pstmt.setDouble(18, payroll.getTotalDutyManagerPaid());
+                pstmt.setDouble(19, payroll.getTotalLegalHolidayPaid());
+                pstmt.setDouble(20, payroll.getTotalSpecialHolidayPaid());
+                pstmt.setDouble(21, payroll.getTotalWorkingDayOffPaid());
+                pstmt.setDouble(22, payroll.getTotalNonWorkingHolidayPaid());
+                pstmt.setDouble(23, payroll.getAllowance());
+                pstmt.setDouble(24, payroll.getAllowanceForLiquidation());
+                pstmt.setDouble(25, payroll.getNetSalary());
+		pstmt.setDouble(26, adjustments);
+                pstmt.setDouble(27, payroll.getAmountToBeReceive() + adjustments);
+                pstmt.setDouble(28, payroll.getAmountReceivable() + adjustments);
+                pstmt.setInt(29, payroll.getBranchId());
+                pstmt.setString(30, payroll.getPayrollPeriod());
+                pstmt.setString(31, util.convertDateFormat(payroll.getPayrollDate().toString()));                
                 pstmt.executeUpdate();
                 
                 int payrollId = 0;            
@@ -1028,10 +1033,10 @@ public class PayrollDAO {
                 
                 for(Timekeeping t : insertAttendanceList){
                     pstmt = conn.prepareStatement("INSERT INTO timekeeping_table(payrollId, attendanceDate, policy, "
-                            + "holiday, premium, lates, undertime, overtime, nightDifferential, latesDeduction, "
-                            + "undertimeDeduction, overtimePaid, nightDifferentialPaid, legalHolidayPaid, "
+                            + "holiday, premium, lates, undertime, overtime, nightDifferential, dutyManager, latesDeduction, "
+                            + "undertimeDeduction, overtimePaid, nightDifferentialPaid, dutyManagerPaid, legalHolidayPaid, "
                             + "specialHolidayPaid, workingDayOffPaid, psHolidayPaid) "
-                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
+                            + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"); 
                     pstmt.setInt(1, payrollId);
                     pstmt.setString(2, util.convertDateFormat(t.getAttendanceDate().toString()));
                     pstmt.setString(3, t.getPolicy());
@@ -1041,14 +1046,16 @@ public class PayrollDAO {
                     pstmt.setDouble(7, t.getUndertime());
                     pstmt.setDouble(8, t.getOvertime());
                     pstmt.setDouble(9, t.getNightDifferential());
-                    pstmt.setDouble(10, t.getLateDeduction());
-                    pstmt.setDouble(11, t.getUndertimeDeduction());
-                    pstmt.setDouble(12, t.getOvertimePaid());
-                    pstmt.setDouble(13, t.getNightDifferentialPaid());
-                    pstmt.setDouble(14, t.getLegalHolidayPaid());
-                    pstmt.setDouble(15, t.getSpecialHolidayPaid());
-                    pstmt.setDouble(16, t.getWorkingDayOffPaid());
-                    pstmt.setDouble(17, t.getNonWorkingHolidayPaid());
+                    pstmt.setDouble(10, t.getDutyManager());
+                    pstmt.setDouble(11, t.getLateDeduction());
+                    pstmt.setDouble(12, t.getUndertimeDeduction());
+                    pstmt.setDouble(13, t.getOvertimePaid());
+                    pstmt.setDouble(14, t.getNightDifferentialPaid());
+                    pstmt.setDouble(15, t.getDutyManagerPaid());
+                    pstmt.setDouble(16, t.getLegalHolidayPaid());
+                    pstmt.setDouble(17, t.getSpecialHolidayPaid());
+                    pstmt.setDouble(18, t.getWorkingDayOffPaid());
+                    pstmt.setDouble(19, t.getNonWorkingHolidayPaid());
                     pstmt.executeUpdate();
                 }                          
 			                

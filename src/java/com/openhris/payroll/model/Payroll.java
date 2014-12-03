@@ -35,6 +35,7 @@ public class Payroll extends Employee {
     double totalUndertimeDeduction;
     double totalOvertimePaid;
     double totalNightDifferentialPaid;
+    double totalDutyManagerPaid;
     double totalLegalHolidayPaid;
     double totalSpecialHolidayPaid;
     double totalWorkingDayOffPaid;
@@ -89,7 +90,8 @@ public class Payroll extends Employee {
 
     public double getGrossPay(){
         return grossPay = (getHalfMonthSalary() + getTotalOvertimePaid() + getTotalLegalHolidayPaid() + getTotalSpecialHolidayPaid() + 
-                getTotalNightDifferentialPaid() + getTotalWorkingDayOffPaid()) - (getAbsences() + getTotalLatesDeduction() + getTotalUndertimeDeduction());
+                getTotalNightDifferentialPaid() + getTotalDutyManagerPaid() + getTotalWorkingDayOffPaid()) 
+                - (getAbsences() + getTotalLatesDeduction() + getTotalUndertimeDeduction());
     }
     
     public double getAbsences() {
@@ -126,6 +128,10 @@ public class Payroll extends Employee {
 
     public double getTotalNightDifferentialPaid() {
         return totalNightDifferentialPaid;
+    }
+    
+    public double getTotalDutyManagerPaid(){
+        return totalDutyManagerPaid;
     }
 
     public double getTotalLegalHolidayPaid() {
@@ -263,6 +269,10 @@ public class Payroll extends Employee {
 
     public void setTotalNightDifferentialPaid(double totalNightDifferentialPaid) {
         this.totalNightDifferentialPaid = totalNightDifferentialPaid;
+    }
+    
+    public void setTotalDutyManagerPaid(double totalDutyManagerPaid){
+        this.totalDutyManagerPaid = totalDutyManagerPaid;
     }
 
     public void setTotalLegalHolidayPaid(double totalLegalHolidayPaid) {

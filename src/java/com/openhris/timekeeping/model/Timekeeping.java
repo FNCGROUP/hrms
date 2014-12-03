@@ -22,10 +22,12 @@ public class Timekeeping extends Payroll {
     private double undertime;
     private double overtime;
     private double nightDifferential;
+    private double dutyManager;
     private double lateDeduction;
     private double undertimeDeduction;
     private double overtimePaid;
     private double nightDifferentialPaid;
+    private double dutyManagerPaid;
     private double legalHolidayPaid;
     private double specialHolidayPaid;
     private double workingDayOffPaid;
@@ -63,6 +65,10 @@ public class Timekeeping extends Payroll {
         return nightDifferential;
     }
     
+    public double getDutyManager(){
+        return dutyManager;
+    }
+    
     public double getLateDeduction() {
         return lateDeduction;
     }
@@ -79,6 +85,10 @@ public class Timekeeping extends Payroll {
         return nightDifferentialPaid;
     }
 
+    public double getDutyManagerPaid(){
+        return dutyManagerPaid;
+    }
+    
     public double getLegalHolidayPaid() {
         return legalHolidayPaid;
     }
@@ -126,6 +136,10 @@ public class Timekeeping extends Payroll {
     public void setNightDifferential(double nightDifferential){
         this.nightDifferential = nightDifferential;
     }
+    
+    public void setDutyManager(double dutyManager){
+        this.dutyManager = dutyManager;
+    }
 
     public void setLateDeduction(double lateDeduction) {
         this.lateDeduction = lateDeduction;
@@ -143,6 +157,10 @@ public class Timekeeping extends Payroll {
         this.nightDifferentialPaid = nightDifferentialPaid;
     }
 
+    public void setDutyManagerPaid(double dutyManagerPaid){
+        this.dutyManagerPaid = dutyManagerPaid;
+    }
+    
     public void setLegalHolidayPaid(double legalHolidayPaid) {
         this.legalHolidayPaid = legalHolidayPaid;
     }

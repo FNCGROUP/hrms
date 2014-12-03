@@ -211,7 +211,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                         util.convertDateFormat(payrollDate.getValue().toString()), 
                         util.convertDateFormat(attendancePeriodFrom.getValue().toString()), 
                         util.convertDateFormat(attendancePeriodTo.getValue().toString()));
-                subWindow.setWidth("80%");
+                subWindow.setWidth("888px");
                 subWindow.setModal(true);
                 if(subWindow.getParent() == null){
                     getWindow().addWindow(subWindow);
@@ -259,10 +259,12 @@ public class TimekeepingMainUI extends VerticalLayout {
         table.addContainerProperty("undertime", TextField.class, null); 
         table.addContainerProperty("overtime", TextField.class, null);        
         table.addContainerProperty("night differential", TextField.class, null);  
+        table.addContainerProperty("duty manager", TextField.class, null);
         table.addContainerProperty("l/min", Double.class, null); 
         table.addContainerProperty("u/min", Double.class, null); 
         table.addContainerProperty("o/min", Double.class, null);
         table.addContainerProperty("nd/min", Double.class, null);
+        table.addContainerProperty("dm/min", Double.class, null);
         table.addContainerProperty("lholiday", Double.class, null);
         table.addContainerProperty("sholiday", Double.class, null);
         table.addContainerProperty("wdo", Double.class, null);
@@ -275,24 +277,36 @@ public class TimekeepingMainUI extends VerticalLayout {
         table.setColumnAlignment("undertime", Table.ALIGN_CENTER);
         table.setColumnAlignment("overtime", Table.ALIGN_CENTER);
         table.setColumnAlignment("night differential", Table.ALIGN_CENTER);
+        table.setColumnAlignment("duty manager", Table.ALIGN_CENTER);
         table.setColumnAlignment("l/min", Table.ALIGN_RIGHT);
         table.setColumnAlignment("u/min", Table.ALIGN_RIGHT);
         table.setColumnAlignment("o/min", Table.ALIGN_RIGHT);
         table.setColumnAlignment("nd/min", Table.ALIGN_RIGHT);
+        table.setColumnAlignment("dm/min", Table.ALIGN_RIGHT);
         table.setColumnAlignment("lholiday", Table.ALIGN_RIGHT);
         table.setColumnAlignment("sholiday", Table.ALIGN_RIGHT);
         table.setColumnAlignment("wdo", Table.ALIGN_RIGHT);
         table.setColumnAlignment("psday", Table.ALIGN_RIGHT);
         
-        table.setColumnWidth("lates", 70);
-        table.setColumnWidth("undertime", 70);
-        table.setColumnWidth("overtime", 70);
-        table.setColumnWidth("night differential", 70);
+        table.setColumnWidth("date", 70);
+        table.setColumnWidth("policy", 125);
+        table.setColumnWidth("holidays", 125);
+        table.setColumnWidth("premium", 60);
+        table.setColumnWidth("lates", 50);
+        table.setColumnWidth("undertime", 60);
+        table.setColumnWidth("overtime", 50);
+        table.setColumnWidth("night differential", 110);
+        table.setColumnWidth("duty manager", 80);
         table.setColumnWidth("l/min", 40);
         table.setColumnWidth("u/min", 40);
         table.setColumnWidth("o/min", 40);
         table.setColumnWidth("nd/min", 50);
         
+        table.setColumnCollapsed("l/min", true);
+        table.setColumnCollapsed("u/min", true);
+        table.setColumnCollapsed("o/min", true);
+        table.setColumnCollapsed("nd/min", true);
+        table.setColumnCollapsed("dm/min", true);
         table.setColumnCollapsed("lholiday", true);
         table.setColumnCollapsed("sholiday", true);
         table.setColumnCollapsed("wdo", true);
@@ -316,32 +330,44 @@ public class TimekeepingMainUI extends VerticalLayout {
             premium.setImmediate(true);
             
             final TextField lates = new TextField();
-            lates.setWidth("50px");
+            lates.setWidth("100%");
             lates.setValue("0");
+            lates.addStyleName("numerical");
             lates.setEnabled(true);
             lates.setData(itemId);
             lates.setImmediate(true);
                         
             final TextField undertime = new TextField();
-            undertime.setWidth("50px");
+            undertime.setWidth("100%");
             undertime.setValue("0");
+            undertime.addStyleName("numerical");
             undertime.setEnabled(true);
             undertime.setData(itemId);
             undertime.setImmediate(true);
                         
             final TextField overtime = new TextField();
-            overtime.setWidth("50px");
+            overtime.setWidth("100%");
             overtime.setValue("0");
+            overtime.addStyleName("numerical");
             overtime.setEnabled(true);
             overtime.setData(itemId);
             overtime.setImmediate(true);
             
             final TextField nightDifferential = new TextField();
-            nightDifferential.setWidth("50px");
+            nightDifferential.setWidth("70%");
             nightDifferential.setValue("0");
+            nightDifferential.addStyleName("numerical");
             nightDifferential.setEnabled(true);
             nightDifferential.setData(itemId);
             nightDifferential.setImmediate(true);
+            
+            final TextField dutyManager = new TextField();
+            dutyManager.setWidth("80%");
+            dutyManager.setValue("0");
+            dutyManager.addStyleName("numerical");
+            dutyManager.setEnabled(true);
+            dutyManager.setData(itemId);
+            dutyManager.setImmediate(true);
             
             final ComboBox policy = dropDown.populateAttendancePolicyDropDownList(new ComboBox());
             policy.setWidth("120px");
@@ -369,6 +395,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                     item.getItemProperty("u/min").setValue(0.0);
                     item.getItemProperty("o/min").setValue(0.0);
                     item.getItemProperty("nd/min").setValue(0.0);
+                    item.getItemProperty("dm/min").setValue(0.0);
                     item.getItemProperty("sholiday").setValue(0.0);
                     item.getItemProperty("lholiday").setValue(0.0);
                     item.getItemProperty("wdo").setValue(0.0);
@@ -380,24 +407,28 @@ public class TimekeepingMainUI extends VerticalLayout {
                         undertime.setEnabled(true);
                         overtime.setEnabled(true);
                         nightDifferential.setEnabled(true);
+                        dutyManager.setEnabled(true);
                     } else if(event.getProperty().getValue().equals("holiday")){
                         holidays.setEnabled(true);   
                         lates.setEnabled(false);
                         undertime.setEnabled(false);
                         overtime.setEnabled(false);
                         nightDifferential.setEnabled(false);
+                        dutyManager.setEnabled(false);
                     } else if(event.getProperty().getValue().equals("working-holiday")) { 
                         holidays.setEnabled(true);
                         lates.setEnabled(true);
                         undertime.setEnabled(true);
                         overtime.setEnabled(true);
                         nightDifferential.setEnabled(true);
+                        dutyManager.setEnabled(true);
                     } else if(event.getProperty().getValue().equals("working-day-off")){
                         holidays.setEnabled(true);
                         lates.setEnabled(true);
                         undertime.setEnabled(true);
                         overtime.setEnabled(true);
                         nightDifferential.setEnabled(true);
+                        dutyManager.setEnabled(true);
                         
                         additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(employmentWage, employmentWageEntry);
                         item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
@@ -407,6 +438,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                         undertime.setEnabled(false);
                         overtime.setEnabled(false);
                         nightDifferential.setEnabled(false);
+                        dutyManager.setEnabled(false);
                     }                    
                 }
             });    
@@ -489,12 +521,14 @@ public class TimekeepingMainUI extends VerticalLayout {
                     lates.setValue("0");
                     undertime.setValue("0");
                     overtime.setValue("0");
-                    nightDifferential.setValue("0");                    
+                    nightDifferential.setValue("0");   
+                    dutyManager.setValue("0");
                     
                     item.getItemProperty("l/min").setValue(0.0);
                     item.getItemProperty("u/min").setValue(0.0);
                     item.getItemProperty("o/min").setValue(0.0);
                     item.getItemProperty("nd/min").setValue(0.0);
+                    item.getItemProperty("dm/min").setValue(0.0);
                     
                     if(event.getButton().booleanValue() == true){
                         premiumRate = 0.1;                        
@@ -612,10 +646,35 @@ public class TimekeepingMainUI extends VerticalLayout {
                     }
                     
                     if(!event.getText().isEmpty()){
-                        nightDifferentialAddition = tcal.processEmployeesNightDifferential(policyStr, holidayStr, Integer.parseInt(event.getText().trim()), employmentWage);
+                        nightDifferentialAddition = tcal.processEmployeesNightDifferential(policyStr, holidayStr, util.convertStringToInteger(event.getText().trim()), employmentWage);
                         item.getItemProperty("nd/min").setValue(df.format(nightDifferentialAddition + (nightDifferentialAddition*premiumRate)));
                     }else{
                         item.getItemProperty("nd/min").setValue(0.0);
+                    }
+                }
+            });
+            
+            dutyManager.addListener(new FieldEvents.TextChangeListener() {
+
+                @Override
+                public void textChange(FieldEvents.TextChangeEvent event) {
+                    Object itemId = lates.getData();
+                    Item item = table.getItem(itemId); 
+                    String policyStr = item.getItemProperty("policy").toString();
+                    String holidayStr = item.getItemProperty("holidays").toString();
+                    double dutyManagerAddition;
+                    
+                    boolean checkIfInputIsInteger = util.checkInputIfInteger(event.getText().trim());
+                    if(!checkIfInputIsInteger){
+                        getWindow().showNotification("Enter numeric format for Duty Manager!", Window.Notification.TYPE_WARNING_MESSAGE);
+                        return;
+                    }
+                    
+                    if(!event.getText().isEmpty()){
+                        dutyManagerAddition = tcal.processEmployeeDutyManager(policyStr, holidayStr, util.convertStringToInteger(event.getText().trim()), employmentWage);
+                        item.getItemProperty("dm/min").setValue(df.format(dutyManagerAddition));
+                    }else{
+                        item.getItemProperty("dm/min").setValue(0.0);
                     }
                 }
             });
@@ -626,9 +685,10 @@ public class TimekeepingMainUI extends VerticalLayout {
                 premium, lates, 
                 undertime, overtime, 
                 nightDifferential, 
+                dutyManager,
                 0.0, 0.0, 0.0, 
                 0.0, 0.0, 0.0, 
-                0.0, 0.0
+                0.0, 0.0, 0.0
            }, i);                       
         }                
         table.setPageLength(table.size());        
@@ -664,14 +724,16 @@ public class TimekeepingMainUI extends VerticalLayout {
                         t.setUndertime(util.convertStringToDouble(tkeepList.get(5)));
                         t.setOvertime(util.convertStringToDouble(tkeepList.get(6)));
                         t.setNightDifferential(util.convertStringToDouble(tkeepList.get(7)));
-                        t.setLateDeduction(util.convertStringToDouble(tkeepList.get(8)));
-                        t.setUndertimeDeduction(util.convertStringToDouble(tkeepList.get(9)));
-                        t.setOvertimePaid(util.convertStringToDouble(tkeepList.get(10)));
-                        t.setNightDifferentialPaid(util.convertStringToDouble(tkeepList.get(11)));
-                        t.setLegalHolidayPaid(util.convertStringToDouble(tkeepList.get(12)));
-                        t.setSpecialHolidayPaid(util.convertStringToDouble(tkeepList.get(13)));
-                        t.setWorkingDayOffPaid(util.convertStringToDouble(tkeepList.get(14)));
-                        t.setNonWorkingHolidayPaid(util.convertStringToDouble(tkeepList.get(15)));
+                        t.setDutyManager(util.convertStringToDouble(tkeepList.get(8)));
+                        t.setLateDeduction(util.convertStringToDouble(tkeepList.get(9)));
+                        t.setUndertimeDeduction(util.convertStringToDouble(tkeepList.get(10)));
+                        t.setOvertimePaid(util.convertStringToDouble(tkeepList.get(11)));
+                        t.setNightDifferentialPaid(util.convertStringToDouble(tkeepList.get(12)));
+                        t.setDutyManagerPaid(util.convertStringToDouble(tkeepList.get(13)));
+                        t.setLegalHolidayPaid(util.convertStringToDouble(tkeepList.get(14)));
+                        t.setSpecialHolidayPaid(util.convertStringToDouble(tkeepList.get(15)));
+                        t.setWorkingDayOffPaid(util.convertStringToDouble(tkeepList.get(16)));
+                        t.setNonWorkingHolidayPaid(util.convertStringToDouble(tkeepList.get(17)));
                         attendanceList.add(t);
                     }
                     

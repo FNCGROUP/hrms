@@ -224,7 +224,8 @@ public class PayrollComputation {
             if(policyList.get(i).equals("absent") || policyList.get(i).equals("day-off") || policyList.get(i).equals("paternity-leave") || 
                     policyList.get(i).equals("service-incentive-leave") || policyList.get(i).equals("holiday") || 
                     policyList.get(i).equals("paid-vacation-leave") || policyList.get(i).equals("paid-sick-leave") || 
-                    policyList.get(i).equals("unpaid-vacation-leave") || policyList.get(i).equals("unpaid-sick-leave")){
+                    policyList.get(i).equals("unpaid-vacation-leave") || policyList.get(i).equals("unpaid-sick-leave") || 
+                    policyList.get(i).equals("suspended")){
                 count++;
             }
         }
