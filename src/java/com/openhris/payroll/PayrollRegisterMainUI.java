@@ -180,7 +180,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         innerVsplit.setLocked(true);        
         innerVsplit.setSplitPosition(75, Sizeable.UNITS_PERCENTAGE);
         
-        payrollRegisterTable(getBranchId(), null, false); 
+        payrollRegisterTable(getBranchId(), payroll_date, false); 
         innerVsplit.setFirstComponent(payrollRegisterTbl);
         
         GridLayout innerGlayout = new GridLayout(4, 1);
@@ -306,13 +306,15 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                OpenHrisReports reports = new OpenHrisReports(getBranchId(), util.convertDateFormat(payrollDate.getValue().toString()));
-                Window subWindow = reports.payrollRegisterTable(true, payrollRegisterTbl);
-                subWindow.setModal(true);
-                if(subWindow.getParent() == null){
-                    getWindow().addWindow(subWindow);
+                Window sub = new ViewFullScreen(false, 
+                        getBranchId(), 
+                        payroll_date);
+                sub.setModal(true);
+                sub.setSizeFull();
+                if(sub.getParent() == null){
+                    getWindow().addWindow(sub);
                 }
-                subWindow.center();
+                sub.center();
             }
         });
         innerGlayout.addComponent(viewFullScreenButton, 2, 0);
@@ -322,7 +324,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         vsplit.setSecondComponent(innerVsplit); 
     }
     
-    public void payrollRegisterTable(int branchId, String payrollDate, boolean prev){
+    public Table payrollRegisterTable(int branchId, String payrollDate, boolean prev){
         payrollRegisterTbl.removeAllItems();
         payrollRegisterTbl.setSizeFull();
         payrollRegisterTbl.setImmediate(true);
@@ -451,30 +453,14 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     }
                     subWindow.setModal(true);
                     subWindow.center();
-                }
-                
-//                if(event.getPropertyId().equals("advances to o/e")){
-//                    if(!UserAccessControl.isAdvances()){
-//                        getWindow().showNotification("You are not allowed to add/delete advances!", Window.Notification.TYPE_WARNING_MESSAGE);
-//                        return;
-//                    }
-//                    
-//                    int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
-//                    double amountToBeReceive = Double.parseDouble(item.getItemProperty("amount to be receive").toString());
-//                    double amountReceivable = Double.parseDouble(item.getItemProperty("amount received").toString());
-//                    
-//                    Window subWindow = addAdvances(payrollId, amountToBeReceive, amountReceivable);
-//                    if(subWindow.getParent() == null){
-//                        getWindow().addWindow(subWindow);
-//                    }
-//                    subWindow.setModal(true);
-//                    subWindow.center();
-//                }
+                }                
             }
         });
         
         payrollRegisterTbl.setColumnCollapsed("amount received", true);
 	payrollRegisterTbl.setColumnCollapsed("for adjustments", true);
+        
+        return payrollRegisterTbl;
     }
     
     public int getBranchId(){

@@ -67,7 +67,7 @@ public class PayrollDAO {
                     + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
 		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
                     + "FROM payroll_table p INNER JOIN employee e ON p.employeeId = e.employeeId "
-                    + "WHERE e.employeeId = '"+employeeId+"' ORDER BY id DESC" ;
+                    + "WHERE e.employeeId = '"+employeeId+"' AND (e.currentStatus != 'removed' OR e.currentStatus IS NULL) ORDER BY id DESC" ;
         }
         
         List<Payroll> payrollList = new ArrayList<Payroll>();

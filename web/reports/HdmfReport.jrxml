@@ -24,7 +24,8 @@ INNER JOIN trade_table tn ON b.tradeId = tn.id
 INNER JOIN corporate_table cn ON tn.corporateId = cn.id 
 WHERE (SELECT branchId FROM employee_contribution_main 
 WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND 
-(s.actionTaken = 'adjusted' OR s.actionTaken IS NULL) ORDER BY e.lastname ASC]]>
+(s.actionTaken = 'adjusted' OR s.actionTaken IS NULL) AND 
+(e.currentSTATUS != 'removed' OR e.currentStatus IS NULL) ORDER BY e.lastname ASC]]>
 	</queryString>
 	<field name="hdmfNo" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>
