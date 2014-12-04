@@ -109,6 +109,24 @@ public class OpenHrisUtilities {
     
     /**
      * 
+     * @param date = EEE MMM dd HH:mm:ss z yyyy
+     * @return formatted date September 1978
+     */    
+    public static String convertDateFormatForCalendar(String date){
+	DateFormat currentDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy");
+        DateFormat newDateFormat = new SimpleDateFormat("MMMMM yyyy");
+        String dateConvert = null;
+        try {
+            Date newDate = currentDateFormat.parse(date);
+            dateConvert = newDateFormat.format(newDate);
+        } catch (ParseException ex) {
+            Logger.getLogger(OpenHrisUtilities.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return dateConvert;    
+    }
+    
+    /**
+     * 
      * @param value BooleanString
      * @return int 1 || 0
      */

@@ -5,7 +5,10 @@
  */
 package com.openhris.calendar;
 
-import com.openhris.calendar.serviceImpl.CalendarEventImpl;
+import com.openhris.calendar.service.BasicEvent;
+import com.openhris.calendar.service.CalendarService;
+import com.openhris.calendar.serviceImpl.CalendarServiceImpl;
+import com.openhris.commons.OpenHrisUtilities;
 import com.vaadin.addon.calendar.gwt.client.ui.VCalendar;
 import com.vaadin.addon.calendar.ui.Calendar;
 import com.vaadin.addon.calendar.ui.CalendarComponentEvents;
@@ -38,6 +41,7 @@ public class CalendarMainUI extends VerticalLayout {
     private static final long serialVersionUID = -5436777475398410597L;
 
     private static final String DEFAULT_ITEMID = "DEFAULT";
+    CalendarService calendarService = new CalendarServiceImpl();
     
     private enum Mode {
         MONTH, WEEK, DAY;
@@ -58,6 +62,14 @@ public class CalendarMainUI extends VerticalLayout {
     private Button saveEventButton;
     private Button editEventButton;
     
+    private Select eventType;        
+    private DateField startDate;
+    private DateField endDate;
+    private TextField caption;
+    private TextField location;
+    private TextArea description;
+    private Select color;
+    
     private Date dateStart;
     private Date dateEnd;
     private boolean useSecondResolution = true;
@@ -65,6 +77,9 @@ public class CalendarMainUI extends VerticalLayout {
     private String userRole;
     Label monthLabel;
     
+    private String eventId;
+    private String employeeId;
+        
     public CalendarMainUI(){
         setMargin(true);
         cal = new Calendar();
@@ -121,7 +136,7 @@ public class CalendarMainUI extends VerticalLayout {
         grid.setComponentAlignment(monthButton, Alignment.MIDDLE_CENTER);
         
 	monthLabel = new Label();
-	monthLabel.setValue(currentMonthsFirstDate.toString());
+	monthLabel.setValue(OpenHrisUtilities.convertDateFormatForCalendar(currentMonthsFirstDate.toString()));
 	monthLabel.setContentMode(Label.CONTENT_XHTML);
 	monthLabel.addStyleName("month");
 	grid.addComponent(monthLabel, 2, 0);
@@ -206,15 +221,16 @@ public class CalendarMainUI extends VerticalLayout {
             public void eventClick(CalendarComponentEvents.EventClick event) { 
                 nextButton.setVisible(true);
                 prevButton.setVisible(true);
+                
                 if(event.getCalendarEvent() == null){
-                    Window subWindow = scheduleEventWindow();
+                    Window subWindow = scheduleEventWindow(null, null, null, null, null, null, null);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow); 
                     }                    
                     subWindow.setModal(true);
                     subWindow.center();
                 }else{
-                    System.out.println(event.getCalendarEvent().getDescription());
+                    System.out.println(event.getCalendarEvent().getCaption());
                 }                
             }
         });
@@ -279,7 +295,7 @@ public class CalendarMainUI extends VerticalLayout {
             dateEnd = Calendar.getEndOfDay(calendar, dateEnd);
         }
                 
-        Window subWindow = scheduleEventWindow();
+        Window subWindow = scheduleEventWindow(null, null, null, null, null, null, null);
         if(subWindow.getParent() == null){
             getWindow().addWindow(subWindow); 
         }                    
@@ -289,13 +305,19 @@ public class CalendarMainUI extends VerticalLayout {
     }
 
     public final void calendarEvents(){        
-        List<CalendarEventImpl> eventList = new ArrayList<CalendarEventImpl>();
-        for(CalendarEventImpl event : eventList){
+        List<BasicEvent> eventList = calendarService.getAllEvents();
+        for(BasicEvent event : eventList){
             cal.addEvent(event);
         } 
     }
     
-    private Window scheduleEventWindow(){
+    private Window scheduleEventWindow(String type, 
+            String eventCaption, 
+            String eventDescription, 
+            String eventStartDate, 
+            String eventEndDate, 
+            String eventStyleName, 
+            String eventLocation){
         VerticalLayout layout = new VerticalLayout();
         layout.setMargin(true);
         layout.setSpacing(true);
@@ -303,75 +325,41 @@ public class CalendarMainUI extends VerticalLayout {
         final Window subWindow = new Window("New Event", layout);
         subWindow.setWidth("250px");
 
-        final Select eventType = createEventTypelect();
+        eventType = createEventTypelect();
         layout.addComponent(eventType);
         
-        final DateField startDate = createDateField("Start Date: ");
-        startDate.setValue(dateStart);
+        startDate = createDateField("Start Date: ");
         layout.addComponent(startDate);
         
-        final DateField endDate = createDateField("End Date: ");
-        endDate.setValue(dateEnd);
+        endDate = createDateField("End Date: ");
         layout.addComponent(endDate);
         
-        final TextField caption = createTextField("Caption: ");
+        caption = createTextField("Caption: ");
         layout.addComponent(caption);
         
-        final TextField location = createTextField("Where: ");
+        location = createTextField("Where: ");
         layout.addComponent(location);
         
-        final TextArea description = new TextArea("Description: ");
+        description = new TextArea("Description: ");
         description.setWidth("100%");
         description.setRows(3);
         layout.addComponent(description);
         
-        final Select color = createStyleNameSelect();
+        color = createStyleNameSelect();
         layout.addComponent(color);
 
-        saveEventButton = new Button("Apply", new Button.ClickListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                //TODO                
-            }
-        }); 
+        saveEventButton = new Button("SAVE", saveEventBtnListener);
+        saveEventButton.setWidth("100%");
+//        editEventButton = new Button("Edit", editEventBtnListener);
+        deleteEventButton = new Button("DELETE", deleteEventBtnListener);
+        deleteEventButton.setWidth("100%");
         
-        editEventButton = new Button("Edit", new Button.ClickListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                //discardCalendarEvent();
-            }
-        });
-        
-        deleteEventButton = new Button("Delete", new Button.ClickListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                //deleteCalendarEvent();
-            }
-        });
-        /*scheduleEventPopup.addListener(new CloseListener() {
-
-            private static final long serialVersionUID = 1L;
-
-            @Override
-            public void windowClose(CloseEvent e) {
-                //discardCalendarEvent();
-            }
-        }); */
-
         HorizontalLayout buttons = new HorizontalLayout();
         buttons.setSpacing(true);
-        //buttons.addComponent(deleteEventButton);
+        buttons.setWidth("100%");
+        buttons.addComponent(deleteEventButton);
         buttons.addComponent(saveEventButton);
-        //buttons.addComponent(editEventButton);
+//        buttons.addComponent(editEventButton);
         layout.addComponent(buttons);
         layout.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
                 
@@ -408,6 +396,9 @@ public class CalendarMainUI extends VerticalLayout {
         resetTime(false);
         currentMonthsFirstDate = calendar.getTime();
         cal.setStartDate(currentMonthsFirstDate);
+        
+        //add/subtract 1 month each time next button is press
+        monthLabel.setValue(OpenHrisUtilities.convertDateFormatForCalendar(currentMonthsFirstDate.toString()));
 
         updateCaptionLabel();
 
@@ -549,5 +540,46 @@ public class CalendarMainUI extends VerticalLayout {
         f.setWidth("100%");
         f.setNullRepresentation("");
         return f;
+    }
+    
+    Button.ClickListener saveEventBtnListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            getWindow().showNotification("SAVE");
+        }
+    };
+    
+    Button.ClickListener editEventBtnListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            getWindow().showNotification("EDIT");
+        }
+    };
+            
+    Button.ClickListener deleteEventBtnListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            Window sub = getDeleteWindow();
+            sub.setModal(true);
+            if(sub.getParent() == null){
+                getWindow().addWindow(sub);
+            }
+            sub.center();
+        }
+    };
+    
+    Window getDeleteWindow(){
+        Window sub = new Window("DELETE EVENT");
+        sub.setWidth("250px");
+        
+        Button deleteBtn = new Button("DELETE EVENT?");
+        deleteBtn.setWidth("100%");
+        
+        sub.addComponent(deleteBtn);
+        
+        return sub;
     }
 }

@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.calendar.serviceImpl;
+package com.openhris.calendar.service;
 
 import com.vaadin.addon.calendar.event.CalendarEvent;
 import com.vaadin.addon.calendar.event.CalendarEventEditor;
@@ -15,41 +15,39 @@ import java.util.List;
  *
  * @author jetdario
  */
-public class CalendarEventImpl implements CalendarEventEditor, CalendarEvent.EventChangeNotifier {
+public class BasicEvent  implements CalendarEventEditor, CalendarEvent.EventChangeNotifier {
     
-    private int eventId;
+    private Integer eventId;
     private String caption;
     private String description;
     private Date end;
     private Date start;
-    private String startDate;
-    private String endDate;
     private String location;
     private String styleName;
     private Boolean isAllDay = false;
     private String eventType;
     private String employeeId;
-    
+
     private transient List<EventChangeListener> listeners = new ArrayList<EventChangeListener>();
     
-    public CalendarEventImpl(){
+    public BasicEvent(){
         
     }
     
-    public CalendarEventImpl(Date start, Date end){
+    public BasicEvent(Date start, Date end){
         this.start = start;
         this.end = end;
     }
     
-    public CalendarEventImpl(String caption, String description, String styleName, Date start, Date end){
+    public BasicEvent(String caption, String description, String styleName, Date start, Date end){
         this.caption = caption;
         this.description = description;
         this.start = start;
         this.end = end;
         this.styleName = styleName;
     }
-
-    public void setEventId(int eventId){
+    
+    public void setEventId(Integer eventId){
         this.eventId = eventId;
     }
     
@@ -70,13 +68,17 @@ public class CalendarEventImpl implements CalendarEventEditor, CalendarEvent.Eve
         this.end = end;
         fireEventChange();
     }
-
+    
     @Override
     public void setStart(Date start) {
         this.start = start;
         fireEventChange();
     }
-
+    
+    public void setLocation(String location){
+        this.location = location;
+    }
+    
     @Override
     public void setStyleName(String styleName) {
         this.styleName = styleName;
@@ -88,8 +90,16 @@ public class CalendarEventImpl implements CalendarEventEditor, CalendarEvent.Eve
         this.isAllDay = isAllDay;
         fireEventChange();
     }
-
-    public int getEventId(){
+    
+    public void setEventType(String eventType){
+        this.eventType = eventType;
+    }
+    
+    public void setEmployeeId(String employeeId){
+        this.employeeId = employeeId;
+    }
+    
+    public Integer getEventId(){
         return eventId;
     }
     
@@ -97,17 +107,21 @@ public class CalendarEventImpl implements CalendarEventEditor, CalendarEvent.Eve
     public Date getStart() {
         return start;
     }
-
+        
     @Override
     public Date getEnd() {
         return end;
     }
-
+    
     @Override
     public String getCaption() {
-        return caption;
+        return caption;        
     }
 
+    public String getLocation(){
+        return location;
+    }
+    
     @Override
     public String getDescription() {
         return description;
@@ -122,7 +136,15 @@ public class CalendarEventImpl implements CalendarEventEditor, CalendarEvent.Eve
     public boolean isAllDay() {
         return isAllDay;
     }
-
+    
+    public String getEventType(){
+        return eventType;
+    }
+    
+    public String getEmployeeId(){
+        return employeeId;
+    }
+    
     @Override
     public void addListener(EventChangeListener listener) {
         listeners.add(listener);
