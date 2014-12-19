@@ -483,7 +483,7 @@ public class EmployeeMainUI extends VerticalLayout {
                     ph.setPhicNo(phicNo.getValue().toString().trim());
                     ph.setHdmfNo(hdmfNo.getValue().toString().trim());
                     ph.setEmploymentStatus(employmentStatus.getValue().toString());
-                    ph.setEmploymentWageStatus(employmentWage.getValue().toString().trim());
+                    ph.setEmploymentWageStatus(employmentWageStatus.getValue().toString().trim());
                     ph.setEmploymentWageEntry(employmentWageEntry.getValue().toString());
                     ph.setEmploymentWage(Double.parseDouble(employmentWage.getValue().toString().trim()));
                     ph.setAllowance(Double.parseDouble(employmentAllowance.getValue().toString().trim()));

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Advances" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="465eb24c-5faa-4f06-8146-2c1b9777763b">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["F:\\FREELANCEPROJECTS\\hrms\\web\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="CORPORATE_NAME" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="PAYROLL_DATE" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT 
+	pr.name AS name, 
+	pr.corporateName AS corporate, 
+	pr.tradeName AS trade, 
+	pr.branchName AS branch, 
+	pr.branchName AS name, 
+	pr.payrollDate AS payrollDate,
+	pr.attendancePeriodFrom AS dateFrom, 
+	pr.attendancePeriodTo AS dateTo, 
+	pr.salaryId AS payrollId
+FROM payroll_register pr 
+WHERE advances != 0
+AND pr.corporateNAme = $P{CORPORATE_NAME} 
+AND payrollDate = $P{PAYROLL_DATE}]]>
+	</queryString>
+	<field name="name" class="java.lang.String"/>
+	<field name="corporate" class="java.lang.String"/>
+	<field name="trade" class="java.lang.String"/>
+	<field name="branch" class="java.lang.String"/>
+	<field name="payrollDate" class="java.sql.Date"/>
+	<field name="dateFrom" class="java.sql.Date"/>
+	<field name="dateTo" class="java.sql.Date"/>
+	<field name="payrollId" class="java.lang.Integer"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="121" splitType="Stretch">
+			<textField>
+				<reportElement uuid="3d97b0b4-7909-42c1-a9dd-eaacee317d3a" x="0" y="0" width="250" height="30"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{corporate}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="b0cf762a-4307-4394-82cf-c2a44de8b281" x="0" y="30" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Advances]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="fa723a56-b84f-4cc6-b919-7a2a9c885f1d" x="18" y="0" width="120" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b6c13f45-841a-4328-adb8-44c53cda604e" x="138" y="0" width="80" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Trade]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="045ec11e-de70-4c51-a3d7-a92d358b047c" x="218" y="0" width="50" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Branch]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7e909a3e-360a-4075-9156-b95e1da59a69" x="268" y="0" width="40" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="6045aa30-7abc-4810-8a3b-7f9d59728c3e" x="308" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="ced0d2c9-e1ff-43d2-a894-b3eadbc36fa7" x="408" y="0" width="164" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Particulars]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement uuid="f6cf8672-d2d9-429b-9d38-b75eff03bb0a" x="18" y="1" width="120" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="864b1d08-a556-429b-9f4b-90d2b0bec3c8" x="138" y="1" width="80" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{trade}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="a243fb0b-856c-4c4c-81df-bf237c7e5902" x="218" y="1" width="50" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{branch}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement uuid="a26ff1ef-42e3-4068-ba8d-30a709feb3b0" x="268" y="1" width="304" height="20"/>
+				<subreportParameter name="PAYROLL_ID">
+					<subreportParameterExpression><![CDATA[$F{payrollId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="SUBREPORT_DIR">
+					<subreportParameterExpression><![CDATA[$P{SUBREPORT_DIR}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA[$P{SUBREPORT_DIR} + "Advances_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+			<line>
+				<reportElement uuid="803ddc63-3e8e-4100-bf50-bdca2df8ea86" x="18" y="0" width="554" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="54" splitType="Stretch"/>
+	</pageFooter>
+</jasperReport>
