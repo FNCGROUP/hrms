@@ -59,4 +59,6 @@ public interface CompanyService {
     public boolean updateBranchName(int branchId, String name);
     
     public boolean updateBranchAddress(int branchId, String address);
+    
+    public String getCorporateNameByBranchId(int branchId);
 }

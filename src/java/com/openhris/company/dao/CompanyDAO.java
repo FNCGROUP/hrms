@@ -230,4 +230,33 @@ public class CompanyDAO {
         
         return result;
     }
+    
+    public String getCorporateNameByBranchId(int branchId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        String corporate = null;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT corporateName FROM payroll_register WHERE branchId = "+branchId+" ");
+            while(rs.next()){
+                corporate = rs.getString("corporateName");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null ||  !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return corporate;
+    }
 }

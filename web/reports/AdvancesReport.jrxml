@@ -50,9 +50,36 @@ AND payrollDate = $P{PAYROLL_DATE}]]>
 			</textField>
 			<staticText>
 				<reportElement uuid="b0cf762a-4307-4394-82cf-c2a44de8b281" x="0" y="30" width="100" height="20"/>
-				<textElement verticalAlignment="Middle"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
 				<text><![CDATA[Advances]]></text>
 			</staticText>
+			<staticText>
+				<reportElement uuid="e85565ea-cfb5-4237-93f9-3c32cd9414b5" x="0" y="50" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Payroll Period: ]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement uuid="1cf70c12-8657-4150-8a1c-89046c6d9edf" x="100" y="50" width="150" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="8f770928-1f00-428b-8015-fb9c996b31f3" x="0" y="70" width="100" height="40"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[Cut-off Date: ]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement uuid="4334e6dd-13af-4aee-a0fe-437a1fc723f7" x="100" y="70" width="150" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dateFrom}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement uuid="bf922ad7-f653-4b08-8436-e7f82228a6f5" x="100" y="90" width="150" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{dateTo}]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>
@@ -141,6 +168,22 @@ AND payrollDate = $P{PAYROLL_DATE}]]>
 		</band>
 	</detail>
 	<pageFooter>
-		<band height="54" splitType="Stretch"/>
+		<band height="40" splitType="Stretch">
+			<textField>
+				<reportElement uuid="4809c268-e530-4865-b677-383b03f30758" x="0" y="7" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="1d1fe461-d411-4aa7-bbb3-727a2c089e04" x="80" y="7" width="40" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement uuid="1cfb275a-07b7-4352-9f39-2bf2c751dc58" x="408" y="7" width="164" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
 	</pageFooter>
 </jasperReport>

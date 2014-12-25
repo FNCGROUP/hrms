@@ -6,10 +6,10 @@ package com.openhris.payroll;
 
 import com.hrms.beans.AdvancesTypeBean;
 import com.hrms.dbconnection.GetSQLConnection;
-import com.hrms.queries.AdjustmentsDAO;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
+import com.openhris.commons.reports.AdvancesReport;
 import com.openhris.commons.reports.OpenHrisReports;
 import com.openhris.company.service.CompanyService;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
@@ -38,12 +38,10 @@ import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
-import static java.awt.SystemColor.window;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -294,6 +292,10 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                         reports.deleteFile(fileName);
                         sssLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
                     }
+                }else if(reportType.getValue().equals("Advances")){
+                    reports.deleteFile("AdvancesReport_");
+                    String corporate = companyService.getCorporateNameByBranchId(getBranchId());
+                    advancesReport(corporate, util.convertDateFormat(payrollDate.getValue().toString()));
                 }
             }
         });
@@ -1637,4 +1639,57 @@ public class PayrollRegisterMainUI extends VerticalLayout {
             e.getMessage();
         }
    }
+
+   public void advancesReport(String corporate, String payrollDate){
+        Connection conn = getConnection.connection();
+        File reportFile = new File("C:/reportsJasper/AdvancesReport.jasper");
+        
+        final HashMap hm = new HashMap();
+        hm.put("CORPORATE_NAME", corporate);
+        hm.put("PAYROLL_DATE", payrollDate);
+
+        Window subWindow = new Window("Advances Report");
+        ((VerticalLayout) subWindow.getContent()).setSizeFull();
+        subWindow.setWidth("800px");
+        subWindow.setHeight("600px");
+        subWindow.center();
+        
+        try{
+             JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+             SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+             String timestamp = df.format(new Date());
+             final String filePath = "C:/reportsPdf/AdvancesReport_"+timestamp+".pdf";
+             JasperExportManager.exportReportToPdfFile(jpReport, filePath);
+
+             StreamResource.StreamSource source = new StreamResource.StreamSource() {
+                 @Override
+                 public InputStream getStream() {
+                     try {
+                         File f = new File(filePath);
+                         FileInputStream fis = new FileInputStream(f);
+                         return fis;
+                     } catch (Exception e) {
+                         e.getMessage();
+                         return null;
+                     }
+                 }
+             };
+             
+             StreamResource resource = new StreamResource(source, filePath, getApplication());
+             resource.setMIMEType("application/pdf");       
+
+             Embedded e = new Embedded();
+             e.setMimeType("application/pdf");
+             e.setType(Embedded.TYPE_OBJECT);
+             e.setSizeFull();
+             e.setSource(resource);
+             e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+
+             subWindow.addComponent(e);
+
+             getApplication().getMainWindow().open(resource, "_blank");
+        }catch(Exception e){
+             e.getMessage();
+        }        
+    }
 }
