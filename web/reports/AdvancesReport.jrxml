@@ -4,7 +4,8 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<defaultValueExpression><![CDATA["F:\\FREELANCEPROJECTS\\hrms\\web\\reports\\"]]></defaultValueExpression>
+		<!-- <defaultValueExpression><![CDATA["F:\\FREELANCEPROJECTS\\hrms\\web\\reports\\"]]></defaultValueExpression> -->
+                <defaultValueExpression><![CDATA["C:/reportsJasper/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CORPORATE_NAME" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -26,7 +27,8 @@
 FROM payroll_register pr 
 WHERE advances != 0
 AND pr.corporateNAme = $P{CORPORATE_NAME} 
-AND payrollDate = $P{PAYROLL_DATE}]]>
+AND payrollDate = $P{PAYROLL_DATE} 
+ORDER BY pr.name ASC]]>
 	</queryString>
 	<field name="name" class="java.lang.String"/>
 	<field name="corporate" class="java.lang.String"/>
