@@ -897,6 +897,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     public void payrollRegisterReport(String payrollDate){
         Connection conn = getConnection.connection();
         File reportFile = new File("C:/reportsJasper/payrollRegisterReport.jasper");
+//        File reportFile = new File("/home/ReportJasper/payrollRegisterReport.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("BRANCH_ID", branchId);
@@ -904,11 +905,13 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 
         try{
              JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+//            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getPath(), hm, conn); //for CentOS
              SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
              String timestamp = df.format(new Date());
              final String filePath = "C:/reportsPdf/payrollRegisterReport_"+timestamp+".pdf";
+//             final String filePath = "/home/ReportPdf/payrollRegisterReport_"+timestamp+".pdf";
              JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
+             
              Window subWindow = new Window("Payroll Register Report");
              ((VerticalLayout) subWindow.getContent()).setSizeFull();
              subWindow.setWidth("800px");

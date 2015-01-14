@@ -33,6 +33,7 @@ import net.sf.jasperreports.engine.JasperPrint;
 public class OpenHrisReports extends VerticalLayout {
     
     private static final String FILE_DIR = "c:\\reportsPdf";
+//    private static final String FILE_DIR = "/home/ReportPdf/";
     private static final String FILE_TEXT_EXT = ".pdf";
     GetSQLConnection getConnection = new GetSQLConnection();
     PayrollService payrollService = new PayrollServiceImpl();
