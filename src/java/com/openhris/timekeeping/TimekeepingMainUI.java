@@ -154,9 +154,9 @@ public class TimekeepingMainUI extends VerticalLayout {
                 Date parsedAttendanceDateTo = util.parsingDate(attendanceDateTo);
                 Date parsedPayrollDate = util.parsingDate(util.convertDateFormat(payrollDate.getValue().toString()));
                 
-                Date previousPayrollDate = timekeepingService.getPreviousPayrollDate(employeeId);
-                boolean attendanceDateFromExist = timekeepingService.checkAttendanceDateIfExist(attendanceDateFrom, employeeId);
-                boolean attendanceDateToExist = timekeepingService.checkAttendanceDateIfExist(attendanceDateTo, employeeId);
+                Date previousPayrollDate = timekeepingService.getPreviousPayrollDate(getEmployeeId());
+                boolean attendanceDateFromExist = timekeepingService.checkAttendanceDateIfExist(attendanceDateFrom, getEmployeeId());
+                boolean attendanceDateToExist = timekeepingService.checkAttendanceDateIfExist(attendanceDateTo, getEmployeeId());
                 
                 if(attendanceDateFromExist == false || attendanceDateToExist == false){
                     getWindow().showNotification("Attendance Date Range Already Exist", Window.Notification.TYPE_ERROR_MESSAGE);
@@ -179,9 +179,9 @@ public class TimekeepingMainUI extends VerticalLayout {
                 }
                 
                 List dateList;
-                String checkEmployeeCurrentStatus = employeeService.getEmployeeCurrentStatus(employeeId);
+                String checkEmployeeCurrentStatus = employeeService.getEmployeeCurrentStatus(getEmployeeId());
                 if(checkEmployeeCurrentStatus == null){
-                    Date parsedEntryDate = util.parsingDate(employeeService.getEmploymentEntryDate(employeeId));                    
+                    Date parsedEntryDate = util.parsingDate(employeeService.getEmploymentEntryDate(getEmployeeId()));                    
                     if(parsedAttendanceDateFrom.before(parsedEntryDate)){
                         attendanceDateFrom = parsedEntryDate.toString();
                         dateList = obtainPayrollDateList(util.convertDateFormat(attendanceDateFrom), attendanceDateTo);
@@ -193,7 +193,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                         }
                     }
                 } else {
-                    Date parsedEndDate = util.parsingDate(employeeService.getEmploymentEndDate(employeeId));
+                    Date parsedEndDate = util.parsingDate(employeeService.getEmploymentEndDate(getEmployeeId()));
                     if(parsedEndDate.before(parsedAttendanceDateFrom)){
                         getWindow().showNotification("RESIGNED!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
@@ -206,7 +206,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                                 
                 Window subWindow = attendanceTableContainer(employeesName.getValue().toString().toUpperCase(), 
                         dateList, 
-                        employeeId, 
+                        getEmployeeId(), 
                         payrollPeriod.getValue().toString(), 
                         util.convertDateFormat(payrollDate.getValue().toString()), 
                         util.convertDateFormat(attendancePeriodFrom.getValue().toString()), 
@@ -1131,22 +1131,22 @@ public class TimekeepingMainUI extends VerticalLayout {
                         List<String> tkeepList = new ArrayList<String>(Arrays.asList(attStr));
 			
                         Timekeeping t = new Timekeeping();
-                        t.setAttendanceDate(util.parsingDate(tkeepList.get(1).toString()));
-                        t.setPolicy(tkeepList.get(2).toString());
-                        t.setHoliday(tkeepList.get(3).toString());
-                        t.setPremium(util.convertStringToBoolean(tkeepList.get(4).toString()));
-                        t.setLates(util.convertStringToDouble(tkeepList.get(5).toString()));
-                        t.setUndertime(util.convertStringToDouble(tkeepList.get(6).toString()));
-                        t.setOvertime(util.convertStringToDouble(tkeepList.get(7).toString()));
-                        t.setNightDifferential(util.convertStringToDouble(tkeepList.get(8).toString()));
-                        t.setLateDeduction(util.convertStringToDouble(tkeepList.get(9).toString()));
-                        t.setUndertimeDeduction(util.convertStringToDouble(tkeepList.get(10).toString()));
-                        t.setOvertimePaid(util.convertStringToDouble(tkeepList.get(11).toString()));
-                        t.setNightDifferentialPaid(util.convertStringToDouble(tkeepList.get(12).toString()));
-                        t.setLegalHolidayPaid(util.convertStringToDouble(tkeepList.get(13).toString()));
-                        t.setSpecialHolidayPaid(util.convertStringToDouble(tkeepList.get(14).toString()));
-                        t.setWorkingDayOffPaid(util.convertStringToDouble(tkeepList.get(15).toString()));
-                        t.setNonWorkingHolidayPaid(util.convertStringToDouble(tkeepList.get(16).toString()));
+                        t.setAttendanceDate(util.parsingDate(tkeepList.get(1)));
+                        t.setPolicy(tkeepList.get(2));
+                        t.setHoliday(tkeepList.get(3));
+                        t.setPremium(util.convertStringToBoolean(tkeepList.get(4)));
+                        t.setLates(util.convertStringToDouble(tkeepList.get(5)));
+                        t.setUndertime(util.convertStringToDouble(tkeepList.get(6)));
+                        t.setOvertime(util.convertStringToDouble(tkeepList.get(7)));
+                        t.setNightDifferential(util.convertStringToDouble(tkeepList.get(8)));
+                        t.setLateDeduction(util.convertStringToDouble(tkeepList.get(9)));
+                        t.setUndertimeDeduction(util.convertStringToDouble(tkeepList.get(10)));
+                        t.setOvertimePaid(util.convertStringToDouble(tkeepList.get(11)));
+                        t.setNightDifferentialPaid(util.convertStringToDouble(tkeepList.get(12)));
+                        t.setLegalHolidayPaid(util.convertStringToDouble(tkeepList.get(13)));
+                        t.setSpecialHolidayPaid(util.convertStringToDouble(tkeepList.get(14)));
+                        t.setWorkingDayOffPaid(util.convertStringToDouble(tkeepList.get(15)));
+                        t.setNonWorkingHolidayPaid(util.convertStringToDouble(tkeepList.get(16)));
                         attendanceList.add(t);
                     }
                     ProcessPayrollComputation processPayroll = new ProcessPayrollComputation(employeeId, branchId);
@@ -1280,10 +1280,11 @@ public class TimekeepingMainUI extends VerticalLayout {
                 if(event.getProperty().getValue() == null){                    
                 } else {
                     employeeId = employeeService.getEmployeeId(employeesName.getValue().toString());
-                    timekeepingTable(branchId, employeeId);
-                    employmentWage = employeeService.getEmploymentWage(employeeId);
-                    employmentWageStatus = employeeService.getEmploymentWageStatus(employeeId);
-                    employmentWageEntry = employeeService.getEmploymentWageEntry(employeeId);
+                    setEmployeeId(employeeService.getEmployeeId(employeesName.getValue().toString()));
+                    timekeepingTable(branchId, getEmployeeId());
+                    employmentWage = employeeService.getEmploymentWage(getEmployeeId());
+                    employmentWageStatus = employeeService.getEmploymentWageStatus(getEmployeeId());
+                    employmentWageEntry = employeeService.getEmploymentWageEntry(getEmployeeId());
                 }
             }
         });
@@ -1413,5 +1414,13 @@ public class TimekeepingMainUI extends VerticalLayout {
         subWindow.addComponent(button);
         
         return subWindow;
+    }
+
+    void setEmployeeId(String employeeId){
+        this.employeeId = employeeId;
+    }
+    
+    String getEmployeeId(){
+        return employeeId;
     }
 }

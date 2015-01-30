@@ -139,7 +139,7 @@ public class ProcessPayrollComputation {
                       
             double taxableSalary = 0;
             if(employmentWageEntry.equals("daily")){
-                taxableSalary = payroll.getGrossPay();
+                taxableSalary = payroll.getGrossPay() - payroll.getTotalOvertimePaid();
             } else {
                 taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, payroll.getGrossPay());
             }
@@ -180,7 +180,7 @@ public class ProcessPayrollComputation {
             double afl = sal.getAllowanceForLiquidationDeduction(dateList, policyList, allowanceForLiquidation);
             payroll.setAllowanceForLiquidation(afl);
                                                 
-            double netSalary = taxableSalary - tax;
+            double netSalary = taxableSalary - tax + payroll.getTotalOvertimePaid();
             payroll.setNetSalary(netSalary);
 
             double amountReceivable = new Double(df.format(netSalary + allowance + afl));  
