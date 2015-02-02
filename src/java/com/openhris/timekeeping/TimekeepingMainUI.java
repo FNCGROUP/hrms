@@ -211,7 +211,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                         util.convertDateFormat(payrollDate.getValue().toString()), 
                         util.convertDateFormat(attendancePeriodFrom.getValue().toString()), 
                         util.convertDateFormat(attendancePeriodTo.getValue().toString()));
-                subWindow.setWidth("888px");
+                subWindow.setWidth("100%");
                 subWindow.setModal(true);
                 if(subWindow.getParent() == null){
                     getWindow().addWindow(subWindow);
@@ -302,15 +302,15 @@ public class TimekeepingMainUI extends VerticalLayout {
         table.setColumnWidth("o/min", 40);
         table.setColumnWidth("nd/min", 50);
         
-        table.setColumnCollapsed("l/min", true);
-        table.setColumnCollapsed("u/min", true);
-        table.setColumnCollapsed("o/min", true);
-        table.setColumnCollapsed("nd/min", true);
-        table.setColumnCollapsed("dm/min", true);
-        table.setColumnCollapsed("lholiday", true);
-        table.setColumnCollapsed("sholiday", true);
-        table.setColumnCollapsed("wdo", true);
-        table.setColumnCollapsed("psday", true);
+//        table.setColumnCollapsed("l/min", true);
+//        table.setColumnCollapsed("u/min", true);
+//        table.setColumnCollapsed("o/min", true);
+//        table.setColumnCollapsed("nd/min", true);
+//        table.setColumnCollapsed("dm/min", true);
+//        table.setColumnCollapsed("lholiday", true);
+//        table.setColumnCollapsed("sholiday", true);
+//        table.setColumnCollapsed("wdo", true);
+//        table.setColumnCollapsed("psday", true);
                         
         final String[] holidayList = {"legal-holiday", "special-holiday"};        
         if(employmentWageEntry.equals("monthly")){
