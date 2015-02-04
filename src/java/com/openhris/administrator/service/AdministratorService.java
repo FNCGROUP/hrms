@@ -55,9 +55,11 @@ public interface AdministratorService {
     
     public int getUserId(String username);
     
-    public boolean allowAccessOfUserToolbarMenu(int userId, String menu, boolean isAllowed);
+    public boolean allowAccessOfUserToolbarMenu(int userId, String column, boolean isAllowed);
     
-    public boolean allowAccessOfUserAdvanceAccess(int userId, String menu, boolean isAllowed);
+    public boolean allowAccessOfUserAdvanceAccess(int userId, String column, boolean isAllowed);
     
     public boolean checkEnteredPasswordIfCorrect(int userId, String password);
+    
+    public boolean getUserAdvanceAccess(int userId, String column);
 }

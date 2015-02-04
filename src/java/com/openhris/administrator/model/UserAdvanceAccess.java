@@ -19,6 +19,7 @@ public class UserAdvanceAccess extends User {
     private boolean editEmployeesInfo;
     private boolean addEvents;
     private boolean adjustPayroll;
+    private boolean lockPayroll;
 
     public boolean isTimekeeping() {
         return timekeeping;
@@ -56,6 +57,10 @@ public class UserAdvanceAccess extends User {
         return adjustPayroll;
     }
 
+    public boolean isLockPayroll(){
+        return lockPayroll;
+    }
+    
     public void setTimekeeping(boolean timekeeping) {
         this.timekeeping = timekeeping;
     }
@@ -92,4 +97,7 @@ public class UserAdvanceAccess extends User {
         this.adjustPayroll = adjustPayroll;
     }
     
+    public void setLockPayroll(boolean lockPayroll){
+        this.lockPayroll = lockPayroll;
+    }
 }

@@ -55,6 +55,7 @@ public class UserAdvanceAccessMainUI extends VerticalLayout {
         userAdvanceAccessTbl.addContainerProperty("edit employee", CheckBox.class, null);
         userAdvanceAccessTbl.addContainerProperty("add/edit events", CheckBox.class, null);
         userAdvanceAccessTbl.addContainerProperty("adjust payroll", CheckBox.class, null);
+        userAdvanceAccessTbl.addContainerProperty("lock payroll", CheckBox.class, null);
         
         userAdvanceAccessTbl.setColumnAlignment("timekeeping", Table.ALIGN_CENTER);
         userAdvanceAccessTbl.setColumnAlignment("contributions", Table.ALIGN_CENTER);
@@ -65,6 +66,7 @@ public class UserAdvanceAccessMainUI extends VerticalLayout {
         userAdvanceAccessTbl.setColumnAlignment("edit employee", Table.ALIGN_CENTER);
         userAdvanceAccessTbl.setColumnAlignment("add/edit events", Table.ALIGN_CENTER);
         userAdvanceAccessTbl.setColumnAlignment("adjust payroll", Table.ALIGN_CENTER);
+        userAdvanceAccessTbl.setColumnAlignment("lock payroll", Table.ALIGN_CENTER);
         
         List<UserAdvanceAccess> userAdvanceAccessList = administratorService.getListOfUserAdvanceAccess();
         int i = 0;
@@ -288,6 +290,30 @@ public class UserAdvanceAccessMainUI extends VerticalLayout {
             });
             adjustPayroll.setImmediate(true);
             
+            CheckBox lockPayroll = new CheckBox();
+            lockPayroll.setValue(uaa.isLockPayroll());
+            lockPayroll.setData(itemId);
+            lockPayroll.addListener(new Button.ClickListener() {
+
+                @Override
+                public void buttonClick(Button.ClickEvent event) {
+                    Object itemId = adjustPayroll.getData();
+                    Item item = userAdvanceAccessTbl.getItem(itemId);
+                    
+                    boolean result = administratorService.allowAccessOfUserAdvanceAccess(
+                            util.convertStringToInteger(item.getItemProperty("id").toString()), 
+                            "lockPayroll", event.getButton().booleanValue());
+                    if(result){
+                        if(event.getButton().booleanValue()){
+                            getWindow().showNotification("Enabled Adjust Payroll features!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        } else {
+                            getWindow().showNotification("Disabled Adjust Payroll features!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        }
+                    }
+                }
+            });
+            lockPayroll.setImmediate(true);
+            
             userAdvanceAccessTbl.addItem(new Object[]{
                 uaa.getId(), 
                 uaa.getName(), 
@@ -301,7 +327,8 @@ public class UserAdvanceAccessMainUI extends VerticalLayout {
                 payroll, 
                 editEmployeesInfo, 
                 addEvents, 
-                adjustPayroll
+                adjustPayroll, 
+                lockPayroll
             }, new Integer(i));
             i++;
         }

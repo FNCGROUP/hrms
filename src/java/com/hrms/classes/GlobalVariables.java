@@ -16,9 +16,10 @@ public class GlobalVariables implements TransactionListener{
     private static final long serialVersionUID = 1L;
     
     private String employmentWageEntry;
-    private Double employmentWage;
+    private double employmentWage;
     private String username;
     private String userRole;
+    private int userId;
     private boolean logoutAfterPasswordChange;
     
     private static ThreadLocal<GlobalVariables> instance = new ThreadLocal<GlobalVariables>();
@@ -45,6 +46,14 @@ public class GlobalVariables implements TransactionListener{
     
     public static String getUserRole(){
         return instance.get().userRole;
+    }
+    
+    public static void setUserId(int userId){
+        instance.get().userId = userId;
+    }
+    
+    public static int getUserId(){
+        return instance.get().userId;
     }
     
     public static void setLogoutAfterPasswordChange(boolean logoutAfterPasswordChange){

@@ -523,14 +523,14 @@ public class AdministratorDAO {
     }
     
     public boolean allowAccessOfUserToolbarMenu(int userId, 
-            String menu, 
+            String column, 
             boolean isAllowed){
         boolean result = false;
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = conn.prepareStatement("UPDATE user_toolbar_menu_access SET "+menu+" = ? WHERE userId = ?");
-            pstmt.setString(1, String.valueOf(isAllowed).toString());
+            pstmt = conn.prepareStatement("UPDATE user_toolbar_menu_access SET "+column+" = ? WHERE userId = ?");
+            pstmt.setString(1, String.valueOf(isAllowed));
             pstmt.setInt(2, userId);
             pstmt.executeUpdate();
             
@@ -552,14 +552,14 @@ public class AdministratorDAO {
     }
     
     public boolean allowAccessOfUserAdvanceAccess(int userId, 
-            String menu, 
+            String column, 
             boolean isAllowed){
         boolean result = false;
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         try {
-            pstmt = conn.prepareStatement("UPDATE user_advance_access SET "+menu+" = ? WHERE userId = ?");
-            pstmt.setString(1, String.valueOf(isAllowed).toString());
+            pstmt = conn.prepareStatement("UPDATE user_advance_access SET "+column+" = ? WHERE userId = ?");
+            pstmt.setString(1, String.valueOf(isAllowed));
             pstmt.setInt(2, userId);
             pstmt.executeUpdate();
             
@@ -603,6 +603,7 @@ public class AdministratorDAO {
                 uaa.setEditEmployeesInfo(util.convertStringToBoolean(rs.getString("editEmployeesInfo")));
                 uaa.setAddEvents(util.convertStringToBoolean(rs.getString("addEvents")));
                 uaa.setAdjustPayroll(util.convertStringToBoolean(rs.getString("adjustPayroll")));
+                uaa.setLockPayroll(util.convertStringToBoolean(rs.getString("lockPayroll")));
                 UserAdvanceAccessList.add(uaa);
             }
         } catch (SQLException ex) {
@@ -620,5 +621,34 @@ public class AdministratorDAO {
         } 
         
         return UserAdvanceAccessList;
+    }
+
+    public boolean getUserAdvanceAccess(int userId, String column){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT "+column+" FROM user_advance_access WHERE userId = "+userId+" ");
+            while(rs.next()){                
+                result = util.convertStringToBoolean(rs.getString("lockPayroll"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AdministratorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(AdministratorDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 }

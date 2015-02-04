@@ -34,6 +34,7 @@ public class UserAccessControl implements TransactionListener {
     private boolean loansMenu;
     private boolean contributionsMenu;
     private boolean eventsMenu;
+    private boolean lockPayroll;
     public String username;
         
     public UserAccessControl(Application application){
@@ -106,6 +107,10 @@ public class UserAccessControl implements TransactionListener {
         return instance.get().eventsMenu;
     }
 
+    public static boolean isLockPayroll(){
+        return instance.get().lockPayroll;
+    }
+    
     public static void setTimekeeping(boolean timekeeping) {
         instance.get().timekeeping = timekeeping;
     }
@@ -165,6 +170,10 @@ public class UserAccessControl implements TransactionListener {
     public static void setEventsMenu(boolean eventsMenu) {
         instance.get().eventsMenu = eventsMenu;
     }    
+    
+    public static void setLockPayroll(boolean lockPayroll){
+        instance.get().lockPayroll = lockPayroll;
+    }
     
     private boolean convertStringToBoolean(String string){
         return Boolean.parseBoolean(string);

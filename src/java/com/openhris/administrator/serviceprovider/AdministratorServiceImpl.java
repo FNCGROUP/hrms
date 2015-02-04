@@ -101,18 +101,23 @@ public class AdministratorServiceImpl implements AdministratorService {
     }
 
     @Override
-    public boolean allowAccessOfUserToolbarMenu(int userId, String menu, boolean isAllowed) {
-        return adminDAO.allowAccessOfUserToolbarMenu(userId, menu, isAllowed);
+    public boolean allowAccessOfUserToolbarMenu(int userId, String column, boolean isAllowed) {
+        return adminDAO.allowAccessOfUserToolbarMenu(userId, column, isAllowed);
     }
 
     @Override
-    public boolean allowAccessOfUserAdvanceAccess(int userId, String menu, boolean isAllowed) {
-        return adminDAO.allowAccessOfUserAdvanceAccess(userId, menu, isAllowed);
+    public boolean allowAccessOfUserAdvanceAccess(int userId, String column, boolean isAllowed) {
+        return adminDAO.allowAccessOfUserAdvanceAccess(userId, column, isAllowed);
     }
 
     @Override
     public boolean checkEnteredPasswordIfCorrect(int userId, String password) {
         return adminDAO.checkEnteredPasswordIfCorrect(userId, password);
+    }
+
+    @Override
+    public boolean getUserAdvanceAccess(int userId, String column) {
+        return adminDAO.getUserAdvanceAccess(userId, column);
     }
     
 }

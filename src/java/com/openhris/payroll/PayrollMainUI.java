@@ -7,6 +7,8 @@ package com.openhris.payroll;
 import com.hrms.beans.AdvancesTypeBean;
 import com.hrms.classes.GlobalVariables;
 import com.openhris.administrator.model.UserAccessControl;
+import com.openhris.administrator.service.AdministratorService;
+import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.ServiceUpdateDAO;
@@ -50,6 +52,7 @@ public class PayrollMainUI extends VerticalLayout {
     EmployeeService employeeService = new EmployeeServiceImpl();
     DropDownComponent dropDown = new DropDownComponent();
     ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
+    AdministratorService administratorService = new AdministratorServiceImpl();
     
     Table payrollTbl = new Table();
     Table advanceTbl = new Table();
@@ -386,26 +389,37 @@ public class PayrollMainUI extends VerticalLayout {
                 }
                 
                 if(event.getPropertyId().equals("status")){
-                        int payrollId = util.convertStringToInteger(item.getItemProperty("id").getValue().toString());
-                        String status = null;
-                        if(item.getItemProperty("status").toString() == null){                            
-                        } else {
-                            status = item.getItemProperty("status").getValue().toString();
-                        }                    
+                    int payrollId = util.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    String status = null;
+                    if(item.getItemProperty("status").toString() == null){                            
+                    } else {
+                        status = item.getItemProperty("status").getValue().toString();
+                    }                    
+                                                
+                    if(UserAccessControl.isLockPayroll()){
+                        Window subWindow = lockRow(payrollId);
+                        subWindow.setModal(true);
+                        subWindow.center();
+                        if(subWindow.getParent() == null){
+                            getWindow().addWindow(subWindow); 
+                        }                             
+                    } else {
+                        getWindow().showNotification("You are not allowed to lock this row!", Window.Notification.TYPE_WARNING_MESSAGE);
+                    }
                         
-                        if(GlobalVariables.getUserRole().equals("accounting")){
-                           if("locked".equals(status)){
-                           } else {
-                                Window subWindow = lockRow(payrollId);
-                                if(subWindow.getParent() == null){
-                                    getWindow().addWindow(subWindow); 
-                                }                    
-                                subWindow.setModal(true);
-                                subWindow.center();
-                            }
-                        }else{
-                            getWindow().showNotification("You dont have permission to LOCK this ROW!", Window.Notification.TYPE_WARNING_MESSAGE);
-                        }                                                
+//                        if(GlobalVariables.getUserRole().equals("accounting")){
+//                           if("locked".equals(status)){
+//                           } else {
+//                                Window subWindow = lockRow(payrollId);
+//                                if(subWindow.getParent() == null){
+//                                    getWindow().addWindow(subWindow); 
+//                                }                    
+//                                subWindow.setModal(true);
+//                                subWindow.center();
+//                            }
+//                        }else{
+//                            getWindow().showNotification("user id: "+GlobalVariables.getUserId(), Window.Notification.TYPE_WARNING_MESSAGE);
+//                        }                                                
                     }
             }
         });
