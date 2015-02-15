@@ -5,7 +5,6 @@
 package com.openhris.payroll;
 
 import com.hrms.beans.AdvancesTypeBean;
-import com.hrms.classes.GlobalVariables;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.service.AdministratorService;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
@@ -106,7 +105,7 @@ public class PayrollMainUI extends VerticalLayout {
                         return;
                 }
                 
-                payrollTable(getBranchId(), employeeId);
+                payrollTable(getBranchId(), getEmployeeId());
             }
         });
         glayout.addComponent(generatePayrollButton, 1, 0);
@@ -406,21 +405,8 @@ public class PayrollMainUI extends VerticalLayout {
                     } else {
                         getWindow().showNotification("You are not allowed to lock this row!", Window.Notification.TYPE_WARNING_MESSAGE);
                     }
-                        
-//                        if(GlobalVariables.getUserRole().equals("accounting")){
-//                           if("locked".equals(status)){
-//                           } else {
-//                                Window subWindow = lockRow(payrollId);
-//                                if(subWindow.getParent() == null){
-//                                    getWindow().addWindow(subWindow); 
-//                                }                    
-//                                subWindow.setModal(true);
-//                                subWindow.center();
-//                            }
-//                        }else{
-//                            getWindow().showNotification("user id: "+GlobalVariables.getUserId(), Window.Notification.TYPE_WARNING_MESSAGE);
-//                        }                                                
-                    }
+                                                                        
+                }
             }
         });
     }
@@ -469,7 +455,7 @@ public class PayrollMainUI extends VerticalLayout {
                 
                 Boolean result = payrollService.removeSelectedRow(id);
                 if(result == true){
-                    payrollTable(branchId, employeeId);
+                    payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
                 }else{
                     subWindow.getWindow().showNotification("UNABLE TO DELETE ROW!", Window.Notification.TYPE_ERROR_MESSAGE);
@@ -524,7 +510,7 @@ public class PayrollMainUI extends VerticalLayout {
                         newAmountReceive);
                 
                 if(result){
-                    payrollTable(branchId, employeeId);
+                    payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
                 } else{
                     subWindow.getWindow().showNotification("UNABLE TO UPDATE ROW!", Window.Notification.TYPE_ERROR_MESSAGE);
@@ -579,7 +565,7 @@ public class PayrollMainUI extends VerticalLayout {
                         newAmountReceive);
                 
                 if(result){
-                    payrollTable(branchId, employeeId);
+                    payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
                 } else{
                     subWindow.getWindow().showNotification("UNABLE TO UPDATE ROW!", Window.Notification.TYPE_ERROR_MESSAGE);
@@ -634,7 +620,7 @@ public class PayrollMainUI extends VerticalLayout {
                         newAmountReceive);
                 
                 if(result){
-                    payrollTable(branchId, employeeId);
+                    payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
                 } else{
                     subWindow.getWindow().showNotification("UNABLE TO UPDATE ROW!", Window.Notification.TYPE_ERROR_MESSAGE);
@@ -689,7 +675,7 @@ public class PayrollMainUI extends VerticalLayout {
                         newAmountReceive);
                 
                 if(result){
-                    payrollTable(branchId, employeeId);
+                    payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
                 } else{
                     subWindow.getWindow().showNotification("UNABLE TO UPDATE ROW!", Window.Notification.TYPE_ERROR_MESSAGE);
@@ -718,7 +704,7 @@ public class PayrollMainUI extends VerticalLayout {
             public void buttonClick(Button.ClickEvent event) {                
                 Boolean result = payrollService.lockPayroll(payrollId);
                 if(result == true){
-                    payrollTable(branchId, employeeId);
+                    payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
                 }else{
                     subWindow.getWindow().showNotification("UNABLE TO UPDATE ROW!", Window.Notification.TYPE_ERROR_MESSAGE);
@@ -852,7 +838,7 @@ public class PayrollMainUI extends VerticalLayout {
                 String postedDate = util.convertDateFormat(datePosted.getValue().toString());
                 Boolean result = payrollService.updateSalaryByAdvances(advanceList);                
                 if(result == true){
-                    payrollTable(branchId, employeeId);
+                    payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
                 }
             }
@@ -867,8 +853,10 @@ public class PayrollMainUI extends VerticalLayout {
         return subWindow;
     }
     
-    private Table advanceTable(final int payrollId, final double amountToBeReceive, 
-            final double amountReceivable, final Window window){
+    private Table advanceTable(final int payrollId, 
+            final double amountToBeReceive, 
+            final double amountReceivable, 
+            final Window window){
                 
         advanceTbl.removeAllItems();
         advanceTbl.setWidth("100%");
@@ -923,8 +911,12 @@ public class PayrollMainUI extends VerticalLayout {
         return advanceTbl;
     }
     
-    private Window removeAdvances(final int payrollId, final int advanceId, final double removedAmount, final double amountToBeReceive, 
-            final double amountReceivable, final Window window){
+    private Window removeAdvances(final int payrollId, 
+            final int advanceId, 
+            final double removedAmount, 
+            final double amountToBeReceive, 
+            final double amountReceivable, 
+            final Window window){
         final Window subWindow = new Window("REMOVE ADVANCES");
         subWindow.setWidth("220px");
         
@@ -948,7 +940,7 @@ public class PayrollMainUI extends VerticalLayout {
                 boolean result = payrollService.removeAdvanceById(advanceId, payrollId, 
                         removedAmount, amountToBeReceive, amountReceivable, remarks.getValue().toString());
                 if(result == true){
-                    payrollTable(branchId, employeeId);
+                    payrollTable(branchId, getEmployeeId());
                     advanceTable(payrollId, amountToBeReceive, amountReceivable, window);
                     (subWindow.getParent()).removeWindow(subWindow);
                     (window.getParent()).removeWindow(window);
@@ -962,8 +954,12 @@ public class PayrollMainUI extends VerticalLayout {
         return subWindow;
     }
 
-    public int getBranchId(){
+    int getBranchId(){
         return branchId;
+    }
+    
+    String getEmployeeId(){
+        return employeeId;
     }
     
     private Window updatePayrollDate(final int payrollId){
@@ -992,7 +988,7 @@ public class PayrollMainUI extends VerticalLayout {
                 String date = util.convertDateFormat(payrollDate.getValue().toString());
                 Boolean result = payrollService.updatePayrollDate(payrollId, date);
                 if(result == true){
-                    payrollTable(branchId, employeeId);
+                    payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
                 }else{
                     subWindow.getWindow().showNotification("UNABLE TO UPDATE ROW!", Window.Notification.TYPE_ERROR_MESSAGE);

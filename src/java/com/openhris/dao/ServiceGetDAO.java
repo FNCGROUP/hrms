@@ -900,7 +900,7 @@ public class ServiceGetDAO {
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(" SELECT * FROM employee WHERE branchId = "+branchId+" AND "
-                    + "(currentStatus != 'removed' OR currentStatus IS NULL) ORDER BY lastname ASC ");
+                    + "currentStatus IS NULL ORDER BY lastname ASC ");
             while(rs.next()){
                 Employee e = new Employee();
                 e.setFirstname(rs.getString("firstname"));

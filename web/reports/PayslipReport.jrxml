@@ -7,7 +7,7 @@
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT * FROM payslip WHERE branchId = $P{BRANCH_ID} AND 
-payrollDate = $P{PAYROLL_DATE} AND (rowStatus != 'removed' OR rowStatus IS NULL) AND (actionTaken = 'new' OR actionTaken IS NULL ) ORDER BY name ASC]]>
+payrollDate = $P{PAYROLL_DATE} AND (rowStatus != 'removed' OR rowStatus IS NULL) AND (actionTaken = 'adjusted' OR actionTaken IS NULL ) ORDER BY name ASC]]>
 	</queryString>
 	<field name="name" class="java.lang.String"/>
 	<field name="numberOfDays" class="java.lang.Integer"/>
