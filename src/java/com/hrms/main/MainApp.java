@@ -437,8 +437,7 @@ public class MainApp extends Application {
                                         
                     String[] split = event.getItemId().toString().split(" - ");
                     if(util.checkForDuplicatedBranch(split[0])){
-                        branchId = companyService.getBranchId(tradeId, split[0]);
-                        
+                        branchId = companyService.getBranchId(tradeId, split[0]);                        
                     } else {
                         branchId = companyService.getBranchId(tradeId, event.getItemId().toString());
                     }                                 

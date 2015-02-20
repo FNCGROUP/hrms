@@ -230,7 +230,7 @@ public class OpenHrisUtilities {
     public boolean checkForDuplicatedBranch(String str){
         boolean result = false;
         if(str.equals("boracay") || str.equals("head office") || str.equals("eastwood") || str.equals("baguio") 
-                || str.equals("fairview") || str.equals("sta. lucia")){
+                || str.equals("fairview") || str.equals("sta. lucia") || str.equals("on-call and trainees")){
             result = true;
         }
         return result;

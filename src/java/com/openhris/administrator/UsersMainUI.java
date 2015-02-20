@@ -547,6 +547,7 @@ public class UsersMainUI extends VerticalLayout {
     private Window addAccessToUser(final int userId, String name){
         final Window subWindow = new Window("ADD Access to "+name.toUpperCase());
         subWindow.setWidth("400px");
+        subWindow.setHeight("100%");
                 
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
