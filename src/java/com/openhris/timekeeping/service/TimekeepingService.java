@@ -16,7 +16,7 @@ public interface TimekeepingService {
     
     public List<Timekeeping> getAttendancePerPayroll();
     
-    public List<Timekeeping> getAttendanceByBranchAndEmployee(int branchId, String employeeId);
+    public List<Timekeeping> getAttendanceByEmployee(String employeeId);
     
     public boolean checkAttendanceDateIfExist(String date, String employeeId);
     

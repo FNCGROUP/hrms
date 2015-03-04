@@ -24,8 +24,8 @@ public class TimekeepingServiceImpl implements TimekeepingService {
     }
 
     @Override
-    public List<Timekeeping> getAttendanceByBranchAndEmployee(int branchId, String employeeId) {
-        return timekeepingDAO.getAttendanceByBranchAndEmployee(branchId, employeeId);
+    public List<Timekeeping> getAttendanceByEmployee(String employeeId) {
+        return timekeepingDAO.getAttendanceByEmployee(employeeId);
     }
 
     @Override

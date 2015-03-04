@@ -4,11 +4,11 @@
  */
 package com.openhris.payroll;
 
-import com.hrms.beans.AdvancesTypeBean;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.service.AdministratorService;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.openhris.commons.DropDownComponent;
+import com.openhris.commons.EmployeeDropDownList;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.employee.model.Employee;
@@ -22,7 +22,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
@@ -80,11 +79,12 @@ public class PayrollMainUI extends VerticalLayout {
         
         vsplit.setSplitPosition(14, Sizeable.UNITS_PERCENTAGE);
         
-        employeeComboBox(branchId);
         GridLayout glayout = new GridLayout(2, 1);
         glayout.setWidth("60%");
         glayout.setMargin(true);
         glayout.setSpacing(true);
+        
+        employeeComboBox(getBranchId());   
         glayout.addComponent(employeesName, 0, 0);
         
         Button generatePayrollButton = new Button();
@@ -411,8 +411,7 @@ public class PayrollMainUI extends VerticalLayout {
         });
     }
     
-    public void employeeComboBox(final int branchId){ 
-        this.branchId = branchId;        
+    public void employeeComboBox(int branchId){  
         employeesName.removeAllItems();
         employeesName.setWidth("100%");
         employeesName.setNullSelectionAllowed(false);
@@ -740,38 +739,6 @@ public class PayrollMainUI extends VerticalLayout {
         vlayout.setCaption("Post Advances");
         
         final ComboBox advanceType = dropDown.populateAdvanceTypeDropDownList(new ComboBox());
-        advanceType.setNewItemsAllowed(true);
-        advanceType.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-
-            @Override
-            public void addNewItem(String newItemCaption) {
-                AdvancesTypeBean advancesTypeBean = new AdvancesTypeBean();
-                if (!advanceType.containsId(newItemCaption)) {
-                    advancesTypeBean.setAdvancesType(newItemCaption);
-                    Boolean result = payrollService.insertAdvanceType(newItemCaption);
-                    if(result = true){
-                        getWindow().showNotification("Added Type: " + newItemCaption);
-                        lastAddedAdvanceType = true;
-                        advanceType.addItem(newItemCaption);
-                        advanceType.setValue(newItemCaption);
-                    }
-                }
-            }
-            
-        });
-        advanceType.setImmediate(true);
-        advanceType.addListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                if (!lastAddedAdvanceType) {
-                    getWindow().showNotification(
-                            "Selected Type: " + event.getProperty());
-                }
-                lastAddedAdvanceType = false;
-            }
-            
-        });
         vlayout.addComponent(advanceType);
         
         final TextField particulars = new TextField("Particulars:");
@@ -956,6 +923,10 @@ public class PayrollMainUI extends VerticalLayout {
 
     int getBranchId(){
         return branchId;
+    }
+    
+    public void setBranchId(int branchId){
+        this.branchId = branchId;
     }
     
     String getEmployeeId(){

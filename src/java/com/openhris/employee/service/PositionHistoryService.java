@@ -21,4 +21,5 @@ public interface PositionHistoryService {
     
     public boolean removePositionHistory(int positionId);
     
+    public boolean insertEndDate(String employeeId, String endDate);
 }

@@ -9,7 +9,6 @@ import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.commons.reports.AdvancesReport;
 import com.openhris.commons.reports.OpenHrisReports;
 import com.openhris.company.service.CompanyService;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
@@ -19,6 +18,18 @@ import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.model.Adjustment;
 import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.PayrollRegister;
+import com.openhris.payroll.reports.AdjustedPayrollRegisterReport;
+import com.openhris.payroll.reports.AttendanceReport;
+import com.openhris.payroll.reports.BankDebitMemoReport;
+import com.openhris.payroll.reports.HDMFLoansPayableReport;
+import com.openhris.payroll.reports.HDMFReport;
+import com.openhris.payroll.reports.HDMFSavingsReport;
+import com.openhris.payroll.reports.PHICReport;
+import com.openhris.payroll.reports.PayrollRegisterReport;
+import com.openhris.payroll.reports.PayslipReport;
+import com.openhris.payroll.reports.SSSGeneralReport;
+import com.openhris.payroll.reports.SSSSbarroReport;
+import com.openhris.payroll.reports.WitholdingTaxReport;
 import com.openhris.payroll.service.PayrollService;
 import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.vaadin.addon.tableexport.ExcelExport;
@@ -52,6 +63,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import javax.swing.text.html.parser.ContentModel;
 import net.sf.jasperreports.engine.JasperExportManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
@@ -77,7 +89,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     String payrollPeriod;
     int day = 0;
     
-    Table payrollRegisterTbl = new Table();
+    Table payrollRegisterTbl = new PayrollRegisterTable();
     Table advancesTbl = new Table();
     Table adjustmentTbl = new Table();
     ComboBox employeesName = new ComboBox("Employees: ");
@@ -160,8 +172,9 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 			int tradeId = companyService.getTradeIdByBranchId(getBranchId());
 			excelExport = new ExcelExport(payrollRegisterTbl, "Payroll Register");
 			excelExport.excludeCollapsedColumns();
-			excelExport.setReportTitle(companyService.getTradeById(tradeId).toUpperCase()+" Payroll Register");
-			excelExport.setExportFileName(companyService.getTradeById(tradeId).toUpperCase()+" Payroll Register");                    
+			excelExport.setReportTitle(companyService.getTradeById(tradeId).toUpperCase()+" Payroll Register "
+                                    +new Label(companyService.getBranchById(getBranchId()), Label.CONTENT_PREFORMATTED));
+			excelExport.setExportFileName(companyService.getTradeById(tradeId).toUpperCase()+"-Payroll Register");
 			excelExport.export();
 		}
 	});
@@ -215,22 +228,34 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                 if(reportType.getValue().equals("Payroll Register")){
                     String fileName = "payrollRegisterReport_";
                     reports.deleteFile(fileName);
-                    payrollRegisterReport(util.convertDateFormat(payrollDate.getValue().toString()));
+//                    payrollRegisterReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    Window reportWindow = new PayrollRegisterReport(getBranchId(), 
+                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            getApplication());
                 }else if(reportType.getValue().equals("Adjusted Payroll Register")){
 		    String fileName = "PayrollRegisterReportAdjusted_";
                     reports.deleteFile(fileName);
-                    adjustedPayrollRegisterReport(util.convertDateFormat(payrollDate.getValue().toString()));	
+//                    adjustedPayrollRegisterReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    Window reportWindow = new AdjustedPayrollRegisterReport(getBranchId(), 
+                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            getApplication());
 		}else if(reportType.getValue().equals("Payslip Report")){
                     String fileName = "PayslipReport_";
                     reports.deleteFile(fileName);
-                    payslipReport(util.convertDateFormat(payrollDate.getValue().toString()));
+//                    payslipReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    PayslipReport payslipReport = new PayslipReport(getBranchId(), 
+                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            getApplication());
                 }else if(reportType.getValue().equals("SSS Report")){
                     if(day == 15){
                         getWindow().showNotification("SSS Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
                     }else{                        
 			String fileName = "SssReport_";
                         reports.deleteFile(fileName);
-                        sssReport(util.convertDateFormat(payrollDate.getValue().toString()));
+//                        sssReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                        SSSGeneralReport sssGeneralReport = new SSSGeneralReport(getBranchId(), 
+                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                getApplication());
                     }
                 }else if(reportType.getValue().equals("SSS Report Sbarro")){
                     if(day == 15){
@@ -238,13 +263,19 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     }else{                        
 			String fileName = "SssReportSbarro_";
                         reports.deleteFile(fileName);
-                        sssReportSbarro(util.convertDateFormat(payrollDate.getValue().toString()));
+//                        sssReportSbarro(util.convertDateFormat(payrollDate.getValue().toString()));
+                        SSSSbarroReport sssSbarroReport = new SSSSbarroReport(getBranchId(), 
+                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                getApplication());
                     }
                 }else if(reportType.getValue().equals("HDMF Report")){
                     if(day == 15){
                         String fileName = "HdmfReport_";
                         reports.deleteFile(fileName);
-                        hdmfReport(util.convertDateFormat(payrollDate.getValue().toString()));
+//                        hdmfReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                        HDMFReport hdmfReport = new HDMFReport(getBranchId(), 
+                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                getApplication());
                     }else{
                         getWindow().showNotification("HDMF Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
                     }
@@ -252,7 +283,10 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     if(day == 15){
                         String fileName = "HdmfVoluntarySavingsReport_";
                         reports.deleteFile(fileName);
-                        hdmfSavingsReport(util.convertDateFormat(payrollDate.getValue().toString()));
+//                        hdmfSavingsReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                        HDMFSavingsReport hdmfSavingsReport = new HDMFSavingsReport(getBranchId(), 
+                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                getApplication());
                     } else {
                         getWindow().showNotification("HDMF Savings Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
                     }
@@ -260,7 +294,11 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     if(day == 15){
                         String fileName = "HdmfLoanReport_";
                         reports.deleteFile(fileName);
-                        hdmfLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
+//                        hdmfLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                        HDMFLoansPayableReport hdmfLoansPayableReport = new HDMFLoansPayableReport(getBranchId(), 
+                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                getApplication());
+                        
                     } else {
                         getWindow().showNotification("HDMF Loan Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
                     }
@@ -268,22 +306,34 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     if(day == 15){
                         String fileName = "PhicReport_";
                         reports.deleteFile(fileName);
-                        phicReport(util.convertDateFormat(payrollDate.getValue().toString()));
+//                        phicReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                        PHICReport phicReport = new PHICReport(getBranchId(), 
+                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                getApplication());
                     }else{
                         getWindow().showNotification("Philhealth Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
                     }
                 }else if(reportType.getValue().equals("Witholding Tax")){
                     String fileName = "WitholdingTaxesReport_";
                     reports.deleteFile(fileName);
-                    witholdingTaxReport(util.convertDateFormat(payrollDate.getValue().toString()));
+//                    witholdingTaxReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    WitholdingTaxReport witholdingTaxReport = new WitholdingTaxReport(getBranchId(), 
+                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            getApplication());
                 }else if(reportType.getValue().equals("Attendance Report")){
                     String fileName = "AttendanceReport_";
                     reports.deleteFile(fileName);
-                    attendanceReport(util.convertDateFormat(payrollDate.getValue().toString()));
+//                    attendanceReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    AttendanceReport attendanceReport = new AttendanceReport(getBranchId(), 
+                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            getApplication());
                 }else if(reportType.getValue().equals("Bank Debit Memo")){
                     String fileName = "BankDebitMemo_";
                     reports.deleteFile(fileName);
-                    bankDebitMemoReport(util.convertDateFormat(payrollDate.getValue().toString()));
+//                    bankDebitMemoReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    BankDebitMemoReport bankDebitMemoReport = new BankDebitMemoReport(getBranchId(), 
+                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            getApplication());
                 }else if(reportType.getValue().equals("SSS Loans Payable")){
                     if(day == 15){
                         getWindow().showNotification("SSS Loan Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
@@ -296,6 +346,10 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     reports.deleteFile("AdvancesReport_");
                     String corporate = companyService.getCorporateNameByBranchId(getBranchId());
                     advancesReport(corporate, util.convertDateFormat(payrollDate.getValue().toString()));
+                } else if(reportType.getValue().equals("Allowances")){
+                    reports.deleteFile("Allowances_");
+                    String corporate = companyService.getCorporateNameByBranchId(getBranchId());
+                    allowancesReport(util.convertDateFormat(payrollDate.getValue().toString()));
                 }
             }
         });
@@ -327,67 +381,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     }
     
     public Table payrollRegisterTable(int branchId, String payrollDate, boolean prev){
-        payrollRegisterTbl.removeAllItems();
-        payrollRegisterTbl.setSizeFull();
-        payrollRegisterTbl.setImmediate(true);
-        payrollRegisterTbl.setSelectable(true);
-        payrollRegisterTbl.setColumnCollapsingAllowed(true);
-        payrollRegisterTbl.addStyleName("employees-table-layout");
-        
-        payrollRegisterTbl.addContainerProperty("id", String.class, null);
-        payrollRegisterTbl.addContainerProperty("name", String.class, null);
-        payrollRegisterTbl.addContainerProperty("no. of days", Integer.class, null);        
-        payrollRegisterTbl.addContainerProperty("rate per day", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("basic salary", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("half-month salary", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("overtime pay", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("legal holiday", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("special holiday", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("night differential", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("wdo", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("absent", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("lates", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("undertime", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("gross pay", Double.class, null);         
-        payrollRegisterTbl.addContainerProperty("sss", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("phic", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("hdmf", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("tax", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("net pay", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("meal allowance", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("allowance for liquidation", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("advances to o/e", Double.class, null);         
-        payrollRegisterTbl.addContainerProperty("adjustments", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("amount to be receive", Double.class, null);        
-        payrollRegisterTbl.addContainerProperty("amount received", Double.class, null);  
-	payrollRegisterTbl.addContainerProperty("for adjustments", Double.class, null);
-        
-        payrollRegisterTbl.setColumnAlignment("no. of days", Table.ALIGN_CENTER);
-        payrollRegisterTbl.setColumnAlignment("rate per day", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("basic salary", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("adjustments", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("half-month salary", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("overtime pay", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("legal holiday", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("special holiday", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("night differential", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("wdo", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("absent", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("lates", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("undertime", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("gross pay", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("sss", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("phic", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("hdmf", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("tax", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("net pay", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("meal allowance", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("allowance for liquidation", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("advances to o/e", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("amount to be receive", Table.ALIGN_RIGHT);
-        payrollRegisterTbl.setColumnAlignment("amount received", Table.ALIGN_RIGHT);
-	payrollRegisterTbl.setColumnAlignment("for adjustments", Table.ALIGN_RIGHT);
-        
+        payrollRegisterTbl.removeAllItems();        
         List<PayrollRegister> payrollRegisterList = payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev);
         int i = 0;
         for(PayrollRegister pr : payrollRegisterList){
@@ -473,251 +467,251 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         this.branchId = branchId;
     }    
     
-    private Window addAdvances(final int payrollId, 
-            final double amountToBeReceive, 
-            final double amountReceivable){       
-        final Window subWindow = new Window("ADD/REMOVE ADVANCES");
-        subWindow.setWidth("450px");
-        
-        TabSheet ts = new TabSheet();
-        ts.addStyleName("bar");
-        
-        VerticalLayout vlayout = new VerticalLayout();
-        vlayout.setMargin(true);
-        vlayout.setSpacing(true);
-        vlayout.setCaption("View Advances");
-        
-        advancesTable(payrollId, 
-                amountToBeReceive, 
-                amountReceivable, 
-                subWindow);       
-        
-        vlayout.addComponent(advancesTbl);
-        ts.addComponent(vlayout);
-        
-        vlayout = new VerticalLayout();
-        vlayout.setMargin(true);
-        vlayout.setSpacing(true);
-        vlayout.setCaption("Post Advances");
-        
-        final ComboBox advanceType = dropDown.populateAdvanceTypeDropDownList(new ComboBox());
-        advanceType.setNewItemsAllowed(true);
-        advanceType.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-
-            @Override
-            public void addNewItem(String newItemCaption) {
-                AdvancesTypeBean advancesTypeBean = new AdvancesTypeBean();
-                if (!advanceType.containsId(newItemCaption)) {
-                    advancesTypeBean.setAdvancesType(newItemCaption);
-                    Boolean result = payrollService.insertAdvanceType(newItemCaption);
-                    if(result = true){
-                        getWindow().showNotification("Added Type: " + newItemCaption);
-                        lastAddedAdvanceType = true;
-                        advanceType.addItem(newItemCaption);
-                        advanceType.setValue(newItemCaption);
-                    }
-                }
-            }
-            
-        });
-        advanceType.setImmediate(true);
-        advanceType.addListener(new Property.ValueChangeListener() {
-
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                if (!lastAddedAdvanceType) {
-                    getWindow().showNotification(
-                            "Selected Type: " + event.getProperty());
-                }
-                lastAddedAdvanceType = false;
-            }
-            
-        });
-        vlayout.addComponent(advanceType);
-        
-        final TextField particulars = new TextField("Particulars:");
-        particulars.setWidth("100%");
-        vlayout.addComponent(particulars);
-        
-        final TextField amount = new TextField("Amount:");
-        amount.setWidth("100%");
-        vlayout.addComponent(amount);
-        
-        final PopupDateField datePosted = new PopupDateField("Date Posted:");
-        datePosted.addStyleName("mydate");
-        datePosted.setValue(new Date());
-        datePosted.setWidth("100%");
-        datePosted.setDateFormat("EEE - MMM dd, yyyy");
-        datePosted.setLenient(true);
-        datePosted.setResolution(DateField.RESOLUTION_DAY);
-        vlayout.addComponent(datePosted);
-        
-        Button button = new Button("POST ADVANCE AMOUNT");
-        button.setWidth("100%");
-        button.addListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {       
-                if(advanceType.getValue() == null){
-                    getWindow().showNotification("Select Type!", Window.Notification.TYPE_ERROR_MESSAGE);
-                    return;
-                }
-                
-                if(particulars.getValue().toString().trim().isEmpty()){
-                    getWindow().showNotification("Enter Particulars!", Window.Notification.TYPE_ERROR_MESSAGE);
-                    return;
-                }
-                
-                if(!amount.getValue().toString().trim().isEmpty()){
-                    boolean result = util.checkInputIfDouble(amount.getValue().toString().trim());
-                    if(result == false){
-                        getWindow().showNotification("Error entered Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                }else{
-                    getWindow().showNotification("Please Enter an Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
-                    return;
-                }
-                                
-                List<Advances> advanceList = new ArrayList<Advances>();
-                Advances a = new Advances();
-                a.setId(payrollId);
-                a.setAmountToBeReceive(amountToBeReceive);
-                a.setAmountReceivable(amountReceivable);
-                a.setAmount(util.convertStringToDouble(amount.getValue().toString().trim()));
-                a.setDatePosted(util.parsingDate(util.convertDateFormat(datePosted.getValue().toString())));
-                a.setAdvanceType(advanceType.getValue().toString());
-                a.setParticulars(particulars.getValue().toString());
-                advanceList.add(a);
-                
-                Double advances = Double.parseDouble(amount.getValue().toString().trim());
-                String postedDate = util.convertDateFormat(datePosted.getValue().toString());
-                Boolean result = payrollService.updateSalaryByAdvances(advanceList);                
-                if(result == true){
-                    payrollRegisterTable(getBranchId(), payroll_date, false);
-                    (subWindow.getParent()).removeWindow(subWindow);
-                }
-            }
-            
-        }); 
-        vlayout.addComponent(button);
-        
-        ts.addComponent(vlayout);       
-        
-        subWindow.addComponent(ts);
-        
-        return subWindow;
-    }
-    
-    private Table advancesTable(final int payrollId, 
-            final double amountToBeReceive, 
-            final double amountReceivable, 
-            final Window window){
-                
-        advancesTbl.removeAllItems();
-        advancesTbl.setWidth("100%");
-        advancesTbl.setImmediate(true);
-        advancesTbl.setSelectable(true);
-        
-        advancesTbl.addContainerProperty("id", String.class, null);
-        advancesTbl.addContainerProperty("amount", String.class, null);
-        advancesTbl.addContainerProperty("type", String.class, null);
-        advancesTbl.addContainerProperty("particulars", String.class, null);
-        advancesTbl.addContainerProperty("date posted", String.class, null);
-        
-        int i = 0;
-        List<Advances> advancesList = payrollService.getAdvancesByPayroll(payrollId);
-        for(Advances a : advancesList){
-            advancesTbl.addItem(new Object[]{
-                a.getAdvanceId(), a.getAmount(), a.getAdvanceType(), 
-                a.getParticulars(), util.convertDateFormat(a.getDatePosted().toString())
-            }, i);
-            i++;
-        }
-        advancesTbl.setPageLength(advancesTbl.size());
-        
-        for(Object listener : advancesTbl.getListeners(ItemClickEvent.class)){
-            advancesTbl.removeListener(ItemClickEvent.class, listener);
-        }
-        
-        advancesTbl.addListener(new ItemClickEvent.ItemClickListener() {
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                Object itemId = event.getItemId();
-                final Item item = advancesTbl.getItem(itemId);
-                              
-                if(event.getPropertyId().equals("id")){
-                    String amount = item.getItemProperty("amount").getValue().toString();                
-                    Double removedAdvances = Double.parseDouble(util.removeCommaFromString(amount));
-                    int advanceId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
-                        
-                    Window subWindow = removeAdvances(payrollId, 
-                            advanceId, 
-                            removedAdvances, 
-                            amountToBeReceive, 
-                            amountReceivable, 
-                            window);
-                    if(subWindow.getParent() == null){
-                        getWindow().addWindow(subWindow);
-                    }
-                    subWindow.setModal(true);
-                    subWindow.center();
-                }
-            }
-            
-        });
-        
-        return advancesTbl;
-    }
-    
-    private Window removeAdvances(final int payrollId, 
-            final int advanceId, 
-            final double removedAmount, 
-            final double amountToBeReceive, 
-            final double amountReceivable, 
-            final Window window){
-        final Window subWindow = new Window("REMOVE ADVANCES");
-        subWindow.setWidth("220px");
-        
-        VerticalLayout vlayout = new VerticalLayout();
-        vlayout.setSpacing(true);
-        
-        final TextField remarks = new TextField("Remarks: ");
-        remarks.setWidth("100%");
-        vlayout.addComponent(remarks);
-        
-        Button removeAdvances = new Button("REMOVE ADVANCE AMOUNT");
-        removeAdvances.setWidth("100%");
-        removeAdvances.addListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                if(remarks.getValue() == null || remarks.getValue().toString().trim().isEmpty()){
-                    getWindow().showNotification("Add remarks!", Window.Notification.TYPE_WARNING_MESSAGE);
-                    return;
-                }
-                boolean result = payrollService.removeAdvanceById(advanceId, payrollId, 
-                        removedAmount, amountToBeReceive, amountReceivable, remarks.getValue().toString());
-                if(result == true){
-                    payrollRegisterTable(getBranchId(), payroll_date, false);
-                    advancesTable(payrollId, 
-                            amountToBeReceive, 
-                            amountReceivable, 
-                            window);
-                    
-                    (subWindow.getParent()).removeWindow(subWindow);
-                    (window.getParent()).removeWindow(window);
-                }
-            }    
-
-        });
-        vlayout.addComponent(removeAdvances);
-        
-        subWindow.addComponent(vlayout);
-        return subWindow;
-    }
+//    private Window addAdvances(final int payrollId, 
+//            final double amountToBeReceive, 
+//            final double amountReceivable){       
+//        final Window subWindow = new Window("ADD/REMOVE ADVANCES");
+//        subWindow.setWidth("450px");
+//        
+//        TabSheet ts = new TabSheet();
+//        ts.addStyleName("bar");
+//        
+//        VerticalLayout vlayout = new VerticalLayout();
+//        vlayout.setMargin(true);
+//        vlayout.setSpacing(true);
+//        vlayout.setCaption("View Advances");
+//        
+//        advancesTable(payrollId, 
+//                amountToBeReceive, 
+//                amountReceivable, 
+//                subWindow);       
+//        
+//        vlayout.addComponent(advancesTbl);
+//        ts.addComponent(vlayout);
+//        
+//        vlayout = new VerticalLayout();
+//        vlayout.setMargin(true);
+//        vlayout.setSpacing(true);
+//        vlayout.setCaption("Post Advances");
+//        
+//        final ComboBox advanceType = dropDown.populateAdvanceTypeDropDownList(new ComboBox());
+//        advanceType.setNewItemsAllowed(true);
+//        advanceType.setNewItemHandler(new AbstractSelect.NewItemHandler() {
+//
+//            @Override
+//            public void addNewItem(String newItemCaption) {
+//                AdvancesTypeBean advancesTypeBean = new AdvancesTypeBean();
+//                if (!advanceType.containsId(newItemCaption)) {
+//                    advancesTypeBean.setAdvancesType(newItemCaption);
+//                    Boolean result = payrollService.insertAdvanceType(newItemCaption);
+//                    if(result = true){
+//                        getWindow().showNotification("Added Type: " + newItemCaption);
+//                        lastAddedAdvanceType = true;
+//                        advanceType.addItem(newItemCaption);
+//                        advanceType.setValue(newItemCaption);
+//                    }
+//                }
+//            }
+//            
+//        });
+//        advanceType.setImmediate(true);
+//        advanceType.addListener(new Property.ValueChangeListener() {
+//
+//            @Override
+//            public void valueChange(Property.ValueChangeEvent event) {
+//                if (!lastAddedAdvanceType) {
+//                    getWindow().showNotification(
+//                            "Selected Type: " + event.getProperty());
+//                }
+//                lastAddedAdvanceType = false;
+//            }
+//            
+//        });
+//        vlayout.addComponent(advanceType);
+//        
+//        final TextField particulars = new TextField("Particulars:");
+//        particulars.setWidth("100%");
+//        vlayout.addComponent(particulars);
+//        
+//        final TextField amount = new TextField("Amount:");
+//        amount.setWidth("100%");
+//        vlayout.addComponent(amount);
+//        
+//        final PopupDateField datePosted = new PopupDateField("Date Posted:");
+//        datePosted.addStyleName("mydate");
+//        datePosted.setValue(new Date());
+//        datePosted.setWidth("100%");
+//        datePosted.setDateFormat("EEE - MMM dd, yyyy");
+//        datePosted.setLenient(true);
+//        datePosted.setResolution(DateField.RESOLUTION_DAY);
+//        vlayout.addComponent(datePosted);
+//        
+//        Button button = new Button("POST ADVANCE AMOUNT");
+//        button.setWidth("100%");
+//        button.addListener(new Button.ClickListener() {
+//
+//            @Override
+//            public void buttonClick(Button.ClickEvent event) {       
+//                if(advanceType.getValue() == null){
+//                    getWindow().showNotification("Select Type!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                    return;
+//                }
+//                
+//                if(particulars.getValue().toString().trim().isEmpty()){
+//                    getWindow().showNotification("Enter Particulars!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                    return;
+//                }
+//                
+//                if(!amount.getValue().toString().trim().isEmpty()){
+//                    boolean result = util.checkInputIfDouble(amount.getValue().toString().trim());
+//                    if(result == false){
+//                        getWindow().showNotification("Error entered Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                        return;
+//                    }
+//                    
+//                }else{
+//                    getWindow().showNotification("Please Enter an Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                    return;
+//                }
+//                                
+//                List<Advances> advanceList = new ArrayList<Advances>();
+//                Advances a = new Advances();
+//                a.setId(payrollId);
+//                a.setAmountToBeReceive(amountToBeReceive);
+//                a.setAmountReceivable(amountReceivable);
+//                a.setAmount(util.convertStringToDouble(amount.getValue().toString().trim()));
+//                a.setDatePosted(util.parsingDate(util.convertDateFormat(datePosted.getValue().toString())));
+//                a.setAdvanceType(advanceType.getValue().toString());
+//                a.setParticulars(particulars.getValue().toString());
+//                advanceList.add(a);
+//                
+//                Double advances = Double.parseDouble(amount.getValue().toString().trim());
+//                String postedDate = util.convertDateFormat(datePosted.getValue().toString());
+//                Boolean result = payrollService.updateSalaryByAdvances(advanceList);                
+//                if(result == true){
+//                    payrollRegisterTable(getBranchId(), payroll_date, false);
+//                    (subWindow.getParent()).removeWindow(subWindow);
+//                }
+//            }
+//            
+//        }); 
+//        vlayout.addComponent(button);
+//        
+//        ts.addComponent(vlayout);       
+//        
+//        subWindow.addComponent(ts);
+//        
+//        return subWindow;
+//    }
+//    
+//    private Table advancesTable(final int payrollId, 
+//            final double amountToBeReceive, 
+//            final double amountReceivable, 
+//            final Window window){
+//                
+//        advancesTbl.removeAllItems();
+//        advancesTbl.setWidth("100%");
+//        advancesTbl.setImmediate(true);
+//        advancesTbl.setSelectable(true);
+//        
+//        advancesTbl.addContainerProperty("id", String.class, null);
+//        advancesTbl.addContainerProperty("amount", String.class, null);
+//        advancesTbl.addContainerProperty("type", String.class, null);
+//        advancesTbl.addContainerProperty("particulars", String.class, null);
+//        advancesTbl.addContainerProperty("date posted", String.class, null);
+//        
+//        int i = 0;
+//        List<Advances> advancesList = payrollService.getAdvancesByPayroll(payrollId);
+//        for(Advances a : advancesList){
+//            advancesTbl.addItem(new Object[]{
+//                a.getAdvanceId(), a.getAmount(), a.getAdvanceType(), 
+//                a.getParticulars(), util.convertDateFormat(a.getDatePosted().toString())
+//            }, i);
+//            i++;
+//        }
+//        advancesTbl.setPageLength(advancesTbl.size());
+//        
+//        for(Object listener : advancesTbl.getListeners(ItemClickEvent.class)){
+//            advancesTbl.removeListener(ItemClickEvent.class, listener);
+//        }
+//        
+//        advancesTbl.addListener(new ItemClickEvent.ItemClickListener() {
+//
+//            @Override
+//            public void itemClick(ItemClickEvent event) {
+//                Object itemId = event.getItemId();
+//                final Item item = advancesTbl.getItem(itemId);
+//                              
+//                if(event.getPropertyId().equals("id")){
+//                    String amount = item.getItemProperty("amount").getValue().toString();                
+//                    Double removedAdvances = Double.parseDouble(util.removeCommaFromString(amount));
+//                    int advanceId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
+//                        
+//                    Window subWindow = removeAdvances(payrollId, 
+//                            advanceId, 
+//                            removedAdvances, 
+//                            amountToBeReceive, 
+//                            amountReceivable, 
+//                            window);
+//                    if(subWindow.getParent() == null){
+//                        getWindow().addWindow(subWindow);
+//                    }
+//                    subWindow.setModal(true);
+//                    subWindow.center();
+//                }
+//            }
+//            
+//        });
+//        
+//        return advancesTbl;
+//    }
+//    
+//    private Window removeAdvances(final int payrollId, 
+//            final int advanceId, 
+//            final double removedAmount, 
+//            final double amountToBeReceive, 
+//            final double amountReceivable, 
+//            final Window window){
+//        final Window subWindow = new Window("REMOVE ADVANCES");
+//        subWindow.setWidth("220px");
+//        
+//        VerticalLayout vlayout = new VerticalLayout();
+//        vlayout.setSpacing(true);
+//        
+//        final TextField remarks = new TextField("Remarks: ");
+//        remarks.setWidth("100%");
+//        vlayout.addComponent(remarks);
+//        
+//        Button removeAdvances = new Button("REMOVE ADVANCE AMOUNT");
+//        removeAdvances.setWidth("100%");
+//        removeAdvances.addListener(new Button.ClickListener() {
+//
+//            @Override
+//            public void buttonClick(Button.ClickEvent event) {
+//                if(remarks.getValue() == null || remarks.getValue().toString().trim().isEmpty()){
+//                    getWindow().showNotification("Add remarks!", Window.Notification.TYPE_WARNING_MESSAGE);
+//                    return;
+//                }
+//                boolean result = payrollService.removeAdvanceById(advanceId, payrollId, 
+//                        removedAmount, amountToBeReceive, amountReceivable, remarks.getValue().toString());
+//                if(result == true){
+//                    payrollRegisterTable(getBranchId(), payroll_date, false);
+//                    advancesTable(payrollId, 
+//                            amountToBeReceive, 
+//                            amountReceivable, 
+//                            window);
+//                    
+//                    (subWindow.getParent()).removeWindow(subWindow);
+//                    (window.getParent()).removeWindow(window);
+//                }
+//            }    
+//
+//        });
+//        vlayout.addComponent(removeAdvances);
+//        
+//        subWindow.addComponent(vlayout);
+//        return subWindow;
+//    }
     
     private Window addAdjustment(final int payrollId, 
             final double amountToBeReceive, 
@@ -1589,7 +1583,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
    private void allowancesReport(String payroll_date){
         Connection conn = getConnection.connection(); 
         File reportFile = new File("C:/reportsJasper/AllowancesReport.jasper");
-        int tradeId = companyService.getTradeIdByBranchId(branchId);
+        int tradeId = companyService.getTradeIdByBranchId(getBranchId());
         int corporateId = companyService.getCorporateIdByTradeId(tradeId);
 	String corporateName = companyService.getCorporateById(corporateId);
 
@@ -1695,4 +1689,5 @@ public class PayrollRegisterMainUI extends VerticalLayout {
              e.getMessage();
         }        
     }
+
 }

@@ -40,11 +40,6 @@ public class SalaryInformationServiceImpl implements SalaryInformationService{
     }
 
     @Override
-    public boolean insertEndDate(String employeeId, String endDate) {
-        return siDAO.insertEndDate(employeeId, endDate);
-    }
-
-    @Override
     public boolean updateBankAccountNo(String employeeId, String bankAccountNo) {
         return siDAO.updateBankAccountNo(employeeId, bankAccountNo);
     }

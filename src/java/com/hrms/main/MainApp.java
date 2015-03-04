@@ -21,7 +21,6 @@ import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.service.AdministratorService;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.openhris.calendar.CalendarMainUI;
-import com.openhris.commons.AboutHris;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.model.Branch;
@@ -43,7 +42,6 @@ import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -133,10 +131,10 @@ public class MainApp extends Application {
             window.getWindow().addWindow(subWindow);
         }
         
-        initToolBarMenu(main, window);
+        initToolBarMenu(window);
     }
     
-    private void initToolBarMenu(VerticalLayout vlayout, final Window window){
+    private void initToolBarMenu(final Window window){
         CssLayout toolbar = new CssLayout();
         toolbar.setWidth("100%");
         toolbar.addStyleName("toolbar-invert");
@@ -155,14 +153,12 @@ public class MainApp extends Application {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Window subWindow = aboutHrms();
-//                AboutHris aboutHris = new AboutHris();
-//                Window subWindow = aboutHris.aboutHris();
-                if(subWindow.getParent() == null){
-                    window.getWindow().addWindow(subWindow);
+                Window sub = new AboutHRMS();
+                if(sub.getParent() == null){
+                    window.getWindow().addWindow(sub);
                 }
-                subWindow.setModal(true);
-                subWindow.center();
+                sub.setModal(true);
+                sub.center();
             }
             
         });
@@ -232,7 +228,7 @@ public class MainApp extends Application {
         });
         right.addComponent(settingsButton);
         
-        vlayout.addComponent(toolbar);
+        main.addComponent(toolbar);
         
         hsplit = new HorizontalSplitPanel();        
         hsplit.addStyleName("small blue white");
@@ -240,8 +236,8 @@ public class MainApp extends Application {
         hsplit.setSplitPosition(23, Sizeable.UNITS_PERCENTAGE);
 	hsplit.setSizeFull();
 	
-        vlayout.addComponent(hsplit);
-        vlayout.setExpandRatio(hsplit, 1);         
+        main.addComponent(hsplit);
+        main.setExpandRatio(hsplit, 1);         
         
         menu = new CssLayout();
         menu.addStyleName("menu");
@@ -267,7 +263,7 @@ public class MainApp extends Application {
                 if(event.getButton().getCaption().equals("MAIN")){
                     mainMenuBar = true;
                 } else if (event.getButton().getCaption().equals("TIMEKEEPING")) {
-                    timekeepingMenuBar = true;
+                    timekeepingMenuBar = true;             
                 } else if (event.getButton().getCaption().equals("PAYROLL")) {
                     payrollMenuBar = true;
                 } else if (event.getButton().getCaption().equals("LOANS")) {
@@ -446,12 +442,12 @@ public class MainApp extends Application {
                         employeeMainUI.employeesTable(getEmployeeList(branchId));
                     } 
                     
-                    timekeepingMainUI.timekeepingTable(branchId, null);
+                    timekeepingMainUI.setBranchId(branchId);
                     timekeepingMainUI.employeeComboBox(branchId);
                     
                     payrollMainUI.employeeComboBox(branchId); 
                     payrollRegisterMainUI.setBranchId(branchId);
-                    
+//                    
                     usersMainUI.employeeComboBox(branchId);
                     usersMainUI.setBranchId(branchId);
                 }
@@ -572,9 +568,8 @@ public class MainApp extends Application {
     }
     
     ComponentContainer buildEmployeesComponent(){
-        employeeMainUI = new EmployeeMainUI(GlobalVariables.getUserRole(), branchId);
+        employeeMainUI = new EmployeeMainUI(GlobalVariables.getUserRole(), getBranchId());
         companyModule = new CompanyModule(GlobalVariables.getUserRole());
-//        calendarModule = new CalendarModule(GlobalVariables.getUsername(), GlobalVariables.getUserRole());
         
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
@@ -597,7 +592,7 @@ public class MainApp extends Application {
     }
     
     ComponentContainer buildTimekeepingComponent(){
-        timekeepingMainUI = new TimekeepingMainUI(branchId);
+        timekeepingMainUI = new TimekeepingMainUI();
         
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
@@ -613,8 +608,8 @@ public class MainApp extends Application {
     }
     
     ComponentContainer buildPayrollComponent(){
-        payrollMainUI = new PayrollMainUI(branchId);
-        payrollRegisterMainUI = new PayrollRegisterMainUI(branchId);
+        payrollMainUI = new PayrollMainUI(getBranchId());
+        payrollRegisterMainUI = new PayrollRegisterMainUI(getBranchId());
         
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
@@ -684,7 +679,7 @@ public class MainApp extends Application {
     }
     
     ComponentContainer buildAdministratorComponent(){
-        usersMainUI = new UsersMainUI(branchId);
+        usersMainUI = new UsersMainUI(getBranchId());
         userToolbarMenuAccessMainUI = new UserToolbarMenuAccessMainUI();
         userAdvanceAccessMainUI = new UserAdvanceAccessMainUI();
         
@@ -771,34 +766,7 @@ public class MainApp extends Application {
         
         return subWindow;
     }
-    
-    private Window aboutHrms(){
-        VerticalLayout vlayout = new VerticalLayout();
-        vlayout.setSpacing(true);
-        vlayout.setMargin(true);
         
-        final Window subWindow = new Window("About HRMS", vlayout);
-        subWindow.setWidth("300px");
-                
-        Label version = new Label("Version: <b>1.0</b>");
-        version.setContentMode(Label.CONTENT_XHTML);
-        subWindow.addComponent(version);
-        
-        Label title = new Label("Title: <b>Human Resource Information System</b>");
-        title.setContentMode(Label.CONTENT_XHTML);
-        subWindow.addComponent(title);
-        
-        Label developer = new Label("Developed By: <b>Engr. Godfrey D. Beray</b>");
-        developer.setContentMode(Label.CONTENT_XHTML);
-        subWindow.addComponent(developer);
-        
-        Label framework = new Label("Framework: <b>VAADIN - Sept2012</b>");
-        framework.setContentMode(Label.CONTENT_XHTML);
-        subWindow.addComponent(framework);
-        
-        return subWindow;
-    }
-    
     private void authenticateLogin(boolean result){
         if(userAuthenticate == false){
             aboutButton.setEnabled(false);
@@ -885,5 +853,9 @@ public class MainApp extends Application {
     
     public int getUserId(){
         return userId;
+    }
+    
+    public int getBranchId(){
+        return branchId;
     }
 }

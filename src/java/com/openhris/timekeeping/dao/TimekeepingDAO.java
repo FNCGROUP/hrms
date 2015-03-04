@@ -107,25 +107,19 @@ public class TimekeepingDAO {
         return attendanceList;
     }
     
-    public List<Timekeeping> getAttendanceByBranchAndEmployee(int branchId, String employeeId){
+    public List<Timekeeping> getAttendanceByEmployee(String employeeId){
         Connection conn = getConnection.connection();
         Statement stmt = null;
         ResultSet rs = null; 
-        String queryAttendanceList;
-        
-        if(employeeId == null){
-            queryAttendanceList = "SELECT * FROM timekeeping_summary WHERE branchId = "+branchId+" "
-                    + "ORDER BY payrollId DESC";
-        } else {
-            queryAttendanceList = "SELECT * FROM timekeeping_summary "
-                    + "WHERE branchId = "+branchId+" AND employeeId = '"+employeeId+"' "
-                    + "ORDER BY payrollId DESC";
-        }
-        
         List<Timekeeping> attendanceList = new ArrayList<Timekeeping>();
+        
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery(queryAttendanceList);
+            rs = stmt.executeQuery("SELECT payrollId, attendancePeriodFrom, attendancePeriodTo, lates, "
+                    + "undertime, overtime, nightDifferential, latesDeduction, undertimeDeduction, "
+                    + "overtimePaid, nightDifferentialPaid, legalHolidayPaid, specialHolidayPaid, "
+                    + "workingDayOffPaid, nonWorkingHolidayPaid FROM timekeeping_summary "
+                    + "WHERE employeeId = '"+employeeId+"' ORDER BY payrollId DESC");
             while(rs.next()){
                 Timekeeping t = new Timekeeping();
                 t.setId(util.convertStringToInteger(rs.getString("payrollId")));

@@ -21,9 +21,7 @@ public interface SalaryInformationService {
     
     public boolean updateEmployeeContributionBranch(String employeeId, int branchId, String remarks);    
     
-    public boolean editEmploymentDateEntry(String employeeId, String entryDate);
-    
-    public boolean insertEndDate(String employeeId, String endDate);
+    public boolean editEmploymentDateEntry(String employeeId, String entryDate);    
     
     public boolean updateBankAccountNo(String employeeId, String bankAccountNo);
 }

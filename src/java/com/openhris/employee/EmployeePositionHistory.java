@@ -7,6 +7,8 @@
 package com.openhris.employee;
 
 import com.openhris.commons.DropDownComponent;
+import com.openhris.commons.HRISPopupDateField;
+import com.openhris.commons.HRISTextField;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.employee.model.PositionHistory;
@@ -20,14 +22,14 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import com.vaadin.ui.themes.Reindeer;
 import java.util.Date;
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class EmployeePositionHistory extends VerticalLayout{
     int tradeId;
     int branchId;
     GridLayout glayout;
-    Table positionHistoryTbl = new Table();
+    Table positionHistoryTbl = new PositionHistoryTable();
     
     public EmployeePositionHistory(){        
     }
@@ -58,8 +60,8 @@ public class EmployeePositionHistory extends VerticalLayout{
         init();
         addComponent(layout());
         setComponentAlignment(glayout, Alignment.TOP_CENTER);
-        positionHistoryTable();
-        addComponent(positionHistoryTbl);
+        addComponent(positionHistoryTable());
+        addComponent(layout2());
     }
     
     public void init(){
@@ -121,18 +123,13 @@ public class EmployeePositionHistory extends VerticalLayout{
         });
         glayout.addComponent(branch, 2, 0);
         
-        final TextField department = createTextField("Department: ");
+        final TextField department = new HRISTextField("Department: ");
         glayout.addComponent(department, 0, 1);
         
-        final TextField position = createTextField("Position: ");
+        final TextField position = new HRISTextField("Position: ");
         glayout.addComponent(position, 1, 1);
         
-        final PopupDateField entryDate = new PopupDateField("Entry Date:");
-        entryDate.addStyleName("mydate");
-        entryDate.setValue(new Date());
-        entryDate.setDateFormat("yyyy-MM-dd");
-        entryDate.setWidth("100%");
-        entryDate.setResolution(DateField.RESOLUTION_DAY);
+        final PopupDateField entryDate = new HRISPopupDateField("Entry Date:");
         glayout.addComponent(entryDate, 2, 1);
         
         Button updateBtn = new Button("UPDATE EMPLOYEE's POSITION");
@@ -176,7 +173,7 @@ public class EmployeePositionHistory extends VerticalLayout{
                 positionHistory.setCompany(corporate.getValue().toString());
                 positionHistory.setTrade(trade.getValue().toString());
                 positionHistory.setBranch(branch.getValue().toString());
-                positionHistory.setDepartment(department.getValue().toString());
+                positionHistory.setDepartment(department.getValue().toString().toLowerCase());
                 positionHistory.setEntryDate((Date) entryDate.getValue());
                 positionHistory.setBranchId(branchId);
                 
@@ -194,20 +191,7 @@ public class EmployeePositionHistory extends VerticalLayout{
     }
     
     public Table positionHistoryTable(){   
-        positionHistoryTbl.removeAllItems();
-        positionHistoryTbl.setSizeFull();
-        positionHistoryTbl.setSelectable(true);
-        positionHistoryTbl.setImmediate(true);        
-        positionHistoryTbl.setStyleName("employees-table-layout");   
-        
-        positionHistoryTbl.addContainerProperty("id", String.class, null);
-        positionHistoryTbl.addContainerProperty("position", String.class, null);
-        positionHistoryTbl.addContainerProperty("company", String.class, null);
-        positionHistoryTbl.addContainerProperty("trade", String.class, null);
-        positionHistoryTbl.addContainerProperty("branch", String.class, null);
-        positionHistoryTbl.addContainerProperty("department", String.class, null);
-        positionHistoryTbl.addContainerProperty("entry date", String.class, null);
-        
+        positionHistoryTbl.removeAllItems();        
         List<PositionHistory> positionList = phService.getPositionHistory(getEmployeeId());
         int i = 0;
         for(PositionHistory p: positionList){
@@ -237,59 +221,69 @@ public class EmployeePositionHistory extends VerticalLayout{
                 
                 if(event.getPropertyId().equals("id")){
                     int positionId = util.convertStringToInteger(item.getItemProperty("id").getValue().toString());
-                    Window window = removePositionWindow(positionId);
+                    Window window = new RemovePositionWindow(positionId);
                     if(window.getParent() == null){
                         getWindow().addWindow(window);
                     }
                     window.center();
+                    window.addListener(subWindowCloseListener);
                 }                
             }
         });
         
         return positionHistoryTbl;
     }
-    
-    private Window removePositionWindow(final int positionId){
-        VerticalLayout vlayout = new VerticalLayout();
-        vlayout.setSpacing(true);
-        vlayout.setMargin(true);
         
-        final Window window = new Window("REMOVE POSITION", vlayout);
-        window.setWidth("300px");
+    public ComponentContainer layout2(){
+        HorizontalLayout hlayout = new HorizontalLayout();
+        hlayout.setSpacing(true);          
+        hlayout.setWidth("100%");
+                              
+        GridLayout glayout2 = new GridLayout(2, 1);
+        glayout2.setSpacing(true);
         
-        Button removeBtn = new  Button("Remove Position?");
-        removeBtn.setWidth("100%");
-        removeBtn.addListener(new Button.ClickListener() {
+        final PopupDateField endDate = new HRISPopupDateField("Exit Date: ");
+        endDate.setWidth("150px");
+        glayout2.addComponent(endDate, 0, 0);
+        glayout2.setComponentAlignment(endDate, Alignment.BOTTOM_LEFT);
+        
+        Button endDateBtn = new Button("RESIGN");
+        endDateBtn.setWidth("150px");
+        endDateBtn.addListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                boolean result = phService.removePositionHistory(positionId);
-                if(result){
-                    positionHistoryTable();
-                    (window.getParent()).removeWindow(window);
-                } else {
-                    getWindow().showNotification("Cannot Remove Position, Contact your DBA!", Window.Notification.TYPE_ERROR_MESSAGE);
+                if(endDate.getValue() == null || endDate.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Enter End Date.", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
                 }
+                
+                Window window = new ConfirmResignWindow(getEmployeeId(), util.convertDateFormat(endDate.getValue().toString().trim().toLowerCase()));
+                if(window.getParent() == null){
+                    getWindow().addWindow(window);
+                }
+                window.setModal(true);
+                window.center();
             }
         });
-        removeBtn.setImmediate(true);
+        glayout2.addComponent(endDateBtn, 1, 0);
+        glayout2.setComponentAlignment(endDateBtn, Alignment.BOTTOM_LEFT);
+                                
+        hlayout.addComponent(glayout2);
+        hlayout.setComponentAlignment(glayout2, Alignment.MIDDLE_RIGHT);
         
-        window.addComponent(removeBtn);
-        
-        return window;
+        return hlayout;
     }
     
     private String getEmployeeId(){
         return employeeId;
     }
-    
-    private TextField createTextField(String str){
-	TextField t = new TextField();
-	t.setCaption(str);
-	t.setWidth("100%");
-	t.setStyleName(Reindeer.TEXTFIELD_SMALL);
-        t.setNullSettingAllowed(true);
         
-	return t;
-    }
+    Window.CloseListener subWindowCloseListener = new Window.CloseListener() {
+
+        @Override
+        public void windowClose(Window.CloseEvent e) {
+            positionHistoryTable();
+        }
+    };
 }
