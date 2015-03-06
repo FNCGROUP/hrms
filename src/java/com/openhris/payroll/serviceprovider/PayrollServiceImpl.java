@@ -84,12 +84,14 @@ public class PayrollServiceImpl implements PayrollService {
         double phicAmount, 
         double netPay, 
         double amountToBeReceive, 
-        double amountReceive) {
+        double amountReceive, 
+        boolean isPayrollAdjusted) {
             return payrollDAO.updatePhicContribution(payrollId, 
                     phicAmount, 
                     netPay, 
                     amountToBeReceive, 
-                    amountReceive);
+                    amountReceive, 
+                    isPayrollAdjusted);
     }
 
     @Override
@@ -112,12 +114,14 @@ public class PayrollServiceImpl implements PayrollService {
         double newTaxWitheldAmount, 
         double netPay, 
         double amountToBeReceive, 
-        double amountReceive) {
+        double amountReceive, 
+        boolean isPayrollAdjusted) {
             return payrollDAO.updateTaxWitheldAmount(payrollId, 
                     newTaxWitheldAmount, 
                     netPay, 
                     amountToBeReceive, 
-                    amountReceive);
+                    amountReceive, 
+                    isPayrollAdjusted);
     }
 
     @Override
@@ -125,12 +129,14 @@ public class PayrollServiceImpl implements PayrollService {
         double hdmfContribution, 
         double netPay, 
         double amountToBeReceive, 
-        double amountReceive) {
+        double amountReceive, 
+        boolean isPayrollAdjusted) {
             return payrollDAO.updateHdmfContribution(payrollId, 
                     hdmfContribution, 
                     netPay, 
                     amountToBeReceive, 
-                    amountReceive);
+                    amountReceive, 
+                    isPayrollAdjusted);
     }
 
     @Override
@@ -138,12 +144,14 @@ public class PayrollServiceImpl implements PayrollService {
         double sssContribution, 
         double netPay, 
         double amountToBeReceive, 
-        double amountReceive) {
+        double amountReceive, 
+        boolean isPayrollAdjusted) {
             return payrollDAO.updateSssContribution(payrollId, 
                     sssContribution, 
                     netPay, 
                     amountToBeReceive, 
-                    amountReceive);
+                    amountReceive, 
+                    isPayrollAdjusted);
     }
 
     @Override

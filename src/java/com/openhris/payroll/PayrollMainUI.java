@@ -500,22 +500,27 @@ public class PayrollMainUI extends VerticalLayout {
                 double newNetSalary;
                 double newAmountToBeReceive;
                 double newAmountReceive;
+                boolean isPayrollAdjusted;
                 
                 if(payrollService.isPayrollAdjusted(payrollId)){
                      newNetSalary = (netPay + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                     newAmountToBeReceive = (amountToBeReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                     newAmountReceive = amountReceive;
+                    isPayrollAdjusted = true;
                 } else {
                     newNetSalary = (netPay + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                     newAmountToBeReceive = (amountToBeReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                     newAmountReceive = (amountReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                
+                    isPayrollAdjusted = false; 
                 }
                 
                 boolean result = payrollService.updatePhicContribution(payrollId, 
                         util.convertStringToDouble(phicNewAmount.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
-                        newAmountReceive);
+                        newAmountReceive, 
+                        isPayrollAdjusted);
                 
                 if(result){
                     payrollTable(branchId, getEmployeeId());
@@ -565,22 +570,26 @@ public class PayrollMainUI extends VerticalLayout {
                 double newNetSalary;
                 double newAmountToBeReceive;
                 double newAmountReceive;
+                boolean isPayrollAdjusted;
                 
                 if(payrollService.isPayrollAdjusted(payrollId)){
                     newNetSalary = (netPay + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                     newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                     newAmountReceive = amountReceive;
+                    isPayrollAdjusted = true;
                 } else {
                     newNetSalary = (netPay + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                     newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                     newAmountReceive = (amountReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                    isPayrollAdjusted = false;
                 }
                 
                 boolean result = payrollService.updateHdmfContribution(payrollId, 
                         util.convertStringToDouble(newHdmfContribution.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
-                        newAmountReceive);
+                        newAmountReceive, 
+                        isPayrollAdjusted);
                 
                 if(result){
                     payrollTable(branchId, getEmployeeId());
@@ -630,22 +639,26 @@ public class PayrollMainUI extends VerticalLayout {
                 double newNetSalary;
                 double newAmountToBeReceive;
                 double newAmountReceive;
+                boolean isPayrollAdjusted;
                 
                 if(payrollService.isPayrollAdjusted(payrollId)){
                     newNetSalary = (netSalary + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
                     newAmountToBeReceive = (amountToBeReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
                     newAmountReceive = amountReceive;
+                    isPayrollAdjusted = true;
                 } else {
                     newNetSalary = (netSalary + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
                     newAmountToBeReceive = (amountToBeReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
                     newAmountReceive = (amountReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                    isPayrollAdjusted = false;
                 }
                 
                 boolean result = payrollService.updateSssContribution(payrollId, 
                         util.convertStringToDouble(newSssContribution.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
-                        newAmountReceive);
+                        newAmountReceive, 
+                        isPayrollAdjusted);
                 
                 if(result){
                     payrollTable(branchId, getEmployeeId());
@@ -692,15 +705,29 @@ public class PayrollMainUI extends VerticalLayout {
                     return;
                 }
                 
-                double newNetSalary = (netSalary + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
-                double newAmountToBeReceive = (amountToBeReceive + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
-                double newAmountReceive = (amountReceive + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                double newNetSalary;
+                double newAmountToBeReceive;
+                double newAmountReceive;
+                boolean isPayrollAdjusted;
+                
+                if(payrollService.isPayrollAdjusted(payrollId)){
+                    newNetSalary = (netSalary + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                    newAmountReceive = amountReceive;
+                    isPayrollAdjusted = true;
+                } else {
+                    newNetSalary = (netSalary + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                    newAmountReceive = (amountReceive + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                    isPayrollAdjusted = false;
+                }
                 
                 boolean result = payrollService.updateTaxWitheldAmount(payrollId, 
                         util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
-                        newAmountReceive);
+                        newAmountReceive, 
+                        isPayrollAdjusted);
                 
                 if(result){
                     payrollTable(branchId, getEmployeeId());

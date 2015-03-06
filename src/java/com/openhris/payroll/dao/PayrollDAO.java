@@ -487,11 +487,13 @@ public class PayrollDAO {
             double phicAmount, 
             double netPay, 
             double amountToBeReceive, 
-            double amountReceive){        
+            double amountReceive, 
+            boolean isPayrollAdjusted){        
         boolean result = false;
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE payroll_table SET phic = ?, netSalary = ?, "
                     + "amountToBeReceive = ?, amountReceivable = ? WHERE id = ?");
             pstmt.setDouble(1, phicAmount);
@@ -501,8 +503,24 @@ public class PayrollDAO {
             pstmt.setInt(5, payrollId);
             pstmt.executeUpdate();
             
+            if(isPayrollAdjusted){
+                double forAdjustment = amountToBeReceive - amountReceive;
+                pstmt = conn.prepareStatement("UPDATE payroll_table SET "
+                    + "forAdjustments = ? WHERE id = ?");
+                pstmt.setDouble(1, forAdjustment);
+                pstmt.setInt(2, payrollId);
+                pstmt.executeUpdate();
+            }
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+                System.out.println("Transaction Rollback");
+            } catch (SQLException ex1) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally{
             try {
@@ -604,11 +622,13 @@ public class PayrollDAO {
             double newTaxWitheldAmount, 
             double netPay, 
             double amountToBeReceive, 
-            double amountReceive){        
+            double amountReceive, 
+            boolean isPayrollAdjusted){        
         boolean result = false;
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE payroll_table SET tax = ?, netSalary = ?, "
                     + "amountToBeReceive = ?, amountReceivable = ? WHERE id = ?");
             pstmt.setDouble(1, newTaxWitheldAmount);
@@ -618,8 +638,24 @@ public class PayrollDAO {
             pstmt.setInt(5, payrollId);
             pstmt.executeUpdate();
             
+            if(isPayrollAdjusted){
+                double forAdjustment = amountToBeReceive - amountReceive;
+                pstmt = conn.prepareStatement("UPDATE payroll_table SET "
+                    + "forAdjustments = ? WHERE id = ?");
+                pstmt.setDouble(1, forAdjustment);
+                pstmt.setInt(2, payrollId);
+                pstmt.executeUpdate();
+            }
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+                System.out.println("Transaction Rollback");
+            } catch (SQLException ex1) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally{
             try {
@@ -639,11 +675,13 @@ public class PayrollDAO {
             double newHdmfContribution, 
             double netPay, 
             double amountToBeReceive, 
-            double amountReceive){        
+            double amountReceive, 
+            boolean isPayrollAdjusted){        
         boolean result = false;
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE payroll_table SET hdmf = ?, netSalary = ?, "
                     + "amountToBeReceive = ?, amountReceivable = ? WHERE id = ?");
             pstmt.setDouble(1, newHdmfContribution);
@@ -653,8 +691,24 @@ public class PayrollDAO {
             pstmt.setInt(5, payrollId);
             pstmt.executeUpdate();
             
+            if(isPayrollAdjusted){
+                double forAdjustment = amountToBeReceive - amountReceive;
+                pstmt = conn.prepareStatement("UPDATE payroll_table SET "
+                    + "forAdjustments = ? WHERE id = ?");
+                pstmt.setDouble(1, forAdjustment);
+                pstmt.setInt(2, payrollId);
+                pstmt.executeUpdate();
+            }
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+                System.out.println("Transaction Rollback");
+            } catch (SQLException ex1) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally{
             try {
@@ -674,11 +728,13 @@ public class PayrollDAO {
             double sssContribution, 
             double netPay, 
             double amountToBeReceive, 
-            double amountReceive){        
+            double amountReceive, 
+            boolean isPayrollAdjusted){        
         boolean result = false;
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE payroll_table SET sss = ?, netSalary = ?, "
                     + "amountToBeReceive = ?, amountReceivable = ? WHERE id = ?");
             pstmt.setDouble(1, sssContribution);
@@ -688,8 +744,24 @@ public class PayrollDAO {
             pstmt.setInt(5, payrollId);
             pstmt.executeUpdate();
             
+            if(isPayrollAdjusted){
+                double forAdjustment = amountToBeReceive - amountReceive;
+                pstmt = conn.prepareStatement("UPDATE payroll_table SET "
+                    + "forAdjustments = ? WHERE id = ?");
+                pstmt.setDouble(1, forAdjustment);
+                pstmt.setInt(2, payrollId);
+                pstmt.executeUpdate();
+            }
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+                System.out.println("Transaction Rollback");
+            } catch (SQLException ex1) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally{
             try {
@@ -1178,7 +1250,9 @@ public class PayrollDAO {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT actionTaken FROM payroll_table WHERE id = "+id+" ");
             while(rs.next()){
-                if(rs.getString("actionTaken").equals("adjusted")){
+                if(rs.getString("actionTaken") == null){
+                    result = false;
+                } else if(rs.getString("actionTaken").equals("adjusted")) {
                     result = true;
                 }
             }

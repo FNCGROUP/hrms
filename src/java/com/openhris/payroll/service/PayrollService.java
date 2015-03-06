@@ -43,7 +43,8 @@ public interface PayrollService {
             double phicAmount, 
             double netPay, 
             double amountToBeReceive, 
-            double amountReceive);
+            double amountReceive, 
+            boolean isPayrollAdjusted);
     
     public String getPayrollPeriodByPayrollId(int payrollId);
     
@@ -55,19 +56,22 @@ public interface PayrollService {
             double newTaxWitheldAmount, 
             double netPay, 
             double amountToBeReceive, 
-            double amountReceive);
+            double amountReceive, 
+            boolean isPayrollAdjusted);
     
     public boolean updateHdmfContribution(int payrollId, 
             double phicAmount, 
             double netPay, 
             double amountToBeReceive, 
-            double amountReceive);
+            double amountReceive, 
+            boolean isPayrollAdjusted);
     
     public boolean updateSssContribution(int payrollId, 
             double sssContribution, 
             double netPay, 
             double amountToBeReceive, 
-            double amountReceive);
+            double amountReceive, 
+            boolean isPayrollAdjusted);
     
     public boolean lockPayroll(int payrollId);
     
