@@ -7,8 +7,6 @@ package com.openhris.employee.service;
 import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.model.PositionHistory;
-import com.vaadin.ui.Table;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,11 +19,11 @@ public interface EmployeeService {
     
     public List<Employee> getEmployeeById(String employeeId);
             
-    public List<Employee> getAllEmployee();
+    public List<Employee> getAllEmployees();
         
     public List<Employee> getEmployeePerBranchForDropDownList(int branchId);
     
-    public List<PositionHistory> getEmployeePerBranch(int branchId);
+    public List<Employee> getEmployeePerBranch(int branchId);
     
     public List<PositionHistory> getEmployeePositionHistory(String employeeId);
     

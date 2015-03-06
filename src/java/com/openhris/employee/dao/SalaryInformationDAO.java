@@ -44,6 +44,7 @@ public class SalaryInformationDAO {
                 employeeInformation.setEmploymentWage(util.convertStringToDouble(rs.getString("employmentWage")));
                 employeeInformation.setAllowance(util.convertStringToDouble(rs.getString("allowance")));
                 employeeInformation.setAllowanceEntry(rs.getString("allowanceEntry"));
+                employeeInformation.setAfl(util.convertStringToDouble(rs.getString("allowanceForLiquidation")));
                 employeeInformation.setSssNo(rs.getString("sssNo"));
                 employeeInformation.setTinNo(rs.getString("tinNo"));
                 employeeInformation.setPhicNo(rs.getString("phicNo"));
@@ -77,8 +78,19 @@ public class SalaryInformationDAO {
         boolean result = false;
         
         try {
-            pstmt = conn.prepareStatement("UPDATE employee SET employmentStatus = ?, employmentWageStatus = ?, employmentWageEntry = ?, "
-                    + "employmentWage = ?, allowance = ?, allowanceEntry = ?, sssNo = ?, tinNo = ?, phicNo = ?, hdmfNo = ?, totalDependent = ? "
+            pstmt = conn.prepareStatement("UPDATE employee SET "
+                    + "employmentStatus = ?, "
+                    + "employmentWageStatus = ?, "
+                    + "employmentWageEntry = ?, "
+                    + "employmentWage = ?, "
+                    + "allowance = ?, "
+                    + "allowanceEntry = ?, "
+                    + "allowanceForLiquidation = ?, "
+                    + "sssNo = ?, "
+                    + "tinNo = ?, "
+                    + "phicNo = ?, "
+                    + "hdmfNo = ?, "
+                    + "totalDependent = ? "
                     + "WHERE employeeId = ? ");
             pstmt.setString(1, employeeInformation.getEmploymentStatus());
             pstmt.setString(2, employeeInformation.getEmploymentWageStatus());
@@ -86,12 +98,13 @@ public class SalaryInformationDAO {
             pstmt.setDouble(4, employeeInformation.getEmploymentWage());
             pstmt.setDouble(5, employeeInformation.getAllowance());
             pstmt.setString(6, employeeInformation.getAllowanceEntry());
-            pstmt.setString(7, employeeInformation.getSssNo());
-            pstmt.setString(8, employeeInformation.getTinNo());
-            pstmt.setString(9, employeeInformation.getPhicNo());
-            pstmt.setString(10, employeeInformation.gethdmfNo());
-            pstmt.setString(11, employeeInformation.getTotalDependent());
-            pstmt.setString(12, employeeId);
+            pstmt.setDouble(7, employeeInformation.getAfl());
+            pstmt.setString(8, employeeInformation.getSssNo());
+            pstmt.setString(9, employeeInformation.getTinNo());
+            pstmt.setString(10, employeeInformation.getPhicNo());
+            pstmt.setString(11, employeeInformation.gethdmfNo());
+            pstmt.setString(12, employeeInformation.getTotalDependent());
+            pstmt.setString(13, employeeId);
             pstmt.executeUpdate();
             
             result = true;

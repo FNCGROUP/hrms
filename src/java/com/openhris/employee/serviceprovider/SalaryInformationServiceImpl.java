@@ -9,7 +9,6 @@ package com.openhris.employee.serviceprovider;
 import com.openhris.employee.dao.SalaryInformationDAO;
 import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.service.SalaryInformationService;
-import java.util.Date;
 
 /**
  *

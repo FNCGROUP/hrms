@@ -10,6 +10,7 @@ import com.hrms.classes.GlobalVariables;
 import com.hrms.utilities.ConvertionUtilities;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.UploadImage;
+import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.PersonalInformation;
 import com.openhris.employee.model.PositionHistory;
 import com.openhris.employee.service.EmployeeCurrentStatusService;
@@ -482,7 +483,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
 	return t;
     }
 	    
-    public List<PositionHistory> getEmployeeList(int branchId){
+    public List<Employee> getEmployeeList(int branchId){
         return employeeService.getEmployeePerBranch(branchId);
     }
     

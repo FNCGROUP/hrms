@@ -4,37 +4,25 @@
  */
 package com.openhris.employee;
 
-import com.hrms.classes.BranchName;
-import com.hrms.classes.CorporateName;
-import com.hrms.classes.TradeName;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.service.CompanyService;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.employee.model.Employee;
-import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.model.PositionHistory;
 import com.openhris.employee.service.EmployeeService;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
-import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalSplitPanel;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeButton;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -97,7 +85,7 @@ public class EmployeeMainUI extends VerticalLayout {
         
     }
         
-    public void employeesTable(List<PositionHistory> employeeList){
+    public void employeesTable(List<Employee> employeeList){
         employeesTbl.removeAllItems();
         employeesTbl.setSizeFull();
         employeesTbl.setSelectable(true);
@@ -107,10 +95,10 @@ public class EmployeeMainUI extends VerticalLayout {
         employeesTbl.addContainerProperty("name", String.class, null);
         
         int i = 0; 
-        for(PositionHistory p : employeeList){
-            String name = p.getLastname()+", "+p.getFirstname()+" "+p.getMiddlename();
+        for(Employee e : employeeList){
+            String name = e.getLastname()+", "+e.getFirstname()+" "+e.getMiddlename();
             employeesTbl.addItem(new Object[]{
-                p.getEmployeeId(), 
+                e.getEmployeeId(), 
                 name.toUpperCase() 
             }, i);
             i++;
@@ -128,26 +116,28 @@ public class EmployeeMainUI extends VerticalLayout {
                 Object itemId = event.getItemId();
                 Item item = employeesTbl.getItem(itemId);
                 
-                if(event.getPropertyId().equals("employee id")){   
-                    String currentStatus = employeeService.getEmployeeCurrentStatus(item.getItemProperty("employee id").getValue().toString());
-                    if(currentStatus == null){                        
-                    } else {
-                        getWindow().showNotification("Employee has been removed from the list.", Window.Notification.TYPE_WARNING_MESSAGE);
-                        return;
-                    }
-                    
-		    hsplit.setSecondComponent(new EmployeeInformationUI(item.getItemProperty("employee id").getValue().toString(), getApplication()));
-                }
+                hsplit.setSecondComponent(new EmployeeInformationUI(item.getItemProperty("employee id").getValue().toString(), getApplication()));
                 
-                if(event.getPropertyId().equals("name")){          
-                    String employeeId = employeeService.getEmployeeId(item.getItemProperty("name").toString());
-                    Window subWindow = addAllowanceForLiquidation(item.getItemProperty("employee id").getValue().toString());
-                    subWindow.setModal(true);
-                    if(subWindow.getParent() == null){
-                        getWindow().addWindow(subWindow);
-                    }
-                    subWindow.center();
-                }
+//                if(event.getPropertyId().equals("employee id")){   
+//                    String currentStatus = employeeService.getEmployeeCurrentStatus(item.getItemProperty("employee id").getValue().toString());
+//                    if(currentStatus == null){                        
+//                    } else {
+//                        getWindow().showNotification("Employee has been removed from the list.", Window.Notification.TYPE_WARNING_MESSAGE);
+//                        return;
+//                    }
+//                    
+//		    hsplit.setSecondComponent(new EmployeeInformationUI(item.getItemProperty("employee id").getValue().toString(), getApplication()));
+//                }
+                
+//                if(event.getPropertyId().equals("name")){          
+//                    String employeeId = employeeService.getEmployeeId(item.getItemProperty("name").toString());
+//                    Window subWindow = addAllowanceForLiquidation(item.getItemProperty("employee id").getValue().toString());
+//                    subWindow.setModal(true);
+//                    if(subWindow.getParent() == null){
+//                        getWindow().addWindow(subWindow);
+//                    }
+//                    subWindow.center();
+//                }
             }
         });
         
@@ -515,47 +505,47 @@ public class EmployeeMainUI extends VerticalLayout {
 //        return subWindow;
 //    }     
 
-    public Window addAllowanceForLiquidation(final String employeeId){
-        VerticalLayout vlayout = new VerticalLayout();
-        vlayout.setSpacing(true);
-        vlayout.setMargin(true);
-        
-        final Window subWindow = new Window("Allowance For Liquidation", vlayout);
-        subWindow.setWidth("200px");
-        
-        final TextField aflField = new TextField("AFL: ");
-        aflField.setWidth("100%");
-        double aflAmount = employeeService.getEmploymentAllowanceForLiquidation(employeeId);
-        aflField.setValue(aflAmount);   
-        aflField.addStyleName("numerical");
-        vlayout.addComponent(aflField);
-        
-        Button updateAflButton = new Button("UPDATE");
-        updateAflButton.setWidth("100%");
-        updateAflButton.addListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                boolean checkIfEnteredValueIsDouble = util.checkInputIfDouble(aflField.getValue().toString().trim());
-                if(!checkIfEnteredValueIsDouble){
-                    subWindow.getWindow().showNotification("Please enter numeric format!", Window.Notification.TYPE_ERROR_MESSAGE);
-                }
-                
-                boolean result = employeeService.updateEmploymentAllowanceForLiquidation(
-                        util.convertStringToDouble(aflField.getValue().toString().trim()), 
-                        employeeId);
-                if(result == true){
-//                    employeesTable(getEmployeeList(branchId));
-                    (subWindow.getParent()).removeWindow(subWindow);
-                }else{
-                    subWindow.getWindow().showNotification("UNABLE TO UPDATE AFL!", Window.Notification.TYPE_ERROR_MESSAGE);
-                }
-            }
-        });
-        vlayout.addComponent(updateAflButton);
-        
-        return subWindow;
-    }
+//    public Window addAllowanceForLiquidation(final String employeeId){
+//        VerticalLayout vlayout = new VerticalLayout();
+//        vlayout.setSpacing(true);
+//        vlayout.setMargin(true);
+//        
+//        final Window subWindow = new Window("Allowance For Liquidation", vlayout);
+//        subWindow.setWidth("200px");
+//        
+//        final TextField aflField = new TextField("AFL: ");
+//        aflField.setWidth("100%");
+//        double aflAmount = employeeService.getEmploymentAllowanceForLiquidation(employeeId);
+//        aflField.setValue(aflAmount);   
+//        aflField.addStyleName("numerical");
+//        vlayout.addComponent(aflField);
+//        
+//        Button updateAflButton = new Button("UPDATE");
+//        updateAflButton.setWidth("100%");
+//        updateAflButton.addListener(new Button.ClickListener() {
+//
+//            @Override
+//            public void buttonClick(Button.ClickEvent event) {
+//                boolean checkIfEnteredValueIsDouble = util.checkInputIfDouble(aflField.getValue().toString().trim());
+//                if(!checkIfEnteredValueIsDouble){
+//                    subWindow.getWindow().showNotification("Please enter numeric format!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                }
+//                
+//                boolean result = employeeService.updateEmploymentAllowanceForLiquidation(
+//                        util.convertStringToDouble(aflField.getValue().toString().trim()), 
+//                        employeeId);
+//                if(result == true){
+////                    employeesTable(getEmployeeList(branchId));
+//                    (subWindow.getParent()).removeWindow(subWindow);
+//                }else{
+//                    subWindow.getWindow().showNotification("UNABLE TO UPDATE AFL!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                }
+//            }
+//        });
+//        vlayout.addComponent(updateAflButton);
+//        
+//        return subWindow;
+//    }
     
     public int getBranchId(){
         return branchId;
@@ -565,32 +555,7 @@ public class EmployeeMainUI extends VerticalLayout {
         return userRole;
     }
     
-    public List<PositionHistory> getEmployeeList(int branchId){
+    public List<Employee> getEmployeeList(int branchId){
         return employeeService.getEmployeePerBranch(branchId);
-    }
-    
-//    public void employeeComboBox(final int branchId){      
-//        this.branchId = branchId;
-//        employeesName.removeAllItems();
-//        employeesName.setWidth("100%");
-//        employeesName.setCaption("Employees: ");
-//        employeesName.setNullSelectionAllowed(false);
-//        List<Employee> employeesList = employeeService.getEmployeePerBranchForDropDownList(branchId);        
-//        for(Employee e : employeesList){
-//            String name = e.getLastname()+ ", " + e.getFirstname() + " " + e.getMiddlename();
-//            employeesName.addItem(name.toUpperCase());
-//        }
-//        employeesName.addListener(new ComboBox.ValueChangeListener() {
-//
-//            @Override
-//            public void valueChange(Property.ValueChangeEvent event) {
-//                if(event.getProperty().getValue() == null){                    
-//                } else {
-//                    employeeId = employeeService.getEmployeeId(employeesName.getValue().toString());
-//                    timekeepingTable(branchId, employeeId);
-//                }
-//            }
-//        });
-//        employeesName.setImmediate(true);
-//    }
+    }    
 }

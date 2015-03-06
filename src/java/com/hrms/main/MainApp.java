@@ -31,7 +31,7 @@ import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.contributions.ContributionComponentContainer;
 import com.openhris.employee.AddNewEmployeeWindow;
 import com.openhris.employee.EmployeeMainUI;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.Employee;
 import com.openhris.employee.service.EmployeeService;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.PayrollMainUI;
@@ -440,7 +440,7 @@ public class MainApp extends Application {
                     }                                 
                     
                     if(mainMenuBar){
-                        employeeMainUI.employeesTable(getEmployeeList(branchId));
+                        employeeMainUI.employeesTable(getEmployeeListByBranch(branchId));
                     } 
                     
                     timekeepingMainUI.setBranchId(branchId);
@@ -549,13 +549,13 @@ public class MainApp extends Application {
         }
         menu.addComponent(otherMenu);       
         
-        otherMenu = new NativeButton("REFRESH / VIEW ALL EMPLOYEE");
+        otherMenu = new NativeButton("VIEW ALL EMPLOYEE");
         otherMenu.setStyleName("selected");   
         otherMenu.addListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                employeeMainUI.employeesTable(getEmployeeList(0));
+                employeeMainUI.employeesTable(getAllEmployees());
             }
         });
         if(GlobalVariables.getUserRole().equals("administrator") || 
@@ -590,6 +590,14 @@ public class MainApp extends Application {
         mainMenuGrid.addComponent(companyModule);
 	mainMenuGrid.setSizeFull();
         ts.addComponent(mainMenuGrid);
+        
+        ts.addListener(new TabSheet.SelectedTabChangeListener() {
+
+            @Override
+            public void selectedTabChange(SelectedTabChangeEvent event) {
+                employeeMainUI.employeesTable(getEmployeeListByBranch(getBranchId()));
+            }
+        });
         
         return ts;
     }
@@ -850,8 +858,12 @@ public class MainApp extends Application {
         }
     }
     
-    public List<PositionHistory> getEmployeeList(int branchId){
+    public List<Employee> getEmployeeListByBranch(int branchId){
         return employeeService.getEmployeePerBranch(branchId);
+    }
+    
+    public List<Employee> getAllEmployees(){
+        return employeeService.getAllEmployees();
     }
     
     public int getUserId(){
@@ -866,7 +878,7 @@ public class MainApp extends Application {
 
         @Override
         public void windowClose(Window.CloseEvent e) {
-            employeeMainUI.employeesTable(getEmployeeList(getBranchId()));
+            employeeMainUI.employeesTable(getEmployeeListByBranch(getBranchId()));
         }
     };
 }

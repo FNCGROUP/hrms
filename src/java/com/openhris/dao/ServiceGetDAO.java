@@ -4,11 +4,7 @@
  */
 package com.openhris.dao;
 
-import com.hrms.classes.GlobalVariables;
 import com.hrms.dbconnection.GetSQLConnection;
-import com.openhris.administrator.model.User;
-import com.openhris.administrator.model.UserAdvanceAccess;
-import com.openhris.administrator.model.UserToolbarMenuAccess;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.model.Branch;
 import com.openhris.company.model.Company;
@@ -19,10 +15,6 @@ import com.openhris.contributions.model.Tax;
 import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.model.PositionHistory;
-import com.openhris.payroll.model.Advances;
-import com.openhris.payroll.model.Payroll;
-import com.openhris.payroll.model.PayrollRegister;
-import com.openhris.timekeeping.model.Timekeeping;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

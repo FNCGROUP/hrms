@@ -7,7 +7,6 @@
 package com.openhris.employee.service;
 
 import com.openhris.employee.model.EmploymentInformation;
-import java.util.Date;
 
 /**
  *

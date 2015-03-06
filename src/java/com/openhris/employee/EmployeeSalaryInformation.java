@@ -21,11 +21,9 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -36,7 +34,7 @@ import com.vaadin.ui.Window;
  */
 public class EmployeeSalaryInformation extends VerticalLayout{
     
-    SalaryInformationService siService = new SalaryInformationServiceImpl();
+    SalaryInformationService salaryInformationService = new SalaryInformationServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
     DropDownComponent dropDown = new DropDownComponent();
     CompanyService companyService = new CompanyServiceImpl();
@@ -97,10 +95,12 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         
         final TextField employmentWage = new TextField("Employment Wage");
         employmentWage.setWidth("200px");
+        employmentWage.addStyleName("numerical");
         glayout.addComponent(employmentWage, 0, 1);
         
         final TextField employmentAllowance = new TextField("Allowance");
         employmentAllowance.setWidth("200px");
+        employmentAllowance.addStyleName("numerical");
         glayout.addComponent(employmentAllowance, 1, 1);
         
         final ComboBox employmentAllowanceEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox());
@@ -121,11 +121,16 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         
         final TextField tinField = new TextField("TIN: ");
         tinField.setWidth("200px");
-        glayout.addComponent(tinField, 0, 3);
+        glayout.addComponent(tinField, 0, 3);        
         
         final ComboBox employeeDependent = dropDown.populateTotalDependent(new ComboBox());
         employeeDependent.setWidth("200px");
         glayout.addComponent(employeeDependent, 1, 3);
+        
+        final TextField aflField = new TextField("Allowance for Liquidation: ");
+        aflField.setWidth("100%");   
+        aflField.addStyleName("numerical");
+        glayout.addComponent(aflField, 2, 3);
         
         Button updateBtn = new Button("UPDATE SALARY INFORMATION");
         updateBtn.setWidth("100%");
@@ -155,6 +160,17 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                     }
                 }
                 
+                if(aflField.getValue() == null || aflField.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("NULL/Empty for AFL is not Allowed!", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                } else {
+                    boolean checkValueIfDouble = util.checkInputIfDouble(aflField.getValue().toString().trim());
+                    if(!checkValueIfDouble){
+                        getWindow().showNotification("Enter a numeric format for AFL!");
+                        return;
+                    }
+                }
+                
                 EmploymentInformation employmentInformation = new EmploymentInformation();
                 
                 if(util.checkInputIfInteger(employmentStatus.getValue().toString())){
@@ -177,6 +193,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                 
                 employmentInformation.setEmploymentWage(util.convertStringToDouble(employmentWage.getValue().toString().trim()));
                 employmentInformation.setAllowance(util.convertStringToDouble(employmentAllowance.getValue().toString().trim()));
+                employmentInformation.setAfl(util.convertStringToDouble(aflField.getValue().toString().trim()));
                 
                 if(util.checkInputIfInteger(employmentAllowanceEntry.getValue().toString())){
                     employmentInformation.setAllowanceEntry(employmentAllowanceEntry.getItemCaption(employmentAllowanceEntry.getValue()));
@@ -195,7 +212,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                     employmentInformation.setTotalDependent(employeeDependent.getValue().toString());
                 }
                 
-                boolean result = siService.updateEmployeeSalaryInformation(getEmployeeId(), employmentInformation);
+                boolean result = salaryInformationService.updateEmployeeSalaryInformation(getEmployeeId(), employmentInformation);
                 if(result){
                     getWindow().showNotification("Update Employment Salary Information!", Window.Notification.TYPE_TRAY_NOTIFICATION);
                 } else {
@@ -203,21 +220,21 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                 }
             }
         });
-        glayout.addComponent(updateBtn, 2, 3);
+        glayout.addComponent(updateBtn, 2, 4);
         glayout.setComponentAlignment(updateBtn, Alignment.BOTTOM_CENTER);
                         
         final CheckBox editBankAccountNo = new CheckBox("Edit Bank Account No.");
         editBankAccountNo.setImmediate(true);
         editBankAccountNo.setEnabled(userRoleResult);
-        glayout.addComponent(editBankAccountNo, 2, 4);
+        glayout.addComponent(editBankAccountNo, 1, 4);
         glayout.setComponentAlignment(editBankAccountNo, Alignment.BOTTOM_LEFT);
         
         final TextField bankAccountNo = new HRISTextField("Bank Account No: ");
         bankAccountNo.setImmediate(true);
-        glayout.addComponent(bankAccountNo, 1, 4);
+        glayout.addComponent(bankAccountNo, 0, 4);
         
         if(getEmployeeId() != null){
-            EmploymentInformation employmentInformation = siService.getEmployeeSalaryInformation(getEmployeeId());
+            EmploymentInformation employmentInformation = salaryInformationService.getEmployeeSalaryInformation(getEmployeeId());
             
             Object employmentStatusId = employmentStatus.addItem();
             employmentStatus.setItemCaption(employmentStatusId, employmentInformation.getEmploymentStatus());
@@ -247,6 +264,8 @@ public class EmployeeSalaryInformation extends VerticalLayout{
             employeeDependent.setItemCaption(employeeTotalDependentId, employmentInformation.getTotalDependent());
             employeeDependent.setValue(employeeTotalDependentId);
             
+            aflField.setValue(employmentInformation.getAfl());
+            
             bankAccountNo.setValue((employmentInformation.getBankAccountNo() == null) ? "" : employmentInformation.getBankAccountNo());    
             bankAccountNo.setReadOnly(true);
         }
@@ -260,7 +279,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                     return;
                 } 
                 
-                boolean result = siService.updateBankAccountNo(getEmployeeId(), bankAccountNo.getValue().toString().trim().toLowerCase());
+                boolean result = salaryInformationService.updateBankAccountNo(getEmployeeId(), bankAccountNo.getValue().toString().trim().toLowerCase());
                 if(result){
                     bankAccountNo.setReadOnly(result);
                     editBankAccountNo.setValue(!result);
@@ -306,7 +325,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         glayout.setComponentAlignment(setContributionBtn, Alignment.BOTTOM_CENTER);
                                                     
         if(getEmployeeId() != null){
-            EmploymentInformation employmentInformation = siService.getEmployeeSalaryInformation(getEmployeeId());            
+            EmploymentInformation employmentInformation = salaryInformationService.getEmployeeSalaryInformation(getEmployeeId());            
             employmentStatusField.setValue(employmentInformation.getCurrentStatus().toUpperCase());                       
         }
         employmentStatusField.setReadOnly(true);
@@ -401,7 +420,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                         return;
                     }
                     
-                    boolean result = siService.updateEmployeeContributionBranch(getEmployeeId(), branchId, remarks.getValue().toString());
+                    boolean result = salaryInformationService.updateEmployeeContributionBranch(getEmployeeId(), branchId, remarks.getValue().toString());
                     if(result){
                         getWindow().showNotification("Successfully transferred to new Branch!");
                         (subWindow.getParent()).removeWindow(subWindow);
@@ -431,7 +450,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                boolean result = siService.editEmploymentDateEntry(getEmployeeId(), entryDate);
+                boolean result = salaryInformationService.editEmploymentDateEntry(getEmployeeId(), entryDate);
                 if(result){
                     getWindow().showNotification("Update Entry Date.", Window.Notification.TYPE_TRAY_NOTIFICATION);
                     (window.getParent()).removeWindow(window);

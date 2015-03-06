@@ -119,7 +119,8 @@ public class TimekeepingDAO {
                     + "undertime, overtime, nightDifferential, latesDeduction, undertimeDeduction, "
                     + "overtimePaid, nightDifferentialPaid, legalHolidayPaid, specialHolidayPaid, "
                     + "workingDayOffPaid, nonWorkingHolidayPaid FROM timekeeping_summary "
-                    + "WHERE employeeId = '"+employeeId+"' ORDER BY payrollId DESC");
+                    + "WHERE currentStatus IS NULL AND "
+                    + "employeeId = '"+employeeId+"' ORDER BY payrollId DESC");
             while(rs.next()){
                 Timekeeping t = new Timekeeping();
                 t.setId(util.convertStringToInteger(rs.getString("payrollId")));

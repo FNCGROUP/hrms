@@ -7,6 +7,7 @@ package com.openhris.employee.serviceprovider;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceInsertDAO;
 import com.openhris.dao.ServiceUpdateDAO;
+import com.openhris.employee.dao.EmployeeDAO;
 import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.EmploymentInformation;
 import com.openhris.employee.model.PositionHistory;
@@ -22,6 +23,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     ServiceGetDAO serviceGet = new ServiceGetDAO();
     ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
     ServiceInsertDAO serviceInsert = new ServiceInsertDAO();
+    EmployeeDAO employeeDAO = new EmployeeDAO();
 
     @Override
     public String getEmployeeId(String name) {
@@ -34,13 +36,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> getAllEmployee() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<Employee> getAllEmployees() {
+        return employeeDAO.getAllEmployees();
     }
 
     @Override
-    public List<PositionHistory> getEmployeePerBranch(int branchId) {
-        return serviceGet.getEmployeePerBranch(branchId);
+    public List<Employee> getEmployeePerBranch(int branchId) {
+        return employeeDAO.getEmployeePerBranch(branchId);
     }
 
     @Override
