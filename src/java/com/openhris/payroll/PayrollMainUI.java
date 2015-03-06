@@ -8,7 +8,6 @@ import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.service.AdministratorService;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.openhris.commons.DropDownComponent;
-import com.openhris.commons.EmployeeDropDownList;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.employee.model.Employee;
@@ -498,9 +497,19 @@ public class PayrollMainUI extends VerticalLayout {
                     return;
                 }
                 
-                double newNetSalary = (netPay + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
-                double newAmountToBeReceive = (amountToBeReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
-                double newAmountReceive = (amountReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                double newNetSalary;
+                double newAmountToBeReceive;
+                double newAmountReceive;
+                
+                if(payrollService.isPayrollAdjusted(payrollId)){
+                     newNetSalary = (netPay + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                    newAmountReceive = amountReceive;
+                } else {
+                    newNetSalary = (netPay + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                    newAmountReceive = (amountReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                }
                 
                 boolean result = payrollService.updatePhicContribution(payrollId, 
                         util.convertStringToDouble(phicNewAmount.getValue().toString().trim()), 
@@ -553,9 +562,19 @@ public class PayrollMainUI extends VerticalLayout {
                     return;
                 }
                 
-                double newNetSalary = (netPay + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
-                double newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
-                double newAmountReceive = (amountReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                double newNetSalary;
+                double newAmountToBeReceive;
+                double newAmountReceive;
+                
+                if(payrollService.isPayrollAdjusted(payrollId)){
+                    newNetSalary = (netPay + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                    newAmountReceive = amountReceive;
+                } else {
+                    newNetSalary = (netPay + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                    newAmountReceive = (amountReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                }
                 
                 boolean result = payrollService.updateHdmfContribution(payrollId, 
                         util.convertStringToDouble(newHdmfContribution.getValue().toString().trim()), 
@@ -608,9 +627,19 @@ public class PayrollMainUI extends VerticalLayout {
                     return;
                 }
                 
-                double newNetSalary = (netSalary + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
-                double newAmountToBeReceive = (amountToBeReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
-                double newAmountReceive = (amountReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                double newNetSalary;
+                double newAmountToBeReceive;
+                double newAmountReceive;
+                
+                if(payrollService.isPayrollAdjusted(payrollId)){
+                    newNetSalary = (netSalary + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                    newAmountReceive = amountReceive;
+                } else {
+                    newNetSalary = (netSalary + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                    newAmountReceive = (amountReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                }
                 
                 boolean result = payrollService.updateSssContribution(payrollId, 
                         util.convertStringToDouble(newSssContribution.getValue().toString().trim()), 

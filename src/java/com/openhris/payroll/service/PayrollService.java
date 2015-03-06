@@ -101,4 +101,6 @@ public interface PayrollService {
             double amountReceived, 
             double adjustment, 
             String remarks);
+    
+    public boolean isPayrollAdjusted(int id);
 }

@@ -20,11 +20,11 @@ import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
@@ -41,15 +41,29 @@ public class EmployeePositionHistory extends VerticalLayout{
         
     PositionHistoryService phService = new PositionHistoryServiceImpl();
     CompanyService companyService = new CompanyServiceImpl();
-    OpenHrisUtilities util = new OpenHrisUtilities();
+    OpenHrisUtilities utilities = new OpenHrisUtilities();
     DropDownComponent dropDown = new DropDownComponent();
+    
+    ComboBox corporate;
+    ComboBox trade;
+    ComboBox branch;
+    TextField position;
+    TextField department;
+    PopupDateField entryDate;
+    CheckBox newPositionBtn = new CheckBox("Check to add new Position or to Transfer");
+    Button updateBtn;
+    boolean isEdit = false;
     
     String employeeId;
     int corporateId;
     int tradeId;
     int branchId;
+    int positionId;
     GridLayout glayout;
     Table positionHistoryTbl = new PositionHistoryTable();
+    
+    private static String BTN_CAPTION_1 = "UPDATE";
+    private static String BTN_CAPTION_2 = "EDIT";
     
     public EmployeePositionHistory(){        
     }
@@ -77,62 +91,37 @@ public class EmployeePositionHistory extends VerticalLayout{
         glayout.setWidth("100%");
 	glayout.setHeight("100%");
         
-        final ComboBox corporate = dropDown.populateCorporateComboBox(new ComboBox());
+        corporate = dropDown.populateCorporateComboBox(new ComboBox());
         corporate.setWidth("250px");
         glayout.addComponent(corporate, 0, 0);
         
-        final ComboBox trade = new ComboBox("Trade: ");
+        trade = new ComboBox("Trade: ");
         trade.setWidth("200px");
-        corporate.addListener(new ComboBox.ValueChangeListener() {
-
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                if(event.getProperty().getValue() == null){                    
-                } else {
-                    corporateId = companyService.getCorporateId(corporate.getValue().toString());
-                    dropDown.populateTradeComboBox(trade, corporateId);
-                }
-                
-            }
-        });
+        corporate.addListener(corporateListener);
         glayout.addComponent(trade, 1, 0);
         
-        final ComboBox branch = new ComboBox("Branch: ");
+        branch = new ComboBox("Branch: ");
         branch.setWidth("180px");
-        trade.addListener(new ComboBox.ValueChangeListener() {
-
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                if(event.getProperty().getValue() == null){                    
-                } else {
-                    tradeId = companyService.getTradeId(trade.getValue().toString(), corporateId);
-                    dropDown.populateBranchComboBox(branch, tradeId, corporateId);
-                }
-                
-            }
-        });
-        branch.addListener(new ComboBox.ValueChangeListener() {
-
-            @Override
-            public void valueChange(Property.ValueChangeEvent event) {
-                if(event.getProperty().getValue() == null){                    
-                } else {
-                    branchId = companyService.getBranchId(tradeId, branch.getValue().toString());
-                }                
-            }
-        });
+        trade.addListener(tradeListener);
+        branch.addListener(branchListener);
         glayout.addComponent(branch, 2, 0);
         
-        final TextField department = new HRISTextField("Department: ");
+        department = new HRISTextField("Department: ");
         glayout.addComponent(department, 0, 1);
         
-        final TextField position = new HRISTextField("Position: ");
+        position = new HRISTextField("Position: ");
         glayout.addComponent(position, 1, 1);
         
-        final PopupDateField entryDate = new HRISPopupDateField("Entry Date:");
+        entryDate = new HRISPopupDateField("Entry Date:");
         glayout.addComponent(entryDate, 2, 1);
+                
+        newPositionBtn.addListener(newBtnPositionListener);
+        newPositionBtn.setValue(true);
+        newPositionBtn.setImmediate(true);
+        glayout.addComponent(newPositionBtn, 0, 2);
         
-        Button updateBtn = new Button("UPDATE EMPLOYEE's POSITION");
+        updateBtn = new Button();
+        updateBtn.setCaption(BTN_CAPTION_1);
         updateBtn.setWidth("100%");
         updateBtn.addListener(new Button.ClickListener() {
 
@@ -170,14 +159,49 @@ public class EmployeePositionHistory extends VerticalLayout{
                 
                 PositionHistory positionHistory = new PositionHistory();
                 positionHistory.setPosition(position.getValue().toString().toLowerCase());
-                positionHistory.setCompany(corporate.getValue().toString());
-                positionHistory.setTrade(trade.getValue().toString());
-                positionHistory.setBranch(branch.getValue().toString());
+                
+                if(utilities.checkInputIfInteger(corporate.getValue().toString())){
+                    positionHistory.setCompany(corporate.getItemCaption(corporate.getValue()));
+                } else {
+                    positionHistory.setCompany(corporate.getValue().toString());                    
+                }
+                
+                if(utilities.checkInputIfInteger(trade.getValue().toString())){
+                    positionHistory.setTrade(trade.getItemCaption(trade.getValue()));
+                } else {
+                    positionHistory.setTrade(trade.getValue().toString());                    
+                }
+                
+                if(utilities.checkInputIfInteger(branch.getValue().toString())){
+                    positionHistory.setBranch(branch.getItemCaption(branch.getValue()));
+                } else {
+                    positionHistory.setBranch(branch.getValue().toString());
+                }   
+                
                 positionHistory.setDepartment(department.getValue().toString().toLowerCase());
                 positionHistory.setEntryDate((Date) entryDate.getValue());
-                positionHistory.setBranchId(branchId);
                 
-                boolean result = phService.updatePositionHistory(employeeId, positionHistory);
+                if(getBranchId() == 0){
+                    corporateId = companyService.getCorporateId(positionHistory.getCompany());
+                    tradeId = companyService.getTradeId(positionHistory.getTrade(), corporateId);
+                    branchId = companyService.getBranchId(tradeId, positionHistory.getBranch());
+                }
+                
+                positionHistory.setBranchId(getBranchId());
+                positionHistory.setPositionId(getPositionId());
+                
+                if(updateBtn.getCaption().equals("EDIT") && getPositionId() == 0){
+                    getWindow().showNotification("Select a row from the table to EDIT.");
+                    return;
+                }
+                
+                if(updateBtn.getCaption().equals("EDIT")){
+                    isEdit = true;
+                } else {
+                    isEdit = false;
+                }
+                
+                boolean result = phService.updatePositionHistory(getEmployeeId(), positionHistory, isEdit, getPositionId());
                 if(result){
                     positionHistoryTable();
                 } else {
@@ -202,7 +226,7 @@ public class EmployeePositionHistory extends VerticalLayout{
                 p.getTrade(), 
                 p.getBranch(), 
                 p.getDepartment(), 
-                util.convertDateFormat(p.getEntryDate().toString())
+                utilities.convertDateFormat(p.getEntryDate().toString())
             }, i);
             i++;
         }
@@ -219,14 +243,37 @@ public class EmployeePositionHistory extends VerticalLayout{
                 Object itemId = event.getItemId();
                 Item item = positionHistoryTbl.getItem(itemId);
                 
-                if(event.getPropertyId().equals("id")){
-                    int positionId = util.convertStringToInteger(item.getItemProperty("id").getValue().toString());
-                    Window window = new RemovePositionWindow(positionId);
+                newPositionBtn.setValue(false);
+                updateBtn.setCaption(BTN_CAPTION_2);
+                
+                positionId = utilities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                setPositionId(positionId);                
+                if(event.getPropertyId().equals("id")){                    
+                    Window window = new RemovePositionWindow(getPositionId());
                     if(window.getParent() == null){
                         getWindow().addWindow(window);
                     }
                     window.center();
                     window.addListener(subWindowCloseListener);
+                } else {
+                    List<PositionHistory> positionListById = phService.getPositionHistoryById(utilities.convertStringToInteger(item.getItemProperty("id").getValue().toString()));
+                    for(PositionHistory history : positionListById){
+                        Object corporateObjectId = corporate.addItem();
+                        corporate.setItemCaption(corporateObjectId, history.getCompany());
+                        corporate.setValue(corporateObjectId);
+                        
+                        Object tradeObjectId = trade.addItem();
+                        trade.setItemCaption(tradeObjectId, history.getTrade());
+                        trade.setValue(tradeObjectId);
+                        
+                        Object branchObjectId = branch.addItem();
+                        branch.setItemCaption(branchObjectId, history.getBranch());
+                        branch.setValue(branchObjectId);
+                        
+                        department.setValue(history.getDepartment());
+                        position.setValue(history.getPosition());
+                        entryDate.setValue(history.getEntryDate());
+                    }
                 }                
             }
         });
@@ -258,7 +305,7 @@ public class EmployeePositionHistory extends VerticalLayout{
                     return;
                 }
                 
-                Window window = new ConfirmResignWindow(getEmployeeId(), util.convertDateFormat(endDate.getValue().toString().trim().toLowerCase()));
+                Window window = new ConfirmResignWindow(getEmployeeId(), utilities.convertDateFormat(endDate.getValue().toString().trim().toLowerCase()));
                 if(window.getParent() == null){
                     getWindow().addWindow(window);
                 }
@@ -277,13 +324,88 @@ public class EmployeePositionHistory extends VerticalLayout{
     
     private String getEmployeeId(){
         return employeeId;
+    }      
+    
+    int getPositionId(){
+        return positionId;
+    }
+    
+    void setPositionId(int positionId){
+        this.positionId = positionId;
+    }
+    
+    int getCorporateId(){
+        return corporateId;
+    }
+    
+    int getTradeId(){
+        return tradeId;
+    }
+    
+    int getBranchId(){
+        return branchId;
     }
         
+    void clearFields(){
+        position.setValue("");
+        department.setValue("");
+        entryDate.setValue(new Date());
+    }
+    
     Window.CloseListener subWindowCloseListener = new Window.CloseListener() {
 
         @Override
         public void windowClose(Window.CloseEvent e) {
             positionHistoryTable();
+        }
+    };  
+    
+    Button.ClickListener newBtnPositionListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            newPositionBtn.setValue(event.getButton().booleanValue());
+            if(event.getButton().booleanValue()){
+                clearFields();
+                updateBtn.setCaption(BTN_CAPTION_1);
+            } else {
+                updateBtn.setCaption(BTN_CAPTION_2);
+            }
+        }
+    };
+    
+    Property.ValueChangeListener corporateListener = new Property.ValueChangeListener() {
+
+        @Override
+        public void valueChange(Property.ValueChangeEvent event) {
+            if(event.getProperty().getValue() == null){                    
+            } else {
+                corporateId = companyService.getCorporateId(event.getProperty().getValue().toString());
+                dropDown.populateTradeComboBox(trade, corporateId);
+            }
+        }
+    };
+    
+    Property.ValueChangeListener tradeListener = new Property.ValueChangeListener() {
+
+        @Override
+        public void valueChange(Property.ValueChangeEvent event) {
+            if(event.getProperty().getValue() == null){                    
+            } else {
+                tradeId = companyService.getTradeId(event.getProperty().getValue().toString(), corporateId);
+                dropDown.populateBranchComboBox(branch, tradeId, corporateId);
+            }
+        }
+    };
+    
+    Property.ValueChangeListener branchListener = new Property.ValueChangeListener() {
+
+        @Override
+        public void valueChange(Property.ValueChangeEvent event) {
+            if(event.getProperty().getValue() == null){                    
+            } else {
+                branchId = companyService.getBranchId(tradeId, event.getProperty().getValue().toString());
+            }
         }
     };
 }

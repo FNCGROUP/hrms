@@ -4,10 +4,10 @@
  */
 package com.openhris.payroll;
 
-import com.hrms.beans.AdvancesTypeBean;
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.commons.DropDownComponent;
+import com.openhris.commons.HRISPopupDateField;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.commons.reports.OpenHrisReports;
 import com.openhris.company.service.CompanyService;
@@ -15,10 +15,10 @@ import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.employee.service.EmployeeService;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
-import com.openhris.payroll.model.Adjustment;
-import com.openhris.payroll.model.Advances;
 import com.openhris.payroll.model.PayrollRegister;
 import com.openhris.payroll.reports.AdjustedPayrollRegisterReport;
+import com.openhris.payroll.reports.AdvancesReport;
+import com.openhris.payroll.reports.AllowancesReport;
 import com.openhris.payroll.reports.AttendanceReport;
 import com.openhris.payroll.reports.BankDebitMemoReport;
 import com.openhris.payroll.reports.HDMFLoansPayableReport;
@@ -28,45 +28,27 @@ import com.openhris.payroll.reports.PHICReport;
 import com.openhris.payroll.reports.PayrollRegisterReport;
 import com.openhris.payroll.reports.PayslipReport;
 import com.openhris.payroll.reports.SSSGeneralReport;
+import com.openhris.payroll.reports.SSSLoansPayable;
 import com.openhris.payroll.reports.SSSSbarroReport;
 import com.openhris.payroll.reports.WitholdingTaxReport;
 import com.openhris.payroll.service.PayrollService;
 import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
 import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Item;
-import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.Sizeable;
-import com.vaadin.terminal.StreamResource;
-import com.vaadin.ui.AbstractSelect;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
-import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
-import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
-import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import javax.swing.text.html.parser.ContentModel;
-import net.sf.jasperreports.engine.JasperExportManager;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
 
 /**
  *
@@ -85,7 +67,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     int branchId;
     String employeeId;
     boolean lastAddedAdvanceType;
-    String payroll_date;
+    String payrollDate;
     String payrollPeriod;
     int day = 0;
     
@@ -117,14 +99,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         glayout.setSpacing(true);
         glayout.setWidth("100%");
                 
-        final PopupDateField payrollDate = new PopupDateField("Payroll Date");
-        payrollDate.addStyleName("mydate");
-        payrollDate.setValue(new Date());
-        payrollDate.setWidth("100%");
-        payrollDate.setDateFormat("EEE - MMM dd, yyyy");
-        payrollDate.setLenient(true);
-        payrollDate.setResolution(DateField.RESOLUTION_DAY);
-        glayout.addComponent(payrollDate, 0, 0);
+        final PopupDateField payrollDateField = new HRISPopupDateField("Payroll Date");
+        glayout.addComponent(payrollDateField, 0, 0);
         
         Button payrollRegisterButton = new Button();
         if(!UserAccessControl.isPayroll()){
@@ -139,13 +115,13 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                payroll_date = util.convertDateFormat(payrollDate.getValue().toString());
+                payrollDate = util.convertDateFormat(payrollDateField.getValue().toString());
                 payrollRegisterTable(getBranchId(), 
-                        payroll_date, 
+                        getPayrollDate(), 
                         false); 
 		
 		Calendar cal = Calendar.getInstance();
-		cal.setTime(util.parsingDate(util.convertDateFormat(payrollDate.getValue().toString())));
+		cal.setTime(util.parsingDate(util.convertDateFormat(payrollDateField.getValue().toString())));
 		day = cal.get(Calendar.DAY_OF_MONTH);
             }
         });
@@ -191,7 +167,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         innerVsplit.setLocked(true);        
         innerVsplit.setSplitPosition(75, Sizeable.UNITS_PERCENTAGE);
         
-        payrollRegisterTable(getBranchId(), payroll_date, false); 
+        payrollRegisterTable(getBranchId(), getPayrollDate(), false); 
         innerVsplit.setFirstComponent(payrollRegisterTbl);
         
         GridLayout innerGlayout = new GridLayout(4, 1);
@@ -208,14 +184,14 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {   
-                OpenHrisReports reports = new OpenHrisReports(getBranchId(), util.convertDateFormat(payrollDate.getValue().toString()));     
+                OpenHrisReports reports = new OpenHrisReports(getBranchId(), util.convertDateFormat(payrollDateField.getValue().toString()));     
                 
                 if(payrollRegisterTbl.getPageLength() == 0){
                     getWindow().showNotification("No Data on table to be printed!", Window.Notification.TYPE_ERROR_MESSAGE);
                     return;
                 }
                 
-                if(payrollDate.getValue() == null){
+                if(payrollDateField.getValue() == null){
                     getWindow().showNotification("Payroll Date Required!", Window.Notification.TYPE_ERROR_MESSAGE);
                     return;
                 }
@@ -228,23 +204,20 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                 if(reportType.getValue().equals("Payroll Register")){
                     String fileName = "payrollRegisterReport_";
                     reports.deleteFile(fileName);
-//                    payrollRegisterReport(util.convertDateFormat(payrollDate.getValue().toString()));
                     Window reportWindow = new PayrollRegisterReport(getBranchId(), 
-                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 }else if(reportType.getValue().equals("Adjusted Payroll Register")){
 		    String fileName = "PayrollRegisterReportAdjusted_";
                     reports.deleteFile(fileName);
-//                    adjustedPayrollRegisterReport(util.convertDateFormat(payrollDate.getValue().toString()));
                     Window reportWindow = new AdjustedPayrollRegisterReport(getBranchId(), 
-                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
 		}else if(reportType.getValue().equals("Payslip Report")){
                     String fileName = "PayslipReport_";
                     reports.deleteFile(fileName);
-//                    payslipReport(util.convertDateFormat(payrollDate.getValue().toString()));
                     PayslipReport payslipReport = new PayslipReport(getBranchId(), 
-                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 }else if(reportType.getValue().equals("SSS Report")){
                     if(day == 15){
@@ -252,9 +225,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     }else{                        
 			String fileName = "SssReport_";
                         reports.deleteFile(fileName);
-//                        sssReport(util.convertDateFormat(payrollDate.getValue().toString()));
                         SSSGeneralReport sssGeneralReport = new SSSGeneralReport(getBranchId(), 
-                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
                     }
                 }else if(reportType.getValue().equals("SSS Report Sbarro")){
@@ -263,18 +235,16 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     }else{                        
 			String fileName = "SssReportSbarro_";
                         reports.deleteFile(fileName);
-//                        sssReportSbarro(util.convertDateFormat(payrollDate.getValue().toString()));
                         SSSSbarroReport sssSbarroReport = new SSSSbarroReport(getBranchId(), 
-                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
                     }
                 }else if(reportType.getValue().equals("HDMF Report")){
                     if(day == 15){
                         String fileName = "HdmfReport_";
                         reports.deleteFile(fileName);
-//                        hdmfReport(util.convertDateFormat(payrollDate.getValue().toString()));
                         HDMFReport hdmfReport = new HDMFReport(getBranchId(), 
-                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
                     }else{
                         getWindow().showNotification("HDMF Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
@@ -283,9 +253,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     if(day == 15){
                         String fileName = "HdmfVoluntarySavingsReport_";
                         reports.deleteFile(fileName);
-//                        hdmfSavingsReport(util.convertDateFormat(payrollDate.getValue().toString()));
                         HDMFSavingsReport hdmfSavingsReport = new HDMFSavingsReport(getBranchId(), 
-                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
                     } else {
                         getWindow().showNotification("HDMF Savings Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
@@ -294,9 +263,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     if(day == 15){
                         String fileName = "HdmfLoanReport_";
                         reports.deleteFile(fileName);
-//                        hdmfLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
                         HDMFLoansPayableReport hdmfLoansPayableReport = new HDMFLoansPayableReport(getBranchId(), 
-                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
                         
                     } else {
@@ -306,9 +274,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     if(day == 15){
                         String fileName = "PhicReport_";
                         reports.deleteFile(fileName);
-//                        phicReport(util.convertDateFormat(payrollDate.getValue().toString()));
                         PHICReport phicReport = new PHICReport(getBranchId(), 
-                                util.convertDateFormat(payrollDate.getValue().toString()), 
+                                util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
                     }else{
                         getWindow().showNotification("Philhealth Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
@@ -316,23 +283,20 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                 }else if(reportType.getValue().equals("Witholding Tax")){
                     String fileName = "WitholdingTaxesReport_";
                     reports.deleteFile(fileName);
-//                    witholdingTaxReport(util.convertDateFormat(payrollDate.getValue().toString()));
                     WitholdingTaxReport witholdingTaxReport = new WitholdingTaxReport(getBranchId(), 
-                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 }else if(reportType.getValue().equals("Attendance Report")){
                     String fileName = "AttendanceReport_";
                     reports.deleteFile(fileName);
-//                    attendanceReport(util.convertDateFormat(payrollDate.getValue().toString()));
                     AttendanceReport attendanceReport = new AttendanceReport(getBranchId(), 
-                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 }else if(reportType.getValue().equals("Bank Debit Memo")){
                     String fileName = "BankDebitMemo_";
                     reports.deleteFile(fileName);
-//                    bankDebitMemoReport(util.convertDateFormat(payrollDate.getValue().toString()));
                     BankDebitMemoReport bankDebitMemoReport = new BankDebitMemoReport(getBranchId(), 
-                            util.convertDateFormat(payrollDate.getValue().toString()), 
+                            util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 }else if(reportType.getValue().equals("SSS Loans Payable")){
                     if(day == 15){
@@ -340,16 +304,22 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     }else{
                         String fileName = "SssLoanReport_";
                         reports.deleteFile(fileName);
-                        sssLoanReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                        SSSLoansPayable sssLoansPayable = new SSSLoansPayable(getBranchId(), 
+                                util.convertDateFormat(payrollDateField.getValue().toString()), 
+                                getApplication());
                     }
                 }else if(reportType.getValue().equals("Advances")){
                     reports.deleteFile("AdvancesReport_");
                     String corporate = companyService.getCorporateNameByBranchId(getBranchId());
-                    advancesReport(corporate, util.convertDateFormat(payrollDate.getValue().toString()));
+                    AdvancesReport advancesReport = new AdvancesReport(corporate, 
+                            util.convertDateFormat(payrollDateField.getValue().toString()), 
+                            getApplication());
                 } else if(reportType.getValue().equals("Allowances")){
                     reports.deleteFile("Allowances_");
                     String corporate = companyService.getCorporateNameByBranchId(getBranchId());
-                    allowancesReport(util.convertDateFormat(payrollDate.getValue().toString()));
+                    AllowancesReport allowancesReport = new AllowancesReport(corporate, 
+                            util.convertDateFormat(payrollDateField.getValue().toString()), 
+                            getApplication());
                 }
             }
         });
@@ -364,7 +334,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
             public void buttonClick(Button.ClickEvent event) {
                 Window sub = new ViewFullScreen(false, 
                         getBranchId(), 
-                        payroll_date);
+                        getPayrollDate());
                 sub.setModal(true);
                 sub.setSizeFull();
                 if(sub.getParent() == null){
@@ -440,7 +410,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     double amountReceive = util.convertStringToDouble(item.getItemProperty("amount received").getValue().toString());
                     double adjustments = util.convertStringToDouble(item.getItemProperty("adjustments").getValue().toString());
                             
-                    Window subWindow = addAdjustment(payrollId, 
+                    Window subWindow = new AdjustmentWindow(payrollId, 
                             amountToBeReceive, 
                             amountReceive, 
                             adjustments);
@@ -449,6 +419,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     }
                     subWindow.setModal(true);
                     subWindow.center();
+                    
+                    subWindow.addListener(adjustmentWindowListener);
                 }                
             }
         });
@@ -467,1227 +439,15 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         this.branchId = branchId;
     }    
     
-//    private Window addAdvances(final int payrollId, 
-//            final double amountToBeReceive, 
-//            final double amountReceivable){       
-//        final Window subWindow = new Window("ADD/REMOVE ADVANCES");
-//        subWindow.setWidth("450px");
-//        
-//        TabSheet ts = new TabSheet();
-//        ts.addStyleName("bar");
-//        
-//        VerticalLayout vlayout = new VerticalLayout();
-//        vlayout.setMargin(true);
-//        vlayout.setSpacing(true);
-//        vlayout.setCaption("View Advances");
-//        
-//        advancesTable(payrollId, 
-//                amountToBeReceive, 
-//                amountReceivable, 
-//                subWindow);       
-//        
-//        vlayout.addComponent(advancesTbl);
-//        ts.addComponent(vlayout);
-//        
-//        vlayout = new VerticalLayout();
-//        vlayout.setMargin(true);
-//        vlayout.setSpacing(true);
-//        vlayout.setCaption("Post Advances");
-//        
-//        final ComboBox advanceType = dropDown.populateAdvanceTypeDropDownList(new ComboBox());
-//        advanceType.setNewItemsAllowed(true);
-//        advanceType.setNewItemHandler(new AbstractSelect.NewItemHandler() {
-//
-//            @Override
-//            public void addNewItem(String newItemCaption) {
-//                AdvancesTypeBean advancesTypeBean = new AdvancesTypeBean();
-//                if (!advanceType.containsId(newItemCaption)) {
-//                    advancesTypeBean.setAdvancesType(newItemCaption);
-//                    Boolean result = payrollService.insertAdvanceType(newItemCaption);
-//                    if(result = true){
-//                        getWindow().showNotification("Added Type: " + newItemCaption);
-//                        lastAddedAdvanceType = true;
-//                        advanceType.addItem(newItemCaption);
-//                        advanceType.setValue(newItemCaption);
-//                    }
-//                }
-//            }
-//            
-//        });
-//        advanceType.setImmediate(true);
-//        advanceType.addListener(new Property.ValueChangeListener() {
-//
-//            @Override
-//            public void valueChange(Property.ValueChangeEvent event) {
-//                if (!lastAddedAdvanceType) {
-//                    getWindow().showNotification(
-//                            "Selected Type: " + event.getProperty());
-//                }
-//                lastAddedAdvanceType = false;
-//            }
-//            
-//        });
-//        vlayout.addComponent(advanceType);
-//        
-//        final TextField particulars = new TextField("Particulars:");
-//        particulars.setWidth("100%");
-//        vlayout.addComponent(particulars);
-//        
-//        final TextField amount = new TextField("Amount:");
-//        amount.setWidth("100%");
-//        vlayout.addComponent(amount);
-//        
-//        final PopupDateField datePosted = new PopupDateField("Date Posted:");
-//        datePosted.addStyleName("mydate");
-//        datePosted.setValue(new Date());
-//        datePosted.setWidth("100%");
-//        datePosted.setDateFormat("EEE - MMM dd, yyyy");
-//        datePosted.setLenient(true);
-//        datePosted.setResolution(DateField.RESOLUTION_DAY);
-//        vlayout.addComponent(datePosted);
-//        
-//        Button button = new Button("POST ADVANCE AMOUNT");
-//        button.setWidth("100%");
-//        button.addListener(new Button.ClickListener() {
-//
-//            @Override
-//            public void buttonClick(Button.ClickEvent event) {       
-//                if(advanceType.getValue() == null){
-//                    getWindow().showNotification("Select Type!", Window.Notification.TYPE_ERROR_MESSAGE);
-//                    return;
-//                }
-//                
-//                if(particulars.getValue().toString().trim().isEmpty()){
-//                    getWindow().showNotification("Enter Particulars!", Window.Notification.TYPE_ERROR_MESSAGE);
-//                    return;
-//                }
-//                
-//                if(!amount.getValue().toString().trim().isEmpty()){
-//                    boolean result = util.checkInputIfDouble(amount.getValue().toString().trim());
-//                    if(result == false){
-//                        getWindow().showNotification("Error entered Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
-//                        return;
-//                    }
-//                    
-//                }else{
-//                    getWindow().showNotification("Please Enter an Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
-//                    return;
-//                }
-//                                
-//                List<Advances> advanceList = new ArrayList<Advances>();
-//                Advances a = new Advances();
-//                a.setId(payrollId);
-//                a.setAmountToBeReceive(amountToBeReceive);
-//                a.setAmountReceivable(amountReceivable);
-//                a.setAmount(util.convertStringToDouble(amount.getValue().toString().trim()));
-//                a.setDatePosted(util.parsingDate(util.convertDateFormat(datePosted.getValue().toString())));
-//                a.setAdvanceType(advanceType.getValue().toString());
-//                a.setParticulars(particulars.getValue().toString());
-//                advanceList.add(a);
-//                
-//                Double advances = Double.parseDouble(amount.getValue().toString().trim());
-//                String postedDate = util.convertDateFormat(datePosted.getValue().toString());
-//                Boolean result = payrollService.updateSalaryByAdvances(advanceList);                
-//                if(result == true){
-//                    payrollRegisterTable(getBranchId(), payroll_date, false);
-//                    (subWindow.getParent()).removeWindow(subWindow);
-//                }
-//            }
-//            
-//        }); 
-//        vlayout.addComponent(button);
-//        
-//        ts.addComponent(vlayout);       
-//        
-//        subWindow.addComponent(ts);
-//        
-//        return subWindow;
-//    }
-//    
-//    private Table advancesTable(final int payrollId, 
-//            final double amountToBeReceive, 
-//            final double amountReceivable, 
-//            final Window window){
-//                
-//        advancesTbl.removeAllItems();
-//        advancesTbl.setWidth("100%");
-//        advancesTbl.setImmediate(true);
-//        advancesTbl.setSelectable(true);
-//        
-//        advancesTbl.addContainerProperty("id", String.class, null);
-//        advancesTbl.addContainerProperty("amount", String.class, null);
-//        advancesTbl.addContainerProperty("type", String.class, null);
-//        advancesTbl.addContainerProperty("particulars", String.class, null);
-//        advancesTbl.addContainerProperty("date posted", String.class, null);
-//        
-//        int i = 0;
-//        List<Advances> advancesList = payrollService.getAdvancesByPayroll(payrollId);
-//        for(Advances a : advancesList){
-//            advancesTbl.addItem(new Object[]{
-//                a.getAdvanceId(), a.getAmount(), a.getAdvanceType(), 
-//                a.getParticulars(), util.convertDateFormat(a.getDatePosted().toString())
-//            }, i);
-//            i++;
-//        }
-//        advancesTbl.setPageLength(advancesTbl.size());
-//        
-//        for(Object listener : advancesTbl.getListeners(ItemClickEvent.class)){
-//            advancesTbl.removeListener(ItemClickEvent.class, listener);
-//        }
-//        
-//        advancesTbl.addListener(new ItemClickEvent.ItemClickListener() {
-//
-//            @Override
-//            public void itemClick(ItemClickEvent event) {
-//                Object itemId = event.getItemId();
-//                final Item item = advancesTbl.getItem(itemId);
-//                              
-//                if(event.getPropertyId().equals("id")){
-//                    String amount = item.getItemProperty("amount").getValue().toString();                
-//                    Double removedAdvances = Double.parseDouble(util.removeCommaFromString(amount));
-//                    int advanceId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
-//                        
-//                    Window subWindow = removeAdvances(payrollId, 
-//                            advanceId, 
-//                            removedAdvances, 
-//                            amountToBeReceive, 
-//                            amountReceivable, 
-//                            window);
-//                    if(subWindow.getParent() == null){
-//                        getWindow().addWindow(subWindow);
-//                    }
-//                    subWindow.setModal(true);
-//                    subWindow.center();
-//                }
-//            }
-//            
-//        });
-//        
-//        return advancesTbl;
-//    }
-//    
-//    private Window removeAdvances(final int payrollId, 
-//            final int advanceId, 
-//            final double removedAmount, 
-//            final double amountToBeReceive, 
-//            final double amountReceivable, 
-//            final Window window){
-//        final Window subWindow = new Window("REMOVE ADVANCES");
-//        subWindow.setWidth("220px");
-//        
-//        VerticalLayout vlayout = new VerticalLayout();
-//        vlayout.setSpacing(true);
-//        
-//        final TextField remarks = new TextField("Remarks: ");
-//        remarks.setWidth("100%");
-//        vlayout.addComponent(remarks);
-//        
-//        Button removeAdvances = new Button("REMOVE ADVANCE AMOUNT");
-//        removeAdvances.setWidth("100%");
-//        removeAdvances.addListener(new Button.ClickListener() {
-//
-//            @Override
-//            public void buttonClick(Button.ClickEvent event) {
-//                if(remarks.getValue() == null || remarks.getValue().toString().trim().isEmpty()){
-//                    getWindow().showNotification("Add remarks!", Window.Notification.TYPE_WARNING_MESSAGE);
-//                    return;
-//                }
-//                boolean result = payrollService.removeAdvanceById(advanceId, payrollId, 
-//                        removedAmount, amountToBeReceive, amountReceivable, remarks.getValue().toString());
-//                if(result == true){
-//                    payrollRegisterTable(getBranchId(), payroll_date, false);
-//                    advancesTable(payrollId, 
-//                            amountToBeReceive, 
-//                            amountReceivable, 
-//                            window);
-//                    
-//                    (subWindow.getParent()).removeWindow(subWindow);
-//                    (window.getParent()).removeWindow(window);
-//                }
-//            }    
-//
-//        });
-//        vlayout.addComponent(removeAdvances);
-//        
-//        subWindow.addComponent(vlayout);
-//        return subWindow;
-//    }
-    
-    private Window addAdjustment(final int payrollId, 
-            final double amountToBeReceive, 
-            final double amountReceived, 
-            double adjustment){
-        final Window subWindow = new Window("ADJUSTMENTS");
-        subWindow.setWidth("300px");
-        
-        TabSheet ts = new TabSheet();
-        ts.addStyleName("bar");
-        
-        VerticalLayout vlayout = new VerticalLayout();
-        vlayout.setMargin(true);
-        vlayout.setSpacing(true);
-        vlayout.setCaption("Post Adjustments");
-        
-        final TextField amount = new TextField("Amount: ");
-        amount.setWidth("100%");
-        vlayout.addComponent(amount);
-        
-        final TextField remarks = new TextField("Remarks");
-        remarks.setWidth("100%");
-        vlayout.addComponent(remarks);
-        
-        Button saveAdjustments = new Button("POST ADJUSTMENTS");
-        saveAdjustments.setWidth("100%");
-        saveAdjustments.addListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                if(amount.getValue() == null || amount.getValue().toString().trim().isEmpty()){
-                    getWindow().showNotification("Enter Amount for adjustment.", Window.Notification.TYPE_WARNING_MESSAGE);
-                    return;
-                } else {
-                    if(!util.checkInputIfDouble(amount.getValue().toString().trim())){
-                        getWindow().showNotification("Enter a numeric value for amount.", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                }
-                
-                if(remarks.getValue() == null || remarks.getValue().toString().trim().isEmpty()){
-                    getWindow().showNotification("Add remarks for adjustment.", Window.Notification.TYPE_ERROR_MESSAGE);
-                    return;
-                }
-                
-                double amountForAdjustment = util.convertStringToDouble(amount.getValue().toString().trim());
-                String remarksForAdjustment = remarks.getValue().toString().trim().toLowerCase();
-                boolean result = payrollService.insertAdjustmentToPayroll(payrollId, 
-                        amountToBeReceive, 
-                        amountReceived, 
-                        amountForAdjustment, 
-                        remarksForAdjustment);
-                if(result){
-                    getWindow().showNotification("Successfully added adjustment.", Window.Notification.TYPE_HUMANIZED_MESSAGE);
-                    payrollRegisterTable(branchId, payroll_date, false);
-                    (subWindow.getParent()).removeWindow(subWindow);
-                }
-            }
-        });
-        vlayout.addComponent(saveAdjustments);
-        
-        ts.addComponent(vlayout);
-        
-        vlayout = new VerticalLayout();
-        vlayout.setMargin(true);
-        vlayout.setSpacing(true);
-        vlayout.setCaption("Remove Adjustments");
-        
-        Label label = new Label("Remarks: ");
-        vlayout.addComponent(label);
-        
-        adjustmentTable(payrollId, amountToBeReceive, amountReceived, subWindow);
-        vlayout.addComponent(adjustmentTbl);
-                
-        ts.addComponent(vlayout);
-        subWindow.addComponent(ts);
-        
-        return subWindow;
+    String getPayrollDate(){
+        return payrollDate;
     }
     
-    private Table adjustmentTable(final int payrollId, 
-            final double amountToBeReceive, 
-            final double amountReceived, 
-            final Window window){
-        adjustmentTbl.removeAllItems();
-        adjustmentTbl.setWidth("100%");
-        adjustmentTbl.setImmediate(true);
-        adjustmentTbl.setSelectable(true);
-        
-        adjustmentTbl.addContainerProperty("id", Integer.class, null);
-        adjustmentTbl.addContainerProperty("amount", Double.class, null);
-        adjustmentTbl.addContainerProperty("remarks", String.class, null);
-        
-        int i = 0;
-        List<Adjustment> adjustmentList = payrollService.getListOfAdjustmentFromPayrollId(payrollId);
-        for(Adjustment adj : adjustmentList){
-            adjustmentTbl.addItem(new Object[]{  
-                adj.getAdjustmentId(), 
-                adj.getAmount(), 
-                adj.getRemarks()
-            }, i);
-            i++;
+    Window.CloseListener adjustmentWindowListener = new Window.CloseListener() {
+
+        @Override
+        public void windowClose(Window.CloseEvent e) {
+            payrollRegisterTable(getBranchId(), getPayrollDate(), false);
         }
-        
-        adjustmentTbl.setPageLength(adjustmentTbl.size());
-        
-        for(Object listener : adjustmentTbl.getListeners(ItemClickEvent.class)){
-            adjustmentTbl.removeListener(ItemClickEvent.class, listener);
-        }
-        
-        adjustmentTbl.addListener(new ItemClickEvent.ItemClickListener() {
-
-            @Override
-            public void itemClick(ItemClickEvent event) {
-                Object itemId = event.getItemId();
-                final Item item = adjustmentTbl.getItem(itemId);
-                
-                double adjustments = util.convertStringToDouble(item.getItemProperty("amount").getValue().toString());
-                
-                if(event.getPropertyId().equals("id")){
-                    Window subWindow = removeAdjustment(util.convertStringToInteger(item.getItemProperty("id").getValue().toString()), 
-                            amountToBeReceive, 
-                            amountReceived, 
-                            adjustments, 
-                            payrollId, 
-                            window);
-                    if(subWindow.getParent() == null){
-                        getWindow().addWindow(subWindow);                        
-                    }
-                    subWindow.setModal(true);
-                    subWindow.center();
-                }                
-                
-            }
-        });
-        
-        return adjustmentTbl;
-    }
-    
-    private Window removeAdjustment(final int adjustmentId, 
-            final double amountToBeReceive, 
-            final double amountReceive, 
-            final double adjustment, 
-            final int payrollId, 
-            final Window window){
-        VerticalLayout vlayout = new VerticalLayout();
-        vlayout.setMargin(true);
-        vlayout.setSpacing(true);
-        
-        final Window subWindow = new Window("REMOVE ADVANCES", vlayout);
-        subWindow.setWidth("200px");
-        
-        Button removeAdjBtn = new Button("REMOVE ADJUSTMENT?");
-        removeAdjBtn.setWidth("100%");
-        removeAdjBtn.addListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                boolean result = payrollService.removeAdjustmentById(adjustmentId, 
-                        amountToBeReceive, 
-                        amountReceive, 
-                        adjustment, 
-                        payrollId);
-                if(result){
-                    (subWindow.getParent()).removeWindow(subWindow);
-                    (window.getParent()).removeWindow(window);
-                    adjustmentTable(payrollId, 0, 0, subWindow);
-                    payrollRegisterTable(getBranchId(), payroll_date, false);
-                }
-            }
-        });
-        subWindow.addComponent(removeAdjBtn);
-        
-        return subWindow;
-    }
-    
-    public void payrollRegisterReport(String payrollDate){
-        Connection conn = getConnection.connection();
-        File reportFile = new File("C:/reportsJasper/payrollRegisterReport.jasper");
-//        File reportFile = new File("/home/ReportJasper/payrollRegisterReport.jasper");
-        
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", branchId);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        try{
-             JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-//            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getPath(), hm, conn); //for CentOS
-             SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-             String timestamp = df.format(new Date());
-             final String filePath = "C:/reportsPdf/payrollRegisterReport_"+timestamp+".pdf";
-//             final String filePath = "/home/ReportPdf/payrollRegisterReport_"+timestamp+".pdf";
-             JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-             
-             Window subWindow = new Window("Payroll Register Report");
-             ((VerticalLayout) subWindow.getContent()).setSizeFull();
-             subWindow.setWidth("800px");
-             subWindow.setHeight("600px");
-             subWindow.center();
-
-             StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                 @Override
-                 public InputStream getStream() {
-                     try {
-                         File f = new File(filePath);
-                         FileInputStream fis = new FileInputStream(f);
-                         return fis;
-                     } catch (Exception e) {
-                         e.getMessage();
-                         return null;
-                     }
-                 }
-             };
-
-             StreamResource resource = new StreamResource(source, filePath, getApplication());
-             resource.setMIMEType("application/pdf");       
-
-             Embedded e = new Embedded();
-             e.setMimeType("application/pdf");
-             e.setType(Embedded.TYPE_OBJECT);
-             e.setSizeFull();
-             e.setSource(resource);
-             e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-             subWindow.addComponent(e);
-
-             getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-             e.getMessage();
-        }
-    }
-    
-    public void adjustedPayrollRegisterReport(String payrollDate){
-        Connection conn = getConnection.connection();
-        File reportFile = new File("C:/reportsJasper/PayrollRegisterReportAdjusted.jasper");
-        
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", branchId);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        try{
-             JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-             SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-             String timestamp = df.format(new Date());
-             final String filePath = "C:/reportsPdf/payrollRegisterReportAdjusted_"+timestamp+".pdf";
-             JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-             Window subWindow = new Window("Payroll Register Report");
-             ((VerticalLayout) subWindow.getContent()).setSizeFull();
-             subWindow.setWidth("800px");
-             subWindow.setHeight("600px");
-             subWindow.center();
-
-             StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                 @Override
-                 public InputStream getStream() {
-                     try {
-                         File f = new File(filePath);
-                         FileInputStream fis = new FileInputStream(f);
-                         return fis;
-                     } catch (Exception e) {
-                         e.getMessage();
-                         return null;
-                     }
-                 }
-             };
-
-             StreamResource resource = new StreamResource(source, filePath, getApplication());
-             resource.setMIMEType("application/pdf");       
-
-             Embedded e = new Embedded();
-             e.setMimeType("application/pdf");
-             e.setType(Embedded.TYPE_OBJECT);
-             e.setSizeFull();
-             e.setSource(resource);
-             e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-             subWindow.addComponent(e);
-
-             getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-             e.getMessage();
-        }
-    }
-    
-    private void payslipReport(String payrollDate){
-       Connection conn = getConnection.connection();
-       File reportFile = new File("C:/reportsJasper/PayslipReport.jasper");
-
-       final HashMap hm = new HashMap();
-       hm.put("BRANCH_ID", branchId);
-       hm.put("PAYROLL_DATE", payrollDate);
-
-       try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/PayslipReport_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("Payslip Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");     
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-       }catch(Exception e){
-            e.getMessage();
-       }
-   }
-   
-   private void hdmfReport(String payrollDate){       
-       Connection conn = getConnection.connection();
-       File reportFile = new File("C:/reportsJasper/HdmfReport.jasper");
-
-       final HashMap hm = new HashMap();
-       hm.put("BRANCH_ID", branchId);
-       hm.put("PAYROLL_DATE", payrollDate);
-
-       try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/HdmfReport_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("HDMF Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");  
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-       }catch(Exception e){
-            e.getMessage();
-       }
-   }
-   
-   private void hdmfSavingsReport(String payrollDate){
-       Connection conn = getConnection.connection();
-       File reportFile = new File("C:/reportsJasper/HdmfVoluntarySavingsReport.jasper");
-
-       final HashMap hm = new HashMap();
-       hm.put("BRANCH_ID", branchId);
-       hm.put("PAYROLL_DATE", payrollDate);
-
-       try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/HdmfVoluntarySavingsReport_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("HDMF Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");      
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-       }catch(Exception e){
-            e.getMessage();
-       }
-   }
-      
-   private void sssReport(String payrollDate){
-	Connection conn = getConnection.connection();   
-        File reportFile = new File("C:/reportsJasper/SssReport.jasper");
-
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", branchId);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/SssReport_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("SSS Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");     
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-            e.getMessage();
-        }
-   }
-   
-   private void sssReportSbarro(String payrollDate){
-	Connection conn = getConnection.connection();   
-        File reportFile = new File("C:/reportsJasper/SssReportSbarro.jasper");
-
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", branchId);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/SssReportSbarro_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("SSS Report Sbarro");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");     
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-            e.getMessage();
-        }
-   }
-   
-   private void phicReport(String payrollDate){
-       Connection conn = getConnection.connection();	   
-       File reportFile = new File("C:/reportsJasper/PhicReport.jasper");
-
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", branchId);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/PhicReport_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("Phic Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");     
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-            e.getMessage();
-        }
-   }
-   
-   private void witholdingTaxReport(String payrollDate){
-       Connection conn = getConnection.connection();	   
-       File reportFile = new File("C:/reportsJasper/WitholdingTaxesReport.jasper");
-
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", branchId);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/WitholdingTaxesReport_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("Witholding Taxes Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");     
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-            e.getMessage();
-        }
-   }
-   
-   private void attendanceReport(String payrollDate){
-       Connection conn = getConnection.connection();	   
-       File reportFile = new File("C:/reportsJasper/AttendanceReport.jasper");
-
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", branchId);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/AttendanceReport_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("Witholding Taxes Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");       
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-            e.getMessage();
-        }
-   }
-   
-   private void bankDebitMemoReport(String payrollDate){
-       Connection conn = getConnection.connection();	   
-       File reportFile = new File("C:/reportsJasper/BankDebitMemo.jasper");
-
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", branchId);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/BankDebitMemo_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("Witholding Taxes Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");    
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-            e.getMessage();
-        }
-   }     
-   
-   private void sssLoanReport(String payrollDate){
-       Connection conn = getConnection.connection();	   
-       File reportFile = new File("C:/reportsJasper/SssLoanReport.jasper");
-
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", branchId);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/SssLoanReport_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("SSS Loans Payable Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");        
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-            e.getMessage();
-        }
-   }  
-   
-   private void hdmfLoanReport(String payrollDate){
-	Connection conn = getConnection.connection();   
-        File reportFile = new File("C:/reportsJasper/HdmfLoanReport.jasper");
-
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", branchId);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/HdmfLoanReport_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("HDMF Loans Payable Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");   
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-            e.getMessage();
-        }
-   }
-
-   private void allowancesReport(String payroll_date){
-        Connection conn = getConnection.connection(); 
-        File reportFile = new File("C:/reportsJasper/AllowancesReport.jasper");
-        int tradeId = companyService.getTradeIdByBranchId(getBranchId());
-        int corporateId = companyService.getCorporateIdByTradeId(tradeId);
-	String corporateName = companyService.getCorporateById(corporateId);
-
-        final HashMap hm = new HashMap();
-        hm.put("CORPORATE_NAME", corporateName);
-        hm.put("PAYROLL_DATE", payroll_date);
-
-        try{
-            JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-            String timestamp = df.format(new Date());
-            final String filePath = "C:/reportsPdf/AllowancesReport_"+timestamp+".pdf";
-            JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-            Window subWindow = new Window("Allowances Report");
-            ((VerticalLayout) subWindow.getContent()).setSizeFull();
-            subWindow.setWidth("800px");
-            subWindow.setHeight("600px");
-            subWindow.center();
-
-            StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                @Override
-                public InputStream getStream() {
-                    try {
-                        File f = new File(filePath);
-                        FileInputStream fis = new FileInputStream(f);
-                        return fis;
-                    } catch (Exception e) {
-                        e.getMessage();
-                        return null;
-                    }
-                }
-            };
-
-            StreamResource resource = new StreamResource(source, filePath, getApplication());
-            resource.setMIMEType("application/pdf");
-            //resource.getStream();                    
-
-            Embedded e = new Embedded();
-            e.setMimeType("application/pdf");
-            e.setType(Embedded.TYPE_OBJECT);
-            e.setSizeFull();
-            e.setSource(resource);
-            e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-            subWindow.addComponent(e);
-
-            getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-            e.getMessage();
-        }
-   }
-
-   public void advancesReport(String corporate, String payrollDate){
-        Connection conn = getConnection.connection();
-        File reportFile = new File("C:/reportsJasper/AdvancesReport.jasper");
-        
-        final HashMap hm = new HashMap();
-        hm.put("CORPORATE_NAME", corporate);
-        hm.put("PAYROLL_DATE", payrollDate);
-
-        Window subWindow = new Window("Advances Report");
-        ((VerticalLayout) subWindow.getContent()).setSizeFull();
-        subWindow.setWidth("800px");
-        subWindow.setHeight("600px");
-        subWindow.center();
-        
-        try{
-             JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
-             SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-             String timestamp = df.format(new Date());
-             final String filePath = "C:/reportsPdf/AdvancesReport_"+timestamp+".pdf";
-             JasperExportManager.exportReportToPdfFile(jpReport, filePath);
-
-             StreamResource.StreamSource source = new StreamResource.StreamSource() {
-                 @Override
-                 public InputStream getStream() {
-                     try {
-                         File f = new File(filePath);
-                         FileInputStream fis = new FileInputStream(f);
-                         return fis;
-                     } catch (Exception e) {
-                         e.getMessage();
-                         return null;
-                     }
-                 }
-             };
-             
-             StreamResource resource = new StreamResource(source, filePath, getApplication());
-             resource.setMIMEType("application/pdf");       
-
-             Embedded e = new Embedded();
-             e.setMimeType("application/pdf");
-             e.setType(Embedded.TYPE_OBJECT);
-             e.setSizeFull();
-             e.setSource(resource);
-             e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
-
-             subWindow.addComponent(e);
-
-             getApplication().getMainWindow().open(resource, "_blank");
-        }catch(Exception e){
-             e.getMessage();
-        }        
-    }
-
+    };
 }

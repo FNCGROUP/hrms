@@ -304,47 +304,12 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         });
         glayout.addComponent(setContributionBtn, 1, 0, 2, 0);
         glayout.setComponentAlignment(setContributionBtn, Alignment.BOTTOM_CENTER);
-        
-        final PopupDateField entryDate = new PopupDateField("Employment Entry: ");
-        entryDate.addStyleName("mydate");          
-        entryDate.setDateFormat("yyyy-MM-dd");
-        entryDate.setWidth("200px");
-        entryDate.setResolution(DateField.RESOLUTION_DAY);         
-//        glayout.addComponent(entryDate, 1, 0);
-//        glayout.setComponentAlignment(entryDate, Alignment.MIDDLE_LEFT);                
-        
-        Button changeDateEntry = new Button("EDIT DATE ENTRY");
-        changeDateEntry.setWidth("200px");
-        changeDateEntry.setEnabled(userRoleResult);
-        changeDateEntry.setImmediate(true);
-        changeDateEntry.addListener(new Button.ClickListener() {
-
-            @Override
-            public void buttonClick(Button.ClickEvent event) {
-                if(entryDate.getValue() == null || entryDate.getValue().toString().trim().isEmpty()){
-                    getWindow().showNotification("Enter Date Entry.", Window.Notification.TYPE_ERROR_MESSAGE);
-                    return;
-                }
-                
-                Window window = editDateEntryWindow(util.convertDateFormat(entryDate.getValue().toString().trim().toLowerCase()));
-                if(window.getParent() == null){
-                    getWindow().addWindow(window);
-                }
-                window.setModal(true);
-                window.center();
-            }
-        });
-//        glayout.addComponent(changeDateEntry, 2, 0);
-//        glayout.setComponentAlignment(changeDateEntry, Alignment.BOTTOM_LEFT);
-                                 
+                                                    
         if(getEmployeeId() != null){
-            EmploymentInformation employmentInformation = siService.getEmployeeSalaryInformation(getEmployeeId());
-            
-            employmentStatusField.setValue(employmentInformation.getCurrentStatus().toUpperCase());            
-            entryDate.setValue((employmentInformation.getEntryDate() == null) ? "" : employmentInformation.getEntryDate());            
+            EmploymentInformation employmentInformation = siService.getEmployeeSalaryInformation(getEmployeeId());            
+            employmentStatusField.setValue(employmentInformation.getCurrentStatus().toUpperCase());                       
         }
         employmentStatusField.setReadOnly(true);
-        entryDate.setReadOnly(!userRoleResult);
                                
         return glayout;
     }
@@ -476,32 +441,5 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         window.addComponent(editBtn);
         
         return window;
-    }
-    
-//    private Window confirmedResignedWindow(final String endDate){
-//        VerticalLayout vlayout = new VerticalLayout();
-//        vlayout.setWidth("100%");
-//        vlayout.setMargin(true);
-//        vlayout.setSpacing(true);
-//        
-//        final Window window = new Window("END DATE (RESIGN)", vlayout);
-//        window.setResizable(false);
-//        
-//        Button editBtn = new Button("CONFIRM ACTION?");
-//        editBtn.setWidth("100%");
-//        editBtn.addListener(new Button.ClickListener() {
-//
-//            @Override
-//            public void buttonClick(Button.ClickEvent event) {
-//                boolean result = siService.insertEndDate(getEmployeeId(), endDate);
-//                if(result){
-//                    getWindow().showNotification("Resigned.", Window.Notification.TYPE_TRAY_NOTIFICATION);
-//                    (window.getParent()).removeWindow(window);
-//                }
-//            }
-//        });
-//        window.addComponent(editBtn);
-//        
-//        return window;
-//    }
+    }    
 }

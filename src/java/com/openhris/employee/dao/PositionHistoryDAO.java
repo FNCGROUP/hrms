@@ -7,7 +7,6 @@
 package com.openhris.employee.dao;
 
 import com.hrms.dbconnection.GetSQLConnection;
-import com.hrms.utilities.ConvertionUtilities;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.employee.model.PositionHistory;
 import java.sql.Connection;
@@ -65,29 +64,57 @@ public class PositionHistoryDAO {
         return positionList;
     }
     
-    public boolean updatePositionHistory(String employeeId, PositionHistory positionHistory){
+    public boolean updatePositionHistory(String employeeId, PositionHistory positionHistory, boolean isEdit, int positionId){
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         boolean result = false;
-        
+        String query;
+                        
         try {
             conn.setAutoCommit(false);
-            pstmt = conn.prepareStatement("INSERT INTO employee_position_history (employeeId, position, corporate, trade, branch, "
-                    + "department, entryDate, branchId) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
-            pstmt.setString(1, employeeId);
-            pstmt.setString(2, positionHistory.getPosition());
-            pstmt.setString(3, positionHistory.getCompany());
-            pstmt.setString(4, positionHistory.getTrade());
-            pstmt.setString(5, positionHistory.getBranch());
-            pstmt.setString(6, positionHistory.getDepartment());
-            pstmt.setString(7, util.convertDateFormat(positionHistory.getEntryDate().toString()));
-            pstmt.setInt(8, positionHistory.getBranchId());
-            pstmt.executeUpdate();
             
-            pstmt = conn.prepareStatement("UPDATE employee SET branchId = ? WHERE employeeId = ?");
-            pstmt.setInt(1, positionHistory.getBranchId());
-            pstmt.setString(2, employeeId);
-            pstmt.executeUpdate();
+            if(isEdit){
+                pstmt = conn.prepareStatement("UPDATE employee_position_history SET "
+                        + "position = ?, "
+                        + "corporate = ?, "
+                        + "trade = ?, "
+                        + "branch = ?, "
+                        + "department = ?, "
+                        + "entryDate = ?, "
+                        + "branchId = ? "
+                        + "WHERE id = ?");                
+                pstmt.setString(1, positionHistory.getPosition());
+                pstmt.setString(2, positionHistory.getCompany());
+                pstmt.setString(3, positionHistory.getTrade());
+                pstmt.setString(4, positionHistory.getBranch());
+                pstmt.setString(5, positionHistory.getDepartment());
+                pstmt.setString(6, util.convertDateFormat(positionHistory.getEntryDate().toString()));
+                pstmt.setInt(7, positionHistory.getBranchId());
+                pstmt.setInt(8, positionHistory.getPositionId());
+                pstmt.executeUpdate();
+                
+                pstmt = conn.prepareStatement("UPDATE employee SET branchId = ? WHERE employeeId = ?");
+                pstmt.setInt(1, positionHistory.getBranchId());
+                pstmt.setString(2, employeeId);
+                pstmt.executeUpdate();
+            } else {
+                pstmt = conn.prepareStatement("INSERT INTO employee_position_history (employeeId, position, corporate, trade, branch, "
+                    + "department, entryDate, branchId) VALUES (?, ?, ?, ?, ?, ?, ?, ?) ");
+                pstmt.setString(1, employeeId);
+                pstmt.setString(2, positionHistory.getPosition());
+                pstmt.setString(3, positionHistory.getCompany());
+                pstmt.setString(4, positionHistory.getTrade());
+                pstmt.setString(5, positionHistory.getBranch());
+                pstmt.setString(6, positionHistory.getDepartment());
+                pstmt.setString(7, util.convertDateFormat(positionHistory.getEntryDate().toString()));
+                pstmt.setInt(8, positionHistory.getBranchId());
+                pstmt.executeUpdate();
+
+                pstmt = conn.prepareStatement("UPDATE employee SET branchId = ? WHERE employeeId = ?");
+                pstmt.setInt(1, positionHistory.getBranchId());
+                pstmt.setString(2, employeeId);
+                pstmt.executeUpdate();
+            }
             
             conn.commit();
             result = true;
@@ -165,5 +192,42 @@ public class PositionHistoryDAO {
         }
         
         return result;
+    }
+    
+    public List<PositionHistory> getPositionHistoryById(int positionId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;         
+        List<PositionHistory> positionList = new ArrayList<PositionHistory>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM employee_position_history WHERE id = "+positionId+" ");
+            while(rs.next()){
+                PositionHistory positionHistory = new PositionHistory();
+                positionHistory.setPositionId(util.convertStringToInteger(rs.getString("id")));
+                positionHistory.setPosition(rs.getString("position"));
+                positionHistory.setCompany(rs.getString("corporate"));
+                positionHistory.setTrade(rs.getString("trade"));
+                positionHistory.setBranch(rs.getString("branch"));
+                positionHistory.setDepartment(rs.getString("department"));
+                positionHistory.setEntryDate(util.parsingDate(rs.getString("entryDate")));
+                positionList.add(positionHistory);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return positionList;
     }
 }

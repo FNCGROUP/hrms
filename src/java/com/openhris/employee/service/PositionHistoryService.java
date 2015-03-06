@@ -17,9 +17,11 @@ public interface PositionHistoryService {
     
     public List<PositionHistory> getPositionHistory(String employeeId);
     
-    public boolean updatePositionHistory(String employeeId, PositionHistory positionHistory);
+    public boolean updatePositionHistory(String employeeId, PositionHistory positionHistory, boolean isEdit, int positionId);
     
     public boolean removePositionHistory(int positionId);
     
     public boolean insertEndDate(String employeeId, String endDate);
+    
+    public List<PositionHistory> getPositionHistoryById(int positionId);
 }

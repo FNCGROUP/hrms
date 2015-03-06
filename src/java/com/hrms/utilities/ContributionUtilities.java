@@ -86,11 +86,6 @@ public class ContributionUtilities extends VerticalLayout {
             while(rs.next()){
                 sssContribution = Double.parseDouble(rs.getString("sssContribution"));
             }            
-//            System.out.println("prev payroll date: " +calDate);
-//            System.out.println("previous: " +previousGrossPay);
-//            System.out.println("salary: " +salary);
-//            System.out.println("grossPay: " +grossPay);
-//            System.out.println("sss: " +sssContribution);
         } catch (SQLException ex) {
             Logger.getLogger(ContributionUtilities.class.getName()).log(Level.SEVERE, null, ex);
         } finally{

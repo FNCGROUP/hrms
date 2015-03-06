@@ -29,6 +29,7 @@ import com.openhris.company.model.Trade;
 import com.openhris.company.service.CompanyService;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.contributions.ContributionComponentContainer;
+import com.openhris.employee.AddNewEmployeeWindow;
 import com.openhris.employee.EmployeeMainUI;
 import com.openhris.employee.model.PositionHistory;
 import com.openhris.employee.service.EmployeeService;
@@ -464,12 +465,14 @@ public class MainApp extends Application {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Window subWindow = employeeMainUI.openNewEmployeeWindow(null);
+//                Window subWindow = employeeMainUI.openNewEmployeeWindow(null);
+                Window subWindow = new AddNewEmployeeWindow(null);
                 subWindow.setModal(true);
                 if(subWindow.getParent() == null){
                     window.getWindow().addWindow(subWindow);
                 }
                 subWindow.center();
+                subWindow.addListener(newEmployeeWindowCloseListener);
             }
         });
         if(GlobalVariables.getUserRole().equals("administrator") || 
@@ -858,4 +861,12 @@ public class MainApp extends Application {
     public int getBranchId(){
         return branchId;
     }
+    
+    Window.CloseListener newEmployeeWindowCloseListener = new Window.CloseListener() {
+
+        @Override
+        public void windowClose(Window.CloseEvent e) {
+            employeeMainUI.employeesTable(getEmployeeList(getBranchId()));
+        }
+    };
 }

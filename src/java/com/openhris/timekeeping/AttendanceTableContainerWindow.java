@@ -7,7 +7,6 @@ package com.openhris.timekeeping;
 
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.payroll.PayrollMainUI;
 import com.openhris.payroll.ProcessPayrollComputation;
 import com.openhris.timekeeping.model.Timekeeping;
 import com.vaadin.data.Item;

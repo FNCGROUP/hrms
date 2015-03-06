@@ -25,8 +25,8 @@ public class PositionHistoryServiceImpl implements PositionHistoryService {
     }
 
     @Override
-    public boolean updatePositionHistory(String employeeId, PositionHistory positionHistory) {
-        return positionHistoryDAO.updatePositionHistory(employeeId, positionHistory);
+    public boolean updatePositionHistory(String employeeId, PositionHistory positionHistory, boolean isEdit, int positionId) {
+        return positionHistoryDAO.updatePositionHistory(employeeId, positionHistory, isEdit, positionId);
     }
 
     @Override
@@ -37,6 +37,11 @@ public class PositionHistoryServiceImpl implements PositionHistoryService {
     @Override
     public boolean insertEndDate(String employeeId, String endDate) {
         return positionHistoryDAO.insertEndDate(employeeId, endDate);
+    }
+
+    @Override
+    public List<PositionHistory> getPositionHistoryById(int positionId) {
+        return positionHistoryDAO.getPositionHistoryById(positionId);
     }
     
 }

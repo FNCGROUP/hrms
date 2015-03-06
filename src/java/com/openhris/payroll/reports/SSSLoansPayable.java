@@ -25,7 +25,7 @@ import net.sf.jasperreports.engine.JasperPrint;
  *
  * @author jetdario
  */
-public class BankDebitMemoReport extends Window {
+public class SSSLoansPayable extends Window {
     GetSQLConnection getConnection = new GetSQLConnection();
     private int branchId;
     private String payrollDate;
@@ -33,19 +33,19 @@ public class BankDebitMemoReport extends Window {
     String filePath;
     Application payrollApplication;
 
-    public BankDebitMemoReport(int branchId, String payrollDate, Application payrollApplication) {
+    public SSSLoansPayable(int branchId, String payrollDate, Application payrollApplication) {
         this.branchId = branchId;
         this.payrollDate = payrollDate;
         this.payrollApplication = payrollApplication;
         
-        setCaption("Bank Debit Memo Report");
+        setCaption("SSS Loans Payable Report");
         setSizeFull();
         setWidth("800px");
         setHeight("600px");
         center();
         
         Connection conn = getConnection.connection();
-        File reportFile = new File("C:/reportsJasper/BankDebitMemo.jasper");
+        File reportFile = new File("C:/reportsJasper/SssLoanReport.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("BRANCH_ID", getBranchId());
@@ -55,7 +55,7 @@ public class BankDebitMemoReport extends Window {
              JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
              SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
              String timestamp = df.format(new Date());
-             filePath = "C:/reportsPdf/BankDebitMemo_"+timestamp+".pdf";
+             filePath = "C:/reportsPdf/SssLoanReport_"+timestamp+".pdf";
              JasperExportManager.exportReportToPdfFile(jpReport, filePath);             
         }catch(Exception e){
              e.getMessage();

@@ -1167,4 +1167,35 @@ public class PayrollDAO {
         
         return previousPayrollId;
     }
+    
+    public boolean isPayrollAdjusted(int id){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT actionTaken FROM payroll_table WHERE id = "+id+" ");
+            while(rs.next()){
+                if(rs.getString("actionTaken").equals("adjusted")){
+                    result = true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
 }

@@ -217,5 +217,10 @@ public class PayrollServiceImpl implements PayrollService {
                 adjustment, 
                 remarks);
     }
+
+    @Override
+    public boolean isPayrollAdjusted(int id) {
+        return payrollDAO.isPayrollAdjusted(id);
+    }
     
 }
