@@ -12,11 +12,11 @@ import com.vaadin.ui.Table;
  *
  * @author jetdario
  */
-public class PositionHistoryTable extends Table {
+public class PostEmploymentInformationTable extends Table {
 
     OpenHrisUtilities utilities = new OpenHrisUtilities();
     
-    public PositionHistoryTable() {
+    public PostEmploymentInformationTable() {
         setSizeFull();
         setSelectable(true);
         setImmediate(true);        

@@ -14,7 +14,7 @@ import com.openhris.contributions.model.Sss;
 import com.openhris.contributions.model.Tax;
 import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.EmploymentInformation;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -830,7 +830,7 @@ public class ServiceGetDAO {
         return totalDependent;
     }
     
-    public List<PositionHistory> getEmployeePerBranch(int branchId){
+    public List<PostEmploymentInformationBean> getEmployeePerBranch(int branchId){
         Connection conn = getConnection.connection();
         Statement stmt = null;
         ResultSet rs = null; 
@@ -853,12 +853,12 @@ public class ServiceGetDAO {
                     + "WHERE branchId = "+branchId+" AND (currentStatus != 'removed' OR currentStatus IS NULL) ORDER BY lastname ASC ";
         }
         
-        List<PositionHistory> employeesListPerBranch = new ArrayList<PositionHistory>();
+        List<PostEmploymentInformationBean> employeesListPerBranch = new ArrayList<PostEmploymentInformationBean>();
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery(querySelectEmployeePerBranch);
             while(rs.next()){
-                PositionHistory p = new PositionHistory();
+                PostEmploymentInformationBean p = new PostEmploymentInformationBean();
                 p.setEmployeeId(rs.getString("employeeId"));
                 p.setFirstname(rs.getString("firstname"));
                 p.setMiddlename(rs.getString("middlename"));
@@ -916,16 +916,16 @@ public class ServiceGetDAO {
         return employeesListPerBranch;
     }
     
-    public List<PositionHistory> getEmployeePositionHistory(String employeeId){
+    public List<PostEmploymentInformationBean> getEmployeePositionHistory(String employeeId){
         Connection conn = getConnection.connection();
         Statement stmt = null;
         ResultSet rs = null; 
-        List<PositionHistory> employeePositionHistoryList = new ArrayList<PositionHistory>();
+        List<PostEmploymentInformationBean> employeePositionHistoryList = new ArrayList<PostEmploymentInformationBean>();
         try {
             stmt = conn.createStatement();
             rs  = stmt.executeQuery("SELECT * FROM employee_position_history WHERE employeeId = '"+employeeId+"' ");
             while(rs.next()){
-                PositionHistory ph = new PositionHistory();
+                PostEmploymentInformationBean ph = new PostEmploymentInformationBean();
                 ph.setPosition(rs.getString("position"));
                 ph.setCompany(rs.getString("corporate"));
                 ph.setTrade(rs.getString("trade"));

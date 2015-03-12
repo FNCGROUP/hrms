@@ -12,7 +12,7 @@ import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.service.CompanyService;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.employee.model.EmploymentInformation;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import com.openhris.employee.service.EmployeeService;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.vaadin.data.Property;
@@ -179,7 +179,7 @@ public class AddNewEmployeeWindow extends Window {
                 bankAccountNo.setValue(information.getBankAccountNo());
             }
             
-            for(PositionHistory history : employeeService.getEmployeePositionHistory(getEmployeeId())){
+            for(PostEmploymentInformationBean history : employeeService.getEmployeePositionHistory(getEmployeeId())){
                 position.setValue(history.getPosition());
                 
                 Object companyStatusId = corporation.addItem();
@@ -280,8 +280,8 @@ public class AddNewEmployeeWindow extends Window {
                     int trade_id = companyService.getTradeId(trade.getValue().toString(), getCorporateId());
                     int branch_id = companyService.getBranchId(getTradeId(), branch.getValue().toString());
                     
-                    List<PositionHistory> insertList = new ArrayList<PositionHistory>();
-                    PositionHistory ph = new PositionHistory();
+                    List<PostEmploymentInformationBean> insertList = new ArrayList<PostEmploymentInformationBean>();
+                    PostEmploymentInformationBean ph = new PostEmploymentInformationBean();
                     ph.setFirstname(firstname.getValue().toString().trim());
                     ph.setMiddlename(middlename.getValue().toString().trim());
                     ph.setLastname(lastname.getValue().toString().trim());

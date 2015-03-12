@@ -11,7 +11,7 @@ import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.contributions.model.Phic;
 import com.openhris.contributions.model.Sss;
 import com.openhris.contributions.model.Tax;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import com.openhris.payroll.model.Advances;
 import java.sql.Connection;
 import java.sql.Date;
@@ -32,13 +32,13 @@ public class ServiceUpdateDAO {
     ConvertionUtilities conUtil = new ConvertionUtilities();
     OpenHrisUtilities util = new OpenHrisUtilities();
     
-    public boolean updateEmployeeEmploymentInformation(String employeeId, List<PositionHistory> updateList){
+    public boolean updateEmployeeEmploymentInformation(String employeeId, List<PostEmploymentInformationBean> updateList){
         Connection conn = getConnection.connection();
         boolean result = false;
         PreparedStatement pstmt = null;
         try {     
             conn.setAutoCommit(false);
-            for(PositionHistory ph : updateList){                
+            for(PostEmploymentInformationBean ph : updateList){                
                 pstmt = conn.prepareStatement("UPDATE employee SET "
                         + "firstname = ?, middlename = ?, lastname = ?, sssNo = ?, tinNo = ?, phicNo = ?, "
                         + "hdmfNo = ?, employmentStatus = ?, employmentWageStatus = ?, employmentWageEntry = ?, "

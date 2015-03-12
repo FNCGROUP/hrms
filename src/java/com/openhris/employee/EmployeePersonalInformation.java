@@ -12,7 +12,7 @@ import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.UploadImage;
 import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.PersonalInformation;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import com.openhris.employee.service.EmployeeCurrentStatusService;
 import com.openhris.employee.service.PersonalInformationService;
 import com.openhris.employee.serviceprovider.EmployeeCurrentStatusServiceImpl;
@@ -56,7 +56,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
     PersonalInformation personalInformation;
     PersonalInformationService piService = new PersonalInformationServiceImpl();
     ConvertionUtilities convertionUtilities = new ConvertionUtilities();
-    EmployeeCurrentStatusService reService = new EmployeeCurrentStatusServiceImpl();    
+    EmployeeCurrentStatusService employeeCurrentStatusService = new EmployeeCurrentStatusServiceImpl();    
     EmployeeService employeeService = new EmployeeServiceImpl();
 	
     Embedded avatar;
@@ -332,6 +332,11 @@ public class EmployeePersonalInformation extends VerticalLayout{
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
+                if(!GlobalVariables.getUserRole().equals("administrator")){
+                    getWindow().showNotification("You need to an ADMINISTRATOR to perform this ACTION.", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                }
+                
                 Window window = getRemoveWindow(getEmployeeId());
                 window.setModal(true);
                 if(window.getParent() == null){
@@ -454,7 +459,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
             @Override
             public void buttonClick(Button.ClickEvent event) {                
                 EmployeeMainUI employeeMainUI = new EmployeeMainUI(GlobalVariables.getUserRole(), 0);
-                boolean result = reService.removeEmployee(getEmployeeId());
+                boolean result = employeeCurrentStatusService.removeEmployee(getEmployeeId());
                 if(result){
                     clearFields();
                     employeeMainUI.employeesTable(getEmployeeList(0));

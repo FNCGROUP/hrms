@@ -9,7 +9,7 @@ import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.service.CompanyService;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
 import com.openhris.employee.model.Employee;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import com.openhris.employee.service.EmployeeService;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.vaadin.data.Item;
@@ -348,7 +348,7 @@ public class EmployeeMainUI extends VerticalLayout {
 //                bankAccountNo.setValue(ei.getBankAccountNo());
 //            }
 //            
-//            for(PositionHistory ph : employeeService.getEmployeePositionHistory(employeeId)){
+//            for(PostEmploymentInformationBean ph : employeeService.getEmployeePositionHistory(employeeId)){
 //                position.setValue(ph.getPosition());
 //                
 //                Object companyStatusId = corporation.addItem();
@@ -450,7 +450,7 @@ public class EmployeeMainUI extends VerticalLayout {
 //                    int branch_id = companyService.getBranchId(tradeId, branch.getValue().toString());
 //                    
 //                    List<PositionHistory> insertList = new ArrayList<PositionHistory>();
-//                    PositionHistory ph = new PositionHistory();
+//                    PostEmploymentInformationBean ph = new PostEmploymentInformationBean();
 //                    ph.setFirstname(firstname.getValue().toString().trim());
 //                    ph.setMiddlename(middlename.getValue().toString().trim());
 //                    ph.setLastname(lastname.getValue().toString().trim());

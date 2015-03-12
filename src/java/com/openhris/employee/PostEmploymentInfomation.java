@@ -6,15 +6,18 @@
 
 package com.openhris.employee;
 
+import com.hrms.classes.GlobalVariables;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.HRISPopupDateField;
 import com.openhris.commons.HRISTextField;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.serviceprovider.CompanyServiceImpl;
-import com.openhris.employee.model.PositionHistory;
-import com.openhris.employee.service.PositionHistoryService;
-import com.openhris.employee.serviceprovider.PositionHistoryServiceImpl;
+import com.openhris.employee.model.PostEmploymentInformationBean;
+import com.openhris.employee.service.PostEmploymentInformationService;
+import com.openhris.employee.serviceprovider.PostEmploymentInformationServiceImpl;
 import com.openhris.company.service.CompanyService;
+import com.openhris.employee.service.EmployeeService;
+import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
@@ -37,12 +40,13 @@ import java.util.List;
  *
  * @author jetdario
  */
-public class EmployeePositionHistory extends VerticalLayout{
+public class PostEmploymentInfomation extends VerticalLayout{
         
-    PositionHistoryService phService = new PositionHistoryServiceImpl();
+    PostEmploymentInformationService positionHistoryService = new PostEmploymentInformationServiceImpl();
     CompanyService companyService = new CompanyServiceImpl();
     OpenHrisUtilities utilities = new OpenHrisUtilities();
     DropDownComponent dropDown = new DropDownComponent();
+    EmployeeService employeeService = new EmployeeServiceImpl();
     
     ComboBox corporate;
     ComboBox trade;
@@ -60,15 +64,15 @@ public class EmployeePositionHistory extends VerticalLayout{
     int branchId;
     int positionId;
     GridLayout glayout;
-    Table positionHistoryTbl = new PositionHistoryTable();
+    Table positionHistoryTbl = new PostEmploymentInformationTable();
     
     private static String BTN_CAPTION_1 = "UPDATE";
     private static String BTN_CAPTION_2 = "EDIT";
     
-    public EmployeePositionHistory(){        
+    public PostEmploymentInfomation(){        
     }
     
-    public EmployeePositionHistory(String employeeId){
+    public PostEmploymentInfomation(String employeeId){
         this.employeeId = employeeId;
         
         init();
@@ -157,7 +161,7 @@ public class EmployeePositionHistory extends VerticalLayout{
                     return;
                 }
                 
-                PositionHistory positionHistory = new PositionHistory();
+                PostEmploymentInformationBean positionHistory = new PostEmploymentInformationBean();
                 positionHistory.setPosition(position.getValue().toString().toLowerCase());
                 
                 if(utilities.checkInputIfInteger(corporate.getValue().toString())){
@@ -201,9 +205,10 @@ public class EmployeePositionHistory extends VerticalLayout{
                     isEdit = false;
                 }
                 
-                boolean result = phService.updatePositionHistory(getEmployeeId(), positionHistory, isEdit, getPositionId());
+                boolean result = positionHistoryService.updatePositionHistory(getEmployeeId(), positionHistory, isEdit, getPositionId());
                 if(result){
                     positionHistoryTable();
+                    getWindow().showNotification("Position has been updated.", Window.Notification.TYPE_TRAY_NOTIFICATION);
                 } else {
                     getWindow().showNotification("Error on Position History SQL", Window.Notification.TYPE_ERROR_MESSAGE);
                 }
@@ -216,9 +221,9 @@ public class EmployeePositionHistory extends VerticalLayout{
     
     public Table positionHistoryTable(){   
         positionHistoryTbl.removeAllItems();        
-        List<PositionHistory> positionList = phService.getPositionHistory(getEmployeeId());
+        List<PostEmploymentInformationBean> positionList = positionHistoryService.getPositionHistory(getEmployeeId());
         int i = 0;
-        for(PositionHistory p: positionList){
+        for(PostEmploymentInformationBean p: positionList){
             positionHistoryTbl.addItem(new Object[]{
                 p.getPositionId(), 
                 p.getPosition().toLowerCase(), 
@@ -256,8 +261,8 @@ public class EmployeePositionHistory extends VerticalLayout{
                     window.center();
                     window.addListener(subWindowCloseListener);
                 } else {
-                    List<PositionHistory> positionListById = phService.getPositionHistoryById(utilities.convertStringToInteger(item.getItemProperty("id").getValue().toString()));
-                    for(PositionHistory history : positionListById){
+                    List<PostEmploymentInformationBean> positionListById = positionHistoryService.getPositionHistoryById(utilities.convertStringToInteger(item.getItemProperty("id").getValue().toString()));
+                    for(PostEmploymentInformationBean history : positionListById){
                         Object corporateObjectId = corporate.addItem();
                         corporate.setItemCaption(corporateObjectId, history.getCompany());
                         corporate.setValue(corporateObjectId);
@@ -286,11 +291,11 @@ public class EmployeePositionHistory extends VerticalLayout{
         hlayout.setSpacing(true);          
         hlayout.setWidth("100%");
                               
-        GridLayout glayout2 = new GridLayout(2, 1);
+        GridLayout glayout2 = new GridLayout(2, 2);
         glayout2.setSpacing(true);
         
         final PopupDateField endDate = new HRISPopupDateField("Exit Date: ");
-        endDate.setWidth("150px");
+        endDate.setWidth("250px");
         glayout2.addComponent(endDate, 0, 0);
         glayout2.setComponentAlignment(endDate, Alignment.BOTTOM_LEFT);
         
@@ -309,8 +314,6 @@ public class EmployeePositionHistory extends VerticalLayout{
                 if(window.getParent() == null){
                     getWindow().addWindow(window);
                 }
-                window.setModal(true);
-                window.center();
             }
         });
         glayout2.addComponent(endDateBtn, 1, 0);
@@ -318,6 +321,33 @@ public class EmployeePositionHistory extends VerticalLayout{
                                 
         hlayout.addComponent(glayout2);
         hlayout.setComponentAlignment(glayout2, Alignment.MIDDLE_RIGHT);
+        
+        final PopupDateField entryDateFromEmp = new HRISPopupDateField("Entry Date from Employment: ");
+        entryDateFromEmp.setWidth("250px");
+        entryDateFromEmp.setValue(utilities.parsingDate(employeeService.getEmploymentEntryDate(getEmployeeId())));
+        glayout2.addComponent(entryDateFromEmp, 0, 1);
+        glayout2.setComponentAlignment(entryDateFromEmp, Alignment.BOTTOM_LEFT);
+        
+        Button entryDateFromEmpBtn = new Button("EDIT");
+        entryDateFromEmpBtn.setWidth("150px");
+        entryDateFromEmpBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                if(!GlobalVariables.getUserRole().equals("administrator")){
+                    getWindow().showNotification("You need to be an ADMINISTRATOR to EDIT date entry of employment.", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
+                Window sub = new EditEmploymentDateEntryWindow(getEmployeeId(), 
+                utilities.convertDateFormat(entryDateFromEmp.getValue().toString()));
+                if(sub.getParent() == null){
+                    getWindow().addWindow(sub);
+                }
+            }
+        });
+        glayout2.addComponent(entryDateFromEmpBtn, 1, 1);
+        glayout2.setComponentAlignment(entryDateFromEmpBtn, Alignment.BOTTOM_LEFT);
         
         return hlayout;
     }
@@ -373,7 +403,7 @@ public class EmployeePositionHistory extends VerticalLayout{
             }
         }
     };
-    
+        
     Property.ValueChangeListener corporateListener = new Property.ValueChangeListener() {
 
         @Override
@@ -408,4 +438,5 @@ public class EmployeePositionHistory extends VerticalLayout{
             }
         }
     };
+
 }

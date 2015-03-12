@@ -15,12 +15,19 @@ cn.name AS corporateName,
 tn.hdmfNo AS erHdmfNo, 
 b.address AS address, 
 s.payrollDate AS payrollDate 
-FROM employee e INNER JOIN payroll_table s ON e.employeeId = s.employeeId 
-INNER JOIN advance_table a ON s.id = a.payrollId INNER JOIN branch_table b ON e.branchId = b.id 
+FROM employee e 
+INNER JOIN payroll_table s ON e.employeeId = s.employeeId 
+INNER JOIN advance_table a ON s.id = a.payrollId 
+INNER JOIN branch_table b ON e.branchId = b.id 
 INNER JOIN trade_table tn ON b.tradeId = tn.id 
-INNER JOIN corporate_table cn ON tn.corporateId = cn.id WHERE (SELECT branchId FROM employee_contribution_main 
-WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND a.advanceType = 'hdmf loan' AND a.rowStatus IS NULL AND 
-(s.actionTaken = 'adjusted' OR s.actionTaken IS NULL)ORDER BY e.lastname ASC]]>
+INNER JOIN corporate_table cn ON tn.corporateId = cn.id 
+WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) AND
+(SELECT branchId FROM employee_contribution_main 
+WHERE employeeId = e.employeeId ORDER BY 
+id DESC LIMIT 1) = $P{BRANCH_ID} AND 
+s.payrollDate = $P{PAYROLL_DATE} AND 
+a.advanceType = 'hdmf loan' AND a.rowStatus IS NULL AND 
+(s.actionTaken = 'adjusted' OR s.actionTaken IS NULL) ORDER BY e.lastname ASC]]>
 	</queryString>
 	<field name="amount" class="java.lang.Double"/>
 	<field name="hdmfNo" class="java.lang.String"/>

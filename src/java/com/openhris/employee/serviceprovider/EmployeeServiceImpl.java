@@ -10,7 +10,7 @@ import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.employee.dao.EmployeeDAO;
 import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.EmploymentInformation;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import com.openhris.employee.service.EmployeeService;
 import java.util.List;
 
@@ -46,7 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<PositionHistory> getEmployeePositionHistory(String employeeId) {
+    public List<PostEmploymentInformationBean> getEmployeePositionHistory(String employeeId) {
         return serviceGet.getEmployeePositionHistory(employeeId);
     }
 
@@ -56,12 +56,12 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public boolean updateEmployeeEmploymentInformation(String employeeId, List<PositionHistory> updateList) {
+    public boolean updateEmployeeEmploymentInformation(String employeeId, List<PostEmploymentInformationBean> updateList) {
         return serviceUpdate.updateEmployeeEmploymentInformation(employeeId, updateList);
     }
 
     @Override
-    public boolean insertNewEmployee(List<PositionHistory> insertList) {
+    public boolean insertNewEmployee(List<PostEmploymentInformationBean> insertList) {
         return serviceInsert.insertNewEmployee(insertList);
     }
 
@@ -107,7 +107,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public String getEmploymentEntryDate(String employeeId) {
-        return serviceGet.getEmploymentEntryDate(employeeId);
+        return employeeDAO.getEmploymentEntryDate(employeeId);
     }
 
     @Override

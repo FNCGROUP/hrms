@@ -73,6 +73,8 @@ public class AttendanceTableContainerWindow extends Window {
         
         setCaption("ATTENDANCE TABLE for " +name);
         setSizeFull();
+        setModal(true);
+        center();
         
         addComponent(generateAttendanceTable());
     }
@@ -331,19 +333,21 @@ public class AttendanceTableContainerWindow extends Window {
                         } else {
                             item.getItemProperty("psday").setValue(0.0);
                         }
-                    } else if(policyStr.equals("working-day-off")) {
+                    } else if(policyStr.equals("working-day-off")) {                        
                         if(event.getProperty().getValue() == null){
                             item.getItemProperty("psday").setValue(0.0);
                         } else if(event.getProperty().getValue().equals("legal-holiday")){
                             additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
                             item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
                             multiplePremiumPay = tcal.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                            item.getItemProperty("lholiday").setValue(multiplePremiumPay);
+                            item.getItemProperty("lholiday").setValue(multiplePremiumPay); 
+                            item.getItemProperty("sholiday").setValue(0.0);
                         } else {
                             additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
                             item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
                             multiplePremiumPay = tcal.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                            item.getItemProperty("sholiday").setValue(multiplePremiumPay);
+                            item.getItemProperty("sholiday").setValue(multiplePremiumPay);   
+                            item.getItemProperty("lholiday").setValue(0.0);
                         }
                     }                   
                 }
@@ -583,7 +587,6 @@ public class AttendanceTableContainerWindow extends Window {
                             payrollPeriod, 
                             attendancePeriodFrom, 
                             attendancePeriodTo, 
-                            false, 
                             0);
                     if(result){
                         close();

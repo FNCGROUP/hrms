@@ -110,7 +110,6 @@ public class ProcessPayrollComputation {
             String payrollPeriod, 
             String attendancePeriodFrom, 
             String attendancePeriodTo, 
-            boolean editPayroll, 
             int previousPayrollId){
         boolean result = false;
         try{
@@ -194,7 +193,6 @@ public class ProcessPayrollComputation {
 	    
             result = payrollService.insertPayrollAndAttendance(payroll, 
                     timekeepingList, 
-                    editPayroll, 
                     adjustment, 
                     previousPayrollId);
         } catch (NumberFormatException e) {

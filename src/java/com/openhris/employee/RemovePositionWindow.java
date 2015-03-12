@@ -5,8 +5,8 @@
  */
 package com.openhris.employee;
 
-import com.openhris.employee.service.PositionHistoryService;
-import com.openhris.employee.serviceprovider.PositionHistoryServiceImpl;
+import com.openhris.employee.service.PostEmploymentInformationService;
+import com.openhris.employee.serviceprovider.PostEmploymentInformationServiceImpl;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -17,7 +17,7 @@ import com.vaadin.ui.Window;
  */
 public class RemovePositionWindow extends Window implements Button.ClickListener {
 
-    PositionHistoryService positionHistoryService = new PositionHistoryServiceImpl();
+    PostEmploymentInformationService positionHistoryService = new PostEmploymentInformationServiceImpl();
     private int id;
     
     public RemovePositionWindow(int id) {

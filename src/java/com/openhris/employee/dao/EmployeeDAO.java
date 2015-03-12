@@ -9,8 +9,9 @@ import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.employee.model.Employee;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -41,7 +42,7 @@ public class EmployeeDAO {
                     + "lastname FROM employee "
                     + "WHERE currentStatus IS NULL ORDER BY lastname ASC ");
             while(rs.next()){
-                PositionHistory p = new PositionHistory();
+                PostEmploymentInformationBean p = new PostEmploymentInformationBean();
                 p.setEmployeeId(rs.getString("employeeId"));
                 p.setFirstname(rs.getString("firstname"));
                 p.setMiddlename(rs.getString("middlename"));
@@ -80,7 +81,7 @@ public class EmployeeDAO {
                     + "INNER JOIN corporate_table ct ON tt.corporateId = ct.id "
                     + "WHERE branchId = "+branchId+" AND currentStatus IS NULL ORDER BY lastname ASC");
             while(rs.next()){
-                PositionHistory p = new PositionHistory();
+                PostEmploymentInformationBean p = new PostEmploymentInformationBean();
                 p.setEmployeeId(rs.getString("employeeId"));
                 p.setFirstname(rs.getString("firstname"));
                 p.setMiddlename(rs.getString("middlename"));
@@ -104,5 +105,35 @@ public class EmployeeDAO {
             }
         }
         return employeesListPerBranch;
+    }
+    
+    public String getEmploymentEntryDate(String employeeId){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null; 
+        String date = null;
+        try {
+            pstmt = conn.prepareStatement(" SELECT entryDate FROM employee WHERE "
+                    + "employeeId = ? ");
+            pstmt.setString(1, employeeId);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                date = rs.getString("entryDate");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return date;
     }
 }

@@ -47,7 +47,7 @@ public class AdjustmentWindow extends Window {
         this.adjustment = adjustment;
         
         setCaption("ADJUSTMENTS");
-        setWidth("300px");
+        setWidth("400px");
         
         TabSheet ts = new TabSheet();
         ts.addStyleName("bar");
@@ -95,6 +95,7 @@ public class AdjustmentWindow extends Window {
                         remarksForAdjustment);
                 if(result){
                     adjustmentTable();
+                    close();
                     getWindow().showNotification("Successfully added adjustment.", Window.Notification.TYPE_HUMANIZED_MESSAGE);
                 }
             }
@@ -106,12 +107,17 @@ public class AdjustmentWindow extends Window {
         vlayout = new VerticalLayout();
         vlayout.setMargin(true);
         vlayout.setSpacing(true);
-        vlayout.setCaption("Remove Adjustments");
+        vlayout.setCaption("Adjustments Table");
         
-        Label label = new Label("Remarks: ");
+        Label label = new Label("Remarks: Click ID Column to delete Adjustment");
         vlayout.addComponent(label);
         
         vlayout.addComponent(adjustmentTable());
+        
+        Button closeBtn = new Button("CLOSE");
+        closeBtn.setWidth("100%");
+        closeBtn.addListener(closeBtnListener);
+        vlayout.addComponent(closeBtn);
                 
         ts.addComponent(vlayout);
         addComponent(ts);
@@ -152,6 +158,12 @@ public class AdjustmentWindow extends Window {
                 final Item item = adjustmentTbl.getItem(itemId);
                 
                 double adjustments = utilities.convertStringToDouble(item.getItemProperty("amount").getValue().toString());
+                String remarks = item.getItemProperty("remarks").getValue().toString();
+                
+                if(remarks.equals("edit timekeeping table")){
+                    getWindow().showNotification("You cannot delete adjustment from previous Payroll!", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                }
                 
                 if(event.getPropertyId().equals("id")){
                     Window subWindow = removeAdjustment(utilities.convertStringToInteger(item.getItemProperty("id").getValue().toString()), 
@@ -222,4 +234,11 @@ public class AdjustmentWindow extends Window {
         return adjustment;
     }
     
+    Button.ClickListener closeBtnListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            close();
+        }
+    };
 }

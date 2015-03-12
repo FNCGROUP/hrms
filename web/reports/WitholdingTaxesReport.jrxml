@@ -6,8 +6,15 @@
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT e.tinNo AS tinNo, CONCAT_WS(', ', setNameToUpper(e.lastname), CONCAT_WS(' ', setNameToUpper(e.firstname), setNameToUpper(e.middlename))) AS name, ROUND(s.tax, 2) AS tax, b.name AS branch, tn.name AS tradeName, cn.name AS corporateName, tn.tinNo AS erTinNo, b.address AS address, s.payrollDate AS payrollDate FROM employee e INNER JOIN payroll_table s ON e.employeeId = s.employeeId INNER JOIN branch_table b ON e.branchId = b.id INNER JOIN trade_table tn ON b.tradeId = tn.id INNER JOIN corporate_table cn ON 
-tn.corporateId = cn.id WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND s.tax != 0 ORDER BY e.lastname ASC]]>
+		<![CDATA[SELECT e.tinNo AS tinNo, CONCAT_WS(', ', setNameToUpper(e.lastname), CONCAT_WS(' ', setNameToUpper(e.firstname), setNameToUpper(e.middlename))) AS name, ROUND(s.tax, 2) AS tax, b.name AS branch, tn.name AS tradeName, cn.name AS corporateName, tn.tinNo AS erTinNo, b.address AS address, s.payrollDate AS payrollDate 
+FROM employee e 
+INNER JOIN payroll_table s ON e.employeeId = s.employeeId 
+INNER JOIN branch_table b ON e.branchId = b.id 
+INNER JOIN trade_table tn ON b.tradeId = tn.id 
+INNER JOIN corporate_table cn ON 
+tn.corporateId = cn.id 
+WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) AND 
+(SELECT branchId FROM employee_contribution_main WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND s.tax != 0 ORDER BY e.lastname ASC]]>
 	</queryString>
 	<field name="tinNo" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>

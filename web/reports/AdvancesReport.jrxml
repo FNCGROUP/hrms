@@ -4,8 +4,7 @@
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
-		<!-- <defaultValueExpression><![CDATA["F:\\FREELANCEPROJECTS\\hrms\\web\\reports\\"]]></defaultValueExpression> -->
-                <defaultValueExpression><![CDATA["../reportsJasper/"]]></defaultValueExpression>
+		<defaultValueExpression><![CDATA["../reportsJasper/"]]></defaultValueExpression>
 	</parameter>
 	<parameter name="CORPORATE_NAME" class="java.lang.String">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
@@ -25,7 +24,8 @@
 	pr.attendancePeriodTo AS dateTo, 
 	pr.salaryId AS payrollId
 FROM payroll_register pr 
-WHERE advances != 0
+WHERE advances != 0 
+AND (pr.currentStatus != 'removed' OR pr.currentStatus IS NULL)
 AND pr.corporateNAme = $P{CORPORATE_NAME} 
 AND payrollDate = $P{PAYROLL_DATE} 
 ORDER BY pr.name ASC]]>

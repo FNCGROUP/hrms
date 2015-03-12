@@ -1045,8 +1045,7 @@ public class PayrollDAO {
     }
     
     public boolean insertPayrollAndAttendance(Payroll payroll, 
-            List<Timekeeping> insertAttendanceList, 
-            boolean EDIT_PAYROLL, 
+            List<Timekeeping> insertAttendanceList,  
             double adjustments, 
             int previousPayrollId){
         Connection conn = getConnection.connection();

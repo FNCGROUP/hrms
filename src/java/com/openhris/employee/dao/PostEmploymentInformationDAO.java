@@ -8,7 +8,7 @@ package com.openhris.employee.dao;
 
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,21 +23,21 @@ import java.util.logging.Logger;
  *
  * @author jetdario
  */
-public class PositionHistoryDAO {
+public class PostEmploymentInformationDAO {
     GetSQLConnection getConnection = new GetSQLConnection(); 
     OpenHrisUtilities util = new OpenHrisUtilities();
     
-    public List<PositionHistory> getPositionHistory(String employeeId){
+    public List<PostEmploymentInformationBean> getPositionHistory(String employeeId){
         Connection conn = getConnection.connection();
         Statement stmt = null;
         ResultSet rs = null;         
-        List<PositionHistory> positionList = new ArrayList<PositionHistory>();
+        List<PostEmploymentInformationBean> positionList = new ArrayList<PostEmploymentInformationBean>();
         
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM employee_position_history WHERE employeeId = '"+employeeId+"' ORDER BY id DESC ");
             while(rs.next()){
-                PositionHistory positionHistory = new PositionHistory();
+                PostEmploymentInformationBean positionHistory = new PostEmploymentInformationBean();
                 positionHistory.setPositionId(util.convertStringToInteger(rs.getString("id")));
                 positionHistory.setPosition(rs.getString("position"));
                 positionHistory.setCompany(rs.getString("corporate"));
@@ -48,7 +48,7 @@ public class PositionHistoryDAO {
                 positionList.add(positionHistory);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if(conn != null || !conn.isClosed()){
@@ -57,14 +57,14 @@ public class PositionHistoryDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         return positionList;
     }
     
-    public boolean updatePositionHistory(String employeeId, PositionHistory positionHistory, boolean isEdit, int positionId){
+    public boolean updatePositionHistory(String employeeId, PostEmploymentInformationBean positionHistory, boolean isEdit, int positionId){
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         boolean result = false;
@@ -92,7 +92,7 @@ public class PositionHistoryDAO {
                 pstmt.setInt(7, positionHistory.getBranchId());
                 pstmt.setInt(8, positionHistory.getPositionId());
                 pstmt.executeUpdate();
-                
+                                
                 pstmt = conn.prepareStatement("UPDATE employee SET branchId = ? WHERE employeeId = ?");
                 pstmt.setInt(1, positionHistory.getBranchId());
                 pstmt.setString(2, employeeId);
@@ -122,9 +122,9 @@ public class PositionHistoryDAO {
             try {
                 conn.rollback();
             } catch (SQLException ex1) {
-                Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex1);
+                Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex1);
             }
-            Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if(conn != null || !conn.isClosed()){
@@ -132,7 +132,7 @@ public class PositionHistoryDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -150,7 +150,7 @@ public class PositionHistoryDAO {
             
             result = true;
         } catch (SQLException ex) {
-            Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if(conn != null || !conn.isClosed()){
@@ -158,7 +158,7 @@ public class PositionHistoryDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
@@ -179,7 +179,7 @@ public class PositionHistoryDAO {
                         
             result = true;
         } catch (SQLException ex) {
-            Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if(conn != null || !conn.isClosed()){
@@ -187,24 +187,24 @@ public class PositionHistoryDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         return result;
     }
     
-    public List<PositionHistory> getPositionHistoryById(int positionId){
+    public List<PostEmploymentInformationBean> getPositionHistoryById(int positionId){
         Connection conn = getConnection.connection();
         Statement stmt = null;
         ResultSet rs = null;         
-        List<PositionHistory> positionList = new ArrayList<PositionHistory>();
+        List<PostEmploymentInformationBean> positionList = new ArrayList<PostEmploymentInformationBean>();
         
         try {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT * FROM employee_position_history WHERE id = "+positionId+" ");
             while(rs.next()){
-                PositionHistory positionHistory = new PositionHistory();
+                PostEmploymentInformationBean positionHistory = new PostEmploymentInformationBean();
                 positionHistory.setPositionId(util.convertStringToInteger(rs.getString("id")));
                 positionHistory.setPosition(rs.getString("position"));
                 positionHistory.setCompany(rs.getString("corporate"));
@@ -215,7 +215,7 @@ public class PositionHistoryDAO {
                 positionList.add(positionHistory);
             }
         } catch (SQLException ex) {
-            Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 if(conn != null || !conn.isClosed()){
@@ -224,10 +224,38 @@ public class PositionHistoryDAO {
                     conn.close();
                 }
             } catch (SQLException ex) {
-                Logger.getLogger(PositionHistoryDAO.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
         return positionList;
+    }
+
+    public boolean editDateEntryFromEmployment(String employeeId, String entryDate){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE employee SET entryDate = ? WHERE employeeId = ? ");
+            pstmt.setString(1, entryDate);
+            pstmt.setString(2, employeeId);
+            pstmt.executeUpdate();
+                        
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PostEmploymentInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 }

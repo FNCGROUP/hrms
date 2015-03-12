@@ -76,7 +76,7 @@ public class PayrollMainUI extends VerticalLayout {
         vsplit.setSizeFull();
         vsplit.setLocked(true);
         
-        vsplit.setSplitPosition(14, Sizeable.UNITS_PERCENTAGE);
+        vsplit.setSplitPosition(90, Sizeable.UNITS_PIXELS);
         
         GridLayout glayout = new GridLayout(2, 1);
         glayout.setWidth("60%");

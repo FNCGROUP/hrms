@@ -9,7 +9,7 @@ import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.contributions.model.Phic;
 import com.openhris.contributions.model.Sss;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import com.openhris.payroll.dao.PayrollDAO;
 import com.openhris.payroll.model.Payroll;
 import com.openhris.timekeeping.model.Timekeeping;
@@ -33,7 +33,7 @@ public class ServiceInsertDAO {
     ServiceGetDAO serviceGet = new ServiceGetDAO();
     PayrollDAO payrollDAO = new PayrollDAO();
     
-    public boolean insertNewEmployee(List<PositionHistory> insertList){
+    public boolean insertNewEmployee(List<PostEmploymentInformationBean> insertList){
         Connection conn = getConnection.connection();
         boolean result = false;
         PreparedStatement pstmt = null;
@@ -41,7 +41,7 @@ public class ServiceInsertDAO {
         GenerateCompanyId companyId = new GenerateCompanyId();
         try {
             conn.setAutoCommit(false);
-            for(PositionHistory ph : insertList){
+            for(PostEmploymentInformationBean ph : insertList){
                 String employeeId = companyId.generateId(ph.getCompany(), ph.getTrade(), 
                         util.convertDateFormat(ph.getEntryDate().toString()));
                 

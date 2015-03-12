@@ -6,7 +6,7 @@ package com.openhris.employee.service;
 
 import com.openhris.employee.model.Employee;
 import com.openhris.employee.model.EmploymentInformation;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import java.util.List;
 
 /**
@@ -25,13 +25,13 @@ public interface EmployeeService {
     
     public List<Employee> getEmployeePerBranch(int branchId);
     
-    public List<PositionHistory> getEmployeePositionHistory(String employeeId);
+    public List<PostEmploymentInformationBean> getEmployeePositionHistory(String employeeId);
     
     public List<EmploymentInformation> getEmployeeEmploymentInformation(String employeeId);
     
-    public boolean insertNewEmployee(List<PositionHistory> insertList);
+    public boolean insertNewEmployee(List<PostEmploymentInformationBean> insertList);
     
-    public boolean updateEmployeeEmploymentInformation(String employeeId, List<PositionHistory> updateList);
+    public boolean updateEmployeeEmploymentInformation(String employeeId, List<PostEmploymentInformationBean> updateList);
     
     public boolean checkForDuplicateEmployee(String firstname, String middlename, String lastname);
     

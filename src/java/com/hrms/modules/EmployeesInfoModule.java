@@ -10,7 +10,7 @@ import com.hrms.classes.CorporateName;
 import com.hrms.classes.TradeName;
 import com.hrms.queries.GetSQLQuery;
 import com.openhris.dao.ServiceGetDAO;
-import com.openhris.employee.model.PositionHistory;
+import com.openhris.employee.model.PostEmploymentInformationBean;
 import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
 import com.openhris.employee.service.EmployeeService;
 import com.vaadin.data.Property;
@@ -104,9 +104,9 @@ public class EmployeesInfoModule extends VerticalLayout{
         employeesTbl.addContainerProperty("trade name", String.class, null);
         employeesTbl.addContainerProperty("branch", String.class, null);
         
-        List<PositionHistory> employeeList = serviceDAO.getEmployeePerBranch(branchId);
+        List<PostEmploymentInformationBean> employeeList = serviceDAO.getEmployeePerBranch(branchId);
         int i = 0; 
-        for(PositionHistory p : employeeList){
+        for(PostEmploymentInformationBean p : employeeList){
             String name = p.getLastname()+", "+p.getFirstname()+" "+p.getMiddlename();
             employeesTbl.addItem(new Object[]{
                 p.getEmployeeId(), 

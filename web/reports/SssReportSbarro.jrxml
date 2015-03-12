@@ -6,7 +6,9 @@
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT * FROM sss_schedule WHERE (SELECT branchId FROM employee_contribution_main WHERE employeeId = sss_schedule.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND payrollDate = $P{PAYROLL_DATE} AND (corporateName = 'favorite italian fastfood, inc.' OR corporateName = 'big italian serving, inc.' OR corporateName = 'favorite pizzas, inc.' OR corporateName = 'fresh italian serving, inc.' OR corporateName = 'favorite italian eatery, inc.') ORDER BY name ASC]]>
+		<![CDATA[SELECT * FROM sss_schedule 
+WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND 
+(SELECT branchId FROM employee_contribution_main WHERE employeeId = sss_schedule.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND payrollDate = $P{PAYROLL_DATE} AND (corporateName = 'favorite italian fastfood, inc.' OR corporateName = 'big italian serving, inc.' OR corporateName = 'favorite pizzas, inc.' OR corporateName = 'fresh italian serving, inc.' OR corporateName = 'favorite italian eatery, inc.') ORDER BY name ASC]]>
 	</queryString>
 	<field name="sssNo" class="java.lang.String"/>
 	<field name="name" class="java.lang.String"/>

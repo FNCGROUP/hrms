@@ -19,7 +19,7 @@ import com.vaadin.ui.VerticalLayout;
 public class EmployeeInformationUI extends VerticalLayout {
     
     EmployeePersonalInformation employeePersonalInformation;	
-    EmployeePositionHistory employeePositionHistory;
+    PostEmploymentInfomation postEmploymentInfomation;
     EmployeeSalaryInformation employeeSalaryInformation;
     EmployeeAddress employeeAddress;
     EmployeeCharacterReference characterReference;
@@ -43,7 +43,7 @@ public class EmployeeInformationUI extends VerticalLayout {
 	setImmediate(true);
 	       
 	employeePersonalInformation =  new EmployeePersonalInformation(getEmployeeId(), getThisApplication());
-        employeePositionHistory = new EmployeePositionHistory(getEmployeeId());
+        postEmploymentInfomation = new PostEmploymentInfomation(getEmployeeId());
         employeeSalaryInformation = new EmployeeSalaryInformation(getEmployeeId());
         employeeAddress = new EmployeeAddress(getEmployeeId());
         characterReference = new EmployeeCharacterReference(getEmployeeId());
@@ -82,12 +82,12 @@ public class EmployeeInformationUI extends VerticalLayout {
 	ts.addComponent(vlayout);
 	
 	vlayout = new VerticalLayout();
-	vlayout.setCaption("Position History");
-	vlayout.addComponent(employeePositionHistory);
+	vlayout.setCaption("Post Employment Info");
+	vlayout.addComponent(postEmploymentInfomation);
 	ts.addComponent(vlayout);
 	
 	vlayout = new VerticalLayout();
-	vlayout.setCaption("Employment Record");
+	vlayout.setCaption("Work History");
 //	vlayout.addComponent(employeePersonalInformation);
 	ts.addComponent(vlayout);
 	

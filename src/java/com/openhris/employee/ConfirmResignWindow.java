@@ -5,8 +5,8 @@
  */
 package com.openhris.employee;
 
-import com.openhris.employee.service.PositionHistoryService;
-import com.openhris.employee.serviceprovider.PositionHistoryServiceImpl;
+import com.openhris.employee.service.PostEmploymentInformationService;
+import com.openhris.employee.serviceprovider.PostEmploymentInformationServiceImpl;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Window;
 
@@ -16,7 +16,7 @@ import com.vaadin.ui.Window;
  */
 public class ConfirmResignWindow extends Window implements Button.ClickListener {
 
-    PositionHistoryService positionHistoryService = new PositionHistoryServiceImpl();
+    PostEmploymentInformationService positionHistoryService = new PostEmploymentInformationServiceImpl();
     private String employeeId;
     private String endDate;
     
@@ -24,7 +24,9 @@ public class ConfirmResignWindow extends Window implements Button.ClickListener 
         this.employeeId = employeeId;
         this.endDate = endDate;
         setCaption("END DATE (RESIGN)");
+        setModal(true);
         setResizable(false);
+        center();
         
         Button resignBtn = new Button("CONFIRM ACTION?");
         resignBtn.setWidth("100%");

@@ -10,7 +10,7 @@ import java.util.Date;
  *
  * @author jet
  */
-public class PositionHistory extends EmploymentInformation {
+public class PostEmploymentInformationBean extends EmploymentInformation {
     
         private int positionId;
 	private String company;
