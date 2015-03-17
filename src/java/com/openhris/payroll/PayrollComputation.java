@@ -34,23 +34,38 @@ public class PayrollComputation {
     
     double totalAbsences;
     
-    public double getBasicSalary(double salary, String wageEntry){
+    /**
+     * 
+     * @param wage employment wage
+     * @param wageEntry daily/monthly
+     * @return
+     * basic salary of an employee.
+     */
+    public double getBasicSalary(double wage, String wageEntry){
         double basic_salary;    
         if(wageEntry.equals("daily")){            
-//            basic_salary = Math.round((((salary * 314) / 12)*100.0)/100.0);
-            basic_salary = util.roundOffToTwoDecimalPlaces((salary * 314) / 12);
+            basic_salary = util.roundOffToTwoDecimalPlaces((wage * 314) / 12);
         }else{
-            basic_salary = salary;
+            basic_salary = wage;
         }
         return basic_salary;    
     }
     
+    /**
+     * 
+     * @param wageEntry daily/monthly
+     * @param policyList sick-leave, holiday, day-off, etc..
+     * @param wage employment wage
+     * @param dateList attendance date list
+     * @param employeeId company ID
+     * @return 
+     * half month salary of an employee. 
+     * 
+     */
     public double getHalfMonthSalary(String wageEntry, List policyList, double wage, List dateList, String employeeId){
         double halfMonthSalary = 0;
-        
-        String holiday = null;        
-        
-        if(wageEntry.equals("daily")){            
+                
+        if(wageEntry.equals("daily")){        
             for(int i = 0; i < policyList.size(); i++){
                 if(policyList.get(i).equals("null") || policyList.get(i).equals("working-day-off") || 
                         policyList.get(i).equals("working-holiday") || policyList.get(i).equals("paid-vacation-leave") || 
@@ -58,7 +73,7 @@ public class PayrollComputation {
                         policyList.get(i).toString().isEmpty()){                    
                     halfMonthSalary = halfMonthSalary + wage;                   
                 }
-            }            
+            }    
         }else{
             String dateEmployed = employeeService.getEmploymentEntryDate(employeeId);            
             boolean checkIfResigned = employeeService.getEmployeeCurrentStatus(employeeId) != null;
@@ -92,13 +107,11 @@ public class PayrollComputation {
             }
             
         }
-//        return new Double(df.format(halfMonthSalary));
         return util.roundOffToTwoDecimalPlaces(halfMonthSalary);
     }
     
     public double getTaxableSalary(double wage, String wageEntry, List policyList, double halfMonthSalary){        
         double absences = 0;
-//        double totalAbsences = 0.0;
         double taxableSalary = 0;
         
         if(wageEntry.equals("daily")){            
@@ -122,7 +135,6 @@ public class PayrollComputation {
             totalAbsences = absences;
         }
         
-//        return new Double(df.format(taxableSalary));
         return util.roundOffToTwoDecimalPlaces(taxableSalary);
     }  
     
@@ -170,7 +182,6 @@ public class PayrollComputation {
                 Logger.getLogger(com.openhris.payroll.PayrollComputation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-//        return new Double(df.format(tax));
         return util.roundOffToTwoDecimalPlaces(tax);
     }
     
@@ -184,7 +195,6 @@ public class PayrollComputation {
                 }
             }            
         }else{
-//            double allowance_entry_per_day = new Double(df.format((allowance * 12)/314));
             double allowance_entry_per_day = util.roundOffToTwoDecimalPlaces((allowance * 12)/314);
             Double halfAllowance = allowance / 2;
             for(int i = 0; i < policyList.size(); i++){
@@ -198,7 +208,6 @@ public class PayrollComputation {
             }
             halfmonth_allowance = halfAllowance;
         }
-//        return new Double(df.format(halfmonth_allowance));
         return util.roundOffToTwoDecimalPlaces(halfmonth_allowance);
     }
     
@@ -259,7 +268,6 @@ public class PayrollComputation {
     }
     
     public double getTotalAbsences(){
-//        return new Double(df.format(totalAbsences));
         return util.roundOffToTwoDecimalPlaces(totalAbsences);
     }
     

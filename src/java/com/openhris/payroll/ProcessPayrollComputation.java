@@ -71,13 +71,13 @@ public class ProcessPayrollComputation {
     }
     
     public void initVariables(){
-        employmentWage = employeeService.getEmploymentWage(employeeId);
-        employmentWageStatus = employeeService.getEmploymentWageStatus(employeeId);
-        employmentWageEntry = employeeService.getEmploymentWageEntry(employeeId);
-        allowance = employeeService.getEmploymentAllowance(employeeId);
-        allowanceEntry = employeeService.getEmploymentAllowanceEntry(employeeId);
-        allowanceForLiquidation = employeeService.getEmploymentAllowanceForLiquidation(employeeId);
-        totalDependent = employeeService.getEmployeeTotalDependent(employeeId);
+        employmentWage = employeeService.getEmploymentWage(getEmployeeId());
+        employmentWageStatus = employeeService.getEmploymentWageStatus(getEmployeeId());
+        employmentWageEntry = employeeService.getEmploymentWageEntry(getEmployeeId());
+        allowance = employeeService.getEmploymentAllowance(getEmployeeId());
+        allowanceEntry = employeeService.getEmploymentAllowanceEntry(getEmployeeId());
+        allowanceForLiquidation = employeeService.getEmploymentAllowanceForLiquidation(getEmployeeId());
+        totalDependent = employeeService.getEmployeeTotalDependent(getEmployeeId());
     }
     
     public void initVariablesForComputation(List<Timekeeping> tkeep){ 
@@ -114,8 +114,8 @@ public class ProcessPayrollComputation {
         boolean result = false;
         try{
             Payroll payroll = new Payroll();
-            payroll.setEmployeeId(employeeId);
-            payroll.setBranchId(branchId);
+            payroll.setEmployeeId(getEmployeeId());
+            payroll.setBranchId(getBranchId());
             payroll.setPayrollDate(util.parsingDate(payrollDate));
             payroll.setPayrollPeriod(payrollPeriod);
             payroll.setAttendancePeriodFrom(util.parsingDate(attendancePeriodFrom));
@@ -133,7 +133,7 @@ public class ProcessPayrollComputation {
             double basicSalary = sal.getBasicSalary(employmentWage, employmentWageEntry);
             payroll.setBasicSalary(basicSalary);
             
-            double halfMonthSalary = sal.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, employeeId) + getTotalNonWorkingHolidayPay();
+            double halfMonthSalary = sal.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, getEmployeeId()) + getTotalNonWorkingHolidayPay();
             payroll.setHalfMonthSalary(halfMonthSalary);
                       
             double taxableSalary = 0;
@@ -202,11 +202,15 @@ public class ProcessPayrollComputation {
         return result;
     }    
     
-    private double getTotalNonWorkingHolidayPay(){
+    double getTotalNonWorkingHolidayPay(){
         return totalNonWorkingHolidayPaid;
     }
     
-    private String getEmployeeId(){
+    String getEmployeeId(){
         return employeeId;
+    }
+    
+    int getBranchId(){
+        return branchId;
     }
 }

@@ -26,6 +26,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -333,7 +334,7 @@ public class EditAttendanceTableContainerWindow extends Window {
             
             List<Timekeeping> timekeepingListByRowData = timekeepingService.getTimekeepingRowData(
                 utilities.convertDateFormat(getDateList().get(i).toString()), 
-                payrollId);
+                getPayrollId());
             for(Timekeeping t : timekeepingListByRowData){
                 String policy;
                 String holiday;
@@ -355,10 +356,10 @@ public class EditAttendanceTableContainerWindow extends Window {
                 undertime.setValue(t.getUndertime());
                 overtime.setValue(t.getOvertime());
                 nightDifferential.setValue(t.getNightDifferential());
-                    
+                    System.out.println("list if date: "+getDateList().get(i));
                 table.addItem(new Object[]{
                     edit, 
-                    utilities.convertDateFormat(dateList.get(i).toString()), 
+                    utilities.convertDateFormat(getDateList().get(i).toString()), 
                     policy, holiday, 
                     premium, lates, 
                     undertime, overtime, 
@@ -391,11 +392,6 @@ public class EditAttendanceTableContainerWindow extends Window {
                 
                 if(event.getPropertyId().equals("policy")){
                     if(editRow){
-//                        final Window newWindow = policyWindow(holidayList, item);
-//                        if(newWindow.getParent() == null){
-//                            getApplication().getMainWindow().addWindow(newWindow);
-//                        }      
-                        
                         Window sub = new AttendancePolicyWindow(holidayList, 
                                 item, 
                                 getEmploymentWageEntry(), 
@@ -427,11 +423,12 @@ public class EditAttendanceTableContainerWindow extends Window {
                 try{                                       
                     Collection attendanceTableCollection = table.getContainerDataSource().getItemIds();
                     List<Timekeeping> attendanceList = new ArrayList<Timekeeping>();
-                    for(int i = 0; i < attendanceTableCollection.size(); i++){
-                        String str = table.getItem(i).toString();
+                    Iterator iterator = attendanceTableCollection.iterator();
+                    while(iterator.hasNext()){
+                        String str = table.getItem(iterator.next()).toString();
                         String[] attStr = str.split(" ");
-                        List<String> tkeepList = new ArrayList<String>(Arrays.asList(attStr));
-			
+                        List<String> tkeepList = new ArrayList<String>(Arrays.asList(attStr));                                                
+
                         Timekeeping t = new Timekeeping();
                         t.setAttendanceDate(utilities.parsingDate(tkeepList.get(1)));
                         t.setPolicy(tkeepList.get(2));
@@ -451,6 +448,30 @@ public class EditAttendanceTableContainerWindow extends Window {
                         t.setNonWorkingHolidayPaid(utilities.convertStringToDouble(tkeepList.get(16)));
                         attendanceList.add(t);
                     }
+//                    for(int i = 0; i < attendanceTableCollection.size(); i++){
+//                        String str = table.getItem(i).toString();
+//                        String[] attStr = str.split(" ");
+//                        List<String> tkeepList = new ArrayList<String>(Arrays.asList(attStr));
+//
+//                        Timekeeping t = new Timekeeping();
+//                        t.setAttendanceDate(utilities.parsingDate(tkeepList.get(1)));
+//                        t.setPolicy(tkeepList.get(2));
+//                        t.setHoliday(tkeepList.get(3));
+//                        t.setPremium(utilities.convertStringToBoolean(tkeepList.get(4)));
+//                        t.setLates(utilities.convertStringToDouble(tkeepList.get(5)));
+//                        t.setUndertime(utilities.convertStringToDouble(tkeepList.get(6)));
+//                        t.setOvertime(utilities.convertStringToDouble(tkeepList.get(7)));
+//                        t.setNightDifferential(utilities.convertStringToDouble(tkeepList.get(8)));
+//                        t.setLateDeduction(utilities.convertStringToDouble(tkeepList.get(9)));
+//                        t.setUndertimeDeduction(utilities.convertStringToDouble(tkeepList.get(10)));
+//                        t.setOvertimePaid(utilities.convertStringToDouble(tkeepList.get(11)));
+//                        t.setNightDifferentialPaid(utilities.convertStringToDouble(tkeepList.get(12)));
+//                        t.setLegalHolidayPaid(utilities.convertStringToDouble(tkeepList.get(13)));
+//                        t.setSpecialHolidayPaid(utilities.convertStringToDouble(tkeepList.get(14)));
+//                        t.setWorkingDayOffPaid(utilities.convertStringToDouble(tkeepList.get(15)));
+//                        t.setNonWorkingHolidayPaid(utilities.convertStringToDouble(tkeepList.get(16)));
+//                        attendanceList.add(t);
+//                    }
                     ProcessPayrollComputation processPayroll = new ProcessPayrollComputation(getEmployeeId(), getBranchId());
                     processPayroll.initVariables();
                     processPayroll.initVariablesForComputation(attendanceList);
@@ -475,114 +496,7 @@ public class EditAttendanceTableContainerWindow extends Window {
         
         return vlayout;
     }
-    
-//    private Window policyWindow(final String[] holidayList, final Item item){
-//        VerticalLayout vlayout = new VerticalLayout();
-//        vlayout.setSpacing(true);
-//        vlayout.setMargin(true);
-//        
-//        final Window subWindow = new Window("CHANGE POLICY", vlayout);
-//        subWindow.setWidth("225px");
-//                
-//        final ComboBox policy = dropDown.populateAttendancePolicyDropDownList(new ComboBox());
-//        policy.setWidth("100%");
-//        policy.setNullSelectionAllowed(true);              
-//        policy.setImmediate(true);
-//        subWindow.addComponent(policy);
-//        
-//        final ComboBox holidayType = new ComboBox("Type: ");
-//        holidayType.setWidth("100%");
-//        holidayType.setNullSelectionAllowed(false);
-//        holidayType.setVisible(false);
-//        holidayType.setImmediate(true);
-//        for(String temp : holidayList){
-//            holidayType.addItem(temp);
-//        }
-//        policy.addListener(new Property.ValueChangeListener() {
-//
-//            @Override
-//            public void valueChange(Property.ValueChangeEvent event) {
-//                if(event.getProperty().getValue() == null){  
-//                    holidayType.setVisible(false);
-//                    holidayType.removeAllItems();
-//                    for(String temp : holidayList){
-//                        holidayType.addItem(temp);
-//                    }
-//                } else if(event.getProperty().getValue().toString().equals("holiday") || 
-//                        event.getProperty().getValue().toString().equals("working-holiday")){
-//                    holidayType.setVisible(true);
-//                } else if(event.getProperty().getValue().toString().equals("working-day-off")){
-//                    double additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
-//                    item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
-//                } else{
-//                    holidayType.removeAllItems();
-//                    for(String temp : holidayList){
-//                        holidayType.addItem(temp);
-//                    }
-//                    holidayType.setVisible(false);
-//                }
-//            }
-//            
-//        });
-//        holidayType.addListener(new Property.ValueChangeListener() {
-//
-//            @Override
-//            public void valueChange(Property.ValueChangeEvent event) {
-//                double additionalHolidayPay;
-//                if(policy.getValue() == null){                    
-//                } else if(policy.getValue().equals("working-holiday")){
-//                    if(event.getProperty().getValue().toString().equals("legal-holiday")){
-//                        additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
-//                        item.getItemProperty("lholiday").setValue(new Double(df.format(additionalHolidayPay)));
-//                        item.getItemProperty("sholiday").setValue(0.0);
-//                    }else{
-//                        additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
-//                        item.getItemProperty("sholiday").setValue(new Double(df.format(additionalHolidayPay)));
-//                        item.getItemProperty("lholiday").setValue(0.0);
-//                    }
-//                }else if(policy.getValue().equals("holiday")){
-//                    if(event.getProperty().getValue().toString().equals("legal-holiday")){
-//                        additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
-//                        item.getItemProperty("psday").setValue(new Double(df.format(additionalHolidayPay)));                            
-//                    }else{
-//                        item.getItemProperty("psday").setValue(0.0);
-//                    }
-//                }
-//            }
-//            
-//        });
-//        subWindow.addComponent(holidayType);
-//        
-//        Button button = new Button("UPDATE POLICY");
-//        button.setWidth("100%");
-//        button.addListener(new Button.ClickListener() {
-//
-//            @Override
-//            public void buttonClick(Button.ClickEvent event) {
-//                String policyStr;
-//                if(policy.getValue() == null || policy.getValue().toString().isEmpty()){
-//                    policyStr = "";
-//                }else{
-//                    policyStr = policy.getValue().toString();
-//                }
-//                if(policyStr.equals("holiday") || policyStr.equals("working-holiday")){
-//                    if(holidayType.getValue() == null){
-//                        getWindow().showNotification("Select a Holiday type!", Window.Notification.TYPE_ERROR_MESSAGE);
-//                        return;
-//                    }
-//                }
-//                item.getItemProperty("policy").setValue(policyStr);
-//                item.getItemProperty("holidays").setValue(holidayType.getValue());                
-//                
-//                (subWindow.getParent()).removeWindow(subWindow);
-//            }
-//            
-//        });
-//        subWindow.addComponent(button);
-//        
-//        return subWindow;
-//    }
-    
+        
     String getEmployeesName(){
         return name;
     }
