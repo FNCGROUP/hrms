@@ -15,4 +15,7 @@ public interface CalendarService {
     
     public List<BasicEvent> getAllEvents();
     
+    public List<BasicEvent> getEventById();
+    
+    public boolean addNewEvent(BasicEvent basicEvent);
 }

@@ -154,7 +154,7 @@ public class MainApp extends Application {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Window sub = new AboutHRMS();
+                Window sub = new AboutHRIS();
                 if(sub.getParent() == null){
                     window.getWindow().addWindow(sub);
                 }

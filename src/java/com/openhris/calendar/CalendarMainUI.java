@@ -14,12 +14,10 @@ import com.vaadin.addon.calendar.ui.Calendar;
 import com.vaadin.addon.calendar.ui.CalendarComponentEvents;
 import com.vaadin.addon.calendar.ui.handler.BasicDateClickHandler;
 import com.vaadin.addon.calendar.ui.handler.BasicWeekClickHandler;
-import com.vaadin.data.Item;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
-import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.Select;
 import com.vaadin.ui.TextArea;
@@ -27,7 +25,6 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.text.DateFormatSymbols;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -223,12 +220,11 @@ public class CalendarMainUI extends VerticalLayout {
                 prevButton.setVisible(true);
                 
                 if(event.getCalendarEvent() == null){
-                    Window subWindow = scheduleEventWindow(null, null, null, null, null, null, null);
+                    Window subWindow = new CalendarScheduleWindow(0, useSecondResolution);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow); 
-                    }                    
-                    subWindow.setModal(true);
-                    subWindow.center();
+                    }        
+                    subWindow.addListener(scheduleWindowCloseListener);
                 }else{
                     System.out.println(event.getCalendarEvent().getCaption());
                 }                
@@ -295,13 +291,10 @@ public class CalendarMainUI extends VerticalLayout {
             dateEnd = Calendar.getEndOfDay(calendar, dateEnd);
         }
                 
-        Window subWindow = scheduleEventWindow(null, null, null, null, null, null, null);
+        Window subWindow = new CalendarScheduleWindow(0, useSecondResolution);
         if(subWindow.getParent() == null){
             getWindow().addWindow(subWindow); 
-        }                    
-        subWindow.setModal(true);
-        subWindow.center();
-        
+        }                            
     }
 
     public final void calendarEvents(){        
@@ -310,62 +303,7 @@ public class CalendarMainUI extends VerticalLayout {
             cal.addEvent(event);
         } 
     }
-    
-    private Window scheduleEventWindow(String type, 
-            String eventCaption, 
-            String eventDescription, 
-            String eventStartDate, 
-            String eventEndDate, 
-            String eventStyleName, 
-            String eventLocation){
-        VerticalLayout layout = new VerticalLayout();
-        layout.setMargin(true);
-        layout.setSpacing(true);
-
-        final Window subWindow = new Window("New Event", layout);
-        subWindow.setWidth("250px");
-
-        eventType = createEventTypelect();
-        layout.addComponent(eventType);
         
-        startDate = createDateField("Start Date: ");
-        layout.addComponent(startDate);
-        
-        endDate = createDateField("End Date: ");
-        layout.addComponent(endDate);
-        
-        caption = createTextField("Caption: ");
-        layout.addComponent(caption);
-        
-        location = createTextField("Where: ");
-        layout.addComponent(location);
-        
-        description = new TextArea("Description: ");
-        description.setWidth("100%");
-        description.setRows(3);
-        layout.addComponent(description);
-        
-        color = createStyleNameSelect();
-        layout.addComponent(color);
-
-        saveEventButton = new Button("SAVE", saveEventBtnListener);
-        saveEventButton.setWidth("100%");
-//        editEventButton = new Button("Edit", editEventBtnListener);
-        deleteEventButton = new Button("DELETE", deleteEventBtnListener);
-        deleteEventButton.setWidth("100%");
-        
-        HorizontalLayout buttons = new HorizontalLayout();
-        buttons.setSpacing(true);
-        buttons.setWidth("100%");
-        buttons.addComponent(deleteEventButton);
-        buttons.addComponent(saveEventButton);
-//        buttons.addComponent(editEventButton);
-        layout.addComponent(buttons);
-        layout.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
-                
-        return subWindow;
-    }
-    
     private void nextMonth() {
         rollMonth(1);
     }
@@ -492,94 +430,14 @@ public class CalendarMainUI extends VerticalLayout {
         viewMode = Mode.DAY;
         monthButton.setVisible(true);
         weekButton.setVisible(true);
-    }
+    }        
     
-    private DateField createDateField(String caption) {
-        DateField f = new DateField(caption);
-        f.setSizeFull();
-        if (useSecondResolution) {
-            f.setResolution(DateField.RESOLUTION_SEC);
-        } else {
-            f.setResolution(DateField.RESOLUTION_MIN);
-        }
-            return f;
-    }
-    
-    private Select createEventTypelect() {
-        Select s = new Select("Event Type: ");
-        s.setWidth("100%");
-        s.addItem("Legal Holiday");
-        s.addItem("Special Holiday");
-        s.addItem("Birthday");
-        s.addItem("Meeting");
-        s.setNullSelectionAllowed(false);
-        
-        return s;
-    }
-    
-    private Select createStyleNameSelect() {
-        Select s = new Select("Color: ");
-        s.setWidth("100%");
-        s.setNullSelectionAllowed(false);
-        s.addContainerProperty("c", String.class, "");
-        s.setItemCaptionPropertyId("c");
-        Item i = s.addItem("color1");
-        i.getItemProperty("c").setValue("Green");
-        i = s.addItem("color2");
-        i.getItemProperty("c").setValue("Blue");
-        i = s.addItem("color3");
-        i.getItemProperty("c").setValue("Red");
-        i = s.addItem("color4");
-        i.getItemProperty("c").setValue("Orange");
-        s.setImmediate(true);
-        return s;
-    }
-    
-    private TextField createTextField(String caption) {
-        TextField f = new TextField(caption);
-        f.setWidth("100%");
-        f.setNullRepresentation("");
-        return f;
-    }
-    
-    Button.ClickListener saveEventBtnListener = new Button.ClickListener() {
+    Window.CloseListener scheduleWindowCloseListener = new Window.CloseListener() {
 
         @Override
-        public void buttonClick(Button.ClickEvent event) {
-            getWindow().showNotification("SAVE");
+        public void windowClose(Window.CloseEvent e) {
+            BasicEvent basicEvent = new CalendarScheduleWindow().getBasicEvent();
+            cal.addEvent(basicEvent);
         }
     };
-    
-    Button.ClickListener editEventBtnListener = new Button.ClickListener() {
-
-        @Override
-        public void buttonClick(Button.ClickEvent event) {
-            getWindow().showNotification("EDIT");
-        }
-    };
-            
-    Button.ClickListener deleteEventBtnListener = new Button.ClickListener() {
-
-        @Override
-        public void buttonClick(Button.ClickEvent event) {
-            Window sub = getDeleteWindow();
-            sub.setModal(true);
-            if(sub.getParent() == null){
-                getWindow().addWindow(sub);
-            }
-            sub.center();
-        }
-    };
-    
-    Window getDeleteWindow(){
-        Window sub = new Window("DELETE EVENT");
-        sub.setWidth("250px");
-        
-        Button deleteBtn = new Button("DELETE EVENT?");
-        deleteBtn.setWidth("100%");
-        
-        sub.addComponent(deleteBtn);
-        
-        return sub;
-    }
 }

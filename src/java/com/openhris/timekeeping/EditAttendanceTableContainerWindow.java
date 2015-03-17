@@ -78,7 +78,7 @@ public class EditAttendanceTableContainerWindow extends Window {
         this.branchId = branchId;
         this.payrollId = payrollId;
         
-        setCaption("ATTENDANCE TABLE for "+getName());
+        setCaption("ATTENDANCE TABLE for "+getEmployeesName());
         setSizeFull();
         setModal(true);
         center();
@@ -582,6 +582,10 @@ public class EditAttendanceTableContainerWindow extends Window {
 //        
 //        return subWindow;
 //    }
+    
+    String getEmployeesName(){
+        return name;
+    }
     
     public List getDateList() {
         return dateList;

@@ -22,5 +22,15 @@ public class CalendarServiceImpl implements CalendarService{
     public List<BasicEvent> getAllEvents() {
         return calendarDAO.getAllEvents();
     }
+
+    @Override
+    public List<BasicEvent> getEventById() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public boolean addNewEvent(BasicEvent basicEvent) {
+        return calendarDAO.addNewEvent(basicEvent);
+    }
     
 }

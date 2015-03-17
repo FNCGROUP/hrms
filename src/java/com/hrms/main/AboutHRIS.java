@@ -13,10 +13,10 @@ import com.vaadin.ui.Window;
  *
  * @author jetdario
  */
-public class AboutHRMS extends Window {
+public class AboutHRIS extends Window {
 
-    public AboutHRMS() {        
-        setCaption("About HRMS");
+    public AboutHRIS() {        
+        setCaption("About HRIS");
         setWidth("300px");
                 
         VerticalLayout vlayout = new VerticalLayout();

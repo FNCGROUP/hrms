@@ -71,7 +71,7 @@ public class CalendarDAO {
         return eventList;
     }
     
-    public boolean insertNewEvent(BasicEvent basicEvent){
+    public boolean addNewEvent(BasicEvent basicEvent){
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         boolean result = false;
