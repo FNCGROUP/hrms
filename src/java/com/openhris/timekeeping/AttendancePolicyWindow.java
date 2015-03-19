@@ -44,7 +44,7 @@ public class AttendancePolicyWindow extends Window {
         setCaption("CHANGE POLICY");
         setWidth("225px");
         setModal(true);
-        center();
+        center();        
         
         addComponent(getVlayout());
     }
@@ -52,7 +52,10 @@ public class AttendancePolicyWindow extends Window {
     VerticalLayout getVlayout(){
         VerticalLayout vlayout = new VerticalLayout();
         vlayout.setSpacing(true);
-//        vlayout.setMargin(true);
+        
+        if(getEmploymentWageEntry().equals("monthly")){
+            employmentWage = utilities.roundOffToTwoDecimalPlaces((employmentWage * 12) / 314);
+        }
         
         final ComboBox policy = dropDown.populateAttendancePolicyDropDownList(new ComboBox());
         policy.setWidth("100%");
@@ -73,6 +76,10 @@ public class AttendancePolicyWindow extends Window {
             @Override
             public void valueChange(Property.ValueChangeEvent event) {
                 if(event.getProperty().getValue() == null){  
+                    item.getItemProperty("wdo").setValue(0.0);
+                    item.getItemProperty("sholiday").setValue(0.0);
+                    item.getItemProperty("lholiday").setValue(0.0);
+                    item.getItemProperty("psday").setValue(0.0);
                     holidayType.setVisible(false);
                     holidayType.removeAllItems();
                     for(String temp : holidayList){
@@ -80,12 +87,24 @@ public class AttendancePolicyWindow extends Window {
                     }
                 } else if(event.getProperty().getValue().toString().equals("holiday") || 
                     event.getProperty().getValue().toString().equals("working-holiday")){
+                    item.getItemProperty("wdo").setValue(0.0);
+                    item.getItemProperty("sholiday").setValue(0.0);
+                    item.getItemProperty("lholiday").setValue(0.0);
+                    item.getItemProperty("psday").setValue(0.0);
                     holidayType.setVisible(true);
                 } else if(event.getProperty().getValue().toString().equals("working-day-off")){
+                    item.getItemProperty("wdo").setValue(0.0);
+                    item.getItemProperty("sholiday").setValue(0.0);
+                    item.getItemProperty("lholiday").setValue(0.0);
+                    item.getItemProperty("psday").setValue(0.0);
                     holidayType.setVisible(true);
                     double additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
                     item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
                 } else{
+                    item.getItemProperty("wdo").setValue(0.0);
+                    item.getItemProperty("sholiday").setValue(0.0);
+                    item.getItemProperty("lholiday").setValue(0.0);
+                    item.getItemProperty("psday").setValue(0.0);
                     holidayType.removeAllItems();
                     for(String temp : holidayList){
                         holidayType.addItem(temp);
@@ -104,6 +123,7 @@ public class AttendancePolicyWindow extends Window {
                 double multiplePremiumPay;
                 if(policy.getValue() == null){                    
                 } else if(policy.getValue().equals("working-holiday")){
+                    item.getItemProperty("psday").setValue(0.0);
                     if(event.getProperty().getValue().toString().equals("legal-holiday")){
                         additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
                         item.getItemProperty("lholiday").setValue(new Double(df.format(additionalHolidayPay)));
@@ -114,9 +134,15 @@ public class AttendancePolicyWindow extends Window {
                         item.getItemProperty("lholiday").setValue(0.0);
                     }
                 }else if(policy.getValue().equals("holiday")){
+                    item.getItemProperty("lholiday").setValue(0.0);
+                    item.getItemProperty("sholiday").setValue(0.0);
                     if(event.getProperty().getValue().toString().equals("legal-holiday")){
-                        additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                        item.getItemProperty("psday").setValue(new Double(df.format(additionalHolidayPay)));                            
+                        if(getEmploymentWageEntry().equals("daily")){
+                            additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                            item.getItemProperty("psday").setValue(new Double(df.format(additionalHolidayPay))); 
+                        } else {
+                            item.getItemProperty("psday").setValue(0.0);
+                        }                            
                     }else{
                         item.getItemProperty("psday").setValue(0.0);
                     }
