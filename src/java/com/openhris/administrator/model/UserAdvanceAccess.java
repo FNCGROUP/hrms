@@ -20,6 +20,10 @@ public class UserAdvanceAccess extends User {
     private boolean addEvents;
     private boolean adjustPayroll;
     private boolean lockPayroll;
+    private boolean editAttendance;
+    private boolean editSss;
+    private boolean editPhic;
+    private boolean editHdmf;
 
     public boolean isTimekeeping() {
         return timekeeping;
@@ -59,6 +63,22 @@ public class UserAdvanceAccess extends User {
 
     public boolean isLockPayroll(){
         return lockPayroll;
+    }
+
+    public boolean isEditAttendance() {
+        return editAttendance;
+    }
+
+    public boolean isEditSss() {
+        return editSss;
+    }
+
+    public boolean isEditPhic() {
+        return editPhic;
+    }
+
+    public boolean isEditHdmf() {
+        return editHdmf;
     }
     
     public void setTimekeeping(boolean timekeeping) {
@@ -100,4 +120,21 @@ public class UserAdvanceAccess extends User {
     public void setLockPayroll(boolean lockPayroll){
         this.lockPayroll = lockPayroll;
     }
+
+    public void setEditAttendance(boolean editAttendance) {
+        this.editAttendance = editAttendance;
+    }
+
+    public void setEditSss(boolean editSss) {
+        this.editSss = editSss;
+    }
+
+    public void setEditPhic(boolean editPhic) {
+        this.editPhic = editPhic;
+    }
+
+    public void setEditHdmf(boolean editHdmf) {
+        this.editHdmf = editHdmf;
+    }
+    
 }

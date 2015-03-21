@@ -24,8 +24,8 @@ import java.util.logging.Logger;
  */
 public class AuthenticateLogin implements Serializable {
     
-    ConvertionUtilities conUtil = new ConvertionUtilities();
-    OpenHrisUtilities util = new OpenHrisUtilities();
+//    ConvertionUtilities conUtil = new ConvertionUtilities();
+    OpenHrisUtilities utilities = new OpenHrisUtilities();
     GetSQLConnection connect = new GetSQLConnection();
     Connection conn;
         
@@ -43,7 +43,7 @@ public class AuthenticateLogin implements Serializable {
             while(rs.next()){
                 GlobalVariables.setUsername(rs.getString("username_"));
                 GlobalVariables.setUserRole(rs.getString("userRole"));
-                GlobalVariables.setUserId(util.convertStringToInteger(rs.getString("id")));
+                GlobalVariables.setUserId(utilities.convertStringToInteger(rs.getString("id")));
                 result = true;                
             }
             
@@ -51,23 +51,27 @@ public class AuthenticateLogin implements Serializable {
                 stmt = conn.createStatement();
                 rs = stmt.executeQuery(queryUserAccess);
                 while(rs.next()){
-                    UserAccessControl.setTimekeeping(util.convertStringToBoolean(rs.getString("timekeeping")));
-                    UserAccessControl.setContributions(util.convertStringToBoolean(rs.getString("contributions")));
-                    UserAccessControl.setCashBond(util.convertStringToBoolean(rs.getString("cashBond")));
-                    UserAccessControl.setAdjustment(util.convertStringToBoolean(rs.getString("adjustment")));
-                    UserAccessControl.setAdvances(util.convertStringToBoolean(rs.getString("advances")));
-                    UserAccessControl.setPayroll(util.convertStringToBoolean(rs.getString("payroll")));
-                    UserAccessControl.setEditEmployeesInfo(util.convertStringToBoolean(rs.getString("editEmployeesInfo")));
-                    UserAccessControl.setAddEvents(conUtil.convertStringToBoolean(rs.getString("addEvents")));
-                    UserAccessControl.setAdjustPayroll(util.convertStringToBoolean(rs.getString("adjustPayroll")));
-                    UserAccessControl.setLockPayroll(util.convertStringToBoolean(rs.getString("lockPayroll")));
+                    UserAccessControl.setTimekeeping(utilities.convertStringToBoolean(rs.getString("timekeeping")));
+                    UserAccessControl.setContributions(utilities.convertStringToBoolean(rs.getString("contributions")));
+                    UserAccessControl.setCashBond(utilities.convertStringToBoolean(rs.getString("cashBond")));
+                    UserAccessControl.setAdjustment(utilities.convertStringToBoolean(rs.getString("adjustment")));
+                    UserAccessControl.setAdvances(utilities.convertStringToBoolean(rs.getString("advances")));
+                    UserAccessControl.setPayroll(utilities.convertStringToBoolean(rs.getString("payroll")));
+                    UserAccessControl.setEditEmployeesInfo(utilities.convertStringToBoolean(rs.getString("editEmployeesInfo")));
+                    UserAccessControl.setAddEvents(utilities.convertStringToBoolean(rs.getString("addEvents")));
+                    UserAccessControl.setAdjustPayroll(utilities.convertStringToBoolean(rs.getString("adjustPayroll")));
+                    UserAccessControl.setLockPayroll(utilities.convertStringToBoolean(rs.getString("lockPayroll")));
+                    UserAccessControl.setEditAttendance(utilities.convertStringToBoolean(rs.getString("isEditAttendance")));
+                    UserAccessControl.setEditSss(utilities.convertStringToBoolean(rs.getString("isEditSss")));
+                    UserAccessControl.setEditPhic(utilities.convertStringToBoolean(rs.getString("isEditPhic")));
+                    UserAccessControl.setEditHdmf(utilities.convertStringToBoolean(rs.getString("isEditHdmf")));
                  
-                    UserAccessControl.setMainMenu(util.convertStringToBoolean(rs.getString("mainMenu")));
-                    UserAccessControl.setTimekeepingMenu(util.convertStringToBoolean(rs.getString("timekeepingMenu")));
-                    UserAccessControl.setPayrollMenu(util.convertStringToBoolean(rs.getString("payrollMenu")));
-                    UserAccessControl.setContributionsMenu(util.convertStringToBoolean(rs.getString("contributionsMenu")));
-                    UserAccessControl.setEventsMenu(util.convertStringToBoolean(rs.getString("eventsMenu")));
-                    UserAccessControl.setLoansMenu(util.convertStringToBoolean(rs.getString("loansMenu")));
+                    UserAccessControl.setMainMenu(utilities.convertStringToBoolean(rs.getString("mainMenu")));
+                    UserAccessControl.setTimekeepingMenu(utilities.convertStringToBoolean(rs.getString("timekeepingMenu")));
+                    UserAccessControl.setPayrollMenu(utilities.convertStringToBoolean(rs.getString("payrollMenu")));
+                    UserAccessControl.setContributionsMenu(utilities.convertStringToBoolean(rs.getString("contributionsMenu")));
+                    UserAccessControl.setEventsMenu(utilities.convertStringToBoolean(rs.getString("eventsMenu")));
+                    UserAccessControl.setLoansMenu(utilities.convertStringToBoolean(rs.getString("loansMenu")));                    
                 }
             }
             

@@ -142,17 +142,7 @@ public class AttendanceTableContainerWindow extends Window {
         table.setColumnWidth("u/min", 40);
         table.setColumnWidth("o/min", 40);
         table.setColumnWidth("nd/min", 50);
-        
-//        table.setColumnCollapsed("l/min", true);
-//        table.setColumnCollapsed("u/min", true);
-//        table.setColumnCollapsed("o/min", true);
-//        table.setColumnCollapsed("nd/min", true);
-//        table.setColumnCollapsed("dm/min", true);
-//        table.setColumnCollapsed("lholiday", true);
-//        table.setColumnCollapsed("sholiday", true);
-//        table.setColumnCollapsed("wdo", true);
-//        table.setColumnCollapsed("psday", true);
-                        
+                                
         final String[] holidayList = {"legal-holiday", "special-holiday"};        
         if(getEmploymentWageEntry().equals("monthly")){
             employmentWage = util.roundOffToTwoDecimalPlaces((employmentWage * 12) / 314);

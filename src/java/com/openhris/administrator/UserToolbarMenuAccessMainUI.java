@@ -211,7 +211,7 @@ public class UserToolbarMenuAccessMainUI extends VerticalLayout {
             
             userToolbarMenuAccessTbl.addItem(new Object[]{
                 utma.getId(), 
-                utma.getName(), 
+                utma.getName().toUpperCase(), 
                 utma.getUsername(), 
                 utma.getRole(), 
                 main, 

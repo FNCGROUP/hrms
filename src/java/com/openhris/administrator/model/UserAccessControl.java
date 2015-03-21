@@ -36,6 +36,10 @@ public class UserAccessControl implements TransactionListener {
     private boolean eventsMenu;
     private boolean lockPayroll;
     public String username;
+    private boolean editAttendance;
+    private boolean editSss;
+    private boolean editPhic;
+    private boolean editHdmf;
         
     public UserAccessControl(Application application){
         this.application = application;
@@ -110,6 +114,22 @@ public class UserAccessControl implements TransactionListener {
     public static boolean isLockPayroll(){
         return instance.get().lockPayroll;
     }
+
+    public static boolean isEditAttendance() {
+        return instance.get().editAttendance;
+    }
+
+    public static boolean isEditSss() {
+        return instance.get().editSss;
+    }
+
+    public static boolean isEditPhic() {
+        return instance.get().editPhic;
+    }
+
+    public static boolean isEditHdmf() {
+        return instance.get().editHdmf;
+    }
     
     public static void setTimekeeping(boolean timekeeping) {
         instance.get().timekeeping = timekeeping;
@@ -173,6 +193,22 @@ public class UserAccessControl implements TransactionListener {
     
     public static void setLockPayroll(boolean lockPayroll){
         instance.get().lockPayroll = lockPayroll;
+    }
+
+    public static void setEditAttendance(boolean editAttendance) {
+        instance.get().editAttendance = editAttendance;
+    }
+
+    public static void setEditSss(boolean editSss) {
+        instance.get().editSss = editSss;
+    }
+
+    public static void setEditPhic(boolean editPhic) {
+        instance.get().editPhic = editPhic;
+    }
+
+    public static void setEditHdmf(boolean editHdmf) {
+        instance.get().editHdmf = editHdmf;
     }
     
     private boolean convertStringToBoolean(String string){

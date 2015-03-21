@@ -256,14 +256,6 @@ public class TimekeepingMainUI extends VerticalLayout {
                     List dateList = obtainPayrollDateList(item.getItemProperty("from").toString(), item.getItemProperty("to").toString());
                     String payrollPeriod = payrollService.getPayrollPeriodByPayrollId(payrollId);
                     String payrollDate = payrollService.getPayrollDateByPayrollId(payrollId);
-//                    Window subWindow = editAttendanceTableContainer(employeesName.getValue().toString().toUpperCase(), 
-//                        dateList, 
-//                        employeeId, 
-//                        payrollPeriod, 
-//                        payrollDate, 
-//                        item.getItemProperty("from").toString(), 
-//                        item.getItemProperty("to").toString(), 
-//                        payrollId);
                     
                     Window subWindow = new EditAttendanceTableContainerWindow(employeesName.getValue().toString().toUpperCase(), 
                             dateList, 

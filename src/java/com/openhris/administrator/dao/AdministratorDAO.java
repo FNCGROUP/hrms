@@ -29,7 +29,7 @@ import java.util.logging.Logger;
 public class AdministratorDAO {
     
     GetSQLConnection getConnection = new GetSQLConnection(); 
-    OpenHrisUtilities util = new OpenHrisUtilities();
+    OpenHrisUtilities utilities = new OpenHrisUtilities();
     
     public boolean checkEnteredPasswordIfCorrect(int userId, 
             String password){
@@ -102,7 +102,7 @@ public class AdministratorDAO {
             rs = stmt.executeQuery("SELECT * FROM user_access_control WHERE currentStatus IS NULL");
             while(rs.next()){
                 User user = new User();
-                user.setId(util.convertStringToInteger(rs.getString("uId")));
+                user.setId(utilities.convertStringToInteger(rs.getString("uId")));
                 user.setName(rs.getString("name"));
                 user.setTrade(rs.getString("trade"));
                 user.setBranch(rs.getString("branch"));
@@ -493,16 +493,16 @@ public class AdministratorDAO {
             rs = stmt.executeQuery("SELECT * FROM user_access_control");
             while(rs.next()){
                 UserToolbarMenuAccess utma = new UserToolbarMenuAccess();
-                utma.setId(util.convertStringToInteger(rs.getString("uId")));
+                utma.setId(utilities.convertStringToInteger(rs.getString("uId")));
                 utma.setName(rs.getString("name"));
                 utma.setUsername(rs.getString("username"));
                 utma.setRole(rs.getString("role"));
-                utma.setMainMenu(util.convertStringToBoolean(rs.getString("mainMenu")));
-                utma.setTimekeepingMenu(util.convertStringToBoolean(rs.getString("timekeepingMenu")));
-                utma.setPayrollMenu(util.convertStringToBoolean(rs.getString("payrollMenu")));
-                utma.setLoansMenu(util.convertStringToBoolean(rs.getString("loansMenu")));
-                utma.setEventsMenu(util.convertStringToBoolean(rs.getString("eventsMenu")));
-                utma.setContributionsMenu(util.convertStringToBoolean(rs.getString("contributionsMenu")));
+                utma.setMainMenu(utilities.convertStringToBoolean(rs.getString("mainMenu")));
+                utma.setTimekeepingMenu(utilities.convertStringToBoolean(rs.getString("timekeepingMenu")));
+                utma.setPayrollMenu(utilities.convertStringToBoolean(rs.getString("payrollMenu")));
+                utma.setLoansMenu(utilities.convertStringToBoolean(rs.getString("loansMenu")));
+                utma.setEventsMenu(utilities.convertStringToBoolean(rs.getString("eventsMenu")));
+                utma.setContributionsMenu(utilities.convertStringToBoolean(rs.getString("contributionsMenu")));
                 userToolbarMenuAccessList.add(utma);
             }
         } catch (SQLException ex) {
@@ -590,20 +590,24 @@ public class AdministratorDAO {
             rs = stmt.executeQuery("SELECT * FROM user_access_control");
             while(rs.next()){
                 UserAdvanceAccess uaa = new UserAdvanceAccess();
-                uaa.setId(util.convertStringToInteger(rs.getString("uId")));
+                uaa.setId(utilities.convertStringToInteger(rs.getString("uId")));
                 uaa.setName(rs.getString("name"));
                 uaa.setUsername(rs.getString("username"));
                 uaa.setRole(rs.getString("role"));
-                uaa.setTimekeeping(util.convertStringToBoolean(rs.getString("timekeeping")));
-                uaa.setContributions(util.convertStringToBoolean(rs.getString("contributions")));
-                uaa.setCashBond(util.convertStringToBoolean(rs.getString("cashBond")));
-                uaa.setAdvances(util.convertStringToBoolean(rs.getString("advances")));
-                uaa.setAdjustment(util.convertStringToBoolean(rs.getString("adjustment")));
-                uaa.setPayroll(util.convertStringToBoolean(rs.getString("payroll")));
-                uaa.setEditEmployeesInfo(util.convertStringToBoolean(rs.getString("editEmployeesInfo")));
-                uaa.setAddEvents(util.convertStringToBoolean(rs.getString("addEvents")));
-                uaa.setAdjustPayroll(util.convertStringToBoolean(rs.getString("adjustPayroll")));
-                uaa.setLockPayroll(util.convertStringToBoolean(rs.getString("lockPayroll")));
+                uaa.setTimekeeping(utilities.convertStringToBoolean(rs.getString("timekeeping")));
+                uaa.setContributions(utilities.convertStringToBoolean(rs.getString("contributions")));
+                uaa.setCashBond(utilities.convertStringToBoolean(rs.getString("cashBond")));
+                uaa.setAdvances(utilities.convertStringToBoolean(rs.getString("advances")));
+                uaa.setAdjustment(utilities.convertStringToBoolean(rs.getString("adjustment")));
+                uaa.setPayroll(utilities.convertStringToBoolean(rs.getString("payroll")));
+                uaa.setEditEmployeesInfo(utilities.convertStringToBoolean(rs.getString("editEmployeesInfo")));
+                uaa.setAddEvents(utilities.convertStringToBoolean(rs.getString("addEvents")));
+                uaa.setAdjustPayroll(utilities.convertStringToBoolean(rs.getString("adjustPayroll")));
+                uaa.setLockPayroll(utilities.convertStringToBoolean(rs.getString("lockPayroll")));
+                uaa.setEditAttendance(utilities.convertStringToBoolean(rs.getString("isEditAttendance")));
+                uaa.setEditSss(utilities.convertStringToBoolean(rs.getString("isEditSss")));
+                uaa.setEditPhic(utilities.convertStringToBoolean(rs.getString("isEditPhic")));
+                uaa.setEditHdmf(utilities.convertStringToBoolean(rs.getString("isEditHdmf")));
                 UserAdvanceAccessList.add(uaa);
             }
         } catch (SQLException ex) {
@@ -633,7 +637,7 @@ public class AdministratorDAO {
             stmt = conn.createStatement();
             rs = stmt.executeQuery("SELECT "+column+" FROM user_advance_access WHERE userId = "+userId+" ");
             while(rs.next()){                
-                result = util.convertStringToBoolean(rs.getString("lockPayroll"));
+                result = utilities.convertStringToBoolean(rs.getString("lockPayroll"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(AdministratorDAO.class.getName()).log(Level.SEVERE, null, ex);

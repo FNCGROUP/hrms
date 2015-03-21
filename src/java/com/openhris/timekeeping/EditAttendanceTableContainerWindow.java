@@ -5,6 +5,7 @@
  */
 package com.openhris.timekeeping;
 
+import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.payroll.ProcessPayrollComputation;
@@ -140,6 +141,7 @@ public class EditAttendanceTableContainerWindow extends Window {
             
             final CheckBox edit = new CheckBox();
             edit.setData(i);
+            edit.setEnabled(UserAccessControl.isEditAttendance());
             edit.setImmediate(true);
             
             final CheckBox premium = new CheckBox();
@@ -335,6 +337,7 @@ public class EditAttendanceTableContainerWindow extends Window {
             List<Timekeeping> timekeepingListByRowData = timekeepingService.getTimekeepingRowData(
                 utilities.convertDateFormat(getDateList().get(i).toString()), 
                 getPayrollId());
+            
             for(Timekeeping t : timekeepingListByRowData){
                 String policy;
                 String holiday;
@@ -356,7 +359,6 @@ public class EditAttendanceTableContainerWindow extends Window {
                 undertime.setValue(t.getUndertime());
                 overtime.setValue(t.getOvertime());
                 nightDifferential.setValue(t.getNightDifferential());
-                    System.out.println("list if date: "+getDateList().get(i));
                 table.addItem(new Object[]{
                     edit, 
                     utilities.convertDateFormat(getDateList().get(i).toString()), 
@@ -408,15 +410,16 @@ public class EditAttendanceTableContainerWindow extends Window {
         
         vlayout.addComponent(table);
         
-        final Button button = new Button();
-        button.setCaption("Save Attendance Data");
+        final Button saveButton = new Button();
+        saveButton.setWidth("200px");
+        saveButton.setCaption("Save Attendance Data");
+        saveButton.setEnabled(UserAccessControl.isEditAttendance());
         
-        
-        for(Object listener : button.getListeners(Button.ClickListener.class)){
-            button.removeListener(Button.ClickListener.class, listener);
+        for(Object listener : saveButton.getListeners(Button.ClickListener.class)){
+            saveButton.removeListener(Button.ClickListener.class, listener);
         }
         
-        button.addListener(new Button.ClickListener() {
+        saveButton.addListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {                
@@ -448,30 +451,7 @@ public class EditAttendanceTableContainerWindow extends Window {
                         t.setNonWorkingHolidayPaid(utilities.convertStringToDouble(tkeepList.get(16)));
                         attendanceList.add(t);
                     }
-//                    for(int i = 0; i < attendanceTableCollection.size(); i++){
-//                        String str = table.getItem(i).toString();
-//                        String[] attStr = str.split(" ");
-//                        List<String> tkeepList = new ArrayList<String>(Arrays.asList(attStr));
-//
-//                        Timekeeping t = new Timekeeping();
-//                        t.setAttendanceDate(utilities.parsingDate(tkeepList.get(1)));
-//                        t.setPolicy(tkeepList.get(2));
-//                        t.setHoliday(tkeepList.get(3));
-//                        t.setPremium(utilities.convertStringToBoolean(tkeepList.get(4)));
-//                        t.setLates(utilities.convertStringToDouble(tkeepList.get(5)));
-//                        t.setUndertime(utilities.convertStringToDouble(tkeepList.get(6)));
-//                        t.setOvertime(utilities.convertStringToDouble(tkeepList.get(7)));
-//                        t.setNightDifferential(utilities.convertStringToDouble(tkeepList.get(8)));
-//                        t.setLateDeduction(utilities.convertStringToDouble(tkeepList.get(9)));
-//                        t.setUndertimeDeduction(utilities.convertStringToDouble(tkeepList.get(10)));
-//                        t.setOvertimePaid(utilities.convertStringToDouble(tkeepList.get(11)));
-//                        t.setNightDifferentialPaid(utilities.convertStringToDouble(tkeepList.get(12)));
-//                        t.setLegalHolidayPaid(utilities.convertStringToDouble(tkeepList.get(13)));
-//                        t.setSpecialHolidayPaid(utilities.convertStringToDouble(tkeepList.get(14)));
-//                        t.setWorkingDayOffPaid(utilities.convertStringToDouble(tkeepList.get(15)));
-//                        t.setNonWorkingHolidayPaid(utilities.convertStringToDouble(tkeepList.get(16)));
-//                        attendanceList.add(t);
-//                    }
+                    
                     ProcessPayrollComputation processPayroll = new ProcessPayrollComputation(getEmployeeId(), getBranchId());
                     processPayroll.initVariables();
                     processPayroll.initVariablesForComputation(attendanceList);
@@ -490,9 +470,12 @@ public class EditAttendanceTableContainerWindow extends Window {
                 }
             }
             
-        });
-               
-        vlayout.addComponent(button);
+        });               
+        vlayout.addComponent(saveButton);
+        
+        Button printButton = new Button("Print Attendance");
+        printButton.setWidth("200px");
+        vlayout.addComponent(printButton);
         
         return vlayout;
     }

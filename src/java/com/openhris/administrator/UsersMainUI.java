@@ -187,7 +187,7 @@ public class UsersMainUI extends VerticalLayout {
         for(User u : userList){
             usersTbl.addItem(new Object[]{
                 u.getId(),
-                u.getName(), 
+                u.getName().toUpperCase(), 
                 u.getTrade(), 
                 u.getBranch(), 
                 u.getUsername(), 
@@ -211,7 +211,7 @@ public class UsersMainUI extends VerticalLayout {
                 int userId = Integer.parseInt(item.getItemProperty("id").getValue().toString());                
                 
                 if(event.getPropertyId().equals("id")){
-                    String name = item.getItemProperty("name").toString();
+                    String name = item.getItemProperty("name").toString().toLowerCase();
                     Window subWindow = removeUser(userId, name);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow);

@@ -44,7 +44,7 @@ import java.util.List;
  */
 public class PayrollMainUI extends VerticalLayout {
     
-    OpenHrisUtilities util = new OpenHrisUtilities();
+    OpenHrisUtilities utililities = new OpenHrisUtilities();
     PayrollService payrollService = new PayrollServiceImpl();
     EmployeeService employeeService = new EmployeeServiceImpl();
     DropDownComponent dropDown = new DropDownComponent();
@@ -56,6 +56,7 @@ public class PayrollMainUI extends VerticalLayout {
     int branchId;
     String employeeId;
     boolean lastAddedAdvanceType;
+    boolean isPayrollLocked;
     
     ComboBox employeesName = new ComboBox("Employees: ");
     DecimalFormat df = new DecimalFormat("0.00");
@@ -218,34 +219,34 @@ public class PayrollMainUI extends VerticalLayout {
                 }
                 payrollTbl.addItem(new Object[]{
                     p.getId(), 
-                    util.convertDateFormat(p.getAttendancePeriodFrom().toString()), 
-                    util.convertDateFormat(p.getAttendancePeriodTo().toString()), 
-                    util.roundOffToTwoDecimalPlaces(p.getBasicSalary()), 
-                    util.roundOffToTwoDecimalPlaces(p.getHalfMonthSalary()), 
-                    util.roundOffToTwoDecimalPlaces(p.getTotalOvertimePaid()), 
-                    util.roundOffToTwoDecimalPlaces(p.getTotalLegalHolidayPaid()), 
-                    util.roundOffToTwoDecimalPlaces(p.getTotalSpecialHolidayPaid()), 
-                    util.roundOffToTwoDecimalPlaces(p.getTotalNightDifferentialPaid()), 
-                    util.roundOffToTwoDecimalPlaces(p.getTotalWorkingDayOffPaid()), 
-                    util.roundOffToTwoDecimalPlaces(p.getAbsences()), 
-                    util.roundOffToTwoDecimalPlaces(p.getTotalLatesDeduction()), 
-                    util.roundOffToTwoDecimalPlaces(p.getTotalUndertimeDeduction()), 
-                    util.roundOffToTwoDecimalPlaces(p.getGrossPay()), 
-                    util.roundOffToTwoDecimalPlaces(p.getSss()), 
-                    util.roundOffToTwoDecimalPlaces(p.getPhic()), 
-                    util.roundOffToTwoDecimalPlaces(p.getHdmf()), 
-                    util.roundOffToTwoDecimalPlaces(p.getTax()), 
-                    util.roundOffToTwoDecimalPlaces(p.getNetSalary()), 
-                    util.roundOffToTwoDecimalPlaces(p.getCashBond()), 
-                    util.roundOffToTwoDecimalPlaces(p.getAllowance()), 
-                    util.roundOffToTwoDecimalPlaces(p.getAllowanceForLiquidation()), 
-                    util.roundOffToTwoDecimalPlaces(p.getTotalAdvances()), 
-                    util.roundOffToTwoDecimalPlaces(p.getAdjustment()), 
-                    util.roundOffToTwoDecimalPlaces(p.getAmountToBeReceive()), 
-                    util.roundOffToTwoDecimalPlaces(p.getAmountReceivable()), 
-                    util.roundOffToTwoDecimalPlaces(p.getForAdjustments()), 
+                    utililities.convertDateFormat(p.getAttendancePeriodFrom().toString()), 
+                    utililities.convertDateFormat(p.getAttendancePeriodTo().toString()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getBasicSalary()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getHalfMonthSalary()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getTotalOvertimePaid()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getTotalLegalHolidayPaid()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getTotalSpecialHolidayPaid()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getTotalNightDifferentialPaid()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getTotalWorkingDayOffPaid()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getAbsences()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getTotalLatesDeduction()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getTotalUndertimeDeduction()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getGrossPay()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getSss()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getPhic()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getHdmf()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getTax()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getNetSalary()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getCashBond()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getAllowance()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getAllowanceForLiquidation()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getTotalAdvances()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getAdjustment()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getAmountToBeReceive()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getAmountReceivable()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getForAdjustments()), 
                     p.getPayrollPeriod(), 
-                    util.convertDateFormat(p.getPayrollDate().toString()), 
+                    utililities.convertDateFormat(p.getPayrollDate().toString()), 
                     payrollStatus
                 }, new Integer(i));
             }
@@ -265,12 +266,13 @@ public class PayrollMainUI extends VerticalLayout {
                 Item item = payrollTbl.getItem(itemId);
                 
                 String payrollStatus = item.getItemProperty("status").toString().trim();
+                isPayrollLocked = ((payrollStatus.isEmpty() || payrollStatus == null) ? false : true);
                 
                 if(event.getPropertyId().equals("advances to o/e")){
                     if(UserAccessControl.isAdvances()){
-                        int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
-                        double amountToBeReceive = Double.parseDouble(item.getItemProperty("amount to be receive").toString());
-                        double amountReceivable = Double.parseDouble(item.getItemProperty("amount received").toString());
+                        int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                        double amountToBeReceive = utililities.convertStringToDouble(item.getItemProperty("amount to be receive").toString());
+                        double amountReceivable = utililities.convertStringToDouble(item.getItemProperty("amount received").toString());
 
                         Window subWindow = addAdvances(payrollId, amountToBeReceive, amountReceivable);
                         if(subWindow.getParent() == null){
@@ -284,14 +286,14 @@ public class PayrollMainUI extends VerticalLayout {
                     }                    
                 }
                 
-                if(payrollStatus == null || payrollStatus.isEmpty()){                    
+                if(payrollStatus.isEmpty() || payrollStatus == null){                    
                 } else {
-                    getWindow().showNotification("Contact your DBA to unlock this ROW!!", Window.Notification.TYPE_WARNING_MESSAGE);
+                    getWindow().showNotification("Contact your DBA to unlock this ROW!!", Window.Notification.TYPE_TRAY_NOTIFICATION);
                     return;
                 }
                 
                 if(event.getPropertyId().equals("id")){
-                    int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
                     Window subWindow = removeSelectedRow(payrollId);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow);
@@ -301,68 +303,83 @@ public class PayrollMainUI extends VerticalLayout {
                 }                
                 
                 if(event.getPropertyId().equals("phic")){
-                    int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
-                    double phicAmount = Double.parseDouble(item.getItemProperty("phic").toString());
-                    double netPay = Double.parseDouble(item.getItemProperty("net pay").toString());
-                    double amountToBeReceive = Double.parseDouble(item.getItemProperty("amount to be receive").toString());
-                    double amountReceivable = Double.parseDouble(item.getItemProperty("amount received").toString());
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    double phicAmount = utililities.convertStringToDouble(item.getItemProperty("phic").toString());
+                    double netPay = utililities.convertStringToDouble(item.getItemProperty("net pay").toString());
+                    double amountToBeReceive = utililities.convertStringToDouble(item.getItemProperty("amount to be receive").toString());
+                    double amountReceivable = utililities.convertStringToDouble(item.getItemProperty("amount received").toString());
                     
-                    Window subWindow = updatePhicContribution(payrollId, 
-                            phicAmount, 
-                            netPay, 
-                            amountToBeReceive, 
-                            amountReceivable);
-                    if(subWindow.getParent() == null){
-                        getWindow().addWindow(subWindow);
+                    if(UserAccessControl.isEditPhic()){
+                        Window subWindow = updatePhicContribution(payrollId, 
+                                phicAmount, 
+                                netPay, 
+                                amountToBeReceive, 
+                                amountReceivable);
+                        if(subWindow.getParent() == null){
+                            getWindow().addWindow(subWindow);
+                        }
+                        subWindow.setModal(true);
+                        subWindow.center();
+                    } else {
+                        getWindow().showNotification("Edit PHIC isDisabled!", Window.Notification.TYPE_WARNING_MESSAGE);
+                        return;
                     }
-                    subWindow.setModal(true);
-                    subWindow.center();
                 }
                 
                 if(event.getPropertyId().equals("hdmf")){
-                    int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
-                    double hdmfContribution = Double.parseDouble(item.getItemProperty("hdmf").toString());
-                    double netPay = Double.parseDouble(item.getItemProperty("net pay").toString());
-                    double amountToBeReceive = Double.parseDouble(item.getItemProperty("amount to be receive").toString());
-                    double amountReceivable = Double.parseDouble(item.getItemProperty("amount received").toString());
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    double hdmfContribution = utililities.convertStringToDouble(item.getItemProperty("hdmf").toString());
+                    double netPay = utililities.convertStringToDouble(item.getItemProperty("net pay").toString());
+                    double amountToBeReceive = utililities.convertStringToDouble(item.getItemProperty("amount to be receive").toString());
+                    double amountReceivable = utililities.convertStringToDouble(item.getItemProperty("amount received").toString());
                     
-                    Window subWindow = updateHdmfContribution(payrollId, 
-                            hdmfContribution, 
-                            netPay, 
-                            amountToBeReceive, 
-                            amountReceivable);
-                    if(subWindow.getParent() == null){
-                        getWindow().addWindow(subWindow);
+                    if(UserAccessControl.isEditHdmf()){
+                        Window subWindow = updateHdmfContribution(payrollId, 
+                                hdmfContribution, 
+                                netPay, 
+                                amountToBeReceive, 
+                                amountReceivable);
+                        if(subWindow.getParent() == null){
+                            getWindow().addWindow(subWindow);
+                        }
+                        subWindow.setModal(true);
+                        subWindow.center();
+                    } else {
+                        getWindow().showNotification("Edit HDMF isDisabled!", Window.Notification.TYPE_WARNING_MESSAGE);
+                        return;
                     }
-                    subWindow.setModal(true);
-                    subWindow.center();
                 }
                 
                 if(event.getPropertyId().equals("sss")){
-                    int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
-                    double sssContribution = Double.parseDouble(item.getItemProperty("sss").toString());
-                    double netSalary = Double.parseDouble(item.getItemProperty("net pay").toString());
-                    double amountToBeReceive = Double.parseDouble(item.getItemProperty("amount to be receive").toString());
-                    double amountReceivable = Double.parseDouble(item.getItemProperty("amount received").toString());
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    double sssContribution = utililities.convertStringToDouble(item.getItemProperty("sss").toString());
+                    double netSalary = utililities.convertStringToDouble(item.getItemProperty("net pay").toString());
+                    double amountToBeReceive = utililities.convertStringToDouble(item.getItemProperty("amount to be receive").toString());
+                    double amountReceivable = utililities.convertStringToDouble(item.getItemProperty("amount received").toString());
                     
-                    Window subWindow = updateSssContribution(payrollId, 
-                            sssContribution, 
-                            netSalary, 
-                            amountToBeReceive, 
-                            amountReceivable);
-                    if(subWindow.getParent() == null){
-                        getWindow().addWindow(subWindow);
+                    if(UserAccessControl.isEditSss()){
+                        Window subWindow = updateSssContribution(payrollId, 
+                                sssContribution, 
+                                netSalary, 
+                                amountToBeReceive, 
+                                amountReceivable);
+                        if(subWindow.getParent() == null){
+                            getWindow().addWindow(subWindow);
+                        }
+                        subWindow.setModal(true);
+                        subWindow.center();
+                    } else {
+                        getWindow().showNotification("Edit SSS isDisabled!", Window.Notification.TYPE_WARNING_MESSAGE);
+                        return;
                     }
-                    subWindow.setModal(true);
-                    subWindow.center();
                 }
                 
                 if(event.getPropertyId().equals("tax")){
-                    int payrollId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
-                    double taxWitheldAmount = Double.parseDouble(item.getItemProperty("tax").toString());
-                    double netSalary = Double.parseDouble(item.getItemProperty("net pay").toString());
-                    double amountToBeReceive = Double.parseDouble(item.getItemProperty("amount to be receive").toString());
-                    double amountReceivable = Double.parseDouble(item.getItemProperty("amount received").toString());
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    double taxWitheldAmount = utililities.convertStringToDouble(item.getItemProperty("tax").toString());
+                    double netSalary = utililities.convertStringToDouble(item.getItemProperty("net pay").toString());
+                    double amountToBeReceive = utililities.convertStringToDouble(item.getItemProperty("amount to be receive").toString());
+                    double amountReceivable = utililities.convertStringToDouble(item.getItemProperty("amount received").toString());
                     
                     Window subWindow = updateTaxWitheld(payrollId, 
                             taxWitheldAmount, 
@@ -377,7 +394,7 @@ public class PayrollMainUI extends VerticalLayout {
                 }
                 
                 if(event.getPropertyId().equals("payroll date")){
-                    int payrollId = util.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
                     Window subWindow = updatePayrollDate(payrollId);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow); 
@@ -387,7 +404,7 @@ public class PayrollMainUI extends VerticalLayout {
                 }
                 
                 if(event.getPropertyId().equals("status")){
-                    int payrollId = util.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
                     String status = null;
                     if(item.getItemProperty("status").toString() == null){                            
                     } else {
@@ -503,20 +520,20 @@ public class PayrollMainUI extends VerticalLayout {
                 boolean isPayrollAdjusted;
                 
                 if(payrollService.isPayrollAdjusted(payrollId)){
-                     newNetSalary = (netPay + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
-                    newAmountToBeReceive = (amountToBeReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                     newNetSalary = (netPay + phicAmount) - utililities.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + phicAmount) - utililities.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                     newAmountReceive = amountReceive;
                     isPayrollAdjusted = true;
                 } else {
-                    newNetSalary = (netPay + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
-                    newAmountToBeReceive = (amountToBeReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
-                    newAmountReceive = (amountReceive + phicAmount) - util.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                    newNetSalary = (netPay + phicAmount) - utililities.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + phicAmount) - utililities.convertStringToDouble(phicNewAmount.getValue().toString().trim());
+                    newAmountReceive = (amountReceive + phicAmount) - utililities.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                 
                     isPayrollAdjusted = false; 
                 }
                 
                 boolean result = payrollService.updatePhicContribution(payrollId, 
-                        util.convertStringToDouble(phicNewAmount.getValue().toString().trim()), 
+                        utililities.convertStringToDouble(phicNewAmount.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
                         newAmountReceive, 
@@ -573,19 +590,19 @@ public class PayrollMainUI extends VerticalLayout {
                 boolean isPayrollAdjusted;
                 
                 if(payrollService.isPayrollAdjusted(payrollId)){
-                    newNetSalary = (netPay + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
-                    newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                    newNetSalary = (netPay + hdmfContribution) - utililities.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - utililities.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                     newAmountReceive = amountReceive;
                     isPayrollAdjusted = true;
                 } else {
-                    newNetSalary = (netPay + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
-                    newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
-                    newAmountReceive = (amountReceive + hdmfContribution) - util.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                    newNetSalary = (netPay + hdmfContribution) - utililities.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - utililities.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
+                    newAmountReceive = (amountReceive + hdmfContribution) - utililities.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                     isPayrollAdjusted = false;
                 }
                 
                 boolean result = payrollService.updateHdmfContribution(payrollId, 
-                        util.convertStringToDouble(newHdmfContribution.getValue().toString().trim()), 
+                        utililities.convertStringToDouble(newHdmfContribution.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
                         newAmountReceive, 
@@ -642,19 +659,19 @@ public class PayrollMainUI extends VerticalLayout {
                 boolean isPayrollAdjusted;
                 
                 if(payrollService.isPayrollAdjusted(payrollId)){
-                    newNetSalary = (netSalary + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
-                    newAmountToBeReceive = (amountToBeReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                    newNetSalary = (netSalary + sssContribution) - utililities.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + sssContribution) - utililities.convertStringToDouble(newSssContribution.getValue().toString().trim());
                     newAmountReceive = amountReceive;
                     isPayrollAdjusted = true;
                 } else {
-                    newNetSalary = (netSalary + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
-                    newAmountToBeReceive = (amountToBeReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
-                    newAmountReceive = (amountReceive + sssContribution) - util.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                    newNetSalary = (netSalary + sssContribution) - utililities.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + sssContribution) - utililities.convertStringToDouble(newSssContribution.getValue().toString().trim());
+                    newAmountReceive = (amountReceive + sssContribution) - utililities.convertStringToDouble(newSssContribution.getValue().toString().trim());
                     isPayrollAdjusted = false;
                 }
                 
                 boolean result = payrollService.updateSssContribution(payrollId, 
-                        util.convertStringToDouble(newSssContribution.getValue().toString().trim()), 
+                        utililities.convertStringToDouble(newSssContribution.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
                         newAmountReceive, 
@@ -711,19 +728,19 @@ public class PayrollMainUI extends VerticalLayout {
                 boolean isPayrollAdjusted;
                 
                 if(payrollService.isPayrollAdjusted(payrollId)){
-                    newNetSalary = (netSalary + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
-                    newAmountToBeReceive = (amountToBeReceive + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                    newNetSalary = (netSalary + taxWitheldAmount) - utililities.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + taxWitheldAmount) - utililities.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
                     newAmountReceive = amountReceive;
                     isPayrollAdjusted = true;
                 } else {
-                    newNetSalary = (netSalary + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
-                    newAmountToBeReceive = (amountToBeReceive + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
-                    newAmountReceive = (amountReceive + taxWitheldAmount) - util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                    newNetSalary = (netSalary + taxWitheldAmount) - utililities.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                    newAmountToBeReceive = (amountToBeReceive + taxWitheldAmount) - utililities.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
+                    newAmountReceive = (amountReceive + taxWitheldAmount) - utililities.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
                     isPayrollAdjusted = false;
                 }
                 
                 boolean result = payrollService.updateTaxWitheldAmount(payrollId, 
-                        util.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim()), 
+                        utililities.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
                         newAmountReceive, 
@@ -793,6 +810,7 @@ public class PayrollMainUI extends VerticalLayout {
         vlayout.setMargin(true);
         vlayout.setSpacing(true);
         vlayout.setCaption("Post Advances");
+        vlayout.setEnabled(!isPayrollLocked);
         
         final ComboBox advanceType = dropDown.populateAdvanceTypeDropDownList(new ComboBox());
         vlayout.addComponent(advanceType);
@@ -831,7 +849,7 @@ public class PayrollMainUI extends VerticalLayout {
                 }
                 
                 if(!amount.getValue().toString().trim().isEmpty()){
-                    boolean result = util.checkInputIfDouble(amount.getValue().toString().trim());
+                    boolean result = utililities.checkInputIfDouble(amount.getValue().toString().trim());
                     if(result == false){
                         getWindow().showNotification("Error entered Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
@@ -851,14 +869,14 @@ public class PayrollMainUI extends VerticalLayout {
                 a.setId(payrollId);
                 a.setAmountToBeReceive(amountToBeReceive);
                 a.setAmountReceivable(amountReceivable);
-                a.setAmount(util.convertStringToDouble(amount.getValue().toString().trim()));
-                a.setDatePosted(util.parsingDate(util.convertDateFormat(datePosted.getValue().toString())));
+                a.setAmount(utililities.convertStringToDouble(amount.getValue().toString().trim()));
+                a.setDatePosted(utililities.parsingDate(utililities.convertDateFormat(datePosted.getValue().toString())));
                 a.setAdvanceType(advanceType.getValue().toString());
                 a.setParticulars(particulars.getValue().toString());
                 advanceList.add(a);
                 
-                Double advances = Double.parseDouble(amount.getValue().toString().trim());
-                String postedDate = util.convertDateFormat(datePosted.getValue().toString());
+                Double advances = utililities.convertStringToDouble(amount.getValue().toString().trim());
+                String postedDate = utililities.convertDateFormat(datePosted.getValue().toString());
                 Boolean result = payrollService.updateSalaryByAdvances(advanceList);                
                 if(result == true){
                     payrollTable(branchId, getEmployeeId());
@@ -887,7 +905,7 @@ public class PayrollMainUI extends VerticalLayout {
         advanceTbl.setSelectable(true);
         
         advanceTbl.addContainerProperty("id", String.class, null);
-        advanceTbl.addContainerProperty("amount", String.class, null);
+        advanceTbl.addContainerProperty("amount", Double.class, null);
         advanceTbl.addContainerProperty("type", String.class, null);
         advanceTbl.addContainerProperty("particulars", String.class, null);
         advanceTbl.addContainerProperty("date posted", String.class, null);
@@ -897,7 +915,7 @@ public class PayrollMainUI extends VerticalLayout {
         for(Advances a : advancesList){
             advanceTbl.addItem(new Object[]{
                 a.getAdvanceId(), a.getAmount(), a.getAdvanceType(), 
-                a.getParticulars(), util.convertDateFormat(a.getDatePosted().toString())
+                a.getParticulars(), utililities.convertDateFormat(a.getDatePosted().toString())
             }, new Integer(i));
             i++;
         }
@@ -916,7 +934,7 @@ public class PayrollMainUI extends VerticalLayout {
                               
                 if(event.getPropertyId().equals("id")){
                     String amount = item.getItemProperty("amount").getValue().toString();                
-                    Double removedAdvances = Double.valueOf(util.removeCommaFromString(amount));
+                    Double removedAdvances = Double.valueOf(utililities.removeCommaFromString(amount));
                     int advanceId = Integer.parseInt(item.getItemProperty("id").getValue().toString());
                         
                     Window subWindow = removeAdvances(payrollId, advanceId, removedAdvances, 
@@ -1012,7 +1030,7 @@ public class PayrollMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                String date = util.convertDateFormat(payrollDate.getValue().toString());
+                String date = utililities.convertDateFormat(payrollDate.getValue().toString());
                 Boolean result = payrollService.updatePayrollDate(payrollId, date);
                 if(result == true){
                     payrollTable(branchId, getEmployeeId());
