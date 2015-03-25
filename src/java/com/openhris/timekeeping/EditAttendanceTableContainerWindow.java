@@ -93,6 +93,10 @@ public class EditAttendanceTableContainerWindow extends Window {
         vlayout.setSizeFull();
         vlayout.setSpacing(true);
         
+        if(getEmploymentWageEntry().equals("monthly")){
+            employmentWage = utilities.roundOffToTwoDecimalPlaces((employmentWage * 12) / 314);
+        }
+        
         final Table table = new Table();
         table.removeAllItems();
         table.setEnabled(true);

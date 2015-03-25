@@ -405,7 +405,7 @@ public class MainApp extends Application {
                         branchList = companyService.getBranchListAssignedForUser(getUserId(), tradeId);
                     }
                     
-                    branchList = companyService.getBranchByTrade(tradeId, companyId);
+//                    branchList = companyService.getBranchByTrade(tradeId, companyId);
                     String tradeName = companyService.getTradeById(tradeId);
                     for(Branch b : branchList){       
                         if(util.checkForDuplicatedBranch(b.getBranchName())){
@@ -588,6 +588,10 @@ public class MainApp extends Application {
         mainMenuGrid.setSizeFull();
         mainMenuGrid.setCaption("Companies");
         mainMenuGrid.addComponent(companyModule);
+        if(GlobalVariables.getUserRole().equals("encoder") || 
+                GlobalVariables.getUserRole().equals("accounting")){
+            mainMenuGrid.setEnabled(false);
+        }
 	mainMenuGrid.setSizeFull();
         ts.addComponent(mainMenuGrid);
         

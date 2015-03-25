@@ -316,16 +316,15 @@ public class CompanyModule extends VerticalLayout{
 
             @Override
             public void buttonClick(ClickEvent event) {
-                branchBean.setBranchName(branchName.getValue().toString().trim());
-                tradeNameBean.setTradeName(tradeName.getValue().toString());
-                corporateNameBean.setCompanyName(corporateName.getValue().toString());
-                String branch_name = branchBean.getBranchName();
-                String trade_name = tradeNameBean.getTradeName();
-                String corporate_name = corporateNameBean.getCompanyName();
-                boolean result = query.saveBranchName(tradeId, branch_name);
+//                branchBean.setBranchName(branchName.getValue().toString().trim());
+//                tradeNameBean.setTradeName(tradeName.getValue().toString());
+//                corporateNameBean.setCompanyName(corporateName.getValue().toString());
+//                String branch_name = branchBean.getBranchName();
+//                String trade_name = tradeNameBean.getTradeName();
+//                String corporate_name = corporateNameBean.getCompanyName();
+                boolean result = query.saveBranchName(tradeId, branchName.getValue().toString().trim());
                 if(result == true){
                     companyTable();
-//                    getWindow().showNotification("Added BRANCH on "+branch_name.toUpperCase(), Window.Notification.TYPE_HUMANIZED_MESSAGE);
                     (subWindow.getParent()).removeWindow(subWindow);                    
                 }else{
                     getWindow().showNotification("SQL Error");
