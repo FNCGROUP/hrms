@@ -7,6 +7,8 @@ package com.openhris.payroll.reports;
 
 import com.hrms.dbconnection.GetSQLConnection;
 import com.vaadin.Application;
+import com.vaadin.terminal.FileResource;
+import com.vaadin.terminal.Sizeable;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.Embedded;
 import com.vaadin.ui.VerticalLayout;
@@ -46,8 +48,6 @@ public class PayrollRegisterReport extends Window {
         
         setCaption("Payroll Register Report");
         setSizeFull();
-        setWidth("800px");
-        setHeight("600px");
         center();
         
         Connection conn = getConnection.connection();
@@ -92,15 +92,20 @@ public class PayrollRegisterReport extends Window {
         StreamResource resource = new StreamResource(source, filePath, getPayrollApplication());
         resource.setMIMEType("application/pdf");       
 
-        Embedded e = new Embedded();
-        e.setMimeType("application/pdf");
-        e.setType(Embedded.TYPE_OBJECT);
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setSizeFull();
+        Embedded e = new Embedded("", new FileResource(new File(resource.getFilename()), getPayrollApplication()));
+//        e.setMimeType("application/pdf");
+//        e.setType(Embedded.TYPE_OBJECT);
         e.setSizeFull();
-        e.setSource(resource);
-        e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+        e.setType(Embedded.TYPE_BROWSER);        
+//        e.setSource(resource);
+//        e.setParameter("Content-Disposition", "attachment; filename=" + resource.getFilename());
+        vlayout.addComponent(e);
+        
+        addComponent(vlayout);
 
-        addComponent(e);
-
+//        getPayrollApplication().getMainWindow().addWindow(this);
         getPayrollApplication().getMainWindow().open(resource, "_blank");
     }
         

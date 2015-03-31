@@ -52,11 +52,7 @@ public class AttendancePolicyWindow extends Window {
     VerticalLayout getVlayout(){
         VerticalLayout vlayout = new VerticalLayout();
         vlayout.setSpacing(true);
-        
-        if(getEmploymentWageEntry().equals("monthly")){
-            employmentWage = utilities.roundOffToTwoDecimalPlaces((employmentWage * 12) / 314);
-        }
-        
+                
         final ComboBox policy = dropDown.populateAttendancePolicyDropDownList(new ComboBox());
         policy.setWidth("100%");
         policy.setNullSelectionAllowed(true);              
@@ -98,6 +94,8 @@ public class AttendancePolicyWindow extends Window {
                     item.getItemProperty("lholiday").setValue(0.0);
                     item.getItemProperty("psday").setValue(0.0);
                     holidayType.setVisible(true);
+                    
+                    System.out.println("wage: "+getEmploymentWage()+" entry: "+getEmploymentWageEntry());
                     double additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
                     item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
                 } else{
@@ -148,7 +146,9 @@ public class AttendancePolicyWindow extends Window {
                     }
                 } else if(policy.getValue().equals("working-day-off")) {
                     if(event.getProperty().getValue() == null){
-                        item.getItemProperty("psday").setValue(0.0);
+                        item.getItemProperty("sholiday").setValue(0.0);
+                        item.getItemProperty("lholiday").setValue(0.0);
+                        item.getItemProperty("psday").setValue(0.0);                        
                     } else if(event.getProperty().getValue().equals("legal-holiday")){
                         additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
                         item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));

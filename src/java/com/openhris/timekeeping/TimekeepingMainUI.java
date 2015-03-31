@@ -85,10 +85,7 @@ public class TimekeepingMainUI extends VerticalLayout {
         
         final PopupDateField payrollDate = new DateSelector("Payroll Date");
         comboBoxGrid.addComponent(payrollDate, 1, 0);
-        
-//        final ComboBox payrollPeriod = dropDown.populatePayrollPeriodDropDownList(new ComboBox());
-//        comboBoxGrid.addComponent(payrollPeriod, 2, 0);
-        
+                
         final PopupDateField attendancePeriodFrom = new DateSelector("Attendance Period From: ");
         comboBoxGrid.addComponent(attendancePeriodFrom, 0, 1);
         
@@ -115,11 +112,6 @@ public class TimekeepingMainUI extends VerticalLayout {
                     getWindow().showNotification("Select an Employee!");
                     return;
                 }
-
-//                if(payrollPeriod.getValue() == null){
-//                    getWindow().showNotification("Select Payroll Period!");   
-//                    return;
-//                }
 
                 if(payrollDate.getValue() == null){
                     getWindow().showNotification("Select Payroll Date!");

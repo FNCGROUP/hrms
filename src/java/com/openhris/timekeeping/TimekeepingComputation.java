@@ -55,8 +55,10 @@ public class TimekeepingComputation {
         if(policy == null || policy.equals("working-holiday") || policy.isEmpty()){
             overtimeAddition = overtimeAdditionPerMinute;
         }else if(policy.equals("working-day-off")){
-            double wdo = overtimeAdditionPerMinute * 1.3;
-            overtimeAddition = overtimeAdditionPerMinute + wdo;
+            double wdo = wage * 1.3;                                                //Compute Working Day-off Pay
+            double wdoPerMinute = wdo/480;                                          //Compute Working Day-off Per Minute
+            double wdoOvertimePerMinute = wdoPerMinute * 1.25;                      //Additional 25% overtime for wdo per minute 
+            overtimeAddition = overtime * wdoOvertimePerMinute;                     //overtime per minute multiplied by wdo overtime per minute
         }
         
 //        return new Double(df.format(overtimeAddition));
