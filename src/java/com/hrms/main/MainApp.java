@@ -465,7 +465,6 @@ public class MainApp extends Application {
 
             @Override
             public void buttonClick(ClickEvent event) {
-//                Window subWindow = employeeMainUI.openNewEmployeeWindow(null);
                 Window subWindow = new AddNewEmployeeWindow(null);
                 subWindow.setModal(true);
                 if(subWindow.getParent() == null){
@@ -497,8 +496,7 @@ public class MainApp extends Application {
                 subWindow.center();
             }
         });
-        if(GlobalVariables.getUserRole().equals("administrator") || 
-                GlobalVariables.getUserRole().equals("hr")){
+        if(GlobalVariables.getUserRole().equals("administrator")){
             otherMenu.setVisible(true);
         } else {
             otherMenu.setVisible(false);
@@ -519,8 +517,7 @@ public class MainApp extends Application {
                 subWindow.center();
             }
         });
-        if(GlobalVariables.getUserRole().equals("administrator") || 
-                GlobalVariables.getUserRole().equals("hr")){
+        if(GlobalVariables.getUserRole().equals("administrator")){
             otherMenu.setVisible(true);
         } else {
             otherMenu.setVisible(false);
@@ -541,8 +538,7 @@ public class MainApp extends Application {
                 subWindow.center();
             }
         });
-        if(GlobalVariables.getUserRole().equals("administrator") || 
-                GlobalVariables.getUserRole().equals("hr")){
+        if(GlobalVariables.getUserRole().equals("administrator")){
             otherMenu.setVisible(true);
         } else {
             otherMenu.setVisible(false);
