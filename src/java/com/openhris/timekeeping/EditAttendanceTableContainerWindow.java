@@ -54,7 +54,7 @@ public class EditAttendanceTableContainerWindow extends Window {
     private int payrollId;
     
     private double premiumRate;
-    DecimalFormat df = new DecimalFormat("0.00");
+//    DecimalFormat df = new DecimalFormat("0.00");
     
     public EditAttendanceTableContainerWindow(String name, 
             List dateList, 
@@ -221,17 +221,17 @@ public class EditAttendanceTableContainerWindow extends Window {
                     }
                     
                     item.getItemProperty("wdo").setValue(
-                        df.format(Double.parseDouble(item.getItemProperty("wdo").getValue().toString()) + 
+                        utilities.roundOffToTwoDecimalPlaces(Double.parseDouble(item.getItemProperty("wdo").getValue().toString()) + 
                             (Double.parseDouble(item.getItemProperty("wdo").getValue().toString()) * premiumRate))
                     );
                     
                     item.getItemProperty("lholiday").setValue(
-                        df.format(Double.parseDouble(item.getItemProperty("lholiday").getValue().toString()) + 
+                        utilities.roundOffToTwoDecimalPlaces(Double.parseDouble(item.getItemProperty("lholiday").getValue().toString()) + 
                             (Double.parseDouble(item.getItemProperty("lholiday").getValue().toString()) * premiumRate))
                     );
                     
                     item.getItemProperty("sholiday").setValue(
-                        df.format(Double.parseDouble(item.getItemProperty("sholiday").getValue().toString()) + 
+                        utilities.roundOffToTwoDecimalPlaces(Double.parseDouble(item.getItemProperty("sholiday").getValue().toString()) + 
                             (Double.parseDouble(item.getItemProperty("sholiday").getValue().toString()) * premiumRate))
                     );
                 }
@@ -254,8 +254,15 @@ public class EditAttendanceTableContainerWindow extends Window {
                     }
                     
                     if(!event.getText().isEmpty()){
-                        lateDeduction = computation.processEmployeesLates(policyStr, holidayStr, Integer.parseInt(event.getText().trim()), getEmploymentWage());
-                        item.getItemProperty("l/min").setValue(df.format(lateDeduction + (lateDeduction*premiumRate)));
+                        if(utilities.convertStringToInteger(event.getText().trim()) > 5){
+                            lateDeduction = computation.processEmployeesLates(policyStr, 
+                                holidayStr, 
+                                utilities.convertStringToInteger(event.getText().trim()), 
+                                getEmploymentWage());
+                            item.getItemProperty("l/min").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction + (lateDeduction*premiumRate)));
+                        } else {
+                            item.getItemProperty("l/min").setValue(0.0);
+                        }
                     }else{
                         item.getItemProperty("l/min").setValue(0.0);
                     }
@@ -281,7 +288,7 @@ public class EditAttendanceTableContainerWindow extends Window {
                     
                     if(!event.getText().isEmpty()){
                         undertimeDeduction = computation.processEmployeesUndertime(policyStr, holidayStr, Integer.parseInt(event.getText().trim()), getEmploymentWage());
-                        item.getItemProperty("u/min").setValue(df.format(undertimeDeduction + (undertimeDeduction*premiumRate)));
+                        item.getItemProperty("u/min").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction + (undertimeDeduction*premiumRate)));
                     }else{
                         item.getItemProperty("u/min").setValue(0.0);
                     }
@@ -306,7 +313,7 @@ public class EditAttendanceTableContainerWindow extends Window {
                     
                     if(!event.getText().isEmpty()){
                         overtimeAddition = computation.processEmployeesOvertime(policyStr, holidayStr, Integer.parseInt(event.getText().trim()), getEmploymentWage());
-                        item.getItemProperty("o/min").setValue(df.format(overtimeAddition + (overtimeAddition*premiumRate)));
+                        item.getItemProperty("o/min").setValue(utilities.roundOffToTwoDecimalPlaces(overtimeAddition + (overtimeAddition*premiumRate)));
                     }else{
                         item.getItemProperty("o/min").setValue(0.0);
                     }
@@ -331,7 +338,7 @@ public class EditAttendanceTableContainerWindow extends Window {
                     
                     if(!event.getText().isEmpty()){
                         nightDifferentialAddition = computation.processEmployeesNightDifferential(policyStr, holidayStr, Integer.parseInt(event.getText().trim()), getEmploymentWage());
-                        item.getItemProperty("nd/min").setValue(df.format(nightDifferentialAddition + (nightDifferentialAddition*premiumRate)));
+                        item.getItemProperty("nd/min").setValue(utilities.roundOffToTwoDecimalPlaces(nightDifferentialAddition + (nightDifferentialAddition*premiumRate)));
                     }else{
                         item.getItemProperty("nd/min").setValue(0.0);
                     }

@@ -310,8 +310,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     }
                 }else if(reportType.getValue().equals("Advances")){
                     reports.deleteFile("AdvancesReport_");
-                    String corporate = companyService.getCorporateNameByBranchId(getBranchId());
-                    AdvancesReport advancesReport = new AdvancesReport(corporate, 
+//                    String corporate = companyService.getCorporateNameByBranchId(getBranchId());
+                    AdvancesReport advancesReport = new AdvancesReport(getBranchId(), 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 } else if(reportType.getValue().equals("Allowances")){

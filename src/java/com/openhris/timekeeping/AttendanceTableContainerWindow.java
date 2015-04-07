@@ -42,10 +42,10 @@ public class AttendanceTableContainerWindow extends Window {
     private double employmentWage;
     private int branchId;
     
-    OpenHrisUtilities util = new OpenHrisUtilities();
-    TimekeepingComputation tcal = new TimekeepingComputation();
+    OpenHrisUtilities utilities = new OpenHrisUtilities();
+    TimekeepingComputation computation = new TimekeepingComputation();
     DropDownComponent dropDown = new DropDownComponent();
-    DecimalFormat df = new DecimalFormat("0.00");
+//    DecimalFormat df = new DecimalFormat("0.00");
     
     double premiumRate;
     
@@ -145,7 +145,7 @@ public class AttendanceTableContainerWindow extends Window {
                                 
         final String[] holidayList = {"legal-holiday", "special-holiday"};        
         if(getEmploymentWageEntry().equals("monthly")){
-            employmentWage = util.roundOffToTwoDecimalPlaces((employmentWage * 12) / 314);
+            employmentWage = utilities.roundOffToTwoDecimalPlaces((employmentWage * 12) / 314);
         }
         
         for(int i = 0; i < dateList.size(); i++){ 
@@ -261,8 +261,8 @@ public class AttendanceTableContainerWindow extends Window {
                         nightDifferential.setEnabled(true);
                         dutyManager.setEnabled(true);
                         
-                        additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
-                        item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
+                        additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
+                        item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(additionalWorkingDayOffPay));
                     } else {
                         holidays.setEnabled(false);
                         lates.setEnabled(false);
@@ -304,19 +304,19 @@ public class AttendanceTableContainerWindow extends Window {
                     
                     if(policyStr.equals("working-holiday")){
                         if(event.getProperty().getValue().equals("legal-holiday")){
-                            additionalHolidayPay = tcal.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                            item.getItemProperty("lholiday").setValue(new Double(df.format(additionalHolidayPay)));
+                            additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                            item.getItemProperty("lholiday").setValue(utilities.roundOffToTwoDecimalPlaces(additionalHolidayPay));
                             item.getItemProperty("sholiday").setValue(0.0);
                         } else {
-                            additionalHolidayPay = tcal.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                            item.getItemProperty("sholiday").setValue(new Double(df.format(additionalHolidayPay)));
+                            additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                            item.getItemProperty("sholiday").setValue(utilities.roundOffToTwoDecimalPlaces(additionalHolidayPay));
                             item.getItemProperty("lholiday").setValue(0.0);
                         }
                     } else if(policyStr.equals("holiday")) {
                         if(event.getProperty().getValue().equals("legal-holiday")){
                             if(getEmploymentWageEntry().equals("daily")){
-                                additionalHolidayPay = tcal.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                                item.getItemProperty("psday").setValue(new Double(df.format(additionalHolidayPay))); 
+                                additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                                item.getItemProperty("psday").setValue(utilities.roundOffToTwoDecimalPlaces(additionalHolidayPay)); 
                             } else {
                                 item.getItemProperty("psday").setValue(0.0);
                             }
@@ -327,15 +327,15 @@ public class AttendanceTableContainerWindow extends Window {
                         if(event.getProperty().getValue() == null){
                             item.getItemProperty("psday").setValue(0.0);
                         } else if(event.getProperty().getValue().equals("legal-holiday")){
-                            additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
-                            item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
-                            multiplePremiumPay = tcal.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                            additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
+                            item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(additionalWorkingDayOffPay));
+                            multiplePremiumPay = computation.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
                             item.getItemProperty("lholiday").setValue(multiplePremiumPay); 
                             item.getItemProperty("sholiday").setValue(0.0);
                         } else {
-                            additionalWorkingDayOffPay = tcal.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
-                            item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
-                            multiplePremiumPay = tcal.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                            additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
+                            item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(additionalWorkingDayOffPay));
+                            multiplePremiumPay = computation.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
                             item.getItemProperty("sholiday").setValue(multiplePremiumPay);   
                             item.getItemProperty("lholiday").setValue(0.0);
                         }
@@ -370,17 +370,17 @@ public class AttendanceTableContainerWindow extends Window {
                     }
                     
                     item.getItemProperty("wdo").setValue(
-                        df.format(Double.parseDouble(item.getItemProperty("wdo").getValue().toString()) + 
+                        utilities.roundOffToTwoDecimalPlaces(Double.parseDouble(item.getItemProperty("wdo").getValue().toString()) + 
                             (Double.parseDouble(item.getItemProperty("wdo").getValue().toString()) * premiumRate))
                     );
                     
                     item.getItemProperty("lholiday").setValue(
-                        df.format(Double.parseDouble(item.getItemProperty("lholiday").getValue().toString()) + 
+                        utilities.roundOffToTwoDecimalPlaces(Double.parseDouble(item.getItemProperty("lholiday").getValue().toString()) + 
                             (Double.parseDouble(item.getItemProperty("lholiday").getValue().toString()) * premiumRate))
                     );
                     
                     item.getItemProperty("sholiday").setValue(
-                        df.format(Double.parseDouble(item.getItemProperty("sholiday").getValue().toString()) + 
+                        utilities.roundOffToTwoDecimalPlaces(Double.parseDouble(item.getItemProperty("sholiday").getValue().toString()) + 
                             (Double.parseDouble(item.getItemProperty("sholiday").getValue().toString()) * premiumRate))
                     );
                 }
@@ -396,15 +396,22 @@ public class AttendanceTableContainerWindow extends Window {
                     String holidayStr = item.getItemProperty("holidays").toString();
                     double lateDeduction;
                     
-                    boolean checkIfInputIsInteger = util.checkInputIfInteger(event.getText().trim());
+                    boolean checkIfInputIsInteger = utilities.checkInputIfInteger(event.getText().trim());
                     if(!checkIfInputIsInteger){
                         getWindow().showNotification("Enter numeric format for lates!", Window.Notification.TYPE_WARNING_MESSAGE);
                         return;
                     }
                     
                     if(!event.getText().isEmpty()){
-                        lateDeduction = tcal.processEmployeesLates(policyStr, holidayStr, Integer.parseInt(event.getText().trim()), getEmploymentWage());
-                        item.getItemProperty("l/min").setValue(df.format(lateDeduction + (lateDeduction*premiumRate)));
+                        if(utilities.convertStringToInteger(event.getText().trim()) > 5){
+                            lateDeduction = computation.processEmployeesLates(policyStr, 
+                                holidayStr, 
+                                utilities.convertStringToInteger(event.getText().trim()), 
+                                getEmploymentWage());
+                            item.getItemProperty("l/min").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction + (lateDeduction*premiumRate)));
+                        } else {
+                            item.getItemProperty("l/min").setValue(0.0);
+                        }                        
                     }else{
                         item.getItemProperty("l/min").setValue(0.0);
                     }
@@ -422,15 +429,18 @@ public class AttendanceTableContainerWindow extends Window {
                     String holidayStr = item.getItemProperty("holidays").toString();
                     double undertimeDeduction;
                     
-                    boolean checkIfInputIsInteger = util.checkInputIfInteger(event.getText().trim());
+                    boolean checkIfInputIsInteger = utilities.checkInputIfInteger(event.getText().trim());
                     if(!checkIfInputIsInteger){
                         getWindow().showNotification("Enter numeric format for undertime!", Window.Notification.TYPE_WARNING_MESSAGE);
                         return;
                     }
                     
                     if(!event.getText().isEmpty()){
-                        undertimeDeduction = tcal.processEmployeesUndertime(policyStr, holidayStr, Integer.parseInt(event.getText().trim()), getEmploymentWage());
-                        item.getItemProperty("u/min").setValue(df.format(undertimeDeduction + (undertimeDeduction*premiumRate)));
+                        undertimeDeduction = computation.processEmployeesUndertime(policyStr, 
+                                holidayStr, 
+                                utilities.convertStringToInteger(event.getText().trim()), 
+                                getEmploymentWage());
+                        item.getItemProperty("u/min").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction + (undertimeDeduction*premiumRate)));
                     }else{
                         item.getItemProperty("u/min").setValue(0.0);
                     }
@@ -447,15 +457,18 @@ public class AttendanceTableContainerWindow extends Window {
                     String holidayStr = item.getItemProperty("holidays").toString();
                     double overtimeAddition;
                     
-                    boolean checkIfInputIsInteger = util.checkInputIfInteger(event.getText().trim());
+                    boolean checkIfInputIsInteger = utilities.checkInputIfInteger(event.getText().trim());
                     if(!checkIfInputIsInteger){
                         getWindow().showNotification("Enter numeric format for undertime!", Window.Notification.TYPE_WARNING_MESSAGE);
                         return;
                     }
                     
                     if(!event.getText().isEmpty()){
-                        overtimeAddition = tcal.processEmployeesOvertime(policyStr, holidayStr, Integer.parseInt(event.getText().trim()), getEmploymentWage());
-                        item.getItemProperty("o/min").setValue(df.format(overtimeAddition + (overtimeAddition*premiumRate)));
+                        overtimeAddition = computation.processEmployeesOvertime(policyStr, 
+                                holidayStr, 
+                                utilities.convertStringToInteger(event.getText().trim()), 
+                                getEmploymentWage());
+                        item.getItemProperty("o/min").setValue(utilities.roundOffToTwoDecimalPlaces(overtimeAddition + (overtimeAddition*premiumRate)));
                     }else{
                         item.getItemProperty("o/min").setValue(0.0);
                     }
@@ -472,15 +485,18 @@ public class AttendanceTableContainerWindow extends Window {
                     String holidayStr = item.getItemProperty("holidays").toString();
                     double nightDifferentialAddition;
                     
-                    boolean checkIfInputIsInteger = util.checkInputIfInteger(event.getText().trim());
+                    boolean checkIfInputIsInteger = utilities.checkInputIfInteger(event.getText().trim());
                     if(!checkIfInputIsInteger){
                         getWindow().showNotification("Enter numeric format for undertime!", Window.Notification.TYPE_WARNING_MESSAGE);
                         return;
                     }
                     
                     if(!event.getText().isEmpty()){
-                        nightDifferentialAddition = tcal.processEmployeesNightDifferential(policyStr, holidayStr, util.convertStringToInteger(event.getText().trim()), getEmploymentWage());
-                        item.getItemProperty("nd/min").setValue(df.format(nightDifferentialAddition + (nightDifferentialAddition*premiumRate)));
+                        nightDifferentialAddition = computation.processEmployeesNightDifferential(policyStr, 
+                                holidayStr, 
+                                utilities.convertStringToInteger(event.getText().trim()), 
+                                getEmploymentWage());
+                        item.getItemProperty("nd/min").setValue(utilities.roundOffToTwoDecimalPlaces(nightDifferentialAddition + (nightDifferentialAddition*premiumRate)));
                     }else{
                         item.getItemProperty("nd/min").setValue(0.0);
                     }
@@ -497,15 +513,18 @@ public class AttendanceTableContainerWindow extends Window {
                     String holidayStr = item.getItemProperty("holidays").toString();
                     double dutyManagerAddition;
                     
-                    boolean checkIfInputIsInteger = util.checkInputIfInteger(event.getText().trim());
+                    boolean checkIfInputIsInteger = utilities.checkInputIfInteger(event.getText().trim());
                     if(!checkIfInputIsInteger){
                         getWindow().showNotification("Enter numeric format for Duty Manager!", Window.Notification.TYPE_WARNING_MESSAGE);
                         return;
                     }
                     
                     if(!event.getText().isEmpty()){
-                        dutyManagerAddition = tcal.processEmployeeDutyManager(policyStr, holidayStr, util.convertStringToInteger(event.getText().trim()), getEmploymentWage());
-                        item.getItemProperty("dm/min").setValue(df.format(dutyManagerAddition));
+                        dutyManagerAddition = computation.processEmployeeDutyManager(policyStr, 
+                                holidayStr, 
+                                utilities.convertStringToInteger(event.getText().trim()), 
+                                getEmploymentWage());
+                        item.getItemProperty("dm/min").setValue(utilities.roundOffToTwoDecimalPlaces(dutyManagerAddition));
                     }else{
                         item.getItemProperty("dm/min").setValue(0.0);
                     }
@@ -513,7 +532,7 @@ public class AttendanceTableContainerWindow extends Window {
             });
             
             table.addItem(new Object[]{
-                util.convertDateFormat(dateList.get(i).toString()), 
+                utilities.convertDateFormat(dateList.get(i).toString()), 
                 policy, holidays, 
                 premium, lates, 
                 undertime, overtime, 
@@ -549,24 +568,24 @@ public class AttendanceTableContainerWindow extends Window {
                         List<String> tkeepList = new ArrayList<String>(Arrays.asList(attStr));
                         
                         Timekeeping t = new Timekeeping();
-                        t.setAttendanceDate(util.parsingDate(tkeepList.get(0)));
+                        t.setAttendanceDate(utilities.parsingDate(tkeepList.get(0)));
                         t.setPolicy(tkeepList.get(1));
                         t.setHoliday(tkeepList.get(2));
-                        t.setPremium(util.convertStringToBoolean(tkeepList.get(3)));
-                        t.setLates(util.convertStringToDouble(tkeepList.get(4)));
-                        t.setUndertime(util.convertStringToDouble(tkeepList.get(5)));
-                        t.setOvertime(util.convertStringToDouble(tkeepList.get(6)));
-                        t.setNightDifferential(util.convertStringToDouble(tkeepList.get(7)));
-                        t.setDutyManager(util.convertStringToDouble(tkeepList.get(8)));
-                        t.setLateDeduction(util.convertStringToDouble(tkeepList.get(9)));
-                        t.setUndertimeDeduction(util.convertStringToDouble(tkeepList.get(10)));
-                        t.setOvertimePaid(util.convertStringToDouble(tkeepList.get(11)));
-                        t.setNightDifferentialPaid(util.convertStringToDouble(tkeepList.get(12)));
-                        t.setDutyManagerPaid(util.convertStringToDouble(tkeepList.get(13)));
-                        t.setLegalHolidayPaid(util.convertStringToDouble(tkeepList.get(14)));
-                        t.setSpecialHolidayPaid(util.convertStringToDouble(tkeepList.get(15)));
-                        t.setWorkingDayOffPaid(util.convertStringToDouble(tkeepList.get(16)));
-                        t.setNonWorkingHolidayPaid(util.convertStringToDouble(tkeepList.get(17)));
+                        t.setPremium(utilities.convertStringToBoolean(tkeepList.get(3)));
+                        t.setLates(utilities.convertStringToDouble(tkeepList.get(4)));
+                        t.setUndertime(utilities.convertStringToDouble(tkeepList.get(5)));
+                        t.setOvertime(utilities.convertStringToDouble(tkeepList.get(6)));
+                        t.setNightDifferential(utilities.convertStringToDouble(tkeepList.get(7)));
+                        t.setDutyManager(utilities.convertStringToDouble(tkeepList.get(8)));
+                        t.setLateDeduction(utilities.convertStringToDouble(tkeepList.get(9)));
+                        t.setUndertimeDeduction(utilities.convertStringToDouble(tkeepList.get(10)));
+                        t.setOvertimePaid(utilities.convertStringToDouble(tkeepList.get(11)));
+                        t.setNightDifferentialPaid(utilities.convertStringToDouble(tkeepList.get(12)));
+                        t.setDutyManagerPaid(utilities.convertStringToDouble(tkeepList.get(13)));
+                        t.setLegalHolidayPaid(utilities.convertStringToDouble(tkeepList.get(14)));
+                        t.setSpecialHolidayPaid(utilities.convertStringToDouble(tkeepList.get(15)));
+                        t.setWorkingDayOffPaid(utilities.convertStringToDouble(tkeepList.get(16)));
+                        t.setNonWorkingHolidayPaid(utilities.convertStringToDouble(tkeepList.get(17)));
                         attendanceList.add(t);
                     }
                     

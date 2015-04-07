@@ -132,6 +132,7 @@ public class AdjustmentWindow extends Window {
         adjustmentTbl.addContainerProperty("id", Integer.class, null);
         adjustmentTbl.addContainerProperty("amount", Double.class, null);
         adjustmentTbl.addContainerProperty("remarks", String.class, null);
+        adjustmentTbl.addContainerProperty("date posted", String.class, null);
         
         int i = 0;
         List<Adjustment> adjustmentList = payrollService.getListOfAdjustmentFromPayrollId(getPayrollId());
@@ -139,7 +140,8 @@ public class AdjustmentWindow extends Window {
             adjustmentTbl.addItem(new Object[]{  
                 adj.getAdjustmentId(), 
                 adj.getAmount(), 
-                adj.getRemarks()
+                adj.getRemarks(), 
+                utilities.convertDateFormat(adj.getDatePosted().toString())
             }, i);
             i++;
         }

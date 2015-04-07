@@ -6,6 +6,8 @@
 
 package com.openhris.payroll.model;
 
+import java.util.Date;
+
 /**
  *
  * @author jetdario
@@ -15,6 +17,7 @@ public class Adjustment extends Payroll{
     private int adjustmentId;
     private double amount;
     private String remarks;
+    private Date datePosted;
 
     public int getAdjustmentId() {
         return adjustmentId;
@@ -28,6 +31,10 @@ public class Adjustment extends Payroll{
         return remarks;
     }
 
+    public Date getDatePosted(){
+        return datePosted;
+    }
+    
     public void setAdjustmentId(int adjustmentId) {
         this.adjustmentId = adjustmentId;
     }
@@ -40,4 +47,7 @@ public class Adjustment extends Payroll{
         this.remarks = remarks;
     }    
     
+    public void setDatePosted(Date datePosted){
+        this.datePosted = datePosted;
+    }
 }

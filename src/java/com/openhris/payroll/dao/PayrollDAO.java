@@ -845,6 +845,7 @@ public class PayrollDAO {
                 adjustment.setAdjustmentId(util.convertStringToInteger(rs.getString("id")));
                 adjustment.setAmount(util.convertStringToDouble(rs.getString("amount")));
                 adjustment.setRemarks(rs.getString("remarks"));
+                adjustment.setDatePosted(util.parsingDate(rs.getString("datePosted")));
                 adjustmentList.add(adjustment);
             }
         } catch (SQLException ex) {

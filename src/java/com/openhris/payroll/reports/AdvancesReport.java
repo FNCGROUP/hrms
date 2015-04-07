@@ -27,14 +27,17 @@ import net.sf.jasperreports.engine.JasperPrint;
  */
 public class AdvancesReport extends Window {
     GetSQLConnection getConnection = new GetSQLConnection();
-    private String corporate;
+//    private String corporate;
+    private int branchId;
     private String payrollDate;
         
     String filePath;
     Application payrollApplication;
 
-    public AdvancesReport(String corporate, String payrollDate, Application payrollApplication) {
-        this.corporate = corporate;
+    public AdvancesReport(int branchId, 
+            String payrollDate, 
+            Application payrollApplication) {
+        this.branchId = branchId;
         this.payrollDate = payrollDate;
         this.payrollApplication = payrollApplication;
         
@@ -48,7 +51,7 @@ public class AdvancesReport extends Window {
         File reportFile = new File("C:/reportsJasper/AdvancesReport.jasper");
         
         final HashMap hm = new HashMap();
-        hm.put("CORPORATE_NAME", getCorporate());
+        hm.put("BRANCH_ID", getBranchId());
         hm.put("PAYROLL_DATE", getPayrollDate());
 
         try{
@@ -89,9 +92,9 @@ public class AdvancesReport extends Window {
         getPayrollApplication().getMainWindow().open(resource, "_blank");
     }
 
-    String getCorporate() {
-        return corporate;
-    }
+//    String getCorporate() {
+//        return corporate;
+//    }
 
     String getPayrollDate() {
         return payrollDate;
@@ -101,4 +104,7 @@ public class AdvancesReport extends Window {
         return payrollApplication;
     }
     
+    int getBranchId(){
+        return branchId;
+    }
 }
