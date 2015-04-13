@@ -225,8 +225,13 @@ public class PayrollServiceImpl implements PayrollService {
     }
 
     @Override
-    public boolean isPayrollAdjusted(int id) {
-        return payrollDAO.isPayrollAdjusted(id);
+    public boolean isPayrollAdjusted(int payrollId) {
+        return payrollDAO.isPayrollAdjusted(payrollId);
+    }
+
+    @Override
+    public boolean unlockedPayroll(int payrollId) {
+        return payrollDAO.unlockedPayroll(payrollId);
     }
     
 }

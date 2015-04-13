@@ -640,9 +640,15 @@ public class MainApp extends Application {
         
         payrollMenuGrid = new GridLayout();
         payrollMenuGrid.setSizeFull();
-        payrollMenuGrid.setCaption("201 Summary");
+        payrollMenuGrid.setCaption("13th Month");
 //        payrollMenuGrid.addComponent(form201);
         ts.addComponent(payrollMenuGrid);
+        
+//        payrollMenuGrid = new GridLayout();
+//        payrollMenuGrid.setSizeFull();
+//        payrollMenuGrid.setCaption("201 Summary");
+//        payrollMenuGrid.addComponent(form201);
+//        ts.addComponent(payrollMenuGrid);
         
         return ts;
     }

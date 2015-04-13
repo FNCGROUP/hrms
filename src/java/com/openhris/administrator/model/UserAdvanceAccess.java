@@ -24,6 +24,7 @@ public class UserAdvanceAccess extends User {
     private boolean editSss;
     private boolean editPhic;
     private boolean editHdmf;
+    private boolean unlockPayroll;
 
     public boolean isTimekeeping() {
         return timekeeping;
@@ -79,6 +80,10 @@ public class UserAdvanceAccess extends User {
 
     public boolean isEditHdmf() {
         return editHdmf;
+    }
+    
+    public boolean isUnlockedPayroll(){
+        return unlockPayroll;
     }
     
     public void setTimekeeping(boolean timekeeping) {
@@ -137,4 +142,7 @@ public class UserAdvanceAccess extends User {
         this.editHdmf = editHdmf;
     }
     
+    public void setUnlockPayroll(boolean unlockPayroll){
+        this.unlockPayroll = unlockPayroll;
+    }
 }

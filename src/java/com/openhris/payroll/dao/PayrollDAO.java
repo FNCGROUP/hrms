@@ -1240,7 +1240,7 @@ public class PayrollDAO {
         return previousPayrollId;
     }
     
-    public boolean isPayrollAdjusted(int id){
+    public boolean isPayrollAdjusted(int payrollId){
         Connection conn = getConnection.connection();
         Statement stmt = null;
         ResultSet rs = null;
@@ -1248,7 +1248,7 @@ public class PayrollDAO {
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT actionTaken FROM payroll_table WHERE id = "+id+" ");
+            rs = stmt.executeQuery("SELECT actionTaken FROM payroll_table WHERE id = "+payrollId+" ");
             while(rs.next()){
                 if(rs.getString("actionTaken") == null){
                     result = false;
@@ -1263,6 +1263,35 @@ public class PayrollDAO {
                 if(conn != null || !conn.isClosed()){
                     stmt.close();
                     rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public boolean unlockedPayroll(int payrollId){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE payroll_table SET rowStatus = ? "
+                    + "WHERE id = ?");
+            pstmt.setString(1, "unlocked");
+            pstmt.setInt(2, payrollId);
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
                     conn.close();
                 }
             } catch (SQLException ex) {

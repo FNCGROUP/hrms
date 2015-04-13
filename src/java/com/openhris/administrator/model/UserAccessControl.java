@@ -40,6 +40,7 @@ public class UserAccessControl implements TransactionListener {
     private boolean editSss;
     private boolean editPhic;
     private boolean editHdmf;
+    private boolean unlockPayroll;
         
     public UserAccessControl(Application application){
         this.application = application;
@@ -131,6 +132,10 @@ public class UserAccessControl implements TransactionListener {
         return instance.get().editHdmf;
     }
     
+    public static boolean isUnlockedPayroll(){
+        return instance.get().unlockPayroll;
+    }
+    
     public static void setTimekeeping(boolean timekeeping) {
         instance.get().timekeeping = timekeeping;
     }
@@ -209,6 +214,10 @@ public class UserAccessControl implements TransactionListener {
 
     public static void setEditHdmf(boolean editHdmf) {
         instance.get().editHdmf = editHdmf;
+    }
+    
+    private static void setUnlockedPayroll(boolean unlockPayroll){
+        instance.get().unlockPayroll = unlockPayroll;
     }
     
     private boolean convertStringToBoolean(String string){
