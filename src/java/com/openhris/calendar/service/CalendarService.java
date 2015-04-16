@@ -5,6 +5,8 @@
  */
 package com.openhris.calendar.service;
 
+import com.vaadin.addon.calendar.ui.CalendarComponentEvent;
+import com.vaadin.addon.calendar.ui.CalendarComponentEvents;
 import java.util.List;
 
 /**
@@ -15,7 +17,11 @@ public interface CalendarService {
     
     public List<BasicEvent> getAllEvents();
     
-    public List<BasicEvent> getEventById();
+    public BasicEvent getEvent(CalendarComponentEvents.EventClick events);
     
     public boolean addNewEvent(BasicEvent basicEvent);
+    
+    public boolean editEvent(BasicEvent basicEvent);
+    
+    public boolean removeEvent(int eventDataId);
 }

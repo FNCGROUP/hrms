@@ -6,6 +6,7 @@ package com.hrms.utilities;
 
 import com.hrms.classes.SalaryComputation;
 import com.hrms.modules.EmployeesInfoModule;
+import java.io.Serializable;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -18,7 +19,7 @@ import java.util.logging.Logger;
  *
  * @author jet
  */
-public class ConvertionUtilities {
+public class ConvertionUtilities implements Serializable {
     
     public Double convertStringToDouble(String num){
         Double val = null;

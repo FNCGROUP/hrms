@@ -33,7 +33,7 @@ import java.util.List;
  *
  * @author jetdario
  */
-public class CalendarMainUI extends VerticalLayout {
+public class SchedulerMainUI extends VerticalLayout {
     
     private static final long serialVersionUID = -5436777475398410597L;
 
@@ -59,25 +59,23 @@ public class CalendarMainUI extends VerticalLayout {
     private Button saveEventButton;
     private Button editEventButton;
     
-    private Select eventType;        
-    private DateField startDate;
-    private DateField endDate;
-    private TextField caption;
-    private TextField location;
-    private TextArea description;
-    private Select color;
+//    private Select eventType;        
+//    private DateField startDate;
+//    private DateField endDate;
+//    private TextField caption;
+//    private TextField location;
+//    private TextArea description;
+//    private Select color;
     
     private Date dateStart;
     private Date dateEnd;
     private boolean useSecondResolution = true;
-    private String username;
-    private String userRole;
     Label monthLabel;
     
     private String eventId;
-    private String employeeId;
         
-    public CalendarMainUI(){
+    public SchedulerMainUI(){
+        
         setMargin(true);
         cal = new Calendar();
         
@@ -219,14 +217,22 @@ public class CalendarMainUI extends VerticalLayout {
                 nextButton.setVisible(true);
                 prevButton.setVisible(true);
                 
+                Window subWindow;
+                
                 if(event.getCalendarEvent() == null){
-                    Window subWindow = new CalendarScheduleWindow(0, useSecondResolution);
+                    subWindow = new CalendarScheduleWindow(0, 
+                            useSecondResolution, cal);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow); 
                     }        
                     subWindow.addListener(scheduleWindowCloseListener);
-                }else{
-                    System.out.println(event.getCalendarEvent().getCaption());
+                }else{                    
+                    CalendarService calendarService = new CalendarServiceImpl();
+                    BasicEvent basicEvent = calendarService.getEvent(event);
+                    subWindow = new CalendarScheduleWindow(event, basicEvent, cal);
+                    if(subWindow.getParent() == null){
+                        getWindow().addWindow(subWindow); 
+                    }
                 }                
             }
         });
@@ -291,16 +297,18 @@ public class CalendarMainUI extends VerticalLayout {
             dateEnd = Calendar.getEndOfDay(calendar, dateEnd);
         }
                 
-        Window subWindow = new CalendarScheduleWindow(0, useSecondResolution);
+        Window subWindow = new CalendarScheduleWindow(0, 
+                useSecondResolution, cal);
         if(subWindow.getParent() == null){
             getWindow().addWindow(subWindow); 
         }                            
+        subWindow.addListener(scheduleWindowCloseListener);
     }
 
     public final void calendarEvents(){        
         List<BasicEvent> eventList = calendarService.getAllEvents();
-        for(BasicEvent event : eventList){
-            cal.addEvent(event);
+        for(BasicEvent basicEvent : eventList){
+            cal.addEvent(basicEvent);
         } 
     }
         
@@ -436,8 +444,7 @@ public class CalendarMainUI extends VerticalLayout {
 
         @Override
         public void windowClose(Window.CloseEvent e) {
-            BasicEvent basicEvent = new CalendarScheduleWindow().getBasicEvent();
-            cal.addEvent(basicEvent);
         }
     };
+    
 }

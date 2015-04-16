@@ -8,6 +8,7 @@ package com.openhris.calendar.serviceImpl;
 import com.openhris.calendar.dao.CalendarDAO;
 import com.openhris.calendar.service.BasicEvent;
 import com.openhris.calendar.service.CalendarService;
+import com.vaadin.addon.calendar.ui.CalendarComponentEvents;
 import java.util.List;
 
 /**
@@ -24,13 +25,23 @@ public class CalendarServiceImpl implements CalendarService{
     }
 
     @Override
-    public List<BasicEvent> getEventById() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public BasicEvent getEvent(CalendarComponentEvents.EventClick events) {
+        return calendarDAO.getEvent(events);
     }
 
     @Override
     public boolean addNewEvent(BasicEvent basicEvent) {
         return calendarDAO.addNewEvent(basicEvent);
+    }
+
+    @Override
+    public boolean removeEvent(int eventDataId) {
+        return calendarDAO.removeEvent(eventDataId);
+    }
+
+    @Override
+    public boolean editEvent(BasicEvent basicEvent) {
+        return calendarDAO.editEvent(basicEvent);
     }
     
 }

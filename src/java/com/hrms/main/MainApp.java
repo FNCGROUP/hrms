@@ -20,7 +20,7 @@ import com.openhris.administrator.UsersMainUI;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.administrator.service.AdministratorService;
 import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
-import com.openhris.calendar.CalendarMainUI;
+import com.openhris.calendar.SchedulerMainUI;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.company.model.Branch;
@@ -93,7 +93,7 @@ public class MainApp extends Application {
     UsersMainUI usersMainUI;
     UserToolbarMenuAccessMainUI userToolbarMenuAccessMainUI;
     UserAdvanceAccessMainUI userAdvanceAccessMainUI;    
-    CalendarMainUI calendarMainUI;
+    SchedulerMainUI schedulerMainUI;
     
     AdvanceUserAccessModule advanceUserAccess = new AdvanceUserAccessModule();
     CreateNewUser createNewUser;
@@ -321,7 +321,7 @@ public class MainApp extends Application {
         
         mainButton = new NativeButton("CALENDAR", change);
         mainButton.setStyleName("selected");
-        mainButton.setData(buildCalendarComponent());
+        mainButton.setData(buildSchedulerComponent());
         if(GlobalVariables.getUserRole().equals("administrator")){
             mainButton.setVisible(true);
         } else {
@@ -676,20 +676,19 @@ public class MainApp extends Application {
         return ts;
     }
         
-    ComponentContainer buildCalendarComponent(){
-        calendarMainUI = new CalendarMainUI();
+    ComponentContainer buildSchedulerComponent(){
+        schedulerMainUI = new SchedulerMainUI();
         InlineDateField sample = new InlineDateField();
         sample.setValue(new Date());
         sample.setImmediate(true);
         
         TabSheet ts = new TabSheet();
-//        ts.setSizeFull();
         ts.addStyleName("bar");
         
         VerticalLayout calendarMenuGrid = new VerticalLayout();
         calendarMenuGrid.setSizeFull();
-        calendarMenuGrid.setCaption("Calendar");
-        calendarMenuGrid.addComponent(calendarMainUI);      
+        calendarMenuGrid.setCaption("Scheduler");
+        calendarMenuGrid.addComponent(schedulerMainUI);      
         ts.addComponent(calendarMenuGrid);
                 
         return ts;
@@ -771,7 +770,7 @@ public class MainApp extends Application {
                     initMainMenu();
                     (subWindow.getParent()).removeWindow(subWindow);
                     userId = administratorService.getUserId(username.getValue().toString().toLowerCase().trim());
-                    hsplit.setSecondComponent(buildCalendarComponent());
+                    hsplit.setSecondComponent(buildSchedulerComponent());
                 }else{
                     (subWindow.getParent()).showNotification("Incorrect username/password!");
                     return;

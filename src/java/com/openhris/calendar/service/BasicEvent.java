@@ -30,8 +30,7 @@ public class BasicEvent  implements CalendarEventEditor, CalendarEvent.EventChan
 
     private transient List<EventChangeListener> listeners = new ArrayList<EventChangeListener>();
     
-    public BasicEvent(){
-        
+    public BasicEvent(){        
     }
     
     public BasicEvent(Date start, Date end){

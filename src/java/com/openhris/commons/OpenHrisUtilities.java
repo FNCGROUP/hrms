@@ -235,4 +235,8 @@ public class OpenHrisUtilities {
         }
         return result;
     }
+
+    public String replaceSingleQuote(String str){
+        return str.replace("'", "\\'");
+    }
 }

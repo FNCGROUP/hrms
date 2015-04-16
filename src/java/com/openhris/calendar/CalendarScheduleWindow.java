@@ -6,6 +6,12 @@
 package com.openhris.calendar;
 
 import com.openhris.calendar.service.BasicEvent;
+import com.openhris.calendar.service.CalendarService;
+import com.openhris.calendar.serviceImpl.CalendarServiceImpl;
+import com.openhris.commons.OpenHrisUtilities;
+import com.vaadin.addon.calendar.ui.Calendar;
+import com.vaadin.addon.calendar.ui.CalendarComponentEvent;
+import com.vaadin.addon.calendar.ui.CalendarComponentEvents;
 import com.vaadin.data.Item;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
@@ -17,6 +23,7 @@ import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 /**
  *
@@ -25,6 +32,8 @@ import java.util.Date;
 public class CalendarScheduleWindow extends Window {
 
     BasicEvent basicEvent = new BasicEvent();
+    OpenHrisUtilities utilities = new OpenHrisUtilities();
+    CalendarService calendarService = new CalendarServiceImpl();
     private int eventId;
     private boolean useSecondResolution;
     
@@ -35,20 +44,24 @@ public class CalendarScheduleWindow extends Window {
     private TextField location;
     private TextArea description;
     private Select color;
+    private TextField eventDataId;
     private Button deleteEventButton;    
     private Button saveEventButton;
     private Button editEventButton;
     
-    private Date dateStart;
-    private Date dateEnd;
+    CalendarComponentEvents.EventClick event;
+    Calendar cal;
 
     public CalendarScheduleWindow() {
+        addComponent(scheduleLayout());
     }
         
     public CalendarScheduleWindow(int eventId, 
-            boolean useSecondResolution) {
+            boolean useSecondResolution, 
+            Calendar cal) {
         this.eventId = eventId;
         this.useSecondResolution = useSecondResolution;
+        this.cal = cal;
         
         setCaption("Schedule Event");
         setWidth("250px");
@@ -56,6 +69,21 @@ public class CalendarScheduleWindow extends Window {
         center();
         
         addComponent(scheduleLayout());
+    }
+    
+    public CalendarScheduleWindow(CalendarComponentEvents.EventClick event, 
+            BasicEvent basicEvent, 
+            Calendar cal){
+        this.event = event;
+        this.basicEvent = basicEvent;
+        this.cal = cal;
+        
+        setCaption("Scheduled Event");
+        setWidth("250px");
+        setModal(true);
+        center();
+        
+        addComponent(populateSchedule(event));
     }
     
     VerticalLayout scheduleLayout(){
@@ -85,10 +113,10 @@ public class CalendarScheduleWindow extends Window {
         
         color = createStyleNameSelect();
         layout.addComponent(color);
-
+        
         saveEventButton = new Button("SAVE", saveEventBtnListener);
         saveEventButton.setWidth("100%");
-//        editEventButton = new Button("Edit", editEventBtnListener);
+        
         deleteEventButton = new Button("DELETE", deleteEventBtnListener);
         deleteEventButton.setWidth("100%");
         
@@ -98,6 +126,63 @@ public class CalendarScheduleWindow extends Window {
         buttons.addComponent(deleteEventButton);
         buttons.addComponent(saveEventButton);
 //        buttons.addComponent(editEventButton);
+        layout.addComponent(buttons);
+        layout.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
+                
+        return layout;
+    }
+    
+    VerticalLayout populateSchedule(CalendarComponentEvents.EventClick event){
+        VerticalLayout layout = new VerticalLayout();
+        layout.setMargin(true);
+        layout.setSpacing(true);
+
+        eventType = createEventTypelect();
+        eventType.setValue(basicEvent.getEventType());
+        layout.addComponent(eventType);
+        
+        startDate = createDateField("Start Date: ");
+        startDate.setValue(event.getCalendarEvent().getStart());
+        layout.addComponent(startDate);
+        
+        endDate = createDateField("End Date: ");
+        endDate.setValue(event.getCalendarEvent().getEnd());
+        layout.addComponent(endDate);
+        
+        caption = createTextField("Caption: ");
+        caption.setValue(event.getCalendarEvent().getCaption());
+        layout.addComponent(caption);
+        
+        location = createTextField("Where: ");
+        location.setValue(getBasicEvent().getLocation());
+        layout.addComponent(location);
+        
+        description = new TextArea("Description: ");
+        description.setWidth("100%");
+        description.setRows(3);
+        description.setValue(event.getCalendarEvent().getDescription());
+        layout.addComponent(description);
+        
+        color = createStyleNameSelect();
+        color.setValue(basicEvent.getStyleName());
+        layout.addComponent(color);
+        
+        eventDataId = createTextField("id: ");
+        eventDataId.setValue(getBasicEvent().getEventId());
+        eventDataId.setVisible(false);
+        layout.addComponent(eventDataId);
+                
+        editEventButton = new Button("EDIT", editEventBtnListener);
+        editEventButton.setWidth("100%");
+                
+        deleteEventButton = new Button("DELETE", deleteEventBtnListener);
+        deleteEventButton.setWidth("100%");
+        
+        HorizontalLayout buttons = new HorizontalLayout();
+        buttons.setSpacing(true);
+        buttons.setWidth("100%");
+        buttons.addComponent(deleteEventButton);
+        buttons.addComponent(editEventButton);
         layout.addComponent(buttons);
         layout.setComponentAlignment(buttons, Alignment.BOTTOM_RIGHT);
                 
@@ -126,11 +211,18 @@ public class CalendarScheduleWindow extends Window {
     private Select createEventTypelect() {
         Select s = new Select("Event Type: ");
         s.setWidth("100%");
-        s.addItem("Legal Holiday");
-        s.addItem("Special Holiday");
-        s.addItem("Birthday");
-        s.addItem("Meeting");
         s.setNullSelectionAllowed(false);
+        s.addContainerProperty("c", String.class, "");
+        s.setItemCaptionPropertyId("c");
+        Item i = s.addItem("event1");
+        i.getItemProperty("c").setValue("Legal Holiday");
+        i = s.addItem("event2");
+        i.getItemProperty("c").setValue("Special Holiday");
+        i = s.addItem("event3");
+        i.getItemProperty("c").setValue("Birthday");
+        i = s.addItem("event4");
+        i.getItemProperty("c").setValue("Meeting");
+        s.setImmediate(true);
         
         return s;
     }
@@ -164,7 +256,40 @@ public class CalendarScheduleWindow extends Window {
 
         @Override
         public void buttonClick(Button.ClickEvent event) {
-            getWindow().showNotification("SAVE");
+            if(eventType.getValue() == null){ getNotifications(); return; }
+            if(startDate.getValue() == null){ getNotifications(); return; }
+            if(endDate.getValue() == null){ getNotifications(); return; }
+            if(caption.getValue() == null || caption.getValue().toString().trim().isEmpty()){ getNotifications(); return; }
+            if(location.getValue() == null || location.getValue().toString().trim().isEmpty()){ getNotifications(); return; }
+            if(description.getValue() == null || description.getValue().toString().trim().isEmpty()){ getNotifications(); return; }
+            if(color.getValue() == null){ getNotifications(); return; }
+            
+            basicEvent = new BasicEvent();
+            basicEvent.setEventType(eventType.getValue().toString());
+            basicEvent.setStart(utilities.parsingDateWithTime(utilities.convertDateFormatWithTime(startDate.getValue().toString())));
+            basicEvent.setEnd(utilities.parsingDateWithTime(utilities.convertDateFormatWithTime(endDate.getValue().toString())));
+            basicEvent.setCaption(caption.getValue().toString().trim().toLowerCase());
+            basicEvent.setLocation(location.getValue().toString().trim().toLowerCase());
+            basicEvent.setDescription(description.getValue().toString().trim().toLowerCase());
+            basicEvent.setStyleName(color.getValue().toString().trim().toLowerCase());
+            
+            GregorianCalendar start = new GregorianCalendar();
+            GregorianCalendar end = new GregorianCalendar();
+            start.setTime(basicEvent.getStart());
+            end.setTime(basicEvent.getEnd());
+            
+            boolean result = calendarService.addNewEvent(basicEvent);
+            if(result){
+                close();
+                getCalendar().addEvent(new BasicEvent(
+                        basicEvent.getCaption(), 
+                        basicEvent.getDescription(), 
+                        basicEvent.getStyleName(), 
+                        start.getTime(), 
+                        end.getTime()
+                ));
+                getWindow().showNotification("Event Added!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+            }         
         }
     };
     
@@ -172,7 +297,7 @@ public class CalendarScheduleWindow extends Window {
 
         @Override
         public void buttonClick(Button.ClickEvent event) {
-            getWindow().showNotification("EDIT");
+            getWindow().showNotification("event data ID: "+eventDataId.getValue());
         }
     };
             
@@ -180,28 +305,53 @@ public class CalendarScheduleWindow extends Window {
 
         @Override
         public void buttonClick(Button.ClickEvent event) {
+//            getWindow().showNotification("event data ID: "+eventDataId.getValue());
             Window sub = getDeleteWindow();
             sub.setModal(true);
             if(sub.getParent() == null){
-                getWindow().addWindow(sub);
+                getApplication().getMainWindow().addWindow(sub);
             }
             sub.center();
         }
     };
     
     Window getDeleteWindow(){
-        Window sub = new Window("DELETE EVENT");
+        final Window sub = new Window("DELETE EVENT");
         sub.setWidth("250px");
         
         Button deleteBtn = new Button("DELETE EVENT?");
         deleteBtn.setWidth("100%");
+        deleteBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                boolean result = calendarService.removeEvent(utilities.convertStringToInteger(eventDataId.getValue().toString()));
+                if(result){
+                    getApplication().getMainWindow().removeWindow(sub);
+                    close();
+                    getCalendar().removeEvent(getEvent().getCalendarEvent());
+                }
+            }
+        });
         
         sub.addComponent(deleteBtn);
         
         return sub;
     }
     
+    CalendarComponentEvents.EventClick getEvent(){
+        return event;
+    }
+    
     public BasicEvent getBasicEvent(){
         return basicEvent;
+    }
+    
+    private void getNotifications(){
+        getWindow().showNotification("Complete all Fields!", Window.Notification.TYPE_ERROR_MESSAGE);
+    }    
+    
+    Calendar getCalendar(){
+        return cal;
     }
 }
