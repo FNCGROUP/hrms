@@ -319,7 +319,7 @@ public class MainApp extends Application {
         }
         left.addComponent(mainButton);
         
-        mainButton = new NativeButton("CALENDAR", change);
+        mainButton = new NativeButton("SCHEDULER", change);
         mainButton.setStyleName("selected");
         mainButton.setData(buildSchedulerComponent());
         if(GlobalVariables.getUserRole().equals("administrator")){
@@ -438,6 +438,8 @@ public class MainApp extends Application {
                     } else {
                         branchId = companyService.getBranchId(tradeId, event.getItemId().toString());
                     }                                 
+                    
+                    System.out.println("branchId from main method: "+branchId);
                     
                     if(mainMenuBar){
                         employeeMainUI.employeesTable(getEmployeeListByBranch(branchId));

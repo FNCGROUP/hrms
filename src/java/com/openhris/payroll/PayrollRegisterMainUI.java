@@ -263,6 +263,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     if(day == 15){
                         String fileName = "HdmfLoanReport_";
                         reports.deleteFile(fileName);
+                        System.out.println("branchId: "+getBranchId());
                         HDMFLoansPayableReport hdmfLoansPayableReport = new HDMFLoansPayableReport(getBranchId(), 
                                 util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
