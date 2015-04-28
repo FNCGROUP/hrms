@@ -8,17 +8,22 @@ package com.openhris.timekeeping;
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
+import com.openhris.commons.reports.OpenHrisReports;
 import com.openhris.payroll.ProcessPayrollComputation;
 import com.openhris.timekeeping.model.Timekeeping;
+import com.openhris.timekeeping.reports.IndividualAttendanceReport;
 import com.openhris.timekeeping.service.TimekeepingService;
 import com.openhris.timekeeping.serviceprovider.TimekeepingServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ItemClickEvent;
+import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
+import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
@@ -85,7 +90,32 @@ public class EditAttendanceTableContainerWindow extends Window {
         setModal(true);
         center();
         
-        addComponent(generateAttendanceTable());
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setSizeFull();
+        vlayout.setSpacing(true);
+        
+        GridLayout glayout = new GridLayout(2, 2);
+        glayout.setSpacing(true);
+        
+        Label payrollPeriodLabel = new Label("Payroll Period: ");
+        glayout.addComponent(payrollPeriodLabel, 0, 0);
+        glayout.setComponentAlignment(payrollPeriodLabel, Alignment.MIDDLE_RIGHT);
+        
+        Label periodLabel = new Label(getPayrollPeriod());
+        glayout.addComponent(periodLabel, 1, 0);
+        glayout.setComponentAlignment(periodLabel, Alignment.MIDDLE_LEFT);
+        
+        Label payrollDateLabel = new Label("Payroll Date: ");
+        glayout.addComponent(payrollDateLabel, 0, 1);
+        glayout.setComponentAlignment(payrollDateLabel, Alignment.MIDDLE_RIGHT);
+        
+        Label dateLabel = new Label(getPayrollDate());
+        glayout.addComponent(dateLabel, 1, 1);
+        glayout.setComponentAlignment(dateLabel, Alignment.MIDDLE_LEFT);
+        
+        vlayout.addComponent(glayout);
+        vlayout.addComponent(generateAttendanceTable());
+        addComponent(vlayout);
     }
 
     VerticalLayout generateAttendanceTable(){
@@ -423,12 +453,16 @@ public class EditAttendanceTableContainerWindow extends Window {
         
         final Button saveButton = new Button();
         saveButton.setWidth("200px");
-        saveButton.setCaption("Save Attendance Data");
+        saveButton.setCaption("UPDATE ATTENDANCE DATA");
         saveButton.setEnabled(UserAccessControl.isEditAttendance());
         
         for(Object listener : saveButton.getListeners(Button.ClickListener.class)){
             saveButton.removeListener(Button.ClickListener.class, listener);
         }
+        
+        GridLayout glayout = new GridLayout(2, 1);
+        glayout.setSizeFull();
+        glayout.setSpacing(true);
         
         saveButton.addListener(new Button.ClickListener() {
 
@@ -482,11 +516,26 @@ public class EditAttendanceTableContainerWindow extends Window {
             }
             
         });               
-        vlayout.addComponent(saveButton);
+        glayout.addComponent(saveButton, 0, 0);
+        glayout.setComponentAlignment(saveButton, Alignment.MIDDLE_LEFT);
+//        vlayout.addComponent(saveButton);
         
-        Button printButton = new Button("Print Attendance");
+        Button printButton = new Button("PRINT ATTENDANCE");
         printButton.setWidth("200px");
-        vlayout.addComponent(printButton);
+        printButton.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                OpenHrisReports reports = new OpenHrisReports(0, null);
+                String fileName = "IndividualAttendanceReport_";
+                reports.deleteFile(fileName);
+                Window reportWindow = new IndividualAttendanceReport(getPayrollId(), getApplication());
+            }
+        });
+        glayout.addComponent(printButton, 1, 0);
+        glayout.setComponentAlignment(printButton, Alignment.MIDDLE_RIGHT);
+        
+        vlayout.addComponent(glayout);
         
         return vlayout;
     }

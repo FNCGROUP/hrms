@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="payrollRegisterReport" language="groovy" pageWidth="975" pageHeight="637" orientation="Landscape" columnWidth="960" leftMargin="5" rightMargin="10" topMargin="20" bottomMargin="20" uuid="7597f17b-009e-422f-a85f-5fabd44ba177">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="payrollRegisterReport" language="groovy" pageWidth="975" pageHeight="637" orientation="Landscape" columnWidth="960" leftMargin="5" rightMargin="10" topMargin="15" bottomMargin="15" uuid="7597f17b-009e-422f-a85f-5fabd44ba177">
 	<property name="ireport.zoom" value="1.2100000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="73"/>
+	<property name="ireport.y" value="52"/>
 	<parameter name="BRANCH_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -197,171 +197,171 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 			</textField>
 		</band>
 	</title>
-	<columnHeader>
-		<band height="33" splitType="Stretch">
+	<pageHeader>
+		<band height="33">
 			<staticText>
-				<reportElement uuid="6fc5c13d-d722-42db-bb70-7d78eebd2657" x="38" y="0" width="100" height="32"/>
+				<reportElement uuid="6fc5c13d-d722-42db-bb70-7d78eebd2657" x="38" y="1" width="100" height="32"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="9" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Name:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="8313ee02-9dbb-4f41-8c97-5be0244794f7" x="157" y="0" width="20" height="32"/>
+				<reportElement uuid="8313ee02-9dbb-4f41-8c97-5be0244794f7" x="157" y="1" width="20" height="32"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[# Of Days]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="347674d0-5a62-4f31-ae5d-f1116a82b9cf" x="177" y="0" width="25" height="32"/>
+				<reportElement uuid="347674d0-5a62-4f31-ae5d-f1116a82b9cf" x="177" y="1" width="25" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[RPD]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="6d7343e0-e05f-4c2f-a529-7d04c5fd087e" x="242" y="0" width="40" height="32"/>
+				<reportElement uuid="6d7343e0-e05f-4c2f-a529-7d04c5fd087e" x="242" y="1" width="40" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Half- Month Salary]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="6e6606f5-41c3-4fe4-912c-4014331642dc" x="282" y="0" width="35" height="32"/>
+				<reportElement uuid="6e6606f5-41c3-4fe4-912c-4014331642dc" x="282" y="1" width="35" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Overtime Pay]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="96069497-d1c9-4bb7-8e4d-0ec62481d5a7" x="316" y="0" width="35" height="32"/>
+				<reportElement uuid="96069497-d1c9-4bb7-8e4d-0ec62481d5a7" x="316" y="1" width="35" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Legal Holiday]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="c2f014a9-4ce4-4d41-9958-6abffb07b802" x="351" y="0" width="35" height="32"/>
+				<reportElement uuid="c2f014a9-4ce4-4d41-9958-6abffb07b802" x="351" y="1" width="35" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Special Holiday]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="21e29c69-e557-455c-a2df-4f1ca7788e17" x="386" y="0" width="35" height="32"/>
+				<reportElement uuid="21e29c69-e557-455c-a2df-4f1ca7788e17" x="386" y="1" width="35" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Night Differential]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="4691de89-45c2-4753-95e6-9c51dc3f905b" x="456" y="0" width="40" height="32"/>
+				<reportElement uuid="4691de89-45c2-4753-95e6-9c51dc3f905b" x="456" y="1" width="40" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Absent]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="36cbf64e-f321-4abd-8b5b-e93b431b5145" x="496" y="0" width="40" height="32"/>
+				<reportElement uuid="36cbf64e-f321-4abd-8b5b-e93b431b5145" x="496" y="1" width="40" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Lates]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="72a84ca6-557f-4306-b4dd-f5868c6de30c" x="536" y="0" width="40" height="32"/>
+				<reportElement uuid="72a84ca6-557f-4306-b4dd-f5868c6de30c" x="536" y="1" width="40" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Undertime]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="e6b3dcf5-3fb9-4bc2-8a7e-7b9de41ef337" x="626" y="0" width="30" height="32"/>
+				<reportElement uuid="e6b3dcf5-3fb9-4bc2-8a7e-7b9de41ef337" x="626" y="1" width="30" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SSS]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="e65d2075-1862-4e27-9841-78ec19049205" x="656" y="0" width="40" height="32"/>
+				<reportElement uuid="e65d2075-1862-4e27-9841-78ec19049205" x="656" y="1" width="40" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Philhealth]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="8bb94705-afa6-4abe-8a0c-6c9a752cb3c6" x="696" y="0" width="30" height="32"/>
+				<reportElement uuid="8bb94705-afa6-4abe-8a0c-6c9a752cb3c6" x="696" y="1" width="30" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[HDMF]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="90c86267-d80c-4181-a9c3-c093f83f2a79" x="725" y="0" width="30" height="32"/>
+				<reportElement uuid="90c86267-d80c-4181-a9c3-c093f83f2a79" x="725" y="1" width="30" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Tax]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="7852836c-cb79-4f77-b5a5-0da1354eae10" x="754" y="0" width="40" height="32"/>
+				<reportElement uuid="7852836c-cb79-4f77-b5a5-0da1354eae10" x="754" y="1" width="40" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Net   Salary]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="b9040e53-17bb-4cd1-8434-92ace87d74e1" x="794" y="0" width="35" height="32"/>
+				<reportElement uuid="b9040e53-17bb-4cd1-8434-92ace87d74e1" x="794" y="1" width="35" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Meal Allowance]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="05d223c3-4d0b-4d60-b951-ff769ef7e910" x="576" y="0" width="50" height="32"/>
+				<reportElement uuid="05d223c3-4d0b-4d60-b951-ff769ef7e910" x="576" y="1" width="50" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Gross Pay]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="ebff9af8-56f1-4c99-bc24-be46a168482d" x="829" y="0" width="40" height="32"/>
+				<reportElement uuid="ebff9af8-56f1-4c99-bc24-be46a168482d" x="829" y="1" width="40" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
 				<text><![CDATA[Advances to O/E]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="d944c997-6b04-4c4a-90fa-860e18887de5" x="869" y="0" width="40" height="32"/>
+				<reportElement uuid="d944c997-6b04-4c4a-90fa-860e18887de5" x="869" y="1" width="40" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
 				<text><![CDATA[adjustments]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="b013d66d-e509-4864-8780-d39a30709e28" x="909" y="0" width="51" height="32"/>
+				<reportElement uuid="b013d66d-e509-4864-8780-d39a30709e28" x="909" y="1" width="51" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Amount Receivable]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="4ee31d20-3889-4ec3-8572-4e107fbde45d" x="202" y="0" width="40" height="32"/>
+				<reportElement uuid="4ee31d20-3889-4ec3-8572-4e107fbde45d" x="202" y="1" width="40" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Basic Salary]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="cbc9e313-271f-4dba-9d2c-7ad18c190e77" x="421" y="0" width="35" height="32"/>
+				<reportElement uuid="cbc9e313-271f-4dba-9d2c-7ad18c190e77" x="421" y="1" width="35" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="6" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Working Day-off]]></text>
 			</staticText>
 		</band>
-	</columnHeader>
+	</pageHeader>
 	<detail>
 		<band height="22" splitType="Stretch">
 			<textField>
@@ -572,8 +572,33 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 			</textField>
 		</band>
 	</pageFooter>
+	<lastPageFooter>
+		<band height="25">
+			<staticText>
+				<reportElement uuid="7504ff80-5a96-4f4c-84ca-2357e8ed7fb5" x="374" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Checked By: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="7c122a6b-1738-41cf-a9f1-1c7630e5dd5e" x="684" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Audited By: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="b27e31ea-e169-433b-8c56-0c56e4ac7a5f" x="85" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Prepared By: ]]></text>
+			</staticText>
+		</band>
+	</lastPageFooter>
 	<summary>
-		<band height="48" splitType="Stretch">
+		<band height="22" splitType="Stretch">
 			<line>
 				<reportElement uuid="e5dfd7f6-727a-4164-b2c2-1c754dfeb872" x="0" y="0" width="960" height="1"/>
 			</line>
@@ -699,27 +724,6 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 			<line>
 				<reportElement uuid="381ee955-b7d4-43ca-ae6a-6fa776866e91" x="-1" y="20" width="960" height="1"/>
 			</line>
-			<staticText>
-				<reportElement uuid="b27e31ea-e169-433b-8c56-0c56e4ac7a5f" x="0" y="28" width="100" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Prepared By: ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="7504ff80-5a96-4f4c-84ca-2357e8ed7fb5" x="289" y="28" width="100" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Checked By: ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="7c122a6b-1738-41cf-a9f1-1c7630e5dd5e" x="599" y="28" width="100" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Audited By: ]]></text>
-			</staticText>
 			<textField pattern="#,##0.00">
 				<reportElement uuid="04494a25-747e-47d5-aefb-c1379fe60230" x="421" y="0" width="35" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
