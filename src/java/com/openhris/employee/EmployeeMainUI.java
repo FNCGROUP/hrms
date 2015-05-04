@@ -6,12 +6,12 @@ package com.openhris.employee;
 
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.company.service.CompanyService;
-import com.openhris.company.serviceprovider.CompanyServiceImpl;
-import com.openhris.employee.model.Employee;
-import com.openhris.employee.model.PostEmploymentInformationBean;
-import com.openhris.employee.service.EmployeeService;
-import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
+import com.openhris.service.CompanyService;
+import com.openhris.serviceprovider.CompanyServiceImpl;
+import com.openhris.model.Employee;
+import com.openhris.model.PostEmploymentInformationBean;
+import com.openhris.service.EmployeeService;
+import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.Sizeable;

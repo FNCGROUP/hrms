@@ -6,9 +6,9 @@
 package com.openhris.payroll;
 
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.payroll.model.Adjustment;
-import com.openhris.payroll.service.PayrollService;
-import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
+import com.openhris.model.Adjustment;
+import com.openhris.service.PayrollService;
+import com.openhris.serviceprovider.PayrollServiceImpl;
 import com.vaadin.Application;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;

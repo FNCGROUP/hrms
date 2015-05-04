@@ -7,7 +7,7 @@ package com.openhris.dao;
 
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.timekeeping.model.Timekeeping;
+import com.openhris.model.Timekeeping;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

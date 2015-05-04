@@ -6,8 +6,8 @@ package com.openhris.contributions;
 
 import com.openhris.administrator.model.UserAccessControl;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.contributions.model.Sss;
-import com.openhris.contributions.serviceprovider.ContributionServiceImpl;
+import com.openhris.model.Sss;
+import com.openhris.serviceprovider.ContributionServiceImpl;
 import com.openhris.service.ContributionService;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;

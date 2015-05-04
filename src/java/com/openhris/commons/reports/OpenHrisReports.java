@@ -6,8 +6,8 @@ package com.openhris.commons.reports;
 
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
-import com.openhris.payroll.service.PayrollService;
+import com.openhris.serviceprovider.PayrollServiceImpl;
+import com.openhris.service.PayrollService;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.Embedded;

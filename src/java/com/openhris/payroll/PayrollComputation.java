@@ -6,10 +6,10 @@ package com.openhris.payroll;
 
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
-import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
-import com.openhris.employee.service.EmployeeService;
-import com.openhris.payroll.service.PayrollService;
+import com.openhris.serviceprovider.EmployeeServiceImpl;
+import com.openhris.serviceprovider.PayrollServiceImpl;
+import com.openhris.service.EmployeeService;
+import com.openhris.service.PayrollService;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;

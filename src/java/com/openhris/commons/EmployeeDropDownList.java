@@ -5,9 +5,9 @@
  */
 package com.openhris.commons;
 
-import com.openhris.employee.model.Employee;
-import com.openhris.employee.service.EmployeeService;
-import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
+import com.openhris.model.Employee;
+import com.openhris.service.EmployeeService;
+import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.vaadin.ui.ComboBox;
 import java.util.List;
 

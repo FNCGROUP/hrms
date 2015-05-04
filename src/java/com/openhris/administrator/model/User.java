@@ -4,7 +4,7 @@
  */
 package com.openhris.administrator.model;
 
-import com.openhris.employee.model.Employee;
+import com.openhris.model.Employee;
 import com.vaadin.Application;
 import com.vaadin.service.ApplicationContext.TransactionListener;
 

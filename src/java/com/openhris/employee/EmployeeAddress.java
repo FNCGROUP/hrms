@@ -8,9 +8,9 @@ package com.openhris.employee;
 
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.employee.model.Address;
-import com.openhris.employee.service.EmployeeAddressService;
-import com.openhris.employee.serviceprovider.EmployeeAddressServiceImpl;
+import com.openhris.model.Address;
+import com.openhris.service.EmployeeAddressService;
+import com.openhris.serviceprovider.EmployeeAddressServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Alignment;

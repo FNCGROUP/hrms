@@ -5,7 +5,7 @@
  */
 package com.openhris.calendar.serviceImpl;
 
-import com.openhris.calendar.dao.CalendarDAO;
+import com.openhris.dao.CalendarDAO;
 import com.openhris.calendar.service.BasicEvent;
 import com.openhris.calendar.service.CalendarService;
 import com.vaadin.addon.calendar.ui.CalendarComponentEvents;

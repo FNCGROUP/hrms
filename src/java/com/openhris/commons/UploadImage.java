@@ -6,8 +6,8 @@
 
 package com.openhris.commons;
 
-import com.openhris.employee.service.PersonalInformationService;
-import com.openhris.employee.serviceprovider.PersonalInformationServiceImpl;
+import com.openhris.service.PersonalInformationService;
+import com.openhris.serviceprovider.PersonalInformationServiceImpl;
 import com.vaadin.terminal.FileResource;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.Embedded;

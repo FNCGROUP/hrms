@@ -8,7 +8,7 @@ package com.openhris.timekeeping;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.payroll.ProcessPayrollComputation;
-import com.openhris.timekeeping.model.Timekeeping;
+import com.openhris.model.Timekeeping;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;

@@ -7,9 +7,9 @@
 package com.openhris.employee;
 
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.employee.model.CharacterReference;
-import com.openhris.employee.service.CharacterReferenceService;
-import com.openhris.employee.serviceprovider.CharacterReferenceServiceImpl;
+import com.openhris.model.CharacterReference;
+import com.openhris.service.CharacterReferenceService;
+import com.openhris.serviceprovider.CharacterReferenceServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.ui.Alignment;

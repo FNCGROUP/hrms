@@ -5,14 +5,14 @@
 package com.openhris.commons;
 
 import com.hrms.dbconnection.GetSQLConnection;
-import com.openhris.company.model.Branch;
-import com.openhris.company.model.Company;
-import com.openhris.company.model.Trade;
-import com.openhris.company.serviceprovider.CompanyServiceImpl;
+import com.openhris.model.Branch;
+import com.openhris.model.Company;
+import com.openhris.model.Trade;
+import com.openhris.serviceprovider.CompanyServiceImpl;
 import com.openhris.dao.ServiceGetDAO;
-import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
-import com.openhris.company.service.CompanyService;
-import com.openhris.payroll.service.PayrollService;
+import com.openhris.serviceprovider.PayrollServiceImpl;
+import com.openhris.service.CompanyService;
+import com.openhris.service.PayrollService;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;

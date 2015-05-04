@@ -5,17 +5,17 @@
 package com.openhris.commons;
 
 import com.hrms.dbconnection.GetSQLConnection;
-import com.openhris.company.model.Branch;
-import com.openhris.company.model.Company;
-import com.openhris.company.model.Trade;
-import com.openhris.company.serviceprovider.CompanyServiceImpl;
+import com.openhris.model.Branch;
+import com.openhris.model.Company;
+import com.openhris.model.Trade;
+import com.openhris.serviceprovider.CompanyServiceImpl;
 import com.openhris.dao.ServiceGetDAO;
-import com.openhris.employee.model.Employee;
-import com.openhris.employee.serviceprovider.EmployeeServiceImpl;
-import com.openhris.payroll.serviceprovider.PayrollServiceImpl;
-import com.openhris.company.service.CompanyService;
-import com.openhris.employee.service.EmployeeService;
-import com.openhris.payroll.service.PayrollService;
+import com.openhris.model.Employee;
+import com.openhris.serviceprovider.EmployeeServiceImpl;
+import com.openhris.serviceprovider.PayrollServiceImpl;
+import com.openhris.service.CompanyService;
+import com.openhris.service.EmployeeService;
+import com.openhris.service.PayrollService;
 import com.vaadin.ui.ComboBox;
 import java.util.List;
 import java.util.Map;

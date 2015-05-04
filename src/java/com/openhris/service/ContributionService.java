@@ -4,9 +4,9 @@
  */
 package com.openhris.service;
 
-import com.openhris.contributions.model.Phic;
-import com.openhris.contributions.model.Sss;
-import com.openhris.contributions.model.Tax;
+import com.openhris.model.Phic;
+import com.openhris.model.Sss;
+import com.openhris.model.Tax;
 import java.util.List;
 
 /**
