@@ -128,6 +128,25 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         glayout.addComponent(payrollRegisterButton, 1, 0);
         glayout.setComponentAlignment(payrollRegisterButton, Alignment.BOTTOM_LEFT);
         
+        Button adjustedPayrollRegisterBtn = new Button("Adjusted Payroll Register");
+        adjustedPayrollRegisterBtn.setWidth("100%");
+        adjustedPayrollRegisterBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                payrollDate = util.convertDateFormat(payrollDateField.getValue().toString());
+                payrollRegisterTable(getBranchId(), 
+                        getPayrollDate(), 
+                        true); 
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(util.parsingDate(util.convertDateFormat(payrollDateField.getValue().toString())));
+		day = cal.get(Calendar.DAY_OF_MONTH);
+            }
+        });
+        glayout.addComponent(adjustedPayrollRegisterBtn);
+        glayout.setComponentAlignment(adjustedPayrollRegisterBtn, Alignment.BOTTOM_CENTER);
+        
 	Button exportTableToExcel = new Button();
 	if(!UserAccessControl.isPayroll()){
             exportTableToExcel.setCaption("Export Table to Excel is Disabled");
@@ -154,7 +173,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 			excelExport.export();
 		}
 	});
-	glayout.addComponent(exportTableToExcel, 2, 0);
+	glayout.addComponent(exportTableToExcel, 3, 0);
         glayout.setComponentAlignment(exportTableToExcel, Alignment.BOTTOM_LEFT);
 	        
         vsplit.setFirstComponent(glayout);        
@@ -422,7 +441,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     subWindow.center();
                     
                     subWindow.addListener(adjustmentWindowListener);
-                }                
+                } 
+                
             }
         });
         

@@ -850,15 +850,15 @@ public class PayrollMainUI extends VerticalLayout {
                 
                 if(!amount.getValue().toString().trim().isEmpty()){
                     boolean result = utililities.checkInputIfDouble(amount.getValue().toString().trim());
-                    if(result == false){
-                        getWindow().showNotification("Error entered Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    if(!result){
+                        getWindow().showNotification("Enter numeric format for advances!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
                     }
                     
-                    if(Double.parseDouble(amount.getValue().toString().trim()) < 0){
-                        getWindow().showNotification("Add advances on Payroll Register if Amount is less than 0!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
+//                    if(Double.parseDouble(amount.getValue().toString().trim()) < 0){
+//                        getWindow().showNotification("Add advances on Payroll Register if Amount is less than 0!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                        return;
+//                    }
                 }else{
                     getWindow().showNotification("Please Enter an Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
                     return;

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.sql.CommonDataSource;
 
 /**
  *
@@ -1142,19 +1143,61 @@ public class PayrollDAO {
                 }
                 
 		if(previousPayrollId != 0){
-		    double previousAmountReceived = getPreviousAmountReceived(previousPayrollId);
-                    double previousAmountOfAdvances = getAdvancesByPayrollId(previousPayrollId);
-		    double forAdjustment = (payroll.getAmountReceivable() - previousAmountOfAdvances) - previousAmountReceived;
-                    double amountToBeReceive = previousAmountReceived + forAdjustment;
-		    		    
-		    pstmt = conn.prepareStatement("UPDATE payroll_table SET forAdjustments = ?, "
+                    double grossPay = 0;
+                    double sss = 0;
+                    double phic = 0;
+                    double hdmf = 0;
+                    double tax = 0;
+                    double allowance = 0;
+                    double afl = 0;
+                    double forAdjustment = 0;
+                    double previousAdjustments = 0;
+                    double previousAdvances = 0;
+		    double previousAmountReceived = 0;
+                    
+                    stmt = conn.createStatement();
+                    rs = stmt.executeQuery("SELECT * FROM payroll_register WHERE salaryId = "+previousPayrollId+" ");
+                    while(rs.next()){
+                        sss = util.convertStringToDouble(rs.getString("sss"));
+                        phic = util.convertStringToDouble(rs.getString("phic"));
+                        hdmf = util.convertStringToDouble(rs.getString("hdmf"));
+                        tax = util.convertStringToDouble(rs.getString("tax"));
+                        allowance = util.convertStringToDouble(rs.getString("allowance"));
+                        afl = util.convertStringToDouble(rs.getString("allowanceForLiquidation"));
+                        previousAdvances = util.convertStringToDouble(rs.getString("advances"));
+                        previousAdjustments = util.convertStringToDouble(rs.getString("adjustments"));
+                        previousAmountReceived = util.convertStringToDouble(rs.getString("amountReceivable"));
+                    }
+                    
+                    double netSalary = payroll.getGrossPay() - sss - phic - hdmf - tax; 
+                    double amountToBeReceive = (netSalary + allowance + afl + previousAdjustments + forAdjustment) - previousAdvances;
+                    forAdjustment = amountToBeReceive - previousAmountReceived;
+                    
+		    pstmt = conn.prepareStatement("UPDATE payroll_table SET "
+                            + "sss = ?, "
+                            + "phic = ?, "
+                            + "hdmf = ?, "
+                            + "tax = ?, "
+                            + "netSalary = ?, "
+                            + "allowance = ?, "
+                            + "allowanceForLiquidation = ?, " 
+                            + "adjustments = ?, "
 			    + "amountToBeReceive = ?, "
-			    + "amountReceivable = ? "
+			    + "amountReceivable = ?, "
+                            + "forAdjustments = ? "
 			    + "WHERE id = ?");
-		    pstmt.setDouble(1, forAdjustment);
-		    pstmt.setDouble(2, amountToBeReceive);
-		    pstmt.setDouble(3, previousAmountReceived);
-		    pstmt.setInt(4, payrollId);
+		    pstmt.setDouble(1, sss);
+		    pstmt.setDouble(2, phic);
+		    pstmt.setDouble(3, hdmf);
+                    pstmt.setDouble(4, tax);
+		    pstmt.setDouble(5, netSalary);
+		    pstmt.setDouble(6, allowance);
+                    pstmt.setDouble(7, afl);
+		    pstmt.setDouble(8, previousAdjustments);
+		    pstmt.setDouble(9, amountToBeReceive);
+                    pstmt.setDouble(10, previousAmountReceived);
+		    pstmt.setDouble(11, forAdjustment);
+                    pstmt.setInt(12, payrollId);
 		    pstmt.executeUpdate();
 		    
 		    pstmt = conn.prepareStatement("UPDATE payroll_table SET actionTaken = 'adjusted' WHERE id = "+payrollId+" ");
@@ -1163,7 +1206,8 @@ public class PayrollDAO {
                     pstmt = conn.prepareStatement("UPDATE payroll_table SET actionTaken = 'previous' WHERE id = "+previousPayrollId+" ");
                     pstmt.executeUpdate();
                              
-                    if(previousAmountOfAdvances != 0){
+                    if(previousAdvances != 0){
+                        double advancesAmount = 0;
                         String advanceType = null;
                         String particulars = null;
                         String date = null;
@@ -1171,20 +1215,21 @@ public class PayrollDAO {
                         stmt = conn.createStatement();
                         rs = stmt.executeQuery("SELECT * FROM advance_table WHERE payrollId = "+previousPayrollId+"");
                         while(rs.next()){
-                            advanceType = rs.getString("advanceType");
-                            particulars = rs.getString("particulars");
-                            date = rs.getString("datePosted");
-                        }
-
-                        pstmt = conn.prepareStatement("INSERT INTO advance_table(payrollId, amount, advanceType, particulars, datePosted, remarks) "
-                                + "VALUES(?, ?, ?, ?, ?, ?)");
-                        pstmt.setInt(1, payrollId);
-                        pstmt.setDouble(2, previousAmountOfAdvances);
-                        pstmt.setString(3, advanceType);
-                        pstmt.setString(4, particulars);
-                        pstmt.setString(5, date);
-                        pstmt.setString(6, "from adjustment of previous payroll with payrollId:"+previousPayrollId);
-                        pstmt.executeUpdate();
+                            pstmt = conn.prepareStatement("INSERT INTO advance_table SET "
+                                    + "payrollId = ?, "
+                                    + "amount = ?, "
+                                    + "advanceType = ?, "
+                                    + "particulars = ?, "
+                                    + "datePosted = ?, "
+                                    + "remarks = ? ");
+                            pstmt.setInt(1, payrollId);
+                            pstmt.setDouble(2, util.convertStringToDouble(rs.getString("amount")));
+                            pstmt.setString(3, rs.getString("advanceType"));
+                            pstmt.setString(4, rs.getString("particulars"));
+                            pstmt.setString(5, rs.getString("datePosted"));
+                            pstmt.setString(6, "from adjustment of previous payroll with payrollId: "+previousPayrollId);
+                            pstmt.executeUpdate();
+                        }                        
                     }
 		}
  
