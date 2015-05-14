@@ -221,10 +221,11 @@ public class PayrollDAO {
         return advancesList;
     }
     
-    public boolean removeAdvancesById(int advanceId, int payrollId, 
-            Double removedAmount, 
-            Double amountToBeReceive, 
-            Double amountReceivable, 
+    public boolean removeAdvancesById(int advanceId, 
+            int payrollId, 
+            double removedAmount, 
+            double amountToBeReceive, 
+            double amountReceivable, 
             String remarks){
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
@@ -237,8 +238,10 @@ public class PayrollDAO {
             pstmt.setString(1, remarks);
             pstmt.setInt(2, advanceId);
             pstmt.executeUpdate();
-            
-            amountReceivable = amountReceivable + removedAmount;
+                        
+            if(!isPayrollEditted(payrollId)){
+                amountReceivable = amountReceivable + removedAmount;
+            }
             amountToBeReceive = amountToBeReceive + removedAmount;
             
             pstmt = conn.prepareStatement(queryUpdate);
@@ -339,7 +342,13 @@ public class PayrollDAO {
                 pstmt.setString(5, util.convertDateFormat(a.getDatePosted().toString()));
                 pstmt.executeUpdate();
                 
-                double amountReceivable = a.getAmountReceivable() - a.getAmount();
+                double amountReceivable;
+                
+                if(isPayrollEditted(a.getId())){
+                    amountReceivable = a.getAmountReceivable();
+                } else {
+                    amountReceivable = a.getAmountReceivable() - a.getAmount();
+                }                
                 double amountToBeReceive = Math.round((a.getAmountToBeReceive() - a.getAmount())*100.0)/100.0;
                 
                 pstmt = conn.prepareStatement(queryUpdate);
@@ -1339,6 +1348,39 @@ public class PayrollDAO {
             try {
                 if(conn != null || !conn.isClosed()){
                     pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public boolean isPayrollEditted(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT COUNT(*) AS countRows FROM payroll_table "
+                    + "WHERE id = "+payrollId+" "
+                    + "AND actionTaken IS NULL ");
+            while(rs.next()){
+                if(rs.getString("countRows").equals("0")){
+                    result = true;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
                     conn.close();
                 }
             } catch (SQLException ex) {

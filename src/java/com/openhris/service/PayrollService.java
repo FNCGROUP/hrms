@@ -26,9 +26,9 @@ public interface PayrollService {
     public double getTotalAdvancesByPayroll(int payrollId);
     
     public boolean removeAdvanceById(int advanceId, int payrollId, 
-            Double removedAmount, 
-            Double amountToBeReceive, 
-            Double amountReceivable, 
+            double removedAmount, 
+            double amountToBeReceive, 
+            double amountReceivable, 
             String remarks);
     
     public List<String> getAdvanceTypeList();

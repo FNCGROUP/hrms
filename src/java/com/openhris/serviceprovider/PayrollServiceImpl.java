@@ -39,9 +39,9 @@ public class PayrollServiceImpl implements PayrollService {
     @Override
     public boolean removeAdvanceById(int advanceId, 
         int payrollId, 
-        Double removedAmount, 
-        Double amountToBeReceive, 
-        Double amountReceivable, 
+        double removedAmount, 
+        double amountToBeReceive, 
+        double amountReceivable, 
         String remarks) {
             return payrollDAO.removeAdvancesById(advanceId, 
                     payrollId, removedAmount, 
