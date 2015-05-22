@@ -232,7 +232,7 @@ public class TimekeepingMainUI extends VerticalLayout {
 //            }
             i++;
         }
-        timekeepingTbl.setPageLength(25);
+        timekeepingTbl.setPageLength(-1);
         
         for(Object listener : timekeepingTbl.getListeners(ItemClickEvent.class)){
             timekeepingTbl.removeListener(ItemClickEvent.class, listener);

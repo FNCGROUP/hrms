@@ -30,6 +30,12 @@ public class TimekeepingComputation {
         return utilities.roundOffToTwoDecimalPlaces(lateDeduction);
     }
     
+    public double processEmployeesLatesForOnCall(String policy, String holiday, int lates, Double wage){
+        double rate = getHolidayRate(holiday, wage);
+        double lateDeductionPerMinute = calculateDeductionPerMinute(lates, rate);        
+        return utilities.roundOffToTwoDecimalPlaces(lateDeductionPerMinute);
+    }
+    
     public double processEmployeesUndertime(String policy, String holiday, int undertime, Double wage){
         double rate = getHolidayRate(holiday, wage);
         double undertimeDeductionPerMinute = calculateDeductionPerMinute(undertime, rate);
@@ -42,6 +48,13 @@ public class TimekeepingComputation {
         }
         
         return utilities.roundOffToTwoDecimalPlaces(undertimeDeduction);
+    }
+    
+    public double processEmployeesUndertimeForOnCall(String policy, String holiday, int undertime, Double wage){
+        double rate = getHolidayRate(holiday, wage);
+        double undertimeDeductionPerMinute = calculateDeductionPerMinute(undertime, rate);
+        
+        return utilities.roundOffToTwoDecimalPlaces(undertimeDeductionPerMinute);
     }
     
     public double processEmployeesOvertime(String policy, String holiday, int overtime, Double wage){
@@ -60,6 +73,13 @@ public class TimekeepingComputation {
         return utilities.roundOffToTwoDecimalPlaces(overtimeAddition);
     }
     
+    public double processEmployeesOvertimeForOnCall(String policy, String holiday, int overtime, Double wage){
+        double rate = getHolidayRate(holiday, wage);
+        double overtimeAdditionPerMinute = calculateOvertimePerMinute(overtime, rate);
+        
+        return utilities.roundOffToTwoDecimalPlaces(overtimeAdditionPerMinute);
+    }
+    
     public double processEmployeesNightDifferential(String policy, String holiday, int nightDifferential, Double wage){
         double rate = getHolidayRate(holiday, wage);
         double premiumAdditionPerMinute = calculateNightDifferentialPerMinute(nightDifferential, rate) * .1;
@@ -72,6 +92,13 @@ public class TimekeepingComputation {
         }
         
         return utilities.roundOffToTwoDecimalPlaces(premiumAddition);
+    }
+    
+    public double processEmployeesNightDifferentialForOnCall(String policy, String holiday, int nightDifferential, Double wage){
+        double rate = getHolidayRate(holiday, wage);
+        double premiumAdditionPerMinute = calculateNightDifferentialPerMinute(nightDifferential, rate) * .1;
+        
+        return utilities.roundOffToTwoDecimalPlaces(premiumAdditionPerMinute);
     }
     
     public double processEmployeeDutyManager(String policy, 
@@ -90,6 +117,15 @@ public class TimekeepingComputation {
         }
         
         return utilities.roundOffToTwoDecimalPlaces(totalDutyManagerPay);
+    }
+    
+    public double processEmployeeDutyManagerForOnCall(String policy, 
+            String holiday, 
+            int dutyManager, Double wage){
+        double rate = getHolidayRate(holiday, wage);
+        double dutyManagerPayPerMinute = calculateDutyManagerPerMinute(dutyManager, rate);
+        
+        return utilities.roundOffToTwoDecimalPlaces(dutyManagerPayPerMinute);
     }
     
     public double processAdditionalHolidayPay(String holiday, Double wage){

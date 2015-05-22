@@ -9,6 +9,8 @@ import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.payroll.ProcessPayrollComputation;
 import com.openhris.model.Timekeeping;
+import com.openhris.service.CompanyService;
+import com.openhris.serviceprovider.CompanyServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
@@ -19,7 +21,6 @@ import com.vaadin.ui.Table;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -41,10 +42,12 @@ public class AttendanceTableContainerWindow extends Window {
     private String employmentWageEntry;
     private double employmentWage;
     private int branchId;
+    private String branch;
     
     OpenHrisUtilities utilities = new OpenHrisUtilities();
     TimekeepingComputation computation = new TimekeepingComputation();
     DropDownComponent dropDown = new DropDownComponent();
+    CompanyService cs = new CompanyServiceImpl();
 //    DecimalFormat df = new DecimalFormat("0.00");
     
     double premiumRate;
@@ -75,6 +78,8 @@ public class AttendanceTableContainerWindow extends Window {
         setSizeFull();
         setModal(true);
         center();
+        
+        branch = cs.getBranchById(getBranchId());
         
         addComponent(generateAttendanceTable());
     }
@@ -262,7 +267,11 @@ public class AttendanceTableContainerWindow extends Window {
                         dutyManager.setEnabled(true);
                         
                         additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
-                        item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(additionalWorkingDayOffPay));
+                        if(getBranch().equals("on-call and trainees")){
+                            item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(getEmploymentWage()));
+                        } else {
+                            item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(additionalWorkingDayOffPay));
+                        }                        
                     } else {
                         holidays.setEnabled(false);
                         lates.setEnabled(false);
@@ -311,7 +320,7 @@ public class AttendanceTableContainerWindow extends Window {
                             additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
                             item.getItemProperty("sholiday").setValue(utilities.roundOffToTwoDecimalPlaces(additionalHolidayPay));
                             item.getItemProperty("lholiday").setValue(0.0);
-                        }
+                        }                        
                     } else if(policyStr.equals("holiday")) {
                         if(event.getProperty().getValue().equals("legal-holiday")){
                             if(getEmploymentWageEntry().equals("daily")){
@@ -323,7 +332,8 @@ public class AttendanceTableContainerWindow extends Window {
                         } else {
                             item.getItemProperty("psday").setValue(0.0);
                         }
-                    } else if(policyStr.equals("working-day-off")) {                        
+                        
+                    } else if(policyStr.equals("working-day-off")) {   
                         if(event.getProperty().getValue() == null){
                             item.getItemProperty("psday").setValue(0.0);
                         } else if(event.getProperty().getValue().equals("legal-holiday")){
@@ -338,7 +348,7 @@ public class AttendanceTableContainerWindow extends Window {
                             multiplePremiumPay = computation.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
                             item.getItemProperty("sholiday").setValue(multiplePremiumPay);   
                             item.getItemProperty("lholiday").setValue(0.0);
-                        }
+                        }                       
                     }                   
                 }
             });
@@ -403,15 +413,24 @@ public class AttendanceTableContainerWindow extends Window {
                     }
                     
                     if(!event.getText().isEmpty()){
-                        if(utilities.convertStringToInteger(event.getText().trim()) > 5){
+                        if(getBranch().equals("on-call and trainees")){
                             lateDeduction = computation.processEmployeesLates(policyStr, 
                                 holidayStr, 
                                 utilities.convertStringToInteger(event.getText().trim()), 
                                 getEmploymentWage());
                             item.getItemProperty("l/min").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction + (lateDeduction*premiumRate)));
                         } else {
-                            item.getItemProperty("l/min").setValue(0.0);
-                        }                        
+                            if(utilities.convertStringToInteger(event.getText().trim()) > 5){
+                                lateDeduction = computation.processEmployeesLates(policyStr, 
+                                    holidayStr, 
+                                    utilities.convertStringToInteger(event.getText().trim()), 
+                                    getEmploymentWage());
+                                item.getItemProperty("l/min").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction + (lateDeduction*premiumRate)));
+                            } else {
+                                item.getItemProperty("l/min").setValue(0.0);
+                            }  
+                        }
+                                              
                     }else{
                         item.getItemProperty("l/min").setValue(0.0);
                     }
@@ -436,11 +455,20 @@ public class AttendanceTableContainerWindow extends Window {
                     }
                     
                     if(!event.getText().isEmpty()){
-                        undertimeDeduction = computation.processEmployeesUndertime(policyStr, 
-                                holidayStr, 
-                                utilities.convertStringToInteger(event.getText().trim()), 
-                                getEmploymentWage());
-                        item.getItemProperty("u/min").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction + (undertimeDeduction*premiumRate)));
+                        if(getBranch().equals("on-call and trainees")){
+                            undertimeDeduction = computation.processEmployeesUndertimeForOnCall(policyStr, 
+                                    holidayStr, 
+                                    utilities.convertStringToInteger(event.getText().trim()), 
+                                    getEmploymentWage());
+                            item.getItemProperty("u/min").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction + (undertimeDeduction*premiumRate)));
+                        } else {
+                            undertimeDeduction = computation.processEmployeesUndertime(policyStr, 
+                                    holidayStr, 
+                                    utilities.convertStringToInteger(event.getText().trim()), 
+                                    getEmploymentWage());
+                            item.getItemProperty("u/min").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction + (undertimeDeduction*premiumRate)));
+                        }
+                        
                     }else{
                         item.getItemProperty("u/min").setValue(0.0);
                     }
@@ -464,11 +492,20 @@ public class AttendanceTableContainerWindow extends Window {
                     }
                     
                     if(!event.getText().isEmpty()){
-                        overtimeAddition = computation.processEmployeesOvertime(policyStr, 
-                                holidayStr, 
-                                utilities.convertStringToInteger(event.getText().trim()), 
-                                getEmploymentWage());
-                        item.getItemProperty("o/min").setValue(utilities.roundOffToTwoDecimalPlaces(overtimeAddition + (overtimeAddition*premiumRate)));
+                        if(getBranch().equals("on-call and trainees")){
+                            overtimeAddition = computation.processEmployeesOvertimeForOnCall(policyStr, 
+                                    holidayStr, 
+                                    utilities.convertStringToInteger(event.getText().trim()), 
+                                    getEmploymentWage());
+                            item.getItemProperty("o/min").setValue(utilities.roundOffToTwoDecimalPlaces(overtimeAddition + (overtimeAddition*premiumRate)));
+                        } else {
+                            overtimeAddition = computation.processEmployeesOvertime(policyStr, 
+                                    holidayStr, 
+                                    utilities.convertStringToInteger(event.getText().trim()), 
+                                    getEmploymentWage());
+                            item.getItemProperty("o/min").setValue(utilities.roundOffToTwoDecimalPlaces(overtimeAddition + (overtimeAddition*premiumRate)));
+                        }
+                        
                     }else{
                         item.getItemProperty("o/min").setValue(0.0);
                     }
@@ -492,11 +529,20 @@ public class AttendanceTableContainerWindow extends Window {
                     }
                     
                     if(!event.getText().isEmpty()){
-                        nightDifferentialAddition = computation.processEmployeesNightDifferential(policyStr, 
-                                holidayStr, 
-                                utilities.convertStringToInteger(event.getText().trim()), 
-                                getEmploymentWage());
-                        item.getItemProperty("nd/min").setValue(utilities.roundOffToTwoDecimalPlaces(nightDifferentialAddition + (nightDifferentialAddition*premiumRate)));
+                        if(getBranch().equals("on-call and trainees")){
+                            nightDifferentialAddition = computation.processEmployeesNightDifferentialForOnCall(policyStr, 
+                                    holidayStr, 
+                                    utilities.convertStringToInteger(event.getText().trim()), 
+                                    getEmploymentWage());
+                            item.getItemProperty("nd/min").setValue(utilities.roundOffToTwoDecimalPlaces(nightDifferentialAddition + (nightDifferentialAddition*premiumRate)));
+                        } else {
+                            nightDifferentialAddition = computation.processEmployeesNightDifferential(policyStr, 
+                                    holidayStr, 
+                                    utilities.convertStringToInteger(event.getText().trim()), 
+                                    getEmploymentWage());
+                            item.getItemProperty("nd/min").setValue(utilities.roundOffToTwoDecimalPlaces(nightDifferentialAddition + (nightDifferentialAddition*premiumRate)));
+                        }
+                        
                     }else{
                         item.getItemProperty("nd/min").setValue(0.0);
                     }
@@ -520,11 +566,20 @@ public class AttendanceTableContainerWindow extends Window {
                     }
                     
                     if(!event.getText().isEmpty()){
-                        dutyManagerAddition = computation.processEmployeeDutyManager(policyStr, 
-                                holidayStr, 
-                                utilities.convertStringToInteger(event.getText().trim()), 
-                                getEmploymentWage());
-                        item.getItemProperty("dm/min").setValue(utilities.roundOffToTwoDecimalPlaces(dutyManagerAddition));
+                        if(getBranch().equals("on-call and trainees")){
+                            dutyManagerAddition = computation.processEmployeeDutyManagerForOnCall(policyStr, 
+                                    holidayStr, 
+                                    utilities.convertStringToInteger(event.getText().trim()), 
+                                    getEmploymentWage());
+                            item.getItemProperty("dm/min").setValue(utilities.roundOffToTwoDecimalPlaces(dutyManagerAddition));
+                        } else {
+                            dutyManagerAddition = computation.processEmployeeDutyManager(policyStr, 
+                                    holidayStr, 
+                                    utilities.convertStringToInteger(event.getText().trim()), 
+                                    getEmploymentWage());
+                            item.getItemProperty("dm/min").setValue(utilities.roundOffToTwoDecimalPlaces(dutyManagerAddition));
+                        }
+                        
                     }else{
                         item.getItemProperty("dm/min").setValue(0.0);
                     }
@@ -650,5 +705,9 @@ public class AttendanceTableContainerWindow extends Window {
     
     List getDateList(){
         return dateList;
+    }
+    
+    String getBranch(){
+        return branch;
     }
 }

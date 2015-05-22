@@ -259,4 +259,239 @@ public class CompanyDAO {
         
         return corporate;
     }
+    
+    public List<Branch> getBranchListForUser(int userId){
+        List<Branch> branchLists = new ArrayList<Branch>();
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null; 
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(" SELECT bt.name AS name, uba.id AS id FROM user_branch_access uba "
+                    + "INNER JOIN branch_table bt ON uba.branchId = bt.id "
+                    + "WHERE uba.userId = "+userId+" ");
+            while(rs.next()){
+                Branch b = new Branch();
+                b.setBranchId(util.convertStringToInteger(rs.getString("id")));
+                b.setBranchName(rs.getString("name"));
+                branchLists.add(b);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return branchLists;
+    }
+    
+    public boolean removeBranchFromUser(int rowId){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("DELETE FROM user_branch_access WHERE id = ? ");
+            pstmt.setInt(1, rowId);
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public List<Trade> getTradeListForUser(int userId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null; 
+        List<Trade> tradeLists = new ArrayList<Trade>();
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(" SELECT tt.name AS name, uta.id AS id FROM user_trade_access uta "
+                    + "INNER JOIN trade_table tt ON uta.tradeId = tt.id "
+                    + "WHERE uta.userId = "+userId+" ");
+            while(rs.next()){
+                Trade t = new Trade();
+                t.setTradeId(util.convertStringToInteger(rs.getString("id")));
+                t.setTradeName(rs.getString("name"));
+                tradeLists.add(t);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return tradeLists;
+    }
+    
+    public boolean removeTradeFromUser(int rowId){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            conn.setAutoCommit(false);
+            pstmt = conn.prepareStatement("DELETE FROM user_trade_access WHERE id = ? ");
+            pstmt.setInt(1, rowId);
+            pstmt.executeUpdate();
+            
+            int tradeId = 0;
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT tradeId FROM user_trade_access "
+                    + "WHERE id = "+rowId+" ");
+            while(rs.next()){
+                tradeId = util.convertStringToInteger(rs.getString("tradeId"));
+            }
+            
+            pstmt = conn.prepareStatement("DELETE FROM user_branch_access WHERE tradeId = ? ");
+            pstmt.setInt(1, tradeId);
+            pstmt.executeUpdate();
+            
+            conn.commit();
+            result = true;
+        } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public List<Company> getCorporateListForUser(int userId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null; 
+        List<Company> corporateLists = new ArrayList<Company>();
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(" SELECT ct.name AS name, uca.id AS id FROM user_corporate_access uca "
+                    + "INNER JOIN corporate_table ct ON uca.corporateId = ct.id "
+                    + "WHERE uca.userId = '"+userId+"' ");
+            while(rs.next()){
+                Company c = new Company();
+                c.setCompanyId(util.convertStringToInteger(rs.getString("id")));
+                c.setCompanyName(rs.getString("name"));
+                corporateLists.add(c);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return corporateLists;
+    }
+    
+    public boolean removeCorporateFromUser(int rowId){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        boolean result = false;
+        
+        try {
+            conn.setAutoCommit(false);            
+            
+            int corporateId = 0;
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT corporateId FROM user_corporate_access "
+                    + "WHERE id = "+rowId+" ");
+            while(rs.next()){
+                corporateId = util.convertStringToInteger(rs.getString("corporateId"));
+            }
+            
+            int tradeId = 0;
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT tradeId FROM user_trade_access "
+                    + "WHERE corporateId = "+corporateId+" ");
+            while(rs.next()){
+                tradeId = util.convertStringToInteger(rs.getString("tradeId"));
+            }
+            
+            pstmt = conn.prepareStatement("DELETE FROM user_corporate_access WHERE id = ? ");
+            pstmt.setInt(1, rowId);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("DELETE FROM user_trade_access WHERE corporateId = ? ");
+            pstmt.setInt(1, corporateId);
+            pstmt.executeUpdate();
+                        
+            pstmt = conn.prepareStatement("DELETE FROM user_branch_access WHERE tradeId = ? ");
+            pstmt.setInt(1, tradeId);
+            pstmt.executeUpdate();
+            
+            conn.commit();
+            result = true;
+        } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
+            Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(CompanyDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
 }

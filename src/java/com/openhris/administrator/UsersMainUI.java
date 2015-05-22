@@ -415,7 +415,7 @@ public class UsersMainUI extends VerticalLayout {
         corporateAssignedToUserTbl.addContainerProperty("id", String.class, null);
         corporateAssignedToUserTbl.addContainerProperty("name", String.class, null);
         
-        List<Company> corporateList = companyService.getCorporateListAssignedForUser(userId);
+        List<Company> corporateList = companyService.getCorporateListForUser(userId);
         int i = 0;
         for(Company c : corporateList){
             corporateAssignedToUserTbl.addItem(new Object[]{
@@ -438,10 +438,10 @@ public class UsersMainUI extends VerticalLayout {
                 Item item = corporateAssignedToUserTbl.getItem(itemId);
                 
                 if(event.getPropertyId().equals("id")){
-                    int corporateId = util.convertStringToInteger(item.getItemProperty("id").toString());                    
+                    int rowId = util.convertStringToInteger(item.getItemProperty("id").toString());                    
                     String name = item.getItemProperty("name").toString();
                     
-                    Window subWindow = removeAssignedCorporateToUser(userId, corporateId, name);
+                    Window subWindow = removeAssignedCorporateToUser(userId, rowId, name);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow);
                     }
@@ -461,7 +461,7 @@ public class UsersMainUI extends VerticalLayout {
         tradeByCorporateAssignedToUserTbl.addContainerProperty("id", String.class, null);
         tradeByCorporateAssignedToUserTbl.addContainerProperty("name", String.class, null);
         
-        List<Trade> tradeList = companyService.getTradeListAssignedForUser(userId, 0);
+        List<Trade> tradeList = companyService.getTradeListForUser(userId);
         int i = 0;
         for(Trade t: tradeList){
             tradeByCorporateAssignedToUserTbl.addItem(new Object[]{
@@ -484,10 +484,10 @@ public class UsersMainUI extends VerticalLayout {
                 Item item = tradeByCorporateAssignedToUserTbl.getItem(itemId);
                 
                 if(event.getPropertyId().equals("id")){
-                    int tradeId = util.convertStringToInteger(item.getItemProperty("id").toString());                    
+                    int rowId = util.convertStringToInteger(item.getItemProperty("id").toString());                    
                     String name = item.getItemProperty("name").toString();
                     
-                    Window subWindow = removeAssignedTradeToUser(userId, tradeId, name);
+                    Window subWindow = removeAssignedTradeToUser(userId, rowId, name);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow);
                     }
@@ -507,7 +507,7 @@ public class UsersMainUI extends VerticalLayout {
         branchByTradeAssignedToUserTbl.addContainerProperty("id", String.class, null);
         branchByTradeAssignedToUserTbl.addContainerProperty("name", String.class, null);
         
-        List<Branch> branchList = companyService.getBranchListAssignedForUser(userId, 0);
+        List<Branch> branchList = companyService.getBranchListForUser(userId);
         int i = 0;
         for(Branch b : branchList){
             branchByTradeAssignedToUserTbl.addItem(new Object[]{
@@ -530,10 +530,10 @@ public class UsersMainUI extends VerticalLayout {
                 Item item = branchByTradeAssignedToUserTbl.getItem(itemId);
                 
                 if(event.getPropertyId().equals("id")){
-                    int branch_id = util.convertStringToInteger(item.getItemProperty("id").toString());                    
+                    int rowId = util.convertStringToInteger(item.getItemProperty("id").toString());                    
                     String name = item.getItemProperty("name").toString();
                     
-                    Window subWindow = removeAssignedBranchToUser(userId, branch_id, name);
+                    Window subWindow = removeAssignedBranchToUser(rowId, name, userId);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow);
                     }
@@ -768,7 +768,7 @@ public class UsersMainUI extends VerticalLayout {
         return subWindow;
     }
 
-    private Window removeAssignedCorporateToUser(final int userId, final int corporateId, String name){
+    private Window removeAssignedCorporateToUser(final int userId, final int rowId, String name){
         VerticalLayout vlayout = new VerticalLayout();
         vlayout.setSpacing(true);
         vlayout.setMargin(true);
@@ -782,7 +782,7 @@ public class UsersMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                boolean result = companyService.removeCorporateAssignedForUser(corporateId, userId);
+                boolean result = companyService.removeCorporateFromUser(rowId);
                 if(result){
                     corporateAssignedToUserTable(userId);
                     (subWindow.getParent()).removeWindow(subWindow);
@@ -796,7 +796,7 @@ public class UsersMainUI extends VerticalLayout {
         return subWindow;
     }
     
-    private Window removeAssignedTradeToUser(final int userId, final int tradeId, String name){
+    private Window removeAssignedTradeToUser(final int userId, final int rowId, String name){
         VerticalLayout vlayout = new VerticalLayout();
         vlayout.setSpacing(true);
         vlayout.setMargin(true);
@@ -810,7 +810,7 @@ public class UsersMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                boolean result = companyService.removeTradeAssignedForUser(tradeId, userId);
+                boolean result = companyService.removeTradeFromUser(rowId);
                 if(result){
                     tradeByCorporateAssignedToUserTable(userId);
                     (subWindow.getParent()).removeWindow(subWindow);
@@ -824,7 +824,7 @@ public class UsersMainUI extends VerticalLayout {
         return subWindow;
     }
     
-    private Window removeAssignedBranchToUser(final int userId, final int branchId, String name){
+    private Window removeAssignedBranchToUser(final int rowId, String name, final int userId){
         VerticalLayout vlayout = new VerticalLayout();
         vlayout.setSpacing(true);
         vlayout.setMargin(true);
@@ -838,7 +838,7 @@ public class UsersMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                boolean result = companyService.removeBranchAssignedForUser(branchId, userId);
+                boolean result = companyService.removeBranchFromUser(rowId);
                 if(result){
                     branchByTradeAssignedToUserTable(userId);
                     (subWindow.getParent()).removeWindow(subWindow);

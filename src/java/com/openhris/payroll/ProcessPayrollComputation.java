@@ -156,6 +156,12 @@ public class ProcessPayrollComputation {
                 taxableSalary = taxableSalary - (sssContribution);
             }
             
+            if(employmentWageStatus.equals("senior citizen")){
+                phicContribution = 0;
+                hdmfContribution = 0;
+                sssContribution = 0;
+            }
+            
             payroll.setSss(sssContribution);
             payroll.setPhic(phicContribution);
             payroll.setHdmf(hdmfContribution);
@@ -163,7 +169,7 @@ public class ProcessPayrollComputation {
             payroll.setAbsences(sal.getTotalAbsences());            
             
             double tax = sal.getTax(totalDependent, taxableSalary); //get tax          
-            if(employmentWageStatus.equals("minimum") || tax < 0){
+            if(employmentWageStatus.equals("minimum") || tax < 0 || employmentWageStatus.equals("senior citizen")){
                 tax = 0;
             }        
             payroll.setTax(tax);

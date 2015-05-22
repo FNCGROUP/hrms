@@ -61,4 +61,16 @@ public interface CompanyService {
     public boolean updateBranchAddress(int branchId, String address);
     
     public String getCorporateNameByBranchId(int branchId);
+    
+    public List<Branch> getBranchListForUser(int userId);
+    
+    public boolean removeBranchFromUser(int rowId);
+    
+    public List<Trade> getTradeListForUser(int userId);
+    
+    public boolean removeTradeFromUser(int rowId);
+    
+    public List<Company> getCorporateListForUser(int userId);
+    
+    public boolean removeCorporateFromUser(int rowId);
 }

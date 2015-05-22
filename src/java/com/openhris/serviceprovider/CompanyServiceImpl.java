@@ -141,5 +141,35 @@ public class CompanyServiceImpl implements CompanyService {
     public String getCorporateNameByBranchId(int branchId) {
         return companyDAO.getCorporateNameByBranchId(branchId);
     }
+
+    @Override
+    public List<Branch> getBranchListForUser(int userId) {
+        return companyDAO.getBranchListForUser(userId);
+    }
+
+    @Override
+    public boolean removeBranchFromUser(int rowId) {
+        return companyDAO.removeBranchFromUser(rowId);
+    }
+
+    @Override
+    public List<Trade> getTradeListForUser(int userId) {
+        return companyDAO.getTradeListForUser(userId);
+    }
+
+    @Override
+    public boolean removeTradeFromUser(int rowId) {
+        return companyDAO.removeTradeFromUser(rowId);
+    }
+
+    @Override
+    public List<Company> getCorporateListForUser(int userId) {
+        return companyDAO.getCorporateListForUser(userId);
+    }
+
+    @Override
+    public boolean removeCorporateFromUser(int rowId) {
+        return companyDAO.removeCorporateFromUser(rowId);
+    }
     
 }
