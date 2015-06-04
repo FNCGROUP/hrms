@@ -439,8 +439,6 @@ public class MainApp extends Application {
                         branchId = companyService.getBranchId(tradeId, event.getItemId().toString());
                     }                                 
                     
-                    System.out.println("branchId from main method: "+branchId);
-                    
                     if(mainMenuBar){
                         employeeMainUI.employeesTable(getEmployeeListByBranch(branchId));
                     } 

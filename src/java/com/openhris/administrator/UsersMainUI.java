@@ -208,7 +208,7 @@ public class UsersMainUI extends VerticalLayout {
                 Object itemId = event.getItemId();
                 Item item = usersTbl.getItem(itemId);
                 
-                int userId = Integer.parseInt(item.getItemProperty("id").getValue().toString());                
+                int userId = util.convertStringToInteger(item.getItemProperty("id").getValue().toString());                
                 
                 if(event.getPropertyId().equals("id")){
                     String name = item.getItemProperty("name").toString().toLowerCase();
@@ -782,7 +782,7 @@ public class UsersMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                boolean result = companyService.removeCorporateFromUser(rowId);
+                boolean result = companyService.removeCorporateFromUser(rowId, userId);
                 if(result){
                     corporateAssignedToUserTable(userId);
                     (subWindow.getParent()).removeWindow(subWindow);
@@ -810,7 +810,7 @@ public class UsersMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                boolean result = companyService.removeTradeFromUser(rowId);
+                boolean result = companyService.removeTradeFromUser(rowId, userId);
                 if(result){
                     tradeByCorporateAssignedToUserTable(userId);
                     (subWindow.getParent()).removeWindow(subWindow);

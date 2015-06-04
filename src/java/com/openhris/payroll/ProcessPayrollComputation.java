@@ -185,8 +185,14 @@ public class ProcessPayrollComputation {
 
             double afl = sal.getAllowanceForLiquidationDeduction(dateList, policyList, allowanceForLiquidation);
             payroll.setAllowanceForLiquidation(afl);
-                                                
-            double netSalary = taxableSalary - tax + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
+                          
+            double netSalary;
+            if(employmentWageStatus.equals("senior citizen")){
+                netSalary = halfMonthSalary + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
+            } else {
+                netSalary = taxableSalary - tax + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
+            }
+            
             payroll.setNetSalary(netSalary);
 
             double amountReceivable = new Double(df.format(netSalary + allowance + afl));  

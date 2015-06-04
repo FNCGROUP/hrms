@@ -158,8 +158,8 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public boolean removeTradeFromUser(int rowId) {
-        return companyDAO.removeTradeFromUser(rowId);
+    public boolean removeTradeFromUser(int rowId, int userId) {
+        return companyDAO.removeTradeFromUser(rowId, userId);
     }
 
     @Override
@@ -168,8 +168,8 @@ public class CompanyServiceImpl implements CompanyService {
     }
 
     @Override
-    public boolean removeCorporateFromUser(int rowId) {
-        return companyDAO.removeCorporateFromUser(rowId);
+    public boolean removeCorporateFromUser(int rowId, int userId) {
+        return companyDAO.removeCorporateFromUser(rowId, userId);
     }
     
 }

@@ -68,9 +68,9 @@ public interface CompanyService {
     
     public List<Trade> getTradeListForUser(int userId);
     
-    public boolean removeTradeFromUser(int rowId);
+    public boolean removeTradeFromUser(int rowId, int userId);
     
     public List<Company> getCorporateListForUser(int userId);
     
-    public boolean removeCorporateFromUser(int rowId);
+    public boolean removeCorporateFromUser(int rowId, int userId);
 }

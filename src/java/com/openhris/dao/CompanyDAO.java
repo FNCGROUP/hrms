@@ -354,7 +354,7 @@ public class CompanyDAO {
         return tradeLists;
     }
     
-    public boolean removeTradeFromUser(int rowId){
+    public boolean removeTradeFromUser(int rowId, int userId){
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         Statement stmt = null;
@@ -363,9 +363,6 @@ public class CompanyDAO {
         
         try {
             conn.setAutoCommit(false);
-            pstmt = conn.prepareStatement("DELETE FROM user_trade_access WHERE id = ? ");
-            pstmt.setInt(1, rowId);
-            pstmt.executeUpdate();
             
             int tradeId = 0;
             stmt = conn.createStatement();
@@ -375,8 +372,23 @@ public class CompanyDAO {
                 tradeId = util.convertStringToInteger(rs.getString("tradeId"));
             }
             
-            pstmt = conn.prepareStatement("DELETE FROM user_branch_access WHERE tradeId = ? ");
-            pstmt.setInt(1, tradeId);
+            int branchRowId = 0;
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT id FROM user_branch_access "
+                    + "WHERE tradeId = "+tradeId+" "
+                    + "AND userId = "+userId+" ");
+            while(rs.next()){
+                branchRowId = util.convertStringToInteger(rs.getString("id"));
+            }
+                        
+            pstmt = conn.prepareStatement("DELETE FROM user_trade_access "
+                    + "WHERE id = ? ");
+            pstmt.setInt(1, rowId);
+            pstmt.executeUpdate();            
+            
+            pstmt = conn.prepareStatement("DELETE FROM user_branch_access "
+                    + "WHERE id = ? ");
+            pstmt.setInt(1, branchRowId);
             pstmt.executeUpdate();
             
             conn.commit();
@@ -434,7 +446,7 @@ public class CompanyDAO {
         return corporateLists;
     }
     
-    public boolean removeCorporateFromUser(int rowId){
+    public boolean removeCorporateFromUser(int rowId, int userId){
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         Statement stmt = null;
@@ -452,24 +464,38 @@ public class CompanyDAO {
                 corporateId = util.convertStringToInteger(rs.getString("corporateId"));
             }
             
+            int tradeRowId = 0;
             int tradeId = 0;
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT tradeId FROM user_trade_access "
-                    + "WHERE corporateId = "+corporateId+" ");
+            rs = stmt.executeQuery("SELECT id, tradeId FROM user_trade_access "
+                    + "WHERE corporateId = "+corporateId+" "
+                    + "AND userId = "+userId+" ");
             while(rs.next()){
+                tradeRowId = util.convertStringToInteger(rs.getString("id"));
                 tradeId = util.convertStringToInteger(rs.getString("tradeId"));
+            }
+            
+            int branchRowId = 0;
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT id FROM user_branch_access "
+                    + "WHERE tradeId = "+tradeId+" "
+                    + "AND userId = "+userId+" ");
+            while(rs.next()){
+                branchRowId = util.convertStringToInteger(rs.getString("id"));
             }
             
             pstmt = conn.prepareStatement("DELETE FROM user_corporate_access WHERE id = ? ");
             pstmt.setInt(1, rowId);
             pstmt.executeUpdate();
             
-            pstmt = conn.prepareStatement("DELETE FROM user_trade_access WHERE corporateId = ? ");
-            pstmt.setInt(1, corporateId);
+            pstmt = conn.prepareStatement("DELETE FROM user_trade_access "
+                    + "WHERE id = ? ");
+            pstmt.setInt(1, tradeRowId);
             pstmt.executeUpdate();
                         
-            pstmt = conn.prepareStatement("DELETE FROM user_branch_access WHERE tradeId = ? ");
-            pstmt.setInt(1, tradeId);
+            pstmt = conn.prepareStatement("DELETE FROM user_branch_access "
+                    + "WHERE id = ? ");
+            pstmt.setInt(1, branchRowId);
             pstmt.executeUpdate();
             
             conn.commit();
