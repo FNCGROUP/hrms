@@ -38,11 +38,13 @@ import com.openhris.payroll.PayrollMainUI;
 import com.openhris.payroll.PayrollRegisterMainUI;
 import com.openhris.timekeeping.TimekeepingMainUI;
 import com.vaadin.Application;
+import com.vaadin.data.Item;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.*;
 import com.vaadin.ui.Button.ClickEvent;
 import com.vaadin.ui.TabSheet.SelectedTabChangeEvent;
+import groovyjarjarantlr.CommonAST;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -385,7 +387,7 @@ public class MainApp extends Application {
 		                
             for(Trade t : tradeList){
                 tree.addItem(t.getTradeName());
-                tree.setParent(t.getTradeName(), c.getCompanyName());                
+                tree.setParent(t.getTradeName(), c.getCompanyName());   
             }
 	}
         
@@ -405,7 +407,6 @@ public class MainApp extends Application {
                         branchList = companyService.getBranchListAssignedForUser(getUserId(), tradeId);
                     }
                     
-//                    branchList = companyService.getBranchByTrade(tradeId, companyId);
                     String tradeName = companyService.getTradeById(tradeId);
                     for(Branch b : branchList){       
                         if(util.checkForDuplicatedBranch(b.getBranchName())){
@@ -448,7 +449,7 @@ public class MainApp extends Application {
                     
                     payrollMainUI.employeeComboBox(branchId); 
                     payrollRegisterMainUI.setBranchId(branchId);
-//                    
+                    
                     usersMainUI.employeeComboBox(branchId);
                     usersMainUI.setBranchId(branchId);
                 }
