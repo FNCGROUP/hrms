@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PayrollRegisterReportOld" language="groovy" pageWidth="1188" pageHeight="612" orientation="Landscape" columnWidth="1148" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="16473a3e-63f8-4526-9a92-6256ac4f4633">
 	<property name="ireport.zoom" value="1.2100000000000002"/>
 	<property name="ireport.x" value="182"/>
-	<property name="ireport.y" value="56"/>
+	<property name="ireport.y" value="96"/>
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
@@ -101,7 +101,7 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 		<variableExpression><![CDATA[$F{adjustments}]]></variableExpression>
 	</variable>
 	<variable name="receivable" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{amountReceivable}-$F{allowanceForLiquidation}]]></variableExpression>
+		<variableExpression><![CDATA[$F{amountReceivable}]]></variableExpression>
 	</variable>
 	<variable name="workingDayOff" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{workingDayOffPay}]]></variableExpression>
@@ -110,7 +110,7 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 		<variableExpression><![CDATA[$F{allowanceForLiquidation}]]></variableExpression>
 	</variable>
 	<variable name="amountToBeReceiveTotal" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{amountToBeReceive}-$F{allowanceForLiquidation}]]></variableExpression>
+		<variableExpression><![CDATA[$F{amountToBeReceive}]]></variableExpression>
 	</variable>
 	<variable name="forAdjustmentsTotal" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{forAdjustments}]]></variableExpression>
@@ -518,7 +518,7 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amountToBeReceive}-$F{allowanceForLiquidation}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{amountToBeReceive}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
 				<reportElement uuid="f69908c1-f2e9-4326-98d1-b584948d1054" x="1097" y="0" width="45" height="20"/>
@@ -566,7 +566,7 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{amountReceivable}-$F{allowanceForLiquidation}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{amountReceivable}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="0df63e83-3110-422c-bfed-02aff37d8571" x="0" y="1" width="35" height="19"/>
