@@ -442,7 +442,9 @@ public class PayrollMainUI extends VerticalLayout {
             public void valueChange(Property.ValueChangeEvent event) {
                 if(event.getProperty().getValue() == null){                    
                 } else {
+                    System.out.println("name: "+employeesName.getValue());
                     employeeId = employeeService.getEmployeeId(employeesName.getValue().toString());                    
+                    System.out.println("employeeId: "+employeeId);
                 }
             }
         });

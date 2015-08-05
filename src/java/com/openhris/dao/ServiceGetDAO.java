@@ -509,7 +509,8 @@ public class ServiceGetDAO {
         String employeeId = null;
         try {
             pstmt = conn.prepareStatement(" SELECT employeeId FROM employee WHERE "
-                    + "CONCAT_WS(', ', lastname, CONCAT_WS(' ', firstname, middlename)) = ? ");
+                    + "CONCAT_WS(', ', lastname, CONCAT_WS(' ', firstname, middlename)) = ? "
+                    + "AND currentStatus IS NULL ");
             pstmt.setString(1, name.toLowerCase());
             rs = pstmt.executeQuery();
             while(rs.next()){

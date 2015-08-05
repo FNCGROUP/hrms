@@ -1222,7 +1222,9 @@ public class PayrollDAO {
                         String date = null;
                         
                         stmt = conn.createStatement();
-                        rs = stmt.executeQuery("SELECT * FROM advance_table WHERE payrollId = "+previousPayrollId+"");
+                        rs = stmt.executeQuery("SELECT * FROM advance_table "
+                                + "WHERE payrollId = "+previousPayrollId+" "
+                                + "AND rowStatus IS NULL");
                         while(rs.next()){
                             pstmt = conn.prepareStatement("INSERT INTO advance_table SET "
                                     + "payrollId = ?, "

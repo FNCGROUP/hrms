@@ -7,7 +7,6 @@ package com.openhris.dao;
 
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
-import com.openhris.dao.ServiceGetDAO;
 import com.openhris.model.Employee;
 import com.openhris.model.PostEmploymentInformationBean;
 import java.sql.Connection;
@@ -135,5 +134,36 @@ public class EmployeeDAO {
         }
         
         return date;
+    }
+
+    public String getEmployeeId(String name){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null; 
+        String employeeId = null;
+        try {
+            pstmt = conn.prepareStatement(" SELECT employeeId FROM employee WHERE "
+                    + "CONCAT_WS(', ', lastname, CONCAT_WS(' ', firstname, middlename)) = ? "
+                    + "AND currentStatus IS NULL "
+                    + "ORDER BY id DESC LIMIT 1 ");
+            pstmt.setString(1, name.toLowerCase());
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                employeeId = rs.getString("employeeId");
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return employeeId;
     }
 }
