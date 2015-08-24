@@ -104,6 +104,8 @@ public class Constant {
         map.put(9, "unpaid-sick-leave");
         map.put(10, "absent");
         map.put(11, "suspended");
+        map.put(12, "resigned");
+        map.put(13, "end-of-contract");
         return Collections.unmodifiableMap(map);
     }
      

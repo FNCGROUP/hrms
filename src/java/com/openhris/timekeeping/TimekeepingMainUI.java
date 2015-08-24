@@ -211,7 +211,6 @@ public class TimekeepingMainUI extends VerticalLayout {
         List<Timekeeping> attendanceList = timekeepingService.getAttendanceByEmployee(employeeId);
         int i = 0;
         for(Timekeeping t : attendanceList){
-//            if(t.getId() != 0){
             timekeepingTbl.addItem(new Object[]{
                 t.getId(), 
                 util.convertDateFormat(t.getAttendancePeriodFrom().toString()), 
@@ -221,7 +220,7 @@ public class TimekeepingMainUI extends VerticalLayout {
                 t.getOvertime(), 
                 t.getNightDifferential(), 
                 t.getLateDeduction(), 
-                t.getUndertimeDeduction(), 
+                t.getUndertimeDeduction(),  
                 t.getOvertimePaid(), 
                 t.getNightDifferentialPaid(), 
                 t.getLegalHolidayPaid(), 
@@ -229,7 +228,6 @@ public class TimekeepingMainUI extends VerticalLayout {
                 t.getWorkingDayOffPaid(), 
                 t.getNonWorkingHolidayPaid()
             }, new Integer(i));
-//            }
             i++;
         }
         timekeepingTbl.setPageLength(-1);
