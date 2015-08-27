@@ -25,4 +25,28 @@ public interface TimekeepingService {
     public Date getPreviousPayrollDate(String employeeId);
     
     public double getNonWorkingHolidayPay(int payrollId);
+    
+    public double getTotalLates(int payrollId);
+    
+    public double getTotalUndertime(int payrollId);
+    
+    public double getTotalOvertime(int payrollId);
+    
+    public double getTotalNightDifferential(int payrollId);
+    
+    public double getTotalLatesDeduction(int payrollId);
+    
+    public double getTotalUndertimeDeduction(int payrollId);
+    
+    public double getTotalOvertimePaid(int payrollId);
+    
+    public double getTotalNightDifferentialPaid(int payrollId);
+    
+    public double getTotalLegalHolidayPaid(int payrollId);
+    
+    public double getTotalSpecialHolidayPaid(int payrollId);
+    
+    public double getTotalWorkingDayOffPaid(int payrollId);
+    
+    public double getTotalPsHolidayPaid(int payrollId);
 }

@@ -9,13 +9,9 @@ import com.openhris.model.Branch;
 import com.openhris.model.Company;
 import com.openhris.model.Trade;
 import com.openhris.serviceprovider.CompanyServiceImpl;
-import com.openhris.dao.ServiceGetDAO;
-import com.openhris.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.CompanyService;
-import com.openhris.service.PayrollService;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -97,15 +93,16 @@ public class Constant {
         map.put(2, "holiday");
         map.put(3, "working-holiday");
         map.put(4, "paternity-leave");
-        map.put(5, "service-incentive-leave");
-        map.put(6, "paid-vacation-leave");
-        map.put(7, "paid-sick-leave");
-        map.put(8, "unpaid-vacation-leave");
-        map.put(9, "unpaid-sick-leave");
-        map.put(10, "absent");
-        map.put(11, "suspended");
-        map.put(12, "resigned");
-        map.put(13, "end-of-contract");
+        map.put(5, "maternity-leave");
+        map.put(6, "service-incentive-leave");
+        map.put(7, "paid-vacation-leave");
+        map.put(8, "paid-sick-leave");
+        map.put(9, "unpaid-vacation-leave");
+        map.put(10, "unpaid-sick-leave");
+        map.put(11, "absent");
+        map.put(12, "suspended");
+        map.put(13, "resigned");
+        map.put(14, "end-of-contract");
         return Collections.unmodifiableMap(map);
     }
      

@@ -115,29 +115,29 @@ public class TimekeepingDAO {
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT payrollId, attendancePeriodFrom, attendancePeriodTo, lates, "
-                    + "undertime, overtime, nightDifferential, latesDeduction, undertimeDeduction, "
-                    + "overtimePaid, nightDifferentialPaid, legalHolidayPaid, specialHolidayPaid, "
-                    + "workingDayOffPaid, nonWorkingHolidayPaid FROM timekeeping_summary "
-                    + "WHERE currentStatus IS NULL AND "
+            rs = stmt.executeQuery("SELECT payrollId, attendancePeriodFrom, attendancePeriodTo "
+//                    + "lates, undertime, overtime, nightDifferential, latesDeduction, undertimeDeduction, "
+//                    + "overtimePaid, nightDifferentialPaid, legalHolidayPaid, specialHolidayPaid, "
+//                    + "workingDayOffPaid, nonWorkingHolidayPaid "
+                    + "FROM timekeeping_summary WHERE currentStatus IS NULL AND "
                     + "employeeId = '"+employeeId+"' ORDER BY payrollId DESC");
             while(rs.next()){
                 Timekeeping t = new Timekeeping();
                 t.setId(util.convertStringToInteger(rs.getString("payrollId")));
                 t.setAttendancePeriodFrom(util.parsingDate(rs.getString("attendancePeriodFrom")));
                 t.setAttendancePeriodTo(util.parsingDate(rs.getString("attendancePeriodTo")));
-                t.setLates(util.convertStringToDouble(rs.getString("lates")));
-                t.setUndertime(util.convertStringToDouble(rs.getString("undertime")));
-                t.setOvertime(util.convertStringToDouble(rs.getString("overtime")));
-                t.setNightDifferential(util.convertStringToDouble(rs.getString("nightDifferential")));
-                t.setLateDeduction(util.convertStringToDouble(rs.getString("latesDeduction")));
-                t.setUndertimeDeduction(util.convertStringToDouble(rs.getString("undertimeDeduction")));
-                t.setOvertimePaid(util.convertStringToDouble(rs.getString("overtimePaid")));
-                t.setNightDifferentialPaid(util.convertStringToDouble(rs.getString("nightDifferentialPaid")));
-                t.setLegalHolidayPaid(util.convertStringToDouble(rs.getString("legalHolidayPaid")));
-                t.setSpecialHolidayPaid(util.convertStringToDouble(rs.getString("specialHolidayPaid")));
-                t.setWorkingDayOffPaid(util.convertStringToDouble(rs.getString("workingDayOffPaid")));
-                t.setNonWorkingHolidayPaid(util.convertStringToDouble(rs.getString("nonWorkingHolidaypaid")));
+//                t.setLates(util.convertStringToDouble(rs.getString("lates")));
+//                t.setUndertime(util.convertStringToDouble(rs.getString("undertime")));
+//                t.setOvertime(util.convertStringToDouble(rs.getString("overtime")));
+//                t.setNightDifferential(util.convertStringToDouble(rs.getString("nightDifferential")));
+//                t.setLateDeduction(util.convertStringToDouble(rs.getString("latesDeduction")));
+//                t.setUndertimeDeduction(util.convertStringToDouble(rs.getString("undertimeDeduction")));
+//                t.setOvertimePaid(util.convertStringToDouble(rs.getString("overtimePaid")));
+//                t.setNightDifferentialPaid(util.convertStringToDouble(rs.getString("nightDifferentialPaid")));
+//                t.setLegalHolidayPaid(util.convertStringToDouble(rs.getString("legalHolidayPaid")));
+//                t.setSpecialHolidayPaid(util.convertStringToDouble(rs.getString("specialHolidayPaid")));
+//                t.setWorkingDayOffPaid(util.convertStringToDouble(rs.getString("workingDayOffPaid")));
+//                t.setNonWorkingHolidayPaid(util.convertStringToDouble(rs.getString("nonWorkingHolidaypaid")));
                 attendanceList.add(t);
             }
         } catch (SQLException ex) {
@@ -259,5 +259,353 @@ public class TimekeepingDAO {
         }
         
         return nonWorkingHolidayPay;
+    }
+    
+    public double getTotalLates(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT sum(lates) AS lates FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("lates"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalUndertime(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT sum(undertime) AS undertime FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("undertime"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalOvertime(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT sum(overtime) AS overtime FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("overtime"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalNightDifferential(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT sum(nightDifferential) AS nightDifferential FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("nightDifferential"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalLatesDeduction(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT round(sum(latesDeduction),2) AS latesDeduction FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("latesDeduction"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalUndertimeDeduction(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT round(sum(undertimeDeduction),2) AS undertimeDeduction FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("undertimeDeduction"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalOvertimePaid(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT round(sum(overtimePaid),2) AS overtimePaid FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("overtimePaid"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalNightDifferentialPaid(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT round(sum(nightDifferentialPaid),2) AS nightDifferentialPaid FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("nightDifferentialPaid"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalLegalHolidayPaid(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT round(sum(legalHolidayPaid),2) AS legalHolidayPaid FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("legalHolidayPaid"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalSpecialHolidayPaid(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT round(sum(specialHolidayPaid),2) AS specialHolidayPaid FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("specialHolidayPaid"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalWorkingDayOffPaid(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT round(sum(workingDayOffPaid),2) AS workingDayOffPaid FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("workingDayOffPaid"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
+    }
+    
+    public double getTotalPsHolidayPaid(int payrollId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        double total = 0;
+        
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT round(sum(psHolidayPaid),2) AS psHolidayPaid FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){
+                total = util.convertStringToDouble(rs.getString("psHolidayPaid"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return total;
     }
 }

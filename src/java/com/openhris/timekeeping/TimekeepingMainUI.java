@@ -138,25 +138,25 @@ public class TimekeepingMainUI extends VerticalLayout {
                     payrollPeriod = "30th of the month";
                 }
                 
-                if(attendanceDateFromExist == false || attendanceDateToExist == false){
-                    getWindow().showNotification("Attendance Date Range Already Exist", Window.Notification.TYPE_ERROR_MESSAGE);
-                    return;
-                }
-                
-                if(parsedPayrollDate.before(previousPayrollDate)){
-                    getWindow().showNotification("Entered payroll date entry is not allowed!", Window.Notification.TYPE_ERROR_MESSAGE);
-                    return;
-                }
-                
-                if(parsedAttendanceDateTo.before(parsedAttendanceDateFrom)){
-                    getWindow().showNotification("Error Attendance Date Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
-                    return;
-                }
-
-                if(parsedPayrollDate.before(parsedAttendanceDateTo) || parsedPayrollDate.equals(parsedAttendanceDateTo)){
-                    getWindow().showNotification("Error Payroll Date Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
-                    return;
-                }
+//                if(attendanceDateFromExist == false || attendanceDateToExist == false){
+//                    getWindow().showNotification("Attendance Date Range Already Exist", Window.Notification.TYPE_ERROR_MESSAGE);
+//                    return;
+//                }
+//                
+//                if(parsedPayrollDate.before(previousPayrollDate)){
+//                    getWindow().showNotification("Entered payroll date entry is not allowed!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                    return;
+//                }
+//                
+//                if(parsedAttendanceDateTo.before(parsedAttendanceDateFrom)){
+//                    getWindow().showNotification("Error Attendance Date Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                    return;
+//                }
+//
+//                if(parsedPayrollDate.before(parsedAttendanceDateTo) || parsedPayrollDate.equals(parsedAttendanceDateTo)){
+//                    getWindow().showNotification("Error Payroll Date Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                    return;
+//                }
                 
                 List dateList;
                 String checkEmployeeCurrentStatus = employeeService.getEmployeeCurrentStatus(getEmployeeId());
@@ -215,18 +215,31 @@ public class TimekeepingMainUI extends VerticalLayout {
                 t.getId(), 
                 util.convertDateFormat(t.getAttendancePeriodFrom().toString()), 
                 util.convertDateFormat(t.getAttendancePeriodTo().toString()), 
-                t.getLates(), 
-                t.getUndertime(), 
-                t.getOvertime(), 
-                t.getNightDifferential(), 
-                t.getLateDeduction(), 
-                t.getUndertimeDeduction(),  
-                t.getOvertimePaid(), 
-                t.getNightDifferentialPaid(), 
-                t.getLegalHolidayPaid(), 
-                t.getSpecialHolidayPaid(), 
-                t.getWorkingDayOffPaid(), 
-                t.getNonWorkingHolidayPaid()
+//                t.getLates(), 
+//                t.getUndertime(), 
+//                t.getOvertime(), 
+//                t.getNightDifferential(), 
+//                t.getLateDeduction(), 
+//                t.getUndertimeDeduction(),  
+//                t.getOvertimePaid(), 
+//                t.getNightDifferentialPaid(), 
+//                t.getLegalHolidayPaid(), 
+//                t.getSpecialHolidayPaid(), 
+//                t.getWorkingDayOffPaid(), 
+//                t.getNonWorkingHolidayPaid()
+                timekeepingService.getTotalLates(t.getId()), 
+                timekeepingService.getTotalUndertime(t.getId()), 
+                timekeepingService.getTotalOvertime(t.getId()), 
+                timekeepingService.getTotalNightDifferential(t.getId()), 
+                timekeepingService.getTotalLatesDeduction(t.getId()), 
+                timekeepingService.getTotalUndertimeDeduction(t.getId()), 
+                timekeepingService.getTotalOvertimePaid(t.getId()), 
+                timekeepingService.getTotalNightDifferentialPaid(t.getId()), 
+                timekeepingService.getTotalLegalHolidayPaid(t.getId()), 
+                timekeepingService.getTotalSpecialHolidayPaid(t.getId()), 
+                timekeepingService.getTotalWorkingDayOffPaid(t.getId()), 
+                timekeepingService.getTotalPsHolidayPaid(t.getId())
+                
             }, new Integer(i));
             i++;
         }

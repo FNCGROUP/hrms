@@ -41,6 +41,7 @@ public class Payroll extends Employee {
     double totalNonWorkingHolidayPaid;
     double allowance;
     double allowanceForLiquidation;
+    double perDiem;
     double totalAdvances;
     double netSalary;
     double adjustment;
@@ -157,6 +158,10 @@ public class Payroll extends Employee {
         return allowanceForLiquidation;
     }
 
+    public double getPerDiem(){
+        return perDiem;
+    }
+    
     public double getTotalAdvances(){
         PayrollService payrollService = new PayrollServiceImpl();
         return payrollService.getTotalAdvancesByPayroll(getId());
@@ -298,6 +303,10 @@ public class Payroll extends Employee {
         this.allowanceForLiquidation = allowanceForLiquidation;
     }
 
+    public void setPerDiem(double perDiem){
+        this.perDiem = perDiem;
+    }
+    
     public void setTotalAdvances(double totalAdvances){
         this.totalAdvances = totalAdvances;
     }

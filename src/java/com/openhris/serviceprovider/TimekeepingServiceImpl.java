@@ -47,4 +47,64 @@ public class TimekeepingServiceImpl implements TimekeepingService {
     public double getNonWorkingHolidayPay(int payrollId) {
         return timekeepingDAO.getNonWorkingHolidayPay(payrollId);
     }
+
+    @Override
+    public double getTotalLates(int payrollId) {
+        return timekeepingDAO.getTotalLates(payrollId);
+    }
+
+    @Override
+    public double getTotalUndertime(int payrollId) {
+        return timekeepingDAO.getTotalUndertime(payrollId);
+    }
+
+    @Override
+    public double getTotalOvertime(int payrollId) {
+        return timekeepingDAO.getTotalOvertime(payrollId);
+    }
+
+    @Override
+    public double getTotalNightDifferential(int payrollId) {
+        return timekeepingDAO.getTotalNightDifferential(payrollId);
+    }
+
+    @Override
+    public double getTotalLatesDeduction(int payrollId) {
+        return timekeepingDAO.getTotalLatesDeduction(payrollId);
+    }
+
+    @Override
+    public double getTotalUndertimeDeduction(int payrollId) {
+        return timekeepingDAO.getTotalUndertimeDeduction(payrollId);
+    }
+
+    @Override
+    public double getTotalOvertimePaid(int payrollId) {
+        return timekeepingDAO.getTotalOvertimePaid(payrollId);
+    }
+
+    @Override
+    public double getTotalNightDifferentialPaid(int payrollId) {
+        return timekeepingDAO.getTotalNightDifferentialPaid(payrollId);
+    }
+
+    @Override
+    public double getTotalLegalHolidayPaid(int payrollId) {
+        return timekeepingDAO.getTotalLegalHolidayPaid(payrollId);
+    }
+
+    @Override
+    public double getTotalSpecialHolidayPaid(int payrollId) {
+        return timekeepingDAO.getTotalSpecialHolidayPaid(payrollId);
+    }
+
+    @Override
+    public double getTotalWorkingDayOffPaid(int payrollId) {
+        return timekeepingDAO.getTotalWorkingDayOffPaid(payrollId);
+    }
+
+    @Override
+    public double getTotalPsHolidayPaid(int payrollId) {
+        return timekeepingDAO.getTotalPsHolidayPaid(payrollId);
+    }
 }

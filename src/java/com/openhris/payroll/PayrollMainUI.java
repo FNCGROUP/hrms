@@ -51,7 +51,7 @@ public class PayrollMainUI extends VerticalLayout {
     ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
     AdministratorService administratorService = new AdministratorServiceImpl();
     
-    Table payrollTbl = new Table();
+    Table payrollTbl = new PayrollTableProperties();
     Table advanceTbl = new Table();
     int branchId;
     String employeeId;
@@ -122,91 +122,6 @@ public class PayrollMainUI extends VerticalLayout {
     
     public void payrollTable(int branchId, String employeeId){
         payrollTbl.removeAllItems();
-        payrollTbl.setSizeFull();
-        payrollTbl.setImmediate(true);
-        payrollTbl.setSelectable(true);
-        payrollTbl.addStyleName("hris-table-layout");
-        
-        payrollTbl.addContainerProperty("id", String.class, null);        
-        payrollTbl.addContainerProperty("start date", String.class, null);
-        payrollTbl.addContainerProperty("cut-off date", String.class, null);
-        
-        payrollTbl.addContainerProperty("basic salary", String.class, null); 
-        payrollTbl.setColumnAlignment("basic salary", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("half-month salary", String.class, null);
-        payrollTbl.setColumnAlignment("half-month salary", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("overtime pay", String.class, null);
-        payrollTbl.setColumnAlignment("overtime pay", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("legal holiday", String.class, null); 
-        payrollTbl.setColumnAlignment("legal holiday", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("special holiday", String.class, null); 
-        payrollTbl.setColumnAlignment("special holiday", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("night differential", String.class, null); 
-        payrollTbl.setColumnAlignment("night differential", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("wdo", String.class, null);   
-        payrollTbl.setColumnAlignment("wdo", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("absences", String.class, null); 
-        payrollTbl.setColumnAlignment("absences", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("lates", String.class, null);   
-        payrollTbl.setColumnAlignment("lates", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("undertime", String.class, null); 
-        payrollTbl.setColumnAlignment("undertime", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("gross pay", String.class, null); 
-        payrollTbl.setColumnAlignment("gross pay", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("sss", String.class, null); 
-        payrollTbl.setColumnAlignment("sss", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("phic", String.class, null);
-        payrollTbl.setColumnAlignment("phic", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("hdmf", String.class, null);  
-        payrollTbl.setColumnAlignment("hdmf", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("tax", String.class, null); 
-        payrollTbl.setColumnAlignment("tax", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("net pay", String.class, null);  
-        payrollTbl.setColumnAlignment("net pay", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("cash bond", String.class, null);
-        payrollTbl.setColumnAlignment("cash bond", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("allowance", String.class, null); 
-        payrollTbl.setColumnAlignment("allowance", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("allowance for liquidation", String.class, null); 
-        payrollTbl.setColumnAlignment("allowance for liquidation", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("advances to o/e", String.class, null);      
-        payrollTbl.setColumnAlignment("advances to o/e", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("adjustments", String.class, null); 
-        payrollTbl.setColumnAlignment("adjustments", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("amount to be receive", String.class, null); 
-        payrollTbl.setColumnAlignment("amount to be receive", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("amount received", String.class, null); 
-        payrollTbl.setColumnAlignment("amount received", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("for adjustments", String.class, null);
-        payrollTbl.setColumnAlignment("for adjustments", Table.ALIGN_RIGHT);
-        
-        payrollTbl.addContainerProperty("payroll period", String.class, null);
-        payrollTbl.addContainerProperty("payroll date", String.class, null);
-        payrollTbl.addContainerProperty("status", String.class, null);    
-        
         List<Payroll> payrollList = payrollService.getPayrollByBranchAndEmployee(branchId, employeeId);
         String payrollStatus = null;
         int i = 0;
@@ -240,6 +155,7 @@ public class PayrollMainUI extends VerticalLayout {
                     utililities.roundOffToTwoDecimalPlaces(p.getCashBond()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getAllowance()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getAllowanceForLiquidation()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getPerDiem()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getTotalAdvances()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getAdjustment()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getAmountToBeReceive()), 
