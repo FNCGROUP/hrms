@@ -23,7 +23,8 @@
 	pr.attendancePeriodFrom AS dateFrom, 
 	pr.attendancePeriodTo AS dateTo, 
 	pr.salaryId AS payrollId, 
-	pr.branchName AS branchName
+	pr.branchName AS branchName, 
+	pr.advances AS advances 
 FROM payroll_register pr 
 WHERE advances != 0 
 AND (pr.currentStatus != 'removed' OR pr.currentStatus IS NULL)
@@ -40,6 +41,10 @@ ORDER BY pr.name ASC]]>
 	<field name="dateTo" class="java.sql.Date"/>
 	<field name="payrollId" class="java.lang.Integer"/>
 	<field name="branchName" class="java.lang.String"/>
+	<field name="advances" class="java.lang.Double"/>
+	<variable name="TOTAL_ADVANCES" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{advances}]]></variableExpression>
+	</variable>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -200,4 +205,25 @@ ORDER BY pr.name ASC]]>
 			</textField>
 		</band>
 	</pageFooter>
+	<summary>
+		<band height="50">
+			<staticText>
+				<reportElement uuid="d9c146e1-d2a9-4d0f-a05d-e02656d1aa29" x="118" y="0" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total:     ]]></text>
+			</staticText>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="e6dcb4dc-08ea-4ffd-9d1f-413b66cafff4" x="218" y="0" width="90" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_ADVANCES}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="f0d75134-cbd1-4579-9ca4-cc0223937682" x="138" y="0" width="270" height="1"/>
+			</line>
+		</band>
+	</summary>
 </jasperReport>

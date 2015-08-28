@@ -655,4 +655,65 @@ public class AdministratorDAO {
         
         return result;
     }
+    
+    public boolean updateUserAllowedToEnterPreviousAttendance(int userId, int isAllowed){
+        boolean result = false;
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        try {
+            pstmt = conn.prepareStatement("UPDATE user_special_access "
+                    + "SET IsAllowedPreviousAttendance = ? "
+                    + "WHERE userId = ?");
+            pstmt.setInt(1, isAllowed);
+            pstmt.setInt(2, userId);
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceUpdateDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceUpdateDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+    
+    public boolean isUserAllowedToEnterPreviousAttendance(int userId){
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null;
+        Boolean result = false;
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(" SELECT isAllowedPreviousAttendance "
+                    + "FROM user_special_access "
+                    + "WHERE userId = "+userId+" ");
+            while(rs.next()){
+                if(rs.getString("isAllowedPreviousAttendance").equals("1")){
+                    result = true;                    
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(AdministratorDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(AdministratorDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }        
+        
+        return result;
+    }
 }

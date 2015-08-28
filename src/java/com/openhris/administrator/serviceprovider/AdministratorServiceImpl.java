@@ -119,5 +119,15 @@ public class AdministratorServiceImpl implements AdministratorService {
     public boolean getUserAdvanceAccess(int userId, String column) {
         return adminDAO.getUserAdvanceAccess(userId, column);
     }
+
+    @Override
+    public boolean updateUserAllowedToEnterPreviousAttendance(int userId, int isAllowed) {
+        return adminDAO.updateUserAllowedToEnterPreviousAttendance(userId, isAllowed);
+    }
+
+    @Override
+    public boolean isUserAllowedToEnterPreviousAttendance(int userId) {
+        return adminDAO.isUserAllowedToEnterPreviousAttendance(userId);
+    }
     
 }

@@ -14,6 +14,7 @@ import com.hrms.classes.GlobalVariables;
 import com.hrms.dbconnection.AuthenticateLogin;
 import com.hrms.modules.*;
 import com.openhris.administrator.ChangePassword;
+import com.openhris.administrator.SpecialAccessControl;
 import com.openhris.administrator.UserAdvanceAccessMainUI;
 import com.openhris.administrator.UserToolbarMenuAccessMainUI;
 import com.openhris.administrator.UsersMainUI;
@@ -696,7 +697,7 @@ public class MainApp extends Application {
     ComponentContainer buildAdministratorComponent(){
         usersMainUI = new UsersMainUI(getBranchId());
         userToolbarMenuAccessMainUI = new UserToolbarMenuAccessMainUI();
-        userAdvanceAccessMainUI = new UserAdvanceAccessMainUI();
+        userAdvanceAccessMainUI = new UserAdvanceAccessMainUI();        
         
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
@@ -718,6 +719,12 @@ public class MainApp extends Application {
         adminMenuGrid.setSizeFull();
         adminMenuGrid.setCaption("User Advance Access Control");
         adminMenuGrid.addComponent(userAdvanceAccessMainUI);
+        ts.addComponent(adminMenuGrid);
+        
+        adminMenuGrid = new VerticalLayout();
+        adminMenuGrid.setWidth("100%");
+        adminMenuGrid.setCaption("Special Access Control");
+        adminMenuGrid.addComponent(new SpecialAccessControl());
         ts.addComponent(adminMenuGrid);
         
         ts.addListener(new TabSheet.SelectedTabChangeListener() {

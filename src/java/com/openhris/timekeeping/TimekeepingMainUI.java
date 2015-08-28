@@ -4,7 +4,10 @@
  */
 package com.openhris.timekeeping;
 
+import com.hrms.classes.GlobalVariables;
 import com.openhris.administrator.model.UserAccessControl;
+import com.openhris.administrator.service.AdministratorService;
+import com.openhris.administrator.serviceprovider.AdministratorServiceImpl;
 import com.openhris.commons.DateSelector;
 import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
@@ -41,6 +44,8 @@ public class TimekeepingMainUI extends VerticalLayout {
     
     TimekeepingService timekeepingService = new TimekeepingServiceImpl();
     PayrollService payrollService = new PayrollServiceImpl();
+    AdministratorService as = new AdministratorServiceImpl();
+    
     Table timekeepingTbl = new TimekeepingTable();
     Table attendanceTable = new Table();
     int branchId;
@@ -138,25 +143,29 @@ public class TimekeepingMainUI extends VerticalLayout {
                     payrollPeriod = "30th of the month";
                 }
                 
-//                if(attendanceDateFromExist == false || attendanceDateToExist == false){
-//                    getWindow().showNotification("Attendance Date Range Already Exist", Window.Notification.TYPE_ERROR_MESSAGE);
-//                    return;
-//                }
-//                
-//                if(parsedPayrollDate.before(previousPayrollDate)){
-//                    getWindow().showNotification("Entered payroll date entry is not allowed!", Window.Notification.TYPE_ERROR_MESSAGE);
-//                    return;
-//                }
-//                
-//                if(parsedAttendanceDateTo.before(parsedAttendanceDateFrom)){
-//                    getWindow().showNotification("Error Attendance Date Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
-//                    return;
-//                }
-//
-//                if(parsedPayrollDate.before(parsedAttendanceDateTo) || parsedPayrollDate.equals(parsedAttendanceDateTo)){
-//                    getWindow().showNotification("Error Payroll Date Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
-//                    return;
-//                }
+                if(!as.isUserAllowedToEnterPreviousAttendance(GlobalVariables.getUserId())){
+                    if(attendanceDateFromExist == false || attendanceDateToExist == false){
+                        getWindow().showNotification("Attendance Date Range Already Exist", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if(parsedPayrollDate.before(previousPayrollDate)){
+                        getWindow().showNotification("Entered payroll date entry is not allowed!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if(parsedAttendanceDateTo.before(parsedAttendanceDateFrom)){
+                        getWindow().showNotification("Error Attendance Date Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+
+                    if(parsedPayrollDate.before(parsedAttendanceDateTo) || parsedPayrollDate.equals(parsedAttendanceDateTo)){
+                        getWindow().showNotification("Error Payroll Date Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                }
+                
+                
                 
                 List dateList;
                 String checkEmployeeCurrentStatus = employeeService.getEmployeeCurrentStatus(getEmployeeId());

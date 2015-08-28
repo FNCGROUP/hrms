@@ -62,4 +62,8 @@ public interface AdministratorService {
     public boolean checkEnteredPasswordIfCorrect(int userId, String password);
     
     public boolean getUserAdvanceAccess(int userId, String column);
+    
+    public boolean updateUserAllowedToEnterPreviousAttendance(int userId, int isAllowed);
+    
+    public boolean isUserAllowedToEnterPreviousAttendance(int userId);
 }
