@@ -50,6 +50,7 @@ public class PayrollMainUI extends VerticalLayout {
     DropDownComponent dropDown = new DropDownComponent();
     ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
     AdministratorService administratorService = new AdministratorServiceImpl();
+    PayrollSubModules subModules = new PayrollSubModules();
     
     Table payrollTbl = new PayrollTableProperties();
     Table advanceTbl = new Table();
@@ -338,6 +339,13 @@ public class PayrollMainUI extends VerticalLayout {
                         getWindow().showNotification("You are not allowed to lock this row!", Window.Notification.TYPE_WARNING_MESSAGE);
                     }
                                                                         
+                }
+                
+                if(event.getPropertyId().equals("per diem")){                    
+                    Window sub = subModules.perDiemWindow(item);
+                    if(sub.getParent() == null){
+                        getWindow().addWindow(sub);
+                    }
                 }
             }
         });
@@ -771,10 +779,6 @@ public class PayrollMainUI extends VerticalLayout {
                         return;
                     }
                     
-//                    if(Double.parseDouble(amount.getValue().toString().trim()) < 0){
-//                        getWindow().showNotification("Add advances on Payroll Register if Amount is less than 0!", Window.Notification.TYPE_ERROR_MESSAGE);
-//                        return;
-//                    }
                 }else{
                     getWindow().showNotification("Please Enter an Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
                     return;

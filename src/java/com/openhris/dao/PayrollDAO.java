@@ -13,6 +13,7 @@ import com.openhris.model.Advances;
 import com.openhris.model.Payroll;
 import com.openhris.model.PayrollRegister;
 import com.openhris.model.Timekeeping;
+import com.vaadin.data.Item;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,7 +49,7 @@ public class PayrollDAO {
                     + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
                     + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
                     + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.allowance AS allowance, "
-                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.netSalary AS netSalary, "
+                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiem AS perDiem, p.netSalary AS netSalary, "
                     + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
                     + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
 		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
@@ -63,7 +64,7 @@ public class PayrollDAO {
                     + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
                     + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
                     + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.allowance AS allowance, "
-                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.netSalary AS netSalary, "
+                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiem AS perDiem, p.netSalary AS netSalary, "
                     + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
                     + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
 		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
@@ -101,6 +102,7 @@ public class PayrollDAO {
                 p.setTotalWorkingDayOffPaid(util.convertStringToDouble(rs.getString("totalWorkingDayOffPaid")));
                 p.setAllowance(util.convertStringToDouble(rs.getString("allowance")));
                 p.setAllowanceForLiquidation(util.convertStringToDouble(rs.getString("allowanceForLiquidation")));
+                p.setPerDiem(util.convertStringToDouble(rs.getString("perDiem")));
                 p.setNetSalary(util.convertStringToDouble(rs.getString("netSalary")));
                 p.setAmountToBeReceive(util.convertStringToDouble(rs.getString("amountToBeReceive")));
                 p.setAmountReceivable(util.convertStringToDouble(rs.getString("amountReceivable")));
@@ -1383,6 +1385,43 @@ public class PayrollDAO {
                 if(conn != null || !conn.isClosed()){
                     stmt.close();
                     rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
+    }
+
+    public boolean addPerDiem(int payrollId, 
+            double amount, 
+            double amountToBeReceive, 
+            double amountReceived){
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("UPDATE payroll_table "
+                    + "SET perDiem = ?, "
+                    + "amountToBeReceive = ?, "
+                    + "amountReceivable = ? "
+                    + "WHERE id = ? ");
+            pstmt.setDouble(1, amount);
+            pstmt.setDouble(2, amountToBeReceive + amount);
+            pstmt.setDouble(3, amountReceived + amount);
+            pstmt.setInt(4, payrollId);
+            pstmt.executeUpdate();
+                        
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
                     conn.close();
                 }
             } catch (SQLException ex) {

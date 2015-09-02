@@ -9,6 +9,7 @@ import com.openhris.model.Advances;
 import com.openhris.model.Payroll;
 import com.openhris.model.PayrollRegister;
 import com.openhris.model.Timekeeping;
+import com.vaadin.data.Item;
 import java.util.List;
 
 /**
@@ -108,4 +109,9 @@ public interface PayrollService {
     public boolean isPayrollAdjusted(int payrollId);
     
     public boolean unlockedPayroll(int payrollId);
+    
+    public boolean addPerDiem(int payrollId, 
+            double amount, 
+            double amountToBeReceive, 
+            double amountReceived);
 }
