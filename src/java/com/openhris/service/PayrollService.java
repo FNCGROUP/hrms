@@ -111,7 +111,8 @@ public interface PayrollService {
     public boolean unlockedPayroll(int payrollId);
     
     public boolean addPerDiem(int payrollId, 
-            double amount, 
+            double newAmount, 
+            double oldAmount, 
             double amountToBeReceive, 
             double amountReceived);
 }

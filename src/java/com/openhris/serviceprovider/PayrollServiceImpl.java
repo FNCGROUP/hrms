@@ -237,11 +237,13 @@ public class PayrollServiceImpl implements PayrollService {
 
     @Override
     public boolean addPerDiem(int payrollId, 
-            double amount, 
+            double newAmount, 
+            double oldAmount, 
             double amountToBeReceive, 
             double amountReceived) {
         return payrollDAO.addPerDiem(payrollId, 
-                amount, 
+                newAmount, 
+                oldAmount, 
                 amountToBeReceive, 
                 amountReceived);
     }

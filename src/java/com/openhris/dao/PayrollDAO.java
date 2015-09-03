@@ -1396,12 +1396,14 @@ public class PayrollDAO {
     }
 
     public boolean addPerDiem(int payrollId, 
-            double amount, 
+            double newAmount, 
+            double oldAmount, 
             double amountToBeReceive, 
             double amountReceived){
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         boolean result = false;
+        double amount = newAmount - oldAmount;
         
         try {
             pstmt = conn.prepareStatement("UPDATE payroll_table "
@@ -1409,7 +1411,7 @@ public class PayrollDAO {
                     + "amountToBeReceive = ?, "
                     + "amountReceivable = ? "
                     + "WHERE id = ? ");
-            pstmt.setDouble(1, amount);
+            pstmt.setDouble(1, newAmount);
             pstmt.setDouble(2, amountToBeReceive + amount);
             pstmt.setDouble(3, amountReceived + amount);
             pstmt.setInt(4, payrollId);

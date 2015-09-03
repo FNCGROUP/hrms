@@ -51,15 +51,18 @@ public class PayrollSubModules {
                 int payrollId = util.convertStringToInteger(getPayrollTableItem().getItemProperty("id").getValue().toString());
                 double amountToBeReceive = util.convertStringToDouble(getPayrollTableItem().getItemProperty("amount to be receive").toString());
                 double amountReceived = util.convertStringToDouble(getPayrollTableItem().getItemProperty("amount received").toString());
+                double amount = util.convertStringToDouble(perDiemAmount.getValue().toString()) - 
+                        util.convertStringToDouble(getPayrollTableItem().getItemProperty("per diem").getValue().toString());
                 
                 boolean result = ps.addPerDiem(
                         payrollId, 
                         util.convertStringToDouble(perDiemAmount.getValue().toString()), 
+                        util.convertStringToDouble(getPayrollTableItem().getItemProperty("per diem").getValue().toString()), 
                         amountToBeReceive, 
                         amountReceived);
                 if(result){
-                    getPayrollTableItem().getItemProperty("amount to be receive").setValue(amountToBeReceive+util.convertStringToDouble(perDiemAmount.getValue().toString()));
-                    getPayrollTableItem().getItemProperty("amount received").setValue(amountReceived+util.convertStringToDouble(perDiemAmount.getValue().toString()));
+                    getPayrollTableItem().getItemProperty("amount to be receive").setValue(amountToBeReceive + amount);
+                    getPayrollTableItem().getItemProperty("amount received").setValue(amountReceived + amount);
                     getPayrollTableItem().getItemProperty("per diem").setValue(perDiemAmount.getValue());
                     (sub.getParent()).removeWindow(sub);
                 }
