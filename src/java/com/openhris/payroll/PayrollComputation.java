@@ -70,7 +70,7 @@ public class PayrollComputation {
                 if(policyList.get(i).equals("null") || policyList.get(i).equals("working-day-off") || 
                         policyList.get(i).equals("working-holiday") || policyList.get(i).equals("paid-vacation-leave") || 
                         policyList.get(i).equals("paid-sick-leave") || policyList.get(i).equals("paternity-leave") || 
-                        policyList.get(i).toString().isEmpty()){                    
+                        policyList.get(i).equals("maternity-leave") || policyList.get(i).toString().isEmpty()){                    
                     halfMonthSalary = halfMonthSalary + wage;                   
                 }
             }    
@@ -119,7 +119,7 @@ public class PayrollComputation {
                 if(policyList.get(i).equals("null") || policyList.get(i).equals("working-day-off") || 
                         policyList.get(i).equals("working-holiday") || policyList.get(i).equals("paid-vacation-leave") || 
                         policyList.get(i).equals("paid-sick-leave") || policyList.get(i).equals("paternity-leave") || 
-			policyList.get(i).toString().isEmpty()){
+			policyList.get(i).equals("maternity-leave") || policyList.get(i).toString().isEmpty()){
                     taxableSalary = taxableSalary + wage;
                 }
             }             
@@ -202,7 +202,8 @@ public class PayrollComputation {
                     policyList.get(i).equals("service-incentive-leave") || policyList.get(i).equals("holiday") || 
                     policyList.get(i).equals("paid-vacation-leave") || policyList.get(i).equals("paid-sick-leave") || 
                     policyList.get(i).equals("unpaid-vacation-leave") || policyList.get(i).equals("unpaid-sick-leave") || 
-                        policyList.get(i).equals("suspended") || policyList.get(i).equals("resigned") || policyList.get(i).equals("end-of-contract")){
+                    policyList.get(i).equals("suspended") || policyList.get(i).equals("resigned") || 
+                    policyList.get(i).equals("maternity-leave") || policyList.get(i).equals("end-of-contract")){
                     halfAllowance =  halfAllowance - allowance_entry_per_day;
                 }
             }
@@ -234,7 +235,8 @@ public class PayrollComputation {
                     policyList.get(i).equals("service-incentive-leave") || policyList.get(i).equals("holiday") || 
                     policyList.get(i).equals("paid-vacation-leave") || policyList.get(i).equals("paid-sick-leave") || 
                     policyList.get(i).equals("unpaid-vacation-leave") || policyList.get(i).equals("unpaid-sick-leave") || 
-                    policyList.get(i).equals("suspended") || policyList.get(i).equals("resigned") || policyList.get(i).equals("end-of-contract")){
+                    policyList.get(i).equals("suspended") || policyList.get(i).equals("resigned") || 
+                    policyList.get(i).equals("maternity-leave") || policyList.get(i).equals("end-of-contract")){
                 count++;
             }
         }
@@ -250,7 +252,8 @@ public class PayrollComputation {
                     policyList.get(i).equals("service-incentive-leave") || policyList.get(i).equals("paid-vacation-leave") || 
                     policyList.get(i).equals("paid-sick-leave") || policyList.get(i).equals("unpaid-vacation-leave") || 
                     policyList.get(i).equals("unpaid-sick-leave")|| policyList.get(i).equals("suspended") ||  
-                    policyList.get(i).equals("resigned") || policyList.get(i).equals("end-of-contract")){
+                    policyList.get(i).equals("resigned") || policyList.get(i).equals("end-of-contract") || 
+                    policyList.get(i).equals("maternity-leave")){
                 count++;
             }
         }

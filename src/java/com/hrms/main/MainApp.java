@@ -33,6 +33,7 @@ import com.openhris.contributions.ContributionComponentContainer;
 import com.openhris.employee.AddNewEmployeeWindow;
 import com.openhris.employee.EmployeeMainUI;
 import com.openhris.model.Employee;
+import com.openhris.payroll.PayrollAdvancesLedgerUI;
 import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.PayrollMainUI;
@@ -95,6 +96,7 @@ public class MainApp extends Application {
     UserToolbarMenuAccessMainUI userToolbarMenuAccessMainUI;
     UserAdvanceAccessMainUI userAdvanceAccessMainUI;    
     SchedulerMainUI schedulerMainUI;
+    PayrollAdvancesLedgerUI payrollAdvancesLedgerUI;
     
     AdvanceUserAccessModule advanceUserAccess = new AdvanceUserAccessModule();
     CreateNewUser createNewUser;
@@ -448,6 +450,7 @@ public class MainApp extends Application {
                     
                     payrollMainUI.employeeComboBox(branchId); 
                     payrollRegisterMainUI.setBranchId(branchId);
+                    payrollAdvancesLedgerUI.employeeComboBox(branchId);
                     
                     usersMainUI.employeeComboBox(branchId);
                     usersMainUI.setBranchId(branchId);
@@ -621,6 +624,7 @@ public class MainApp extends Application {
     ComponentContainer buildPayrollComponent(){
         payrollMainUI = new PayrollMainUI(getBranchId());
         payrollRegisterMainUI = new PayrollRegisterMainUI(getBranchId());
+        payrollAdvancesLedgerUI = new PayrollAdvancesLedgerUI(getBranchId());
         
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
@@ -640,8 +644,8 @@ public class MainApp extends Application {
         
         payrollMenuGrid = new GridLayout();
         payrollMenuGrid.setSizeFull();
-        payrollMenuGrid.setCaption("13th Month");
-//        payrollMenuGrid.addComponent(form201);
+        payrollMenuGrid.setCaption("Ledger");
+        payrollMenuGrid.addComponent(payrollAdvancesLedgerUI);
         ts.addComponent(payrollMenuGrid);
         
 //        payrollMenuGrid = new GridLayout();

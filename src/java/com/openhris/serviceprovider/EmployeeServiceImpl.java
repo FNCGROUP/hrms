@@ -73,7 +73,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<Employee> getEmployeePerBranchForDropDownList(int branchId) {
-        return serviceGet.getEmployeePerBranchForDropDownList(branchId);
+//        return serviceGet.getEmployeePerBranchForDropDownList(branchId);
+        return employeeDAO.getEmployeePerBranch(branchId);
     }
 
     @Override
