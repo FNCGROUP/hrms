@@ -80,7 +80,7 @@ public class PayrollComputation {
             int count = 0;
             
             for(int i = 0; i < policyList.size(); i++){
-                if(policyList.get(i).equals("day-off")){
+                if(policyList.get(i).equals("day-off") || policyList.get(i).equals("paternity-leave") || policyList.get(i).equals("maternity-leave")){
                     count++;
                 }
             }
@@ -127,7 +127,8 @@ public class PayrollComputation {
             wage = util.roundOffToTwoDecimalPlaces((wage * 12)/314);
             for(int i = 0; i < policyList.size(); i++){
                 if(policyList.get(i).equals("absent") || policyList.get(i).equals("unpaid-vacation-leave") || 
-                        policyList.get(i).equals("unpaid-sick-leave") || policyList.get(i).equals("suspended")){
+                        policyList.get(i).equals("unpaid-sick-leave") || policyList.get(i).equals("suspended") || 
+                        policyList.get(i).equals("paternity-leave") || policyList.get(i).equals("maternity-leave")){
                     absences = absences + wage;
                 }
             }
@@ -219,7 +220,8 @@ public class PayrollComputation {
         double allowance_entry_per_day = util.roundOffToTwoDecimalPlaces((allowanceForLiquidation * 12)/314);
         for(int i = 0; i < policyList.size(); i++){
             if(policyList.get(i).equals("absent") || policyList.get(i).equals("unpaid-vacation-leave") || 
-                    policyList.get(i).equals("unpaid-sick-leave") || policyList.get(i).equals("suspended")){
+                    policyList.get(i).equals("unpaid-sick-leave") || policyList.get(i).equals("suspended") || 
+                    policyList.get(i).equals("paternity-leave") || policyList.get(i).equals("maternity-leave")){
                 allowanceToBeDeductedPerDay =  allowanceToBeDeductedPerDay + allowance_entry_per_day;
             }
         }
