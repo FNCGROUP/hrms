@@ -103,6 +103,7 @@ public class Constant {
         map.put(12, "suspended");
         map.put(13, "resigned");
         map.put(14, "end-of-contract");
+        map.put(15, "awol");
         return Collections.unmodifiableMap(map);
     }
      
