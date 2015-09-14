@@ -9,7 +9,6 @@ import com.hrms.dbconnection.GetSQLConnection;
 import com.vaadin.Application;
 import com.vaadin.terminal.StreamResource;
 import com.vaadin.ui.Embedded;
-import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 import java.io.File;
 import java.io.FileInputStream;

@@ -41,7 +41,8 @@ public class PayrollRegisterTable extends Table {
         addContainerProperty("tax", Double.class, null);        
         addContainerProperty("net pay", Double.class, null);        
         addContainerProperty("meal allowance", Double.class, null);        
-        addContainerProperty("allowance for liquidation", Double.class, null);        
+        addContainerProperty("allowance for liquidation", Double.class, null); 
+        addContainerProperty("per diem", Double.class, null);
         addContainerProperty("advances to o/e", Double.class, null);         
         addContainerProperty("adjustments", Double.class, null);        
         addContainerProperty("amount to be receive", Double.class, null);        
@@ -69,6 +70,7 @@ public class PayrollRegisterTable extends Table {
         setColumnAlignment("net pay", Table.ALIGN_RIGHT);
         setColumnAlignment("meal allowance", Table.ALIGN_RIGHT);
         setColumnAlignment("allowance for liquidation", Table.ALIGN_RIGHT);
+        setColumnAlignment("per diem", Table.ALIGN_RIGHT);
         setColumnAlignment("advances to o/e", Table.ALIGN_RIGHT);
         setColumnAlignment("amount to be receive", Table.ALIGN_RIGHT);
         setColumnAlignment("amount received", Table.ALIGN_RIGHT);

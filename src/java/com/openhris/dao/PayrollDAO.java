@@ -461,6 +461,7 @@ public class PayrollDAO {
                 pr.setNetSalary(util.convertStringToDouble(rs.getString("netSalary")));
                 pr.setAllowance(util.convertStringToDouble(rs.getString("allowance")));
                 pr.setAllowanceForLiquidation(util.convertStringToDouble(rs.getString("allowanceForLiquidation")));
+                pr.setPerDiem(util.convertStringToDouble(rs.getString("perDiem")));
                 pr.setAmount(util.convertStringToDouble(rs.getString("advances")));
                 pr.setAdjustment(util.convertStringToDouble(rs.getString("adjustments")));
                 pr.setAmountReceivable(util.convertStringToDouble(rs.getString("amountReceivable")));

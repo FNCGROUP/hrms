@@ -398,6 +398,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 		util.roundOffToTwoDecimalPlaces(pr.getNetSalary()), 
 		util.roundOffToTwoDecimalPlaces(pr.getAllowance()), 
                 util.roundOffToTwoDecimalPlaces(pr.getAllowanceForLiquidation()), 
+                util.roundOffToTwoDecimalPlaces(pr.getPerDiem()), 
 		util.roundOffToTwoDecimalPlaces(pr.getAmount()), 
 		util.roundOffToTwoDecimalPlaces(pr.getAdjustment()), 
                 util.roundOffToTwoDecimalPlaces(pr.getAmountToBeReceive()), 
