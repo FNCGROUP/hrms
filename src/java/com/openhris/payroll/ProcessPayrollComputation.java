@@ -146,26 +146,29 @@ public class ProcessPayrollComputation {
             double sssContribution = 0;
             double phicContribution = 0;
             double hdmfContribution = 0;
-            
-            if(payrollPeriod.equals("15th of the month")){ 
-                phicContribution = contributionUtil.getPhilhealth(basicSalary);
-                hdmfContribution = contributionUtil.getHdmf(basicSalary);
-                taxableSalary = taxableSalary - (phicContribution + hdmfContribution);
-            }else{              
-                sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate);
-                taxableSalary = taxableSalary - (sssContribution);
-            }
-            
+                        
             if(employmentWageStatus.equals("senior citizen")){
-                phicContribution = 0;
-                hdmfContribution = 0;
-                sssContribution = 0;
+                payroll.setSss(0);
+                payroll.setPhic(0);
+                payroll.setHdmf(0);
+                payroll.setTaxableSalary(taxableSalary);
+            } else {
+                if(payrollPeriod.equals("15th of the month")){ 
+                    phicContribution = contributionUtil.getPhilhealth(basicSalary);
+                    hdmfContribution = contributionUtil.getHdmf(basicSalary);
+                    taxableSalary = taxableSalary - (phicContribution + hdmfContribution);
+                }else{              
+                    sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate);
+                    taxableSalary = taxableSalary - (sssContribution);
+                }
+                
+                payroll.setSss(sssContribution);
+                payroll.setPhic(phicContribution);
+                payroll.setHdmf(hdmfContribution);
+                payroll.setTaxableSalary(taxableSalary);
             }
             
-            payroll.setSss(sssContribution);
-            payroll.setPhic(phicContribution);
-            payroll.setHdmf(hdmfContribution);
-            payroll.setTaxableSalary(taxableSalary);            
+                        
             payroll.setAbsences(sal.getTotalAbsences());            
             
             double tax = sal.getTax(totalDependent, taxableSalary); //get tax          
@@ -188,7 +191,7 @@ public class ProcessPayrollComputation {
                           
             double netSalary;
             if(employmentWageStatus.equals("senior citizen")){
-                netSalary = halfMonthSalary + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
+                netSalary = taxableSalary + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
             } else {
                 netSalary = taxableSalary - tax + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
             }
