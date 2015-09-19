@@ -25,7 +25,7 @@ public class ProcessPayrollComputation {
     
     EmployeeService employeeService = new EmployeeServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
-    PayrollComputation sal = new PayrollComputation();    
+    PayrollComputation payrollComputation = new PayrollComputation();    
     ContributionUtilities contributionUtil = new ContributionUtilities();
     ServiceInsertDAO serviceInsert = new ServiceInsertDAO();
     PayrollService payrollService = new PayrollServiceImpl();    
@@ -130,10 +130,10 @@ public class ProcessPayrollComputation {
             payroll.setTotalWorkingDayOffPaid(totalWorkingDayOffPaid);
             payroll.setTotalNonWorkingHolidayPaid(getTotalNonWorkingHolidayPay());
             
-            double basicSalary = sal.getBasicSalary(employmentWage, employmentWageEntry);
+            double basicSalary = payrollComputation.getBasicSalary(employmentWage, employmentWageEntry);
             payroll.setBasicSalary(basicSalary);
             
-            double halfMonthSalary = sal.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, getEmployeeId()) + getTotalNonWorkingHolidayPay();
+            double halfMonthSalary = payrollComputation.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, getEmployeeId()) + getTotalNonWorkingHolidayPay();
             payroll.setHalfMonthSalary(halfMonthSalary);
                       
             double taxableSalary = 0;
@@ -141,7 +141,7 @@ public class ProcessPayrollComputation {
                 taxableSalary = payroll.getGrossPay() - (payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid());
             } else {
                 double newTaxableSalary = payroll.getGrossPay() - (payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid());
-                taxableSalary = sal.getTaxableSalary(employmentWage, employmentWageEntry, policyList, newTaxableSalary);
+                taxableSalary = payrollComputation.getTaxableSalary(employmentWage, employmentWageEntry, policyList, newTaxableSalary);
             }
             double sssContribution = 0;
             double phicContribution = 0;
@@ -169,9 +169,9 @@ public class ProcessPayrollComputation {
             }
             
                         
-            payroll.setAbsences(sal.getTotalAbsences());            
+            payroll.setAbsences(payrollComputation.getTotalAbsences());            
             
-            double tax = sal.getTax(totalDependent, taxableSalary); //get tax          
+            double tax = payrollComputation.getTax(totalDependent, taxableSalary); //get tax          
             if(employmentWageStatus.equals("minimum") || tax < 0 || employmentWageStatus.equals("senior citizen")){
                 tax = 0;
             }        
@@ -180,13 +180,13 @@ public class ProcessPayrollComputation {
             double cashBond = 0;   
             payroll.setCashBond(cashBond);
 
-            allowance = sal.getAllowance(policyList, allowanceEntry, allowance);
+            allowance = payrollComputation.getAllowance(policyList, allowanceEntry, allowance);
             payroll.setAllowance(allowance);
 
-            int numberOfDays = sal.getNumberOfDays(dateList, policyList);
+            int numberOfDays = payrollComputation.getNumberOfDays(dateList, policyList);
             payroll.setNumOfDays(numberOfDays);
 
-            double afl = sal.getAllowanceForLiquidationDeduction(dateList, policyList, allowanceForLiquidation);
+            double afl = payrollComputation.getAllowanceForLiquidationDeduction(dateList, policyList, allowanceForLiquidation);
             payroll.setAllowanceForLiquidation(afl);
                           
             double netSalary;
@@ -204,7 +204,7 @@ public class ProcessPayrollComputation {
             double amountToBeReceive = amountReceivable;
             payroll.setAmountToBeReceive(amountToBeReceive); 
 
-            double adjustment = sal.getAdjustmentFromPreviousPayroll(employeeId); 
+            double adjustment = payrollComputation.getAdjustmentFromPreviousPayroll(employeeId); 
 	    
             result = payrollService.insertPayrollAndAttendance(payroll, 
                     timekeepingList, 
