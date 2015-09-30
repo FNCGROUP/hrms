@@ -72,7 +72,7 @@ public class SalaryInformationDAO {
         return employeeInformation;
     }
     
-    public boolean updateEmployeeSalaryInformation(String employeeId, EmploymentInformation employeeInformation){
+    public boolean updateEmployeeSalaryInformation(String employeeId, EmploymentInformation ei){
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         boolean result = false;
@@ -83,8 +83,6 @@ public class SalaryInformationDAO {
                     + "employmentWageStatus = ?, "
                     + "employmentWageEntry = ?, "
                     + "employmentWage = ?, "
-                    + "allowance = ?, "
-                    + "allowanceEntry = ?, "
                     + "allowanceForLiquidation = ?, "
                     + "sssNo = ?, "
                     + "tinNo = ?, "
@@ -92,19 +90,17 @@ public class SalaryInformationDAO {
                     + "hdmfNo = ?, "
                     + "totalDependent = ? "
                     + "WHERE employeeId = ? ");
-            pstmt.setString(1, employeeInformation.getEmploymentStatus());
-            pstmt.setString(2, employeeInformation.getEmploymentWageStatus());
-            pstmt.setString(3, employeeInformation.getEmploymentWageEntry());
-            pstmt.setDouble(4, employeeInformation.getEmploymentWage());
-            pstmt.setDouble(5, employeeInformation.getAllowance());
-            pstmt.setString(6, employeeInformation.getAllowanceEntry());
-            pstmt.setDouble(7, employeeInformation.getAfl());
-            pstmt.setString(8, employeeInformation.getSssNo());
-            pstmt.setString(9, employeeInformation.getTinNo());
-            pstmt.setString(10, employeeInformation.getPhicNo());
-            pstmt.setString(11, employeeInformation.gethdmfNo());
-            pstmt.setString(12, employeeInformation.getTotalDependent());
-            pstmt.setString(13, employeeId);
+            pstmt.setString(1, ei.getEmploymentStatus());
+            pstmt.setString(2, ei.getEmploymentWageStatus());
+            pstmt.setString(3, ei.getEmploymentWageEntry());
+            pstmt.setDouble(4, ei.getEmploymentWage());
+            pstmt.setDouble(5, ei.getAfl());
+            pstmt.setString(6, ei.getSssNo());
+            pstmt.setString(7, ei.getTinNo());
+            pstmt.setString(8, ei.getPhicNo());
+            pstmt.setString(9, ei.gethdmfNo());
+            pstmt.setString(10, ei.getTotalDependent());
+            pstmt.setString(11, employeeId);
             pstmt.executeUpdate();
             
             result = true;

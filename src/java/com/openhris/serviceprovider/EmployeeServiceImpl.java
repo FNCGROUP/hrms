@@ -62,8 +62,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public boolean insertNewEmployee(List<PostEmploymentInformationBean> insertList) {
-        return serviceInsert.insertNewEmployee(insertList);
+    public boolean insertNewEmployee(PostEmploymentInformationBean pe) {
+        return serviceInsert.insertNewEmployee(pe);
     }
 
     @Override

@@ -29,7 +29,7 @@ public interface EmployeeService {
     
     public List<EmploymentInformation> getEmployeeEmploymentInformation(String employeeId);
     
-    public boolean insertNewEmployee(List<PostEmploymentInformationBean> insertList);
+    public boolean insertNewEmployee(PostEmploymentInformationBean pe);
     
     public boolean updateEmployeeEmploymentInformation(String employeeId, List<PostEmploymentInformationBean> updateList);
     

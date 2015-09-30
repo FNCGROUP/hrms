@@ -32,7 +32,7 @@ public class ServiceInsertDAO {
     ServiceGetDAO serviceGet = new ServiceGetDAO();
     PayrollDAO payrollDAO = new PayrollDAO();
     
-    public boolean insertNewEmployee(List<PostEmploymentInformationBean> insertList){
+    public boolean insertNewEmployee(PostEmploymentInformationBean pe){
         Connection conn = getConnection.connection();
         boolean result = false;
         PreparedStatement pstmt = null;
@@ -40,59 +40,56 @@ public class ServiceInsertDAO {
         GenerateCompanyId companyId = new GenerateCompanyId();
         try {
             conn.setAutoCommit(false);
-            for(PostEmploymentInformationBean ph : insertList){
-                String employeeId = companyId.generateId(ph.getCompany(), ph.getTrade(), 
-                        util.convertDateFormat(ph.getEntryDate().toString()));
+//            for(PostEmploymentInformationBean ph : insertList){
+                String employeeId = companyId.generateId(pe.getCompany(), pe.getTrade(), 
+                        util.convertDateFormat(pe.getEntryDate().toString()));
                 
                 pstmt = conn.prepareStatement(" INSERT INTO employee(employeeId, firstname, middlename, "
                         + "lastname, sssNo, tinNo, phicNo, hdmfNo, employmentStatus, employmentWageStatus, "
-                        + "employmentWageEntry, employmentWage, allowance, allowanceEntry, branchId, entryDate, "
-                        + "totalDependent, bankAccountNo) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
+                        + "employmentWageEntry, employmentWage, branchId, entryDate, "
+                        + "totalDependent) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ");
                 pstmt.setString(1, employeeId);
-                pstmt.setString(2, ph.getFirstname().toLowerCase());
-                pstmt.setString(3, ph.getMiddlename().toLowerCase());
-                pstmt.setString(4, ph.getLastname().toLowerCase());
-                pstmt.setString(5, ph.getSssNo());
-                pstmt.setString(6, ph.getTinNo());
-                pstmt.setString(7, ph.getPhicNo());
-                pstmt.setString(8, ph.gethdmfNo());
-                pstmt.setString(9, ph.getEmploymentStatus());
-                pstmt.setString(10, ph.getEmploymentWageStatus());
-                pstmt.setString(11, ph.getEmploymentWageEntry());
-                pstmt.setDouble(12, ph.getEmploymentWage());
-                pstmt.setDouble(13, ph.getAllowance());
-                pstmt.setString(14, ph.getAllowanceEntry());
-                pstmt.setInt(15, ph.getBranchId());
-                pstmt.setString(16, util.convertDateFormat(ph.getEntryDate().toString()));
-                pstmt.setString(17, ph.getTotalDependent());
-                pstmt.setString(18, ph.getBankAccountNo());
+                pstmt.setString(2, pe.getFirstname().toLowerCase());
+                pstmt.setString(3, pe.getMiddlename().toLowerCase());
+                pstmt.setString(4, pe.getLastname().toLowerCase());
+                pstmt.setString(5, pe.getSssNo());
+                pstmt.setString(6, pe.getTinNo());
+                pstmt.setString(7, pe.getPhicNo());
+                pstmt.setString(8, pe.gethdmfNo());
+                pstmt.setString(9, pe.getEmploymentStatus());
+                pstmt.setString(10, pe.getEmploymentWageStatus());
+                pstmt.setString(11, pe.getEmploymentWageEntry());
+                pstmt.setDouble(12, pe.getEmploymentWage());
+                pstmt.setInt(13, pe.getBranchId());
+                pstmt.setString(14, util.convertDateFormat(pe.getEntryDate().toString()));
+                pstmt.setString(15, pe.getTotalDependent());
                 pstmt.executeUpdate();
                 
                 pstmt = conn.prepareStatement("INSERT INTO employee_position_history(employeeId, position, "
                         + "corporate, trade, branch, department, entryDate, branchId) "
                         + "VALUES(?, ?, ?, ?, ?, ?, ?, ?)");
                 pstmt.setString(1, employeeId);
-                pstmt.setString(2, ph.getPosition().toLowerCase());
-                pstmt.setString(3, ph.getCompany());
-                pstmt.setString(4, ph.getTrade());
-                pstmt.setString(5, ph.getBranch());
-                pstmt.setString(6, ph.getDepartment());
-                pstmt.setString(7, util.convertDateFormat(ph.getEntryDate().toString()));
-                pstmt.setInt(8, ph.getBranchId());
+                pstmt.setString(2, pe.getPosition().toLowerCase());
+                pstmt.setString(3, pe.getCompany());
+                pstmt.setString(4, pe.getTrade());
+                pstmt.setString(5, pe.getBranch());
+                pstmt.setString(6, pe.getDepartment());
+                pstmt.setString(7, util.convertDateFormat(pe.getEntryDate().toString()));
+                pstmt.setInt(8, pe.getBranchId());
                 pstmt.executeUpdate();
                 
                 pstmt = conn.prepareStatement("INSERT INTO employment_wage_history(employeeId, "
                         + "employmentWage, datePosted) VALUES(?, ?, ?)");
                 pstmt.setString(1, employeeId);
-                pstmt.setDouble(2, ph.getEmploymentWage());
-                pstmt.setString(3, util.convertDateFormat(ph.getEntryDate().toString()));
+                pstmt.setDouble(2, pe.getEmploymentWage());
+                pstmt.setString(3, util.convertDateFormat(pe.getEntryDate().toString()));
                 pstmt.executeUpdate();
                 
                 pstmt = conn.prepareStatement("INSERT INTO employee_contribution_main(employeeId, branchId) VALUES(?, ?)");
                 pstmt.setString(1, employeeId);
-                pstmt.setInt(2, ph.getBranchId());
+                pstmt.setInt(2, pe.getBranchId());
                 pstmt.executeUpdate();
-            }
+//            }
             conn.commit();
             System.out.println("Transaction commit...");
             result = true;
