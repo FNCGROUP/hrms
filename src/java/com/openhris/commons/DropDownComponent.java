@@ -180,8 +180,8 @@ public class DropDownComponent extends ComboBox {
         return employmentWageEntry;
     }
     
-    public ComboBox populateEmploymentAllowanceEntry(ComboBox employmentAllowanceEntry){
-        employmentAllowanceEntry.setCaption("Allowance Entry: ");
+    public ComboBox populateEmploymentAllowanceEntry(ComboBox employmentAllowanceEntry, String allowanceCaption){
+        employmentAllowanceEntry.setCaption(allowanceCaption);
         employmentAllowanceEntry.setNullSelectionAllowed(false);
         employmentAllowanceEntry.setWidth("100%");
         Map<Integer, String> mapStatus = Constant.MAP_CONSTANT_EMPLOYMENT_ALLOWANCE_ENTRY;

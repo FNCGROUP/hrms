@@ -47,18 +47,32 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         addComponent(container());
     }
     
+    TextField communication;
+    TextField perDiem;
+    TextField cola;
+    TextField meal;
+    TextField transportation;
+    TextField other;
+    
+    ComboBox communicationEntry;
+    ComboBox perDiemEntry;
+    ComboBox colaEntry;
+    ComboBox mealEntry;
+    ComboBox transportationEntry;
+    ComboBox otherEntry;
+    
     ComponentContainer container(){
         GridLayout glayout = new GridLayout(3, 12);
         glayout.setSpacing(true);          
         glayout.setWidth("600px");
 	glayout.setHeight("100%");
                 
-        TextField communication = new TextField("Communication Allowance");
+        communication = new TextField("Communication Allowance");
         communication.setWidth("170px");
         communication.addStyleName("numerical");
         glayout.addComponent(communication, 0, 0);
         
-        ComboBox communicationEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox());
+        communicationEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox(), "Entry Type: ");
         communicationEntry.setWidth("150px");
         glayout.addComponent(communicationEntry, 1, 0);
         
@@ -69,12 +83,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 1, 2, 1);
         
-        TextField perDiem = new TextField("Per Diem");
+        perDiem = new TextField("Per Diem");
         perDiem.setWidth("170px");
         perDiem.addStyleName("numerical");
         glayout.addComponent(perDiem, 0, 2);
         
-        ComboBox perDiemEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox());
+        perDiemEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox(), "Entry Type: ");
         perDiemEntry.setWidth("150px");
         glayout.addComponent(perDiemEntry, 1, 2);
         
@@ -85,12 +99,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 3, 2, 3);
         
-        TextField cola = new TextField("Cola");
+        cola = new TextField("Cola");
         cola.setWidth("170px");
         cola.addStyleName("numerical");
         glayout.addComponent(cola, 0, 4);
         
-        ComboBox colaEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox());
+        colaEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox(), "Entry Type: ");
         colaEntry.setWidth("150px");
         glayout.addComponent(colaEntry, 1, 4);
         
@@ -101,12 +115,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 5, 2, 5);
         
-        TextField meal = new TextField("Meal Allowance");
+        meal = new TextField("Meal Allowance");
         meal.setWidth("170px");
         meal.addStyleName("numerical");
         glayout.addComponent(meal, 0, 6);
         
-        ComboBox mealEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox());
+        mealEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox(), "Entry Type: ");
         mealEntry.setWidth("150px");
         glayout.addComponent(mealEntry, 1, 6);
         
@@ -117,12 +131,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 7, 2, 7);
         
-        TextField transportation = new TextField("Transportation Allowance");
+        transportation = new TextField("Transportation Allowance");
         transportation.setWidth("170px");
         transportation.addStyleName("numerical");
         glayout.addComponent(transportation, 0, 8);
         
-        ComboBox transportationEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox());
+        transportationEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox(), "Entry Type: ");
         transportationEntry.setWidth("150px");
         glayout.addComponent(transportationEntry, 1, 8);
         
@@ -133,12 +147,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 9, 2, 9);
         
-        TextField other = new TextField("Other Allowances");
+        other = new TextField("Other Allowances");
         other.setWidth("170px");
         other.addStyleName("numerical");
         glayout.addComponent(other, 0, 10);
         
-        ComboBox otherEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox());
+        otherEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox(), "Entry Type: ");
         otherEntry.setWidth("150px");
         glayout.addComponent(otherEntry, 1, 10);
         
@@ -157,4 +171,36 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
     boolean getUserRoleResult(){
         return userRoleResult;
     }
+    
+    Button.ClickListener buttonClickListner = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            switch(event.getButton().getCaption()){
+                case "UPDATE COMMUNICATION ALLOWANCE" : {
+                    break;
+                }
+                
+                case "UPDATE PER DIEM" : {
+                    break;
+                }
+                
+                case "UPDATE COLA" : {
+                    break;
+                }
+                
+                case "UPDATE MEAL ALLOWANCE" : {
+                    break;
+                }
+                
+                case "UPDATE TRANSPORTATION ALLOWANCE" : {
+                    break;
+                }
+                
+                default : {
+                    break;
+                }
+            }
+        }
+    };
 }
