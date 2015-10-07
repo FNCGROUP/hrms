@@ -31,17 +31,27 @@ public class OpenHrisUtilities {
     
     public double convertStringToDouble(String num){
         double val = 0;
-        if(num != null){
-            val = Double.parseDouble(num);
+        try{
+            if(num != null){
+                val = Double.parseDouble(num);
+            }
+        } catch (Exception e) {
+            e.getMessage();
         }
+        
         return val;
     }
     
     public int convertStringToInteger(String num){
         int val = 0;
-        if(num != null){
-            val = Integer.parseInt(num);
+        try{
+            if(num != null){
+                val = Integer.parseInt(num);
+            }
+        } catch (Exception e) {
+            e.getMessage();
         }
+        
         return val;
     }
     

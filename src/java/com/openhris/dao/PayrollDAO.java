@@ -48,8 +48,8 @@ public class PayrollDAO {
                     + "p.totalUndertimeDeduction AS totalUndertimeDeduction, p.totalOvertimePaid AS totalOvertimePaid, "
                     + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
                     + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
-                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.allowance AS allowance, "
-                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiem AS perDiem, p.netSalary AS netSalary, "
+                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.otherAllowances AS otherAllowances, "
+                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiemAllowance AS perDiemAllowance, p.netSalary AS netSalary, "
                     + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
                     + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
 		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
@@ -63,8 +63,8 @@ public class PayrollDAO {
                     + "p.totalUndertimeDeduction AS totalUndertimeDeduction, p.totalOvertimePaid AS totalOvertimePaid, "
                     + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
                     + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
-                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.allowance AS allowance, "
-                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiem AS perDiem, p.netSalary AS netSalary, "
+                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.otherAllowances AS otherAllowances, "
+                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiemAllowance AS perDiemAllowance, p.netSalary AS netSalary, "
                     + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
                     + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
 		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
@@ -100,9 +100,9 @@ public class PayrollDAO {
                 p.setTotalLegalHolidayPaid(util.convertStringToDouble(rs.getString("totalLegalHolidayPaid")));
                 p.setTotalSpecialHolidayPaid(util.convertStringToDouble(rs.getString("totalSpecialHolidayPaid")));
                 p.setTotalWorkingDayOffPaid(util.convertStringToDouble(rs.getString("totalWorkingDayOffPaid")));
-                p.setAllowance(util.convertStringToDouble(rs.getString("allowance")));
+                p.setOtherAllowances(util.convertStringToDouble(rs.getString("otherAllowances")));
                 p.setAllowanceForLiquidation(util.convertStringToDouble(rs.getString("allowanceForLiquidation")));
-                p.setPerDiem(util.convertStringToDouble(rs.getString("perDiem")));
+                p.setPerDiemAllowance(util.convertStringToDouble(rs.getString("perDiemAllowance")));
                 p.setNetSalary(util.convertStringToDouble(rs.getString("netSalary")));
                 p.setAmountToBeReceive(util.convertStringToDouble(rs.getString("amountToBeReceive")));
                 p.setAmountReceivable(util.convertStringToDouble(rs.getString("amountReceivable")));
@@ -459,9 +459,9 @@ public class PayrollDAO {
                 pr.setHdmf(util.convertStringToDouble(rs.getString("hdmf")));
                 pr.setTax(util.convertStringToDouble(rs.getString("tax")));
                 pr.setNetSalary(util.convertStringToDouble(rs.getString("netSalary")));
-                pr.setAllowance(util.convertStringToDouble(rs.getString("allowance")));
+                pr.setOtherAllowances(util.convertStringToDouble(rs.getString("otherAllowances")));
                 pr.setAllowanceForLiquidation(util.convertStringToDouble(rs.getString("allowanceForLiquidation")));
-                pr.setPerDiem(util.convertStringToDouble(rs.getString("perDiem")));
+                pr.setPerDiemAllowance(util.convertStringToDouble(rs.getString("perDiemAllowance")));
                 pr.setAmount(util.convertStringToDouble(rs.getString("advances")));
                 pr.setAdjustment(util.convertStringToDouble(rs.getString("adjustments")));
                 pr.setAmountReceivable(util.convertStringToDouble(rs.getString("amountReceivable")));
@@ -1075,7 +1075,7 @@ public class PayrollDAO {
                         + "basicSalary, halfMonthSalary, phic, sss, hdmf, absences, numberOfDays, taxableSalary, tax, "
                         + "cashBond, totalLatesDeduction, totalUndertimeDeduction, totalOvertimePaid, totalNightDifferentialPaid, "
                         + "totalDutyManagerPaid, totalLegalHolidayPaid, totalSpecialHolidayPaid, totalWorkingDayOffPaid, "
-                        + "totalNonWorkingHolidayPaid, allowance, allowanceForLiquidation, netSalary, adjustments, amountToBeReceive, "
+                        + "totalNonWorkingHolidayPaid, otherAllowances, allowanceForLiquidation, netSalary, adjustments, amountToBeReceive, "
                         + "amountReceivable, branchId, payrollPeriod, payrollDate) "
                         + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 pstmt.setString(1, payroll.getEmployeeId());
@@ -1100,7 +1100,7 @@ public class PayrollDAO {
                 pstmt.setDouble(20, payroll.getTotalSpecialHolidayPaid());
                 pstmt.setDouble(21, payroll.getTotalWorkingDayOffPaid());
                 pstmt.setDouble(22, payroll.getTotalNonWorkingHolidayPaid());
-                pstmt.setDouble(23, payroll.getAllowance());
+                pstmt.setDouble(23, payroll.getOtherAllowances());
                 pstmt.setDouble(24, payroll.getAllowanceForLiquidation());
                 pstmt.setDouble(25, payroll.getNetSalary());
 		pstmt.setDouble(26, adjustments);

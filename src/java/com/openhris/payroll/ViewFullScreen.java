@@ -154,7 +154,7 @@ public class ViewFullScreen extends Window {
                 util.roundOffToTwoDecimalPlaces(pr.getHdmf()), 
 		util.roundOffToTwoDecimalPlaces(pr.getTax()), 
 		util.roundOffToTwoDecimalPlaces(pr.getNetSalary()), 
-		util.roundOffToTwoDecimalPlaces(pr.getAllowance()), 
+		util.roundOffToTwoDecimalPlaces(pr.getOtherAllowances()), 
                 util.roundOffToTwoDecimalPlaces(pr.getAllowanceForLiquidation()), 
 		util.roundOffToTwoDecimalPlaces(pr.getAmount()), 
 		util.roundOffToTwoDecimalPlaces(pr.getAdjustment()), 

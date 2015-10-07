@@ -16,6 +16,7 @@ import com.openhris.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.CompanyService;
 import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;
+import com.vaadin.data.Item;
 import com.vaadin.ui.ComboBox;
 import java.util.List;
 import java.util.Map;
@@ -180,16 +181,25 @@ public class DropDownComponent extends ComboBox {
         return employmentWageEntry;
     }
     
-    public ComboBox populateEmploymentAllowanceEntry(ComboBox employmentAllowanceEntry, String allowanceCaption){
-        employmentAllowanceEntry.setCaption(allowanceCaption);
-        employmentAllowanceEntry.setNullSelectionAllowed(false);
-        employmentAllowanceEntry.setWidth("100%");
+    public ComboBox populateEmploymentAllowanceEntry(String allowanceCaption){
+        ComboBox select = new ComboBox();
+        select.setCaption(allowanceCaption);        
+        select.setWidth("100%");
+        select.setNullSelectionAllowed(false);
+        select.addContainerProperty("y", String.class, "");
+        select.setItemCaptionPropertyId("y");
+        
         Map<Integer, String> mapStatus = Constant.MAP_CONSTANT_EMPLOYMENT_ALLOWANCE_ENTRY;
-        for(int i = 0; i < mapStatus.size(); i++){
-            employmentAllowanceEntry.addItem(mapStatus.get(i));
+//        for(int i = 0; i < mapStatus.size(); i++){
+//            employmentAllowanceEntry.addItem(mapStatus.get(i));
+//        }
+        Item item;
+        for(Map.Entry<Integer, String> entry : mapStatus.entrySet()){
+            item = select.addItem(entry.getKey());
+            item.getItemProperty("y").setValue(entry.getValue());
         }
-        employmentAllowanceEntry.setImmediate(true);
-        return employmentAllowanceEntry;
+        select.setImmediate(true);
+        return select;
     }
     
     public ComboBox populateAttendancePolicyDropDownList(ComboBox policy){

@@ -25,7 +25,8 @@ public class ProcessPayrollComputation {
     
     EmployeeService employeeService = new EmployeeServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
-    PayrollComputation payrollComputation = new PayrollComputation();    
+    PayrollComputation payrollComputation = new PayrollComputation();
+    PayrollAllowances pa = new PayrollAllowances();
     ContributionUtilities contributionUtil = new ContributionUtilities();
     ServiceInsertDAO serviceInsert = new ServiceInsertDAO();
     PayrollService payrollService = new PayrollServiceImpl();    
@@ -42,11 +43,11 @@ public class ProcessPayrollComputation {
     double allowanceForLiquidation;
     String totalDependent;
     
-    List<Payroll> payrollList = new ArrayList<Payroll>();
-    List<Timekeeping> timekeepingList = new ArrayList<Timekeeping>();
-    List<String> dateList = new ArrayList<String>();
-    List<String> policyList = new ArrayList<String>();
-    List<String> holidayList = new ArrayList<String>();
+    List<Payroll> payrollList = new ArrayList<>();
+    List<Timekeeping> timekeepingList = new ArrayList<>();
+    List<String> dateList = new ArrayList<>();
+    List<String> policyList = new ArrayList<>();
+    List<String> holidayList = new ArrayList<>();
     
     double totalLates;
     double totalUndertime;
@@ -180,8 +181,20 @@ public class ProcessPayrollComputation {
             double cashBond = 0;   
             payroll.setCashBond(cashBond);
 
-            allowance = payrollComputation.getAllowance(policyList, allowanceEntry, allowance);
-            payroll.setAllowance(allowance);
+            double communication = pa.getCommunicationAllowance(policyList, getEmployeeId());
+            double perDiem = pa.getPerDiemAllowance(policyList, getEmployeeId());
+            double cola = pa.getColaAllowance(policyList, getEmployeeId());
+            double meal = pa.getMealAllowance(policyList, getEmployeeId());
+            double transportation = pa.getTransportationAllowance(policyList, getEmployeeId());
+            double others = pa.getOtherAllowance(policyList, getEmployeeId());
+//            allowance = payrollComputation.getAllowance(policyList, allowanceEntry, allowance);
+//            payroll.setAllowance(allowance);
+            payroll.setCommunicationAllowance(communication);
+            payroll.setPerDiemAllowance(perDiem);
+            payroll.setColaAllowance(cola);
+            payroll.setMealAllowance(meal);
+            payroll.setTransportationAllowance(transportation);
+            payroll.setOtherAllowances(others);            
 
             int numberOfDays = payrollComputation.getNumberOfDays(dateList, policyList);
             payroll.setNumOfDays(numberOfDays);

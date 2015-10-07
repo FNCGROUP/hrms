@@ -13,6 +13,9 @@ import com.openhris.service.CompanyService;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  *
@@ -79,7 +82,7 @@ public class Constant {
     }
     
     private static Map<Integer, String> getConstantEmploymentAllowanceEntry(){
-        Map<Integer, String> map = new HashMap<Integer, String>();
+        Map<Integer, String> map = new HashMap<>();
         map.put(0, "monthly");
         map.put(1, "daily");
         map.put(2, "N/A");
@@ -246,4 +249,12 @@ public class Constant {
         return Collections.unmodifiableMap(map);
     }     
         
+    public static <T, E> T getKeyByValue(Map<T, E> map, E value) {
+        for (Entry<T, E> entry : map.entrySet()) {
+            if (Objects.equals(value, entry.getValue())) {
+                return entry.getKey();
+            }
+        }
+        return null;
+    }
 }

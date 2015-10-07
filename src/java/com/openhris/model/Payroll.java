@@ -16,43 +16,47 @@ import java.util.Date;
  */
 public class Payroll extends Employee {
     
-    int id;
-    Date attendancePeriodFrom;
-    Date attendancePeriodTo;
-    double basicSalary;
-    double halfMonthSalary;
-    double phic;
-    double sss;
-    double hdmf;
-    double grossPay;
-    double absences;
-    int numOfDays;
-    double taxableSalary;
-    double tax;
-    double cashBond;
-    double totalLatesDeduction;
-    double totalUndertimeDeduction;
-    double totalOvertimePaid;
-    double totalNightDifferentialPaid;
-    double totalDutyManagerPaid;
-    double totalLegalHolidayPaid;
-    double totalSpecialHolidayPaid;
-    double totalWorkingDayOffPaid;
-    double totalNonWorkingHolidayPaid;
-    double allowance;
-    double allowanceForLiquidation;
-    double perDiem;
-    double totalAdvances;
-    double netSalary;
-    double adjustment;
-    double amountToBeReceive;
-    double amountReceivable;
-    double forAdjustments;
-    int branchId;
-    String payrollPeriod;
-    Date payrollDate;
-    String rowStatus;
-    String actionTaken;
+    private int id;
+    private Date attendancePeriodFrom;
+    private Date attendancePeriodTo;
+    private double basicSalary;
+    private double halfMonthSalary;
+    private double phic;
+    private double sss;
+    private double hdmf;
+    private double grossPay;
+    private double absences;
+    private int numOfDays;
+    private double taxableSalary;
+    private double tax;
+    private double cashBond;
+    private double totalLatesDeduction;
+    private double totalUndertimeDeduction;
+    private double totalOvertimePaid;
+    private double totalNightDifferentialPaid;
+    private double totalDutyManagerPaid;
+    private double totalLegalHolidayPaid;
+    private double totalSpecialHolidayPaid;
+    private double totalWorkingDayOffPaid;
+    private double totalNonWorkingHolidayPaid;
+    private double communicationAllowance;
+    private double perDiemAllowance;
+    private double colaAllowance;
+    private double mealAllowance;
+    private double transportationAllowance;
+    double otherAllowances;    
+    private double allowanceForLiquidation;
+    private double totalAdvances;
+    private double netSalary;
+    private double adjustment;
+    private double amountToBeReceive;
+    private double amountReceivable;
+    private double forAdjustments;
+    private int branchId;
+    private String payrollPeriod;
+    private Date payrollDate;
+    private String rowStatus;
+    private String actionTaken;
 
     TimekeepingService tkService = new TimekeepingServiceImpl();
     
@@ -149,17 +153,33 @@ public class Payroll extends Employee {
     public double getTotalNonWorkingHolidayPaid(){
         return totalNonWorkingHolidayPaid;
     }
-    
-    public double getAllowance() {
-        return allowance;
+
+    public double getCommunicationAllowance() {
+        return communicationAllowance;
     }
 
+    public double getPerDiemAllowance() {
+        return perDiemAllowance;
+    }
+
+    public double getColaAllowance() {
+        return colaAllowance;
+    }
+
+    public double getMealAllowance() {
+        return mealAllowance;
+    }
+
+    public double getTransportationAllowance() {
+        return transportationAllowance;
+    }
+
+    public double getOtherAllowances() {
+        return otherAllowances;
+    }
+    
     public double getAllowanceForLiquidation() {
         return allowanceForLiquidation;
-    }
-
-    public double getPerDiem(){
-        return perDiem;
     }
     
     public double getTotalAdvances(){
@@ -294,19 +314,39 @@ public class Payroll extends Employee {
     public void setTotalNonWorkingHolidayPaid(double totalNonWorkingHolidayPaid){
         this.totalNonWorkingHolidayPaid = totalNonWorkingHolidayPaid;
     }
-    
-    public void setAllowance(double allowance) {
-        this.allowance = allowance;
+
+    public void setGrossPay(double grossPay) {
+        this.grossPay = grossPay;
+    }
+
+    public void setCommunicationAllowance(double communicationAllowance) {
+        this.communicationAllowance = communicationAllowance;
+    }
+
+    public void setPerDiemAllowance(double perDiemAllowance) {
+        this.perDiemAllowance = perDiemAllowance;
+    }
+
+    public void setColaAllowance(double colaAllowance) {
+        this.colaAllowance = colaAllowance;
+    }
+
+    public void setMealAllowance(double mealAllowance) {
+        this.mealAllowance = mealAllowance;
+    }
+
+    public void setTransportationAllowance(double transportationAllowance) {
+        this.transportationAllowance = transportationAllowance;
+    }
+
+    public void setOtherAllowances(double otherAllowances) {
+        this.otherAllowances = otherAllowances;
     }
 
     public void setAllowanceForLiquidation(double allowanceForLiquidation) {
         this.allowanceForLiquidation = allowanceForLiquidation;
     }
 
-    public void setPerDiem(double perDiem){
-        this.perDiem = perDiem;
-    }
-    
     public void setTotalAdvances(double totalAdvances){
         this.totalAdvances = totalAdvances;
     }
