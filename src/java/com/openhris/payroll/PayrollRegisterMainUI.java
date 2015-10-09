@@ -372,9 +372,9 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     
     public Table payrollRegisterTable(int branchId, String payrollDate, boolean prev){
         payrollRegisterTbl.removeAllItems();        
-        List<PayrollRegister> payrollRegisterList = payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev);
+//        List<PayrollRegister> payrollRegisterList = payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev);
         int i = 0;
-        for(PayrollRegister pr : payrollRegisterList){
+        for(PayrollRegister pr : payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev)){
             payrollRegisterTbl.addItem(new Object[]{
                 pr.getId(), 
 		pr.getName().toUpperCase(), 
@@ -396,9 +396,13 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                 util.roundOffToTwoDecimalPlaces(pr.getHdmf()), 
 		util.roundOffToTwoDecimalPlaces(pr.getTax()), 
 		util.roundOffToTwoDecimalPlaces(pr.getNetSalary()), 
-		util.roundOffToTwoDecimalPlaces(pr.getOtherAllowances()), 
-                util.roundOffToTwoDecimalPlaces(pr.getAllowanceForLiquidation()), 
+		util.roundOffToTwoDecimalPlaces(pr.getCommunicationAllowance()), 
                 util.roundOffToTwoDecimalPlaces(pr.getPerDiemAllowance()), 
+                util.roundOffToTwoDecimalPlaces(pr.getColaAllowance()), 
+                util.roundOffToTwoDecimalPlaces(pr.getMealAllowance()), 
+                util.roundOffToTwoDecimalPlaces(pr.getTransportationAllowance()), 
+                util.roundOffToTwoDecimalPlaces(pr.getOtherAllowances()),  
+                util.roundOffToTwoDecimalPlaces(pr.getAllowanceForLiquidation()),                  
 		util.roundOffToTwoDecimalPlaces(pr.getAmount()), 
 		util.roundOffToTwoDecimalPlaces(pr.getAdjustment()), 
                 util.roundOffToTwoDecimalPlaces(pr.getAmountToBeReceive()), 

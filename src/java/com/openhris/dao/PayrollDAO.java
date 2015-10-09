@@ -13,7 +13,6 @@ import com.openhris.model.Advances;
 import com.openhris.model.Payroll;
 import com.openhris.model.PayrollRegister;
 import com.openhris.model.Timekeeping;
-import com.vaadin.data.Item;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -23,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.sql.CommonDataSource;
 
 /**
  *
@@ -41,35 +39,41 @@ public class PayrollDAO {
         String queryPayrollList;
         
         if(employeeId == null){
-            queryPayrollList = "SELECT p.id AS id, p.employeeId AS employeeId, p.attendancePeriodFrom AS attendancePeriodFrom, "
-                    + "p.attendancePeriodTo AS attendancePeriodTo, p.basicSalary AS basicSalary, p.halfMonthSalary AS halfMonthSalary, "
-                    + "p.phic AS phic, p.sss AS sss, p.hdmf AS hdmf, p.absences AS absences, p.numberOfDays AS numberOfDays, "
-                    + "p.taxableSalary AS taxableSalary, p.tax AS tax, p.cashBond AS cashBond, p.totalLatesDeduction AS totalLatesDeduction, "
-                    + "p.totalUndertimeDeduction AS totalUndertimeDeduction, p.totalOvertimePaid AS totalOvertimePaid, "
-                    + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
-                    + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
-                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.otherAllowances AS otherAllowances, "
-                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiemAllowance AS perDiemAllowance, p.netSalary AS netSalary, "
-                    + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
-                    + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
-		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
-                    + "FROM payroll_table p INNER JOIN employee e ON p.employeeId = e.employeeId "
-                    + "WHERE e.branchId = "+branchId+" AND (e.currentStatus != 'removed' OR e.currentStatus IS NULL) ORDER BY id DESC";
+//            queryPayrollList = "SELECT p.id AS id, p.employeeId AS employeeId, p.attendancePeriodFrom AS attendancePeriodFrom, "
+//                    + "p.attendancePeriodTo AS attendancePeriodTo, p.basicSalary AS basicSalary, p.halfMonthSalary AS halfMonthSalary, "
+//                    + "p.phic AS phic, p.sss AS sss, p.hdmf AS hdmf, p.absences AS absences, p.numberOfDays AS numberOfDays, "
+//                    + "p.taxableSalary AS taxableSalary, p.tax AS tax, p.cashBond AS cashBond, p.totalLatesDeduction AS totalLatesDeduction, "
+//                    + "p.totalUndertimeDeduction AS totalUndertimeDeduction, p.totalOvertimePaid AS totalOvertimePaid, "
+//                    + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
+//                    + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
+//                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.otherAllowances AS otherAllowances, "
+//                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiemAllowance AS perDiemAllowance, p.netSalary AS netSalary, "
+//                    + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
+//                    + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
+//		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
+//                    + "FROM payroll_table p INNER JOIN employee e ON p.employeeId = e.employeeId INNER JOIN employee_allowances ea ON "
+//                    + "p.employeeId = ea.employeeId WHERE e.branchId = "+branchId+" AND (e.currentStatus != 'removed' OR e.currentStatus IS NULL) "
+//                    + "ORDER BY id DESC";
+            queryPayrollList = "SELECT * FROM payroll_view WHERE branchId = "+branchId+" "
+                    + "AND (currentStatus != 'removed' OR currentStatus IS NULL)";
         } else {
-            queryPayrollList = "SELECT p.id AS id, p.employeeId AS employeeId, p.attendancePeriodFrom AS attendancePeriodFrom, "
-                    + "p.attendancePeriodTo AS attendancePeriodTo, p.basicSalary AS basicSalary, p.halfMonthSalary AS halfMonthSalary, "
-                    + "p.phic AS phic, p.sss AS sss, p.hdmf AS hdmf, p.absences AS absences, p.numberOfDays AS numberOfDays, "
-                    + "p.taxableSalary AS taxableSalary, p.tax AS tax, p.cashBond AS cashBond, p.totalLatesDeduction AS totalLatesDeduction, "
-                    + "p.totalUndertimeDeduction AS totalUndertimeDeduction, p.totalOvertimePaid AS totalOvertimePaid, "
-                    + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
-                    + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
-                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.otherAllowances AS otherAllowances, "
-                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiemAllowance AS perDiemAllowance, p.netSalary AS netSalary, "
-                    + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
-                    + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
-		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
-                    + "FROM payroll_table p INNER JOIN employee e ON p.employeeId = e.employeeId "
-                    + "WHERE e.employeeId = '"+employeeId+"' AND (e.currentStatus != 'removed' OR e.currentStatus IS NULL) ORDER BY id DESC" ;
+//            queryPayrollList = "SELECT p.id AS id, p.employeeId AS employeeId, p.attendancePeriodFrom AS attendancePeriodFrom, "
+//                    + "p.attendancePeriodTo AS attendancePeriodTo, p.basicSalary AS basicSalary, p.halfMonthSalary AS halfMonthSalary, "
+//                    + "p.phic AS phic, p.sss AS sss, p.hdmf AS hdmf, p.absences AS absences, p.numberOfDays AS numberOfDays, "
+//                    + "p.taxableSalary AS taxableSalary, p.tax AS tax, p.cashBond AS cashBond, p.totalLatesDeduction AS totalLatesDeduction, "
+//                    + "p.totalUndertimeDeduction AS totalUndertimeDeduction, p.totalOvertimePaid AS totalOvertimePaid, "
+//                    + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
+//                    + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
+//                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.otherAllowances AS otherAllowances, "
+//                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiemAllowance AS perDiemAllowance, p.netSalary AS netSalary, "
+//                    + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
+//                    + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
+//		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
+//                    + "FROM payroll_table p INNER JOIN employee e ON p.employeeId = e.employeeId  INNER JOIN employee_allowances ea ON "
+//                    + "p.employeeId = ea.employeeId WHERE e.employeeId = '"+employeeId+"' AND (e.currentStatus != 'removed' OR e.currentStatus IS NULL) "
+//                    + "ORDER BY id DESC" ;
+            queryPayrollList = "SELECT * FROM payroll_view WHERE employeeId = '"+employeeId+"' "
+                    + "AND (currentStatus != 'removed' OR currentStatus IS NULL)";
         }
         
         List<Payroll> payrollList = new ArrayList<Payroll>();
@@ -100,9 +104,13 @@ public class PayrollDAO {
                 p.setTotalLegalHolidayPaid(util.convertStringToDouble(rs.getString("totalLegalHolidayPaid")));
                 p.setTotalSpecialHolidayPaid(util.convertStringToDouble(rs.getString("totalSpecialHolidayPaid")));
                 p.setTotalWorkingDayOffPaid(util.convertStringToDouble(rs.getString("totalWorkingDayOffPaid")));
-                p.setOtherAllowances(util.convertStringToDouble(rs.getString("otherAllowances")));
-                p.setAllowanceForLiquidation(util.convertStringToDouble(rs.getString("allowanceForLiquidation")));
+                p.setCommunicationAllowance(util.convertStringToDouble(rs.getString("communicationAllowance")));
                 p.setPerDiemAllowance(util.convertStringToDouble(rs.getString("perDiemAllowance")));
+                p.setColaAllowance(util.convertStringToDouble(rs.getString("colaAllowance")));
+                p.setMealAllowance(util.convertStringToDouble(rs.getString("mealAllowance")));
+                p.setTransportationAllowance(util.convertStringToDouble(rs.getString("transportationAllowance")));
+                p.setOtherAllowances(util.convertStringToDouble(rs.getString("otherAllowances")));
+                p.setAllowanceForLiquidation(util.convertStringToDouble(rs.getString("allowanceForLiquidation")));                
                 p.setNetSalary(util.convertStringToDouble(rs.getString("netSalary")));
                 p.setAmountToBeReceive(util.convertStringToDouble(rs.getString("amountToBeReceive")));
                 p.setAmountReceivable(util.convertStringToDouble(rs.getString("amountReceivable")));
@@ -459,9 +467,13 @@ public class PayrollDAO {
                 pr.setHdmf(util.convertStringToDouble(rs.getString("hdmf")));
                 pr.setTax(util.convertStringToDouble(rs.getString("tax")));
                 pr.setNetSalary(util.convertStringToDouble(rs.getString("netSalary")));
+                pr.setCommunicationAllowance(util.convertStringToDouble(rs.getString("communicationAllowance")));
+                pr.setPerDiemAllowance(util.convertStringToDouble(rs.getString("perDiemAllowance")));
+                pr.setColaAllowance(util.convertStringToDouble(rs.getString("colaAllowance")));
+                pr.setMealAllowance(util.convertStringToDouble(rs.getString("mealAllowance")));
+                pr.setTransportationAllowance(util.convertStringToDouble(rs.getString("transportationAllowance")));
                 pr.setOtherAllowances(util.convertStringToDouble(rs.getString("otherAllowances")));
                 pr.setAllowanceForLiquidation(util.convertStringToDouble(rs.getString("allowanceForLiquidation")));
-                pr.setPerDiemAllowance(util.convertStringToDouble(rs.getString("perDiemAllowance")));
                 pr.setAmount(util.convertStringToDouble(rs.getString("advances")));
                 pr.setAdjustment(util.convertStringToDouble(rs.getString("adjustments")));
                 pr.setAmountReceivable(util.convertStringToDouble(rs.getString("amountReceivable")));
@@ -1075,9 +1087,10 @@ public class PayrollDAO {
                         + "basicSalary, halfMonthSalary, phic, sss, hdmf, absences, numberOfDays, taxableSalary, tax, "
                         + "cashBond, totalLatesDeduction, totalUndertimeDeduction, totalOvertimePaid, totalNightDifferentialPaid, "
                         + "totalDutyManagerPaid, totalLegalHolidayPaid, totalSpecialHolidayPaid, totalWorkingDayOffPaid, "
-                        + "totalNonWorkingHolidayPaid, otherAllowances, allowanceForLiquidation, netSalary, adjustments, amountToBeReceive, "
+                        + "totalNonWorkingHolidayPaid, communicationAllowance, perDiemAllowance, colaAllowance, mealAllowance, "
+                        + "transportationAllowance, otherAllowances, allowanceForLiquidation, netSalary, adjustments, amountToBeReceive, "
                         + "amountReceivable, branchId, payrollPeriod, payrollDate) "
-                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                        + "VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 pstmt.setString(1, payroll.getEmployeeId());
                 pstmt.setString(2, util.convertDateFormat(payroll.getAttendancePeriodFrom().toString()));
                 pstmt.setString(3, util.convertDateFormat(payroll.getAttendancePeriodTo().toString()));
@@ -1100,15 +1113,20 @@ public class PayrollDAO {
                 pstmt.setDouble(20, payroll.getTotalSpecialHolidayPaid());
                 pstmt.setDouble(21, payroll.getTotalWorkingDayOffPaid());
                 pstmt.setDouble(22, payroll.getTotalNonWorkingHolidayPaid());
-                pstmt.setDouble(23, payroll.getOtherAllowances());
-                pstmt.setDouble(24, payroll.getAllowanceForLiquidation());
-                pstmt.setDouble(25, payroll.getNetSalary());
-		pstmt.setDouble(26, adjustments);
-                pstmt.setDouble(27, payroll.getAmountToBeReceive() + adjustments);
-                pstmt.setDouble(28, payroll.getAmountReceivable() + adjustments);
-                pstmt.setInt(29, payroll.getBranchId());
-                pstmt.setString(30, payroll.getPayrollPeriod());
-                pstmt.setString(31, util.convertDateFormat(payroll.getPayrollDate().toString()));                
+                pstmt.setDouble(23, payroll.getCommunicationAllowance());
+                pstmt.setDouble(24, payroll.getPerDiemAllowance());
+                pstmt.setDouble(25, payroll.getColaAllowance());
+                pstmt.setDouble(26, payroll.getMealAllowance());
+                pstmt.setDouble(27, payroll.getTransportationAllowance());
+                pstmt.setDouble(28, payroll.getOtherAllowances());
+                pstmt.setDouble(29, payroll.getAllowanceForLiquidation());
+                pstmt.setDouble(30, payroll.getNetSalary());
+		pstmt.setDouble(31, adjustments);
+                pstmt.setDouble(32, payroll.getAmountToBeReceive() + adjustments);
+                pstmt.setDouble(33, payroll.getAmountReceivable() + adjustments);
+                pstmt.setInt(34, payroll.getBranchId());
+                pstmt.setString(35, payroll.getPayrollPeriod());
+                pstmt.setString(36, util.convertDateFormat(payroll.getPayrollDate().toString()));                
                 pstmt.executeUpdate();
                 
                 int payrollId = 0;            

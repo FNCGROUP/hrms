@@ -18,7 +18,12 @@ ORDER BY name ASC]]>
 	<field name="monthlyRate" class="java.lang.Double"/>
 	<field name="halfMonthRate" class="java.lang.Double"/>
 	<field name="overtime" class="java.lang.Double"/>
-	<field name="allowance" class="java.lang.Double"/>
+	<field name="communicationAllowance" class="java.lang.Double"/>
+	<field name="perDiemAllowance" class="java.lang.Double"/>
+	<field name="colaAllowance" class="java.lang.Double"/>
+	<field name="mealAllowance" class="java.lang.Double"/>
+	<field name="transportationAllowance" class="java.lang.Double"/>
+	<field name="otherAllowances" class="java.lang.Double"/>
 	<field name="allowanceForLiquidation" class="java.lang.Double"/>
 	<field name="premium" class="java.lang.Double"/>
 	<field name="workingDayOffPay" class="java.lang.Double"/>
@@ -155,7 +160,9 @@ ORDER BY name ASC]]>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{allowance}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{communicationAllowance} + $F{perDiemAllowance} + 
+$F{colaAllowance} + $F{mealAllowance} + 
+$F{transportationAllowance} + $F{otherAllowances}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="5d09464f-ddd7-4fd1-9476-726871937805" x="305" y="55" width="35" height="20"/>

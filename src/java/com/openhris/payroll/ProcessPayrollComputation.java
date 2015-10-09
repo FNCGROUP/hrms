@@ -188,14 +188,16 @@ public class ProcessPayrollComputation {
             double transportation = pa.getTransportationAllowance(policyList, getEmployeeId());
             double others = pa.getOtherAllowance(policyList, getEmployeeId());
 //            allowance = payrollComputation.getAllowance(policyList, allowanceEntry, allowance);
-//            payroll.setAllowance(allowance);
-            payroll.setCommunicationAllowance(communication);
-            payroll.setPerDiemAllowance(perDiem);
-            payroll.setColaAllowance(cola);
-            payroll.setMealAllowance(meal);
+//            payroll.setAllowance(allowance);            
+            payroll.setCommunicationAllowance(communication);            
+            payroll.setPerDiemAllowance(perDiem);           
+            payroll.setColaAllowance(cola);         
+            payroll.setMealAllowance(meal);         
             payroll.setTransportationAllowance(transportation);
             payroll.setOtherAllowances(others);            
 
+            double allowances = communication + perDiem + cola + meal + transportation + others;
+            
             int numberOfDays = payrollComputation.getNumberOfDays(dateList, policyList);
             payroll.setNumOfDays(numberOfDays);
 
@@ -211,7 +213,7 @@ public class ProcessPayrollComputation {
             
             payroll.setNetSalary(netSalary);
 
-            double amountReceivable = new Double(df.format(netSalary + allowance + afl));  
+            double amountReceivable = new Double(df.format(netSalary + allowances + afl));  
             payroll.setAmountReceivable(amountReceivable);
 
             double amountToBeReceive = amountReceivable;

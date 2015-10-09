@@ -123,10 +123,10 @@ public class PayrollMainUI extends VerticalLayout {
     
     public void payrollTable(int branchId, String employeeId){
         payrollTbl.removeAllItems();
-        List<Payroll> payrollList = payrollService.getPayrollByBranchAndEmployee(branchId, employeeId);
+//        List<Payroll> payrollList = payrollService.getPayrollByBranchAndEmployee(branchId, employeeId);
         String payrollStatus = null;
         int i = 0;
-        for(Payroll p : payrollList){
+        for(Payroll p : payrollService.getPayrollByBranchAndEmployee(branchId, employeeId)){
             if(p.getId() != 0){
                 if(p.getRowStatus().equals("unlocked")){
                     payrollStatus = "";
@@ -154,9 +154,13 @@ public class PayrollMainUI extends VerticalLayout {
                     utililities.roundOffToTwoDecimalPlaces(p.getTax()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getNetSalary()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getCashBond()), 
-                    utililities.roundOffToTwoDecimalPlaces(p.getOtherAllowances()), 
-                    utililities.roundOffToTwoDecimalPlaces(p.getAllowanceForLiquidation()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getCommunicationAllowance()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getPerDiemAllowance()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getColaAllowance()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getMealAllowance()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getTransportationAllowance()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getOtherAllowances()), 
+                    utililities.roundOffToTwoDecimalPlaces(p.getAllowanceForLiquidation()),                      
                     utililities.roundOffToTwoDecimalPlaces(p.getTotalAdvances()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getAdjustment()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getAmountToBeReceive()), 
