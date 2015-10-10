@@ -25,16 +25,20 @@ import net.sf.jasperreports.engine.JasperPrint;
  *
  * @author jetdario
  */
-public class AllowancesReport extends Window {
+public class AllowanceReport extends Window {
+
     GetSQLConnection getConnection = new GetSQLConnection();
-    private String corporate;
+    private int branchId;
     private String payrollDate;
         
     String filePath;
     Application payrollApplication;
-
-    public AllowancesReport(String corporate, String payrollDate, Application payrollApplication) {
-        this.corporate = corporate;
+    
+    public AllowanceReport(int branchId, 
+            String payrollDate, 
+            Application payrollApplication) {
+        
+        this.branchId = branchId;
         this.payrollDate = payrollDate;
         this.payrollApplication = payrollApplication;
         
@@ -48,9 +52,9 @@ public class AllowancesReport extends Window {
         File reportFile = new File("C:/reportsJasper/AllowancesReport.jasper");
         
         final HashMap hm = new HashMap();
-        hm.put("CORPORATE_NAME", getCorporate());
+        hm.put("BRANCH_ID", getBranchId());
         hm.put("PAYROLL_DATE", getPayrollDate());
-
+        
         try{
              JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
              SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
@@ -88,9 +92,9 @@ public class AllowancesReport extends Window {
         addComponent(e);
         getPayrollApplication().getMainWindow().open(resource, "_blank");
     }
-
-    String getCorporate() {
-        return corporate;
+    
+    int getBranchId() {
+        return branchId;
     }
 
     String getPayrollDate() {

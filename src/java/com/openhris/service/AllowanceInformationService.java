@@ -22,6 +22,10 @@ public interface AllowanceInformationService {
             double amount, 
             String tableColEntryType, 
             String entryType, 
-            String employeeId);
+            String employeeId, 
+            String remarks);
     
+    public boolean updateAFL(double amount, 
+            String employeeId, 
+            String remarks);
 }

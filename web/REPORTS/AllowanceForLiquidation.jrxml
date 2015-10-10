@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AllowancesReport" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d7273288-bbad-4643-bb6f-478ed86b2250">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="CORPORATE_NAME" class="java.lang.String"/>
+	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT 
+	corporateName, 
+	attendancePeriodTo, 
+	attendancePeriodFrom, 
+	payrollDate, 
+	name, 
+	allowanceForLiquidation 
+FROM payroll_register WHERE corporateName = $P{CORPORATE_NAME} AND 
+payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'previous' OR actionTaken IS NULL ) AND allowanceForLiquidation != 0 ORDER BY employmentWageEntry, name ASC]]>
+	</queryString>
+	<field name="corporateName" class="java.lang.String"/>
+	<field name="attendancePeriodTo" class="java.sql.Date"/>
+	<field name="attendancePeriodFrom" class="java.sql.Date"/>
+	<field name="payrollDate" class="java.sql.Date"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="allowanceForLiquidation" class="java.lang.Double"/>
+	<variable name="TOTAL_ALLOWANCES" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{allowanceForLiquidation}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="129" splitType="Stretch">
+			<textField>
+				<reportElement uuid="fe7962fa-285d-496e-9be6-8b7d6fd36aea" x="0" y="0" width="250" height="30"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="04d1a4af-9096-43d4-b07e-b743f0e8e1eb" x="0" y="50" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payroll Period: ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="eac4cc7a-3b2e-4a2e-bc45-d349261c3dc9" x="0" y="30" width="134" height="20"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Allowances]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="0c6cb669-fa2c-452c-b1e2-156f3460439f" x="0" y="70" width="100" height="40"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cut-off Date: ]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement uuid="7435c6bb-23b1-4c8b-8138-c2dc9ec2f650" x="99" y="90" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{attendancePeriodTo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement uuid="edb1c94f-8ae8-4e81-9c2c-a6f5eaefb13f" x="100" y="70" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{attendancePeriodFrom}]]></textFieldExpression>
+			</textField>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement uuid="38286bfd-1cb8-48f0-b096-03b429219659" x="100" y="50" width="154" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement uuid="6fc5c13d-d722-42db-bb70-7d78eebd2657" x="100" y="0" width="154" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="SansSerif" size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Name:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="47a9e450-7733-4c6c-a4af-6b5d2d466585" x="254" y="0" width="60" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Allowance]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement uuid="257e8ad2-d76a-4483-a6ff-ca39816e0375" x="100" y="0" width="154" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Times New Roman" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="8114dbf2-f55a-4fbb-9a1f-b8e5491bdc55" x="62" y="0" width="38" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}+"."]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="a351e9d6-f36b-462b-a93c-521ec101bd1f" x="254" y="0" width="60" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isStrikeThrough="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{allowanceForLiquidation}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement uuid="5525d80c-8cf6-47b9-af92-46102cb59171" x="100" y="0" width="227" height="1"/>
+			</line>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="50">
+			<textField>
+				<reportElement uuid="aa5fe350-dce1-42d8-95ab-033905525bf6" x="0" y="0" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement uuid="d8e7bb83-c30c-41a9-886d-d19f78317cc3" x="80" y="0" width="40" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="EEEEE dd MMMMM yyyy">
+				<reportElement uuid="d91fd1c3-14fd-47f7-9415-ef99e97a395b" x="377" y="0" width="195" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch">
+			<line>
+				<reportElement uuid="dcd5cfc5-a6fa-4e6d-9577-b9df341a2a94" x="100" y="0" width="227" height="1"/>
+			</line>
+			<textField pattern="#,##0.00">
+				<reportElement uuid="827cf901-22c6-4742-9daa-74c408367c16" x="254" y="1" width="60" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TOTAL_ALLOWANCES}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="272a78da-9b5e-42ac-b58b-4592f6e16b25" x="100" y="1" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Total: ]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>

@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PayrollRegisterReportOld" language="groovy" pageWidth="1188" pageHeight="612" orientation="Landscape" columnWidth="1148" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="16473a3e-63f8-4526-9a92-6256ac4f4633">
 	<property name="ireport.zoom" value="1.2100000000000002"/>
 	<property name="ireport.x" value="182"/>
-	<property name="ireport.y" value="96"/>
+	<property name="ireport.y" value="62"/>
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
@@ -19,6 +19,7 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 	<field name="legalHolidayPay" class="java.lang.Double"/>
 	<field name="specialHolidayPay" class="java.lang.Double"/>
 	<field name="nightDifferentialPay" class="java.lang.Double"/>
+	<field name="dutyManagerPay" class="java.lang.Double"/>
 	<field name="workingDayOffPay" class="java.lang.Double"/>
 	<field name="absences" class="java.lang.Double"/>
 	<field name="totalLatesDeduction" class="java.lang.Double"/>
@@ -29,7 +30,12 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 	<field name="hdmf" class="java.lang.Double"/>
 	<field name="tax" class="java.lang.Double"/>
 	<field name="netSalary" class="java.lang.Double"/>
-	<field name="allowance" class="java.lang.Double"/>
+	<field name="communicationAllowance" class="java.lang.Double"/>
+	<field name="perDiemAllowance" class="java.lang.Double"/>
+	<field name="colaAllowance" class="java.lang.Double"/>
+	<field name="mealAllowance" class="java.lang.Double"/>
+	<field name="transportationAllowance" class="java.lang.Double"/>
+	<field name="otherAllowances" class="java.lang.Double"/>
 	<field name="allowanceForLiquidation" class="java.lang.Double"/>
 	<field name="advances" class="java.lang.Double"/>
 	<field name="adjustments" class="java.lang.Double"/>
@@ -46,6 +52,7 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 	<field name="tradeName" class="java.lang.String"/>
 	<field name="corporateName" class="java.lang.String"/>
 	<field name="currentStatus" class="java.lang.String"/>
+	<field name="employeeId" class="java.lang.String"/>
 	<variable name="basicSalary" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{basicSalary}]]></variableExpression>
 	</variable>
@@ -91,9 +98,6 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 	<variable name="netPay" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{netSalary}]]></variableExpression>
 	</variable>
-	<variable name="mealAllowance" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{allowance}]]></variableExpression>
-	</variable>
 	<variable name="advances" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{advances}]]></variableExpression>
 	</variable>
@@ -114,6 +118,11 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 	</variable>
 	<variable name="forAdjustmentsTotal" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{forAdjustments}]]></variableExpression>
+	</variable>
+	<variable name="allowances" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{communicationAllowance} + $F{perDiemAllowance} + 
+$F{colaAllowance} + $F{mealAllowance} + 
+$F{transportationAllowance} + $F{otherAllowances}]]></variableExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -351,9 +360,9 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 			<staticText>
 				<reportElement uuid="b9040e53-17bb-4cd1-8434-92ace87d74e1" x="794" y="0" width="35" height="32"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="7" isBold="true"/>
+					<font fontName="Times New Roman" size="6" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Meal Allowance]]></text>
+				<text><![CDATA[Allowances]]></text>
 			</staticText>
 			<staticText>
 				<reportElement uuid="7852836c-cb79-4f77-b5a5-0da1354eae10" x="754" y="0" width="40" height="32"/>
@@ -476,7 +485,9 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{allowance}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{communicationAllowance} + $F{perDiemAllowance} + 
+$F{colaAllowance} + $F{mealAllowance} + 
+$F{transportationAllowance} + $F{otherAllowances}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
 				<reportElement uuid="8034510f-1032-4846-93e8-1ad40accc67b" x="754" y="0" width="40" height="20"/>
@@ -679,7 +690,7 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="7"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$V{mealAllowance}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{allowances}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="91922913-7ef5-4f2f-98b1-b3d8c6da4715" x="314" y="0" width="35" height="18"/>

@@ -23,6 +23,7 @@ public class Allowances extends Employee {
     private String transEntryType;
     private double others;
     private String othersEntryType;
+    private double allowanceForLiquidation;
 
     public double getCommunication() {
         return communication;
@@ -72,6 +73,10 @@ public class Allowances extends Employee {
         return othersEntryType;
     }
 
+    public double getAllowanceForLiquidation() {
+        return allowanceForLiquidation;
+    }
+
     public void setCommunication(double communication) {
         this.communication = communication;
     }
@@ -118,6 +123,10 @@ public class Allowances extends Employee {
 
     public void setOthersEntryType(String othersEntryType) {
         this.othersEntryType = othersEntryType;
+    }
+
+    public void setAllowanceForLiquidation(double allowanceForLiquidation) {
+        this.allowanceForLiquidation = allowanceForLiquidation;
     }
     
 }

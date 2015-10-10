@@ -11,15 +11,14 @@ import com.openhris.commons.DropDownComponent;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.model.Allowances;
 import com.openhris.service.AllowanceInformationService;
-import com.openhris.service.SalaryInformationService;
 import com.openhris.serviceprovider.AllowanceInformationServiceImpl;
-import com.openhris.serviceprovider.SalaryInformationServiceImpl;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -59,6 +58,8 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
     TextField meal;
     TextField transportation;
     TextField others;
+    TextField afl;
+    TextArea remarks;
     
     ComboBox communicationEntry;
     ComboBox perDiemEntry;
@@ -67,13 +68,15 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
     ComboBox transportationEntry;
     ComboBox othersEntry;
     
+    Window remarksSubWindow;
+    
     ComponentContainer container(){
-        GridLayout glayout = new GridLayout(3, 12);
+        GridLayout glayout = new GridLayout(3, 14);
         glayout.setSpacing(true);          
         glayout.setWidth("600px");
 	glayout.setHeight("100%");
                 
-        communication = new TextField("Communication Allowance");
+        communication = new TextField("Communication Allowance: ");
         communication.setWidth("170px");
         communication.addStyleName("numerical");
         glayout.addComponent(communication, 0, 0);
@@ -84,13 +87,13 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         Button communicationBtn = new Button("UPDATE COMMUNICATION ALLOWANCE");
         communicationBtn.setWidth("250px");
-        communicationBtn.addListener(buttonClickListner);
+        communicationBtn.addListener(buttonClickListener);
         glayout.addComponent(communicationBtn, 2, 0);
         glayout.setComponentAlignment(communicationBtn, Alignment.BOTTOM_LEFT);
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 1, 2, 1);
         
-        perDiem = new TextField("Per Diem");
+        perDiem = new TextField("Per Diem: ");
         perDiem.setWidth("170px");
         perDiem.addStyleName("numerical");
         glayout.addComponent(perDiem, 0, 2);
@@ -101,13 +104,13 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         Button perDiemBtn = new Button("UPDATE PER DIEM");
         perDiemBtn.setWidth("250px");
-        perDiemBtn.addListener(buttonClickListner);
+        perDiemBtn.addListener(buttonClickListener);
         glayout.addComponent(perDiemBtn, 2, 2);
         glayout.setComponentAlignment(perDiemBtn, Alignment.BOTTOM_LEFT);
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 3, 2, 3);
         
-        cola = new TextField("Cola");
+        cola = new TextField("Cola: ");
         cola.setWidth("170px");
         cola.addStyleName("numerical");
         glayout.addComponent(cola, 0, 4);
@@ -118,13 +121,13 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         Button colaBtn = new Button("UPDATE COLA");
         colaBtn.setWidth("250px");
-        colaBtn.addListener(buttonClickListner);
+        colaBtn.addListener(buttonClickListener);
         glayout.addComponent(colaBtn, 2, 4);
         glayout.setComponentAlignment(colaBtn, Alignment.BOTTOM_LEFT);
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 5, 2, 5);
         
-        meal = new TextField("Meal Allowance");
+        meal = new TextField("Meal Allowance: ");
         meal.setWidth("170px");
         meal.addStyleName("numerical");
         glayout.addComponent(meal, 0, 6);
@@ -135,13 +138,13 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         Button mealBtn = new Button("UPDATE MEAL ALLOWANCE");
         mealBtn.setWidth("250px");
-        mealBtn.addListener(buttonClickListner);
+        mealBtn.addListener(buttonClickListener);
         glayout.addComponent(mealBtn, 2, 6);
         glayout.setComponentAlignment(mealBtn, Alignment.BOTTOM_LEFT);
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 7, 2, 7);
         
-        transportation = new TextField("Transportation Allowance");
+        transportation = new TextField("Transportation Allowance: ");
         transportation.setWidth("170px");
         transportation.addStyleName("numerical");
         glayout.addComponent(transportation, 0, 8);
@@ -152,13 +155,13 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         Button transportationBtn = new Button("UPDATE TRANSPORTATION ALLOWANCE");
         transportationBtn.setWidth("250px");
-        transportationBtn.addListener(buttonClickListner);
+        transportationBtn.addListener(buttonClickListener);
         glayout.addComponent(transportationBtn, 2, 8);
         glayout.setComponentAlignment(transportationBtn, Alignment.BOTTOM_LEFT);
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 9, 2, 9);
         
-        others = new TextField("Other Allowances");
+        others = new TextField("Other Allowances: ");
         others.setWidth("170px");
         others.addStyleName("numerical");
         glayout.addComponent(others, 0, 10);
@@ -169,9 +172,22 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         Button othersBtn = new Button("UPDATE OTHER ALLOWANCES");
         othersBtn.setWidth("250px");
-        othersBtn.addListener(buttonClickListner);
+        othersBtn.addListener(buttonClickListener);
         glayout.addComponent(othersBtn, 2, 10);
         glayout.setComponentAlignment(othersBtn, Alignment.BOTTOM_LEFT);
+        
+        glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 11, 2, 11);
+        
+        afl = new TextField("Allowance for Liquidation: ");
+        afl.setWidth("170px");
+        afl.addStyleName("numerical");
+        glayout.addComponent(afl, 0, 12);
+        
+        Button aflBtn = new Button("UPDATE AFL");
+        aflBtn.setWidth("100%");
+        aflBtn.addListener(buttonClickListener);
+        glayout.addComponent(aflBtn, 1, 12, 2, 12);
+        glayout.setComponentAlignment(aflBtn, Alignment.BOTTOM_LEFT);
         
         if(getEmployeeId() != null){
             Allowances a = ais.getAllowancesByEmployee(getEmployeeId());
@@ -192,8 +208,9 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
             transportationEntry.setValue(Constant.getKeyByValue(Constant.MAP_CONSTANT_EMPLOYMENT_ALLOWANCE_ENTRY, a.getTransEntryType()));
             
             others.setValue(a.getOthers());
-            System.out.println("others: "+a.getOthers());
             othersEntry.setValue(Constant.getKeyByValue(Constant.MAP_CONSTANT_EMPLOYMENT_ALLOWANCE_ENTRY, a.getOthersEntryType()));
+            
+            afl.setValue(a.getAllowanceForLiquidation());
         }        
         
         return glayout;
@@ -207,10 +224,15 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         return userRoleResult;
     }
     
-    Button.ClickListener buttonClickListner = new Button.ClickListener() {
+    Button.ClickListener updateClickListner = new Button.ClickListener() {
 
         @Override
         public void buttonClick(Button.ClickEvent event) {
+            if(remarks.getValue() == null || remarks.getValue().toString().trim().isEmpty()){
+                getWindow().showNotification("Add Remarks!", Window.Notification.TYPE_ERROR_MESSAGE);
+                return;
+            }
+            
             switch(event.getButton().getCaption()){
                 case "UPDATE COMMUNICATION ALLOWANCE" : {
                     if(communication.getValue() == null || communication.getValue().toString().trim().isEmpty()){
@@ -234,9 +256,11 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                             util.convertStringToDouble(communication.getValue().toString().trim()), 
                             "CommunicationEntryType", 
                             communicationEntry.getItem(communicationEntry.getValue()).toString(), 
-                            getEmployeeId());
+                            getEmployeeId(), 
+                            remarks.getValue().toString().trim());
                     if(result){
                         getWindow().showNotification("Update Communication Allowance!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
                     }
                     
                     break;
@@ -264,9 +288,11 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                             util.convertStringToDouble(perDiem.getValue().toString().trim()), 
                             "PerDiemEntryType", 
                             perDiemEntry.getItem(perDiemEntry.getValue()).toString(), 
-                            getEmployeeId());
+                            getEmployeeId(), 
+                            remarks.getValue().toString().trim());
                     if(result){
                         getWindow().showNotification("Update Per Diem Allowance!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
                     }
                     
                     break;
@@ -294,9 +320,11 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                             util.convertStringToDouble(cola.getValue().toString().trim()), 
                             "ColaEntryType", 
                             colaEntry.getItem(colaEntry.getValue()).toString(), 
-                            getEmployeeId());
+                            getEmployeeId(), 
+                            remarks.getValue().toString().trim());
                     if(result){
                         getWindow().showNotification("Update COLA!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
                     }
                     
                     break;
@@ -324,9 +352,11 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                             util.convertStringToDouble(meal.getValue().toString().trim()), 
                             "MealEntryType", 
                             mealEntry.getItem(mealEntry.getValue()).toString(), 
-                            getEmployeeId());
+                            getEmployeeId(), 
+                            remarks.getValue().toString().trim());
                     if(result){
                         getWindow().showNotification("Update Meal Allowance!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
                     }
                     
                     break;
@@ -354,15 +384,17 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                             util.convertStringToDouble(transportation.getValue().toString().trim()), 
                             "TransportationEntryType", 
                             transportationEntry.getItem(transportationEntry.getValue()).toString(), 
-                            getEmployeeId());
+                            getEmployeeId(), 
+                            remarks.getValue().toString().trim());
                     if(result){
                         getWindow().showNotification("Update Transportation Allowance!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
                     }
                     
                     break;
                 }
                 
-                default : {
+                case "UPDATE OTHER ALLOWANCES" : {
                     if(others.getValue() == null || others.getValue().toString().trim().isEmpty()){
                         getWindow().showNotification("Enter Amount for Other Allowances!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
@@ -384,9 +416,33 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                             util.convertStringToDouble(others.getValue().toString().trim()), 
                             "OthersEntryType", 
                             othersEntry.getItem(othersEntry.getValue()).toString(), 
-                            getEmployeeId());
+                            getEmployeeId(), 
+                            remarks.getValue().toString().trim());
                     if(result){
                         getWindow().showNotification("Update Other Allowances!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
+                    }
+                    
+                    break;
+                }
+                
+                default : {
+                    if(afl.getValue() == null || afl.getValue().toString().trim().isEmpty()){
+                        getWindow().showNotification("Enter Amount for Allowance for Liquidation!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    } else {
+                        if(!util.checkInputIfInteger(afl.getValue().toString().trim())){
+                            getWindow().showNotification("Enter a Numeric Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
+                            return;
+                        } 
+                    }
+                    
+                    boolean result = ais.updateAFL(util.convertStringToDouble(afl.getValue().toString().trim()), 
+                            getEmployeeId(), 
+                            remarks.getValue().toString().trim());
+                    if(result){
+                        getWindow().showNotification("Update Other Allowances!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
                     }
                     
                     break;
@@ -394,4 +450,39 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
             }
         }
     };
+
+    Button.ClickListener buttonClickListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            Window sub = remarks(event.getButton().getCaption());
+            if(sub.getParent() == null){
+                getWindow().addWindow(sub);
+            }
+        }
+    };
+    
+    Window remarks(final String buttonCaption){
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        v.setSpacing(true);        
+        
+        remarksSubWindow = new Window("REMARKS", v);
+        remarksSubWindow.setWidth("400px");
+        remarksSubWindow.setModal(true);
+        remarksSubWindow.center();
+        
+        remarks = new TextArea("Add Remarks: ");
+        remarks.setWidth("100%");
+        remarks.setRows(3);
+        remarksSubWindow.addComponent(remarks);
+        
+        Button b = new Button(buttonCaption);
+        b.setWidth("100%");
+        b.addListener(updateClickListner);
+        remarksSubWindow.addComponent(b);
+        
+        return remarksSubWindow;
+    }
 }

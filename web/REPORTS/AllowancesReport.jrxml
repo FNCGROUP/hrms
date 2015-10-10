@@ -1,66 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AllowancesReport" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d7273288-bbad-4643-bb6f-478ed86b2250">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="AllowancesReport" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="f4dad6f3-75a0-43cf-a0ad-dc6cc3e70ea5">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="CORPORATE_NAME" class="java.lang.String"/>
+	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT * FROM payroll_register WHERE corporateName = $P{CORPORATE_NAME} AND 
-payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'previous' OR actionTaken IS NULL ) AND allowanceForLiquidation != 0 ORDER BY employmentWageEntry, name ASC]]>
+		<![CDATA[SELECT 
+	corporateName, 
+	attendancePeriodTo, 
+	attendancePeriodFrom, 
+	payrollDate, 
+	name,
+	communicationAllowance, 
+	perDiemAllowance, 
+	colaAllowance, 
+	mealAllowance, 
+	transportationAllowance, 
+	otherAllowances  
+FROM payroll_register WHERE branchId = $P{BRANCH_ID} AND 
+payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'previous' OR actionTaken IS NULL ) ORDER BY employmentWageEntry, name ASC]]>
 	</queryString>
-	<field name="salaryId" class="java.lang.Integer"/>
-	<field name="name" class="java.lang.String"/>
-	<field name="numberOfDays" class="java.lang.Integer"/>
-	<field name="ratePerDay" class="java.lang.Double"/>
-	<field name="basicSalary" class="java.lang.Double"/>
-	<field name="halfMonthSalary" class="java.lang.Double"/>
-	<field name="overtimePay" class="java.lang.Double"/>
-	<field name="legalHolidayPay" class="java.lang.Double"/>
-	<field name="specialHolidayPay" class="java.lang.Double"/>
-	<field name="nightDifferentialPay" class="java.lang.Double"/>
-	<field name="workingDayOffPay" class="java.lang.Double"/>
-	<field name="absences" class="java.lang.Double"/>
-	<field name="totalLatesDeduction" class="java.lang.Double"/>
-	<field name="totalUndertimeDeduction" class="java.lang.Double"/>
-	<field name="grossPay" class="java.lang.Double"/>
-	<field name="sss" class="java.lang.Double"/>
-	<field name="phic" class="java.lang.Double"/>
-	<field name="hdmf" class="java.lang.Double"/>
-	<field name="tax" class="java.lang.Double"/>
-	<field name="netSalary" class="java.lang.Double"/>
-	<field name="allowance" class="java.lang.Double"/>
-	<field name="allowanceForLiquidation" class="java.lang.Double"/>
-	<field name="advances" class="java.lang.Double"/>
-	<field name="adjustments" class="java.lang.Double"/>
-	<field name="amountReceivable" class="java.lang.Double"/>
-	<field name="amountToBeReceive" class="java.lang.Double"/>
-	<field name="forAdjustments" class="java.lang.Double"/>
-	<field name="actionTaken" class="java.lang.String"/>
-	<field name="payrollDate" class="java.sql.Date"/>
-	<field name="attendancePeriodFrom" class="java.sql.Date"/>
-	<field name="attendancePeriodTo" class="java.sql.Date"/>
-	<field name="branchId" class="java.lang.Integer"/>
-	<field name="employmentWageEntry" class="java.lang.String"/>
-	<field name="branchName" class="java.lang.String"/>
-	<field name="tradeName" class="java.lang.String"/>
 	<field name="corporateName" class="java.lang.String"/>
-	<field name="currentStatus" class="java.lang.String"/>
-	<variable name="TOTAL_ALLOWANCES" class="java.lang.Double" calculation="Sum">
-		<variableExpression><![CDATA[$F{allowanceForLiquidation}]]></variableExpression>
-	</variable>
+	<field name="attendancePeriodTo" class="java.sql.Date"/>
+	<field name="attendancePeriodFrom" class="java.sql.Date"/>
+	<field name="payrollDate" class="java.sql.Date"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="communicationAllowance" class="java.lang.Double"/>
+	<field name="perDiemAllowance" class="java.lang.Double"/>
+	<field name="colaAllowance" class="java.lang.Double"/>
+	<field name="mealAllowance" class="java.lang.Double"/>
+	<field name="transportationAllowance" class="java.lang.Double"/>
+	<field name="otherAllowances" class="java.lang.Double"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
 	<title>
 		<band height="129" splitType="Stretch">
-			<textField>
-				<reportElement uuid="fe7962fa-285d-496e-9be6-8b7d6fd36aea" x="0" y="0" width="250" height="30"/>
-				<textElement verticalAlignment="Middle">
-					<font size="12" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
-			</textField>
 			<staticText>
 				<reportElement uuid="04d1a4af-9096-43d4-b07e-b743f0e8e1eb" x="0" y="50" width="100" height="20"/>
 				<textElement verticalAlignment="Middle">
@@ -75,13 +51,6 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 				</textElement>
 				<text><![CDATA[Allowances]]></text>
 			</staticText>
-			<staticText>
-				<reportElement uuid="0c6cb669-fa2c-452c-b1e2-156f3460439f" x="0" y="70" width="100" height="40"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Cut-off Date: ]]></text>
-			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
 				<reportElement uuid="7435c6bb-23b1-4c8b-8138-c2dc9ec2f650" x="99" y="90" width="100" height="20"/>
 				<textElement verticalAlignment="Middle">
@@ -90,105 +59,145 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 				<textFieldExpression><![CDATA[$F{attendancePeriodTo}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement uuid="edb1c94f-8ae8-4e81-9c2c-a6f5eaefb13f" x="100" y="70" width="100" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{attendancePeriodFrom}]]></textFieldExpression>
-			</textField>
-			<textField pattern="MMMMM dd, yyyy">
 				<reportElement uuid="38286bfd-1cb8-48f0-b096-03b429219659" x="100" y="50" width="154" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement uuid="0c6cb669-fa2c-452c-b1e2-156f3460439f" x="0" y="70" width="100" height="40"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Cut-off Date: ]]></text>
+			</staticText>
+			<textField pattern="MMMMM dd, yyyy">
+				<reportElement uuid="edb1c94f-8ae8-4e81-9c2c-a6f5eaefb13f" x="100" y="70" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{attendancePeriodFrom}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="fe7962fa-285d-496e-9be6-8b7d6fd36aea" x="0" y="0" width="250" height="30"/>
+				<textElement verticalAlignment="Middle">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>
-		<band height="22" splitType="Stretch">
+		<band height="32" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="6fc5c13d-d722-42db-bb70-7d78eebd2657" x="100" y="0" width="154" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="SansSerif" size="9" isBold="false"/>
-				</textElement>
-				<text><![CDATA[Name:]]></text>
+				<reportElement uuid="55d513c7-7d35-4316-bb07-40dc424452f3" x="93" y="0" width="160" height="30"/>
+				<textElement verticalAlignment="Middle"/>
+				<text><![CDATA[name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="47a9e450-7733-4c6c-a4af-6b5d2d466585" x="254" y="0" width="60" height="20"/>
+				<reportElement uuid="2f5680dc-011b-4666-bc7b-ce28c2115d8d" x="393" y="0" width="70" height="30"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9"/>
+					<font size="8"/>
 				</textElement>
-				<text><![CDATA[Allowance]]></text>
+				<text><![CDATA[Cola Allowance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="41b65f74-370c-4736-afbe-da7ac8a29e53" x="463" y="0" width="70" height="30"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Meal Allowance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="1f09ce7e-6962-48a3-9796-f6a53d2251f2" x="533" y="0" width="70" height="30"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Transportation Allowance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="db928a40-1fd7-484e-a4b0-b8cd69b9ad43" x="603" y="0" width="70" height="30"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Other Allowances]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="5eaa72c9-64da-4d00-993c-0fd4fad71a2f" x="253" y="0" width="70" height="30"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Communication Allowance ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f3fe32af-faef-4c1b-b5e0-d28677e7bcdf" x="323" y="0" width="70" height="30"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Per Diem  Allowance ]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="21" splitType="Stretch">
+		<band height="24" splitType="Stretch">
 			<textField>
-				<reportElement uuid="257e8ad2-d76a-4483-a6ff-ca39816e0375" x="100" y="0" width="154" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font fontName="Times New Roman" size="9" isBold="true"/>
-				</textElement>
+				<reportElement uuid="f1a3eba3-9635-4eac-9f88-f050833b37e8" x="93" y="0" width="160" height="20"/>
+				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{name}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="8114dbf2-f55a-4fbb-9a1f-b8e5491bdc55" x="62" y="0" width="38" height="20"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{REPORT_COUNT}+"."]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0.00">
-				<reportElement uuid="a351e9d6-f36b-462b-a93c-521ec101bd1f" x="254" y="0" width="60" height="20"/>
+				<reportElement uuid="a2bf05dd-4532-4005-9ef4-36c57add66be" x="393" y="0" width="70" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9" isStrikeThrough="false"/>
+					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{allowanceForLiquidation}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{colaAllowance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="07575708-c4b8-4c89-9e3a-6190e06ee6ea" x="463" y="0" width="70" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{mealAllowance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="94f1eacc-b91e-44f3-94ad-da71e859ed1e" x="533" y="0" width="70" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{transportationAllowance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="abadcb08-f42f-43f9-855a-2772681943ac" x="603" y="0" width="70" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{otherAllowances}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="df3fb7a8-2001-4192-ba91-ea1351bfb570" x="253" y="0" width="70" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{communicationAllowance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="3c5805cd-4af9-4917-a065-defc67cf851d" x="323" y="0" width="70" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{perDiemAllowance}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="5525d80c-8cf6-47b9-af92-46102cb59171" x="100" y="0" width="227" height="1"/>
+				<reportElement uuid="475e192d-e27a-4199-9521-2ef682787bd2" x="93" y="0" width="580" height="1"/>
 			</line>
 		</band>
 	</detail>
-	<pageFooter>
-		<band height="50">
-			<textField>
-				<reportElement uuid="aa5fe350-dce1-42d8-95ab-033905525bf6" x="0" y="0" width="80" height="20"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
-			</textField>
-			<textField evaluationTime="Report">
-				<reportElement uuid="d8e7bb83-c30c-41a9-886d-d19f78317cc3" x="80" y="0" width="40" height="20"/>
-				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
-			</textField>
-			<textField pattern="EEEEE dd MMMMM yyyy">
-				<reportElement uuid="d91fd1c3-14fd-47f7-9415-ef99e97a395b" x="377" y="0" width="195" height="20"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
-			</textField>
-		</band>
-	</pageFooter>
 	<summary>
 		<band height="42" splitType="Stretch">
 			<line>
-				<reportElement uuid="dcd5cfc5-a6fa-4e6d-9577-b9df341a2a94" x="100" y="0" width="227" height="1"/>
+				<reportElement uuid="cf1347c2-e879-4212-9c86-d0aeb9759372" x="93" y="0" width="580" height="1"/>
 			</line>
-			<textField pattern="#,##0.00">
-				<reportElement uuid="827cf901-22c6-4742-9daa-74c408367c16" x="254" y="1" width="60" height="20"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TOTAL_ALLOWANCES}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement uuid="272a78da-9b5e-42ac-b58b-4592f6e16b25" x="100" y="1" width="100" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[Total: ]]></text>
-			</staticText>
 		</band>
 	</summary>
 </jasperReport>
