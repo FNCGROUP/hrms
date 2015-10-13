@@ -83,7 +83,6 @@ public class SalaryInformationDAO {
                     + "employmentWageStatus = ?, "
                     + "employmentWageEntry = ?, "
                     + "employmentWage = ?, "
-                    + "allowanceForLiquidation = ?, "
                     + "sssNo = ?, "
                     + "tinNo = ?, "
                     + "phicNo = ?, "
@@ -94,13 +93,12 @@ public class SalaryInformationDAO {
             pstmt.setString(2, ei.getEmploymentWageStatus());
             pstmt.setString(3, ei.getEmploymentWageEntry());
             pstmt.setDouble(4, ei.getEmploymentWage());
-            pstmt.setDouble(5, ei.getAfl());
-            pstmt.setString(6, ei.getSssNo());
-            pstmt.setString(7, ei.getTinNo());
-            pstmt.setString(8, ei.getPhicNo());
-            pstmt.setString(9, ei.gethdmfNo());
-            pstmt.setString(10, ei.getTotalDependent());
-            pstmt.setString(11, employeeId);
+            pstmt.setString(5, ei.getSssNo());
+            pstmt.setString(6, ei.getTinNo());
+            pstmt.setString(7, ei.getPhicNo());
+            pstmt.setString(8, ei.gethdmfNo());
+            pstmt.setString(9, ei.getTotalDependent());
+            pstmt.setString(10, employeeId);
             pstmt.executeUpdate();
             
             result = true;

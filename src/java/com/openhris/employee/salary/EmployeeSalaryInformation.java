@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package com.openhris.employee;
+package com.openhris.employee.salary;
 
 import com.hrms.classes.GlobalVariables;
 import com.openhris.commons.DropDownComponent;
@@ -80,15 +80,15 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         glayout.setWidth("660px");
 	glayout.setHeight("100%");
         
-        final ComboBox employmentStatus = dropDown.populateEmploymentStatus(new ComboBox());
+        final ComboBox employmentStatus = dropDown.populateEmploymentStatus("Employment Status: ");
         employmentStatus.setWidth("210px");
         glayout.addComponent(employmentStatus, 0, 0);
         
-        final ComboBox employmentWageStatus = dropDown.populateEmploymentWageStatus(new ComboBox());
+        final ComboBox employmentWageStatus = dropDown.populateEmploymentWageStatus("Employment Wage Status: ");
         employmentWageStatus.setWidth("210px");
         glayout.addComponent(employmentWageStatus, 1, 0);
         
-        final ComboBox employmentWageEntry = dropDown.populateEmploymentWageEntry(new ComboBox());
+        final ComboBox employmentWageEntry = dropDown.populateEmploymentWageEntry("Employment Wage Entry: ");
         employmentWageEntry.setWidth("210px");
         glayout.addComponent(employmentWageEntry, 2, 0);
         
@@ -126,10 +126,10 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         hdmfField.setWidth("100%");
         glayout.addComponent(hdmfField, 2, 2);        
         
-        final TextField aflField = new TextField("Allowance for Liquidation: ");
-        aflField.setWidth("100%");   
-        aflField.addStyleName("numerical");
-        glayout.addComponent(aflField, 0, 3);
+//        final TextField aflField = new TextField("Allowance for Liquidation: ");
+//        aflField.setWidth("100%");   
+//        aflField.addStyleName("numerical");
+//        glayout.addComponent(aflField, 0, 3);
         
         Button updateBtn = new Button("UPDATE SALARY INFORMATION");
         updateBtn.setWidth("100%");
@@ -159,16 +159,16 @@ public class EmployeeSalaryInformation extends VerticalLayout{
 //                    }
 //                }
                 
-                if(aflField.getValue() == null || aflField.getValue().toString().trim().isEmpty()){
-                    getWindow().showNotification("NULL/Empty for AFL is not Allowed!", Window.Notification.TYPE_WARNING_MESSAGE);
-                    return;
-                } else {
-                    boolean checkValueIfDouble = util.checkInputIfDouble(aflField.getValue().toString().trim());
-                    if(!checkValueIfDouble){
-                        getWindow().showNotification("Enter a numeric format for AFL!");
-                        return;
-                    }
-                }
+//                if(aflField.getValue() == null || aflField.getValue().toString().trim().isEmpty()){
+//                    getWindow().showNotification("NULL/Empty for AFL is not Allowed!", Window.Notification.TYPE_WARNING_MESSAGE);
+//                    return;
+//                } else {
+//                    boolean checkValueIfDouble = util.checkInputIfDouble(aflField.getValue().toString().trim());
+//                    if(!checkValueIfDouble){
+//                        getWindow().showNotification("Enter a numeric format for AFL!");
+//                        return;
+//                    }
+//                }
                 
                 EmploymentInformation ei = new EmploymentInformation();
                 
@@ -192,7 +192,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                 
                 ei.setEmploymentWage(util.convertStringToDouble(employmentWage.getValue().toString().trim()));
 //                employmentInformation.setAllowance(util.convertStringToDouble(employmentAllowance.getValue().toString().trim()));
-                ei.setAfl(util.convertStringToDouble(aflField.getValue().toString().trim()));
+//                ei.setAfl(util.convertStringToDouble(aflField.getValue().toString().trim()));
                 
 //                if(util.checkInputIfInteger(employmentAllowanceEntry.getValue().toString())){
 //                    employmentInformation.setAllowanceEntry(employmentAllowanceEntry.getItemCaption(employmentAllowanceEntry.getValue()));
@@ -265,7 +265,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
             employeeDependent.setItemCaption(employeeTotalDependentId, employmentInformation.getTotalDependent());
             employeeDependent.setValue(employeeTotalDependentId);
             
-            aflField.setValue(employmentInformation.getAfl());
+//            aflField.setValue(employmentInformation.getAfl());
             
             bankAccountNo.setValue((employmentInformation.getBankAccountNo() == null) ? "" : employmentInformation.getBankAccountNo());    
             bankAccountNo.setReadOnly(true);

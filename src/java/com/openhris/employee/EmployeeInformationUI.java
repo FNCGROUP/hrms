@@ -6,6 +6,9 @@
 
 package com.openhris.employee;
 
+import com.openhris.employee.allowance.EmployeeAllowanceInformation;
+import com.openhris.employee.others.OtherInformation;
+import com.openhris.employee.salary.EmployeeSalaryInformation;
 import com.vaadin.Application;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.ComponentContainer;
@@ -24,6 +27,7 @@ public class EmployeeInformationUI extends VerticalLayout {
     EmployeeAddress employeeAddress;
     EmployeeCharacterReference characterReference;
     EmployeeAllowanceInformation employeeAllowanceInformation;
+    OtherInformation otherInformation;
     Application application;
 	
     private String employeeId;	
@@ -49,6 +53,7 @@ public class EmployeeInformationUI extends VerticalLayout {
         employeeAddress = new EmployeeAddress(getEmployeeId());
         characterReference = new EmployeeCharacterReference(getEmployeeId());
         employeeAllowanceInformation = new EmployeeAllowanceInformation(getEmployeeId());
+        otherInformation = new OtherInformation(getEmployeeId());
         
 	addComponent(employeeInformationWindow());
     }
@@ -102,6 +107,11 @@ public class EmployeeInformationUI extends VerticalLayout {
         vlayout = new VerticalLayout();
 	vlayout.setCaption("Allowance Information");
 	vlayout.addComponent(employeeAllowanceInformation);
+	ts.addComponent(vlayout);
+        
+        vlayout = new VerticalLayout();
+	vlayout.setCaption("Other Information");
+	vlayout.addComponent(otherInformation);
 	ts.addComponent(vlayout);
 	
 	return ts;    

@@ -110,7 +110,7 @@ public class AddNewEmployeeWindow extends Window {
         final TextField hdmfNo = new HRISTextField("HDMF #: ");
         grid.addComponent(hdmfNo, 2, 4);
                 
-        final ComboBox employmentStatus = dropDown.populateEmploymentStatus(new ComboBox());
+        final ComboBox employmentStatus = dropDown.populateEmploymentStatus("Employment Status: ");
         grid.addComponent(employmentStatus, 0, 5);        
         
         final TextField tinNo = new HRISTextField("Tin #:");
@@ -124,10 +124,10 @@ public class AddNewEmployeeWindow extends Window {
         employmentWage.addListener(checkEntryIfDoubleListener);
         grid.addComponent(employmentWage, 0, 6); 
         
-        final ComboBox employmentWageStatus = dropDown.populateEmploymentWageStatus(new ComboBox());
+        final ComboBox employmentWageStatus = dropDown.populateEmploymentWageStatus("Employment Wage Status: ");
         grid.addComponent(employmentWageStatus, 1, 6);
         
-        final ComboBox employmentWageEntry = dropDown.populateEmploymentWageEntry(new ComboBox());
+        final ComboBox employmentWageEntry = dropDown.populateEmploymentWageEntry("Employment Wage Entry: ");
         grid.addComponent(employmentWageEntry, 2, 6);
                 
 //        final TextField employmentAllowance = new HRISTextField("Allowance");

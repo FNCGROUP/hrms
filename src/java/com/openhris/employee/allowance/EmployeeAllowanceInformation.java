@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.employee;
+package com.openhris.employee.allowance;
 
 import com.hrms.classes.GlobalVariables;
 import com.openhris.commons.Constant;
@@ -49,7 +49,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
 	setSizeFull();
 	setImmediate(true);
         
-        addComponent(container());
+        addComponent(component());
     }
     
     TextField communication;
@@ -70,7 +70,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
     
     Window remarksSubWindow;
     
-    ComponentContainer container(){
+    ComponentContainer component(){
         GridLayout glayout = new GridLayout(3, 14);
         glayout.setSpacing(true);          
         glayout.setWidth("600px");

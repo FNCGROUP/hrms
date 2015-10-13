@@ -145,40 +145,60 @@ public class DropDownComponent extends ComboBox {
         return totalDependent;
     }
     
-    public ComboBox populateEmploymentWageStatus(ComboBox employmentWageStatus){
-        employmentWageStatus.setCaption("Wage Status: ");
-        employmentWageStatus.setNullSelectionAllowed(false);
-        employmentWageStatus.setWidth("100%");
+    public ComboBox populateEmploymentWageStatus(String caption){
+        ComboBox select = new ComboBox();
+        select.setCaption(caption);        
+        select.setWidth("100%");
+        select.setNullSelectionAllowed(false);
+        select.addContainerProperty("y", String.class, "");
+        select.setItemCaptionPropertyId("y");
+        
         Map<Integer, String> mapWageStatus = Constant.MAP_CONSTANT_EMPLOYMENT_WAGE_STATUS;           
-        for(int i = 0; i < mapWageStatus.size(); i++){
-            employmentWageStatus.addItem(mapWageStatus.get(i));
+        Item item;
+        for(Map.Entry<Integer, String> entry : mapWageStatus.entrySet()){
+            item = select.addItem(entry.getKey());
+            item.getItemProperty("y").setValue(entry.getValue());
         }
-        employmentWageStatus.setImmediate(true);
-        return employmentWageStatus;
+        
+        select.setImmediate(true);
+        return select;
     }
     
-    public ComboBox populateEmploymentStatus(ComboBox employmentStatus){
-        employmentStatus.setCaption("Employment Status: ");
-        employmentStatus.setNullSelectionAllowed(false);
-        employmentStatus.setWidth("100%");
+    public ComboBox populateEmploymentStatus(String caption){
+        ComboBox select = new ComboBox();
+        select.setCaption(caption);        
+        select.setWidth("100%");
+        select.setNullSelectionAllowed(false);
+        select.addContainerProperty("y", String.class, "");
+        select.setItemCaptionPropertyId("y");
+        
         Map<Integer, String> mapStatus = Constant.MAP_CONSTANT_EMPLOYMENT_STATUS;
-        for(int i = 0; i < mapStatus.size(); i++){
-            employmentStatus.addItem(mapStatus.get(i));
+        Item item;
+        for(Map.Entry<Integer, String> entry : mapStatus.entrySet()){
+            item = select.addItem(entry.getKey());
+            item.getItemProperty("y").setValue(entry.getValue());
         }
-        employmentStatus.setImmediate(true);
-        return employmentStatus;
+        select.setImmediate(true);
+        return select;
     }
     
-    public ComboBox populateEmploymentWageEntry(ComboBox employmentWageEntry){
-        employmentWageEntry.setCaption("Wage Entry: ");
-        employmentWageEntry.setNullSelectionAllowed(false);
-        employmentWageEntry.setWidth("100%");
+    public ComboBox populateEmploymentWageEntry(String caption){
+        ComboBox select = new ComboBox();
+        select.setCaption(caption);        
+        select.setWidth("100%");
+        select.setNullSelectionAllowed(false);
+        select.addContainerProperty("y", String.class, "");
+        select.setItemCaptionPropertyId("y");
+        
         Map<Integer, String> mapStatus = Constant.MAP_CONSTANT_EMPLOYMENT_WAGE_ENTRY;
-        for(int i = 0; i < mapStatus.size(); i++){
-            employmentWageEntry.addItem(mapStatus.get(i));
+        Item item;
+        for(Map.Entry<Integer, String> entry : mapStatus.entrySet()){
+            item = select.addItem(entry.getKey());
+            item.getItemProperty("y").setValue(entry.getValue());
         }
-        employmentWageEntry.setImmediate(true);
-        return employmentWageEntry;
+        
+        select.setImmediate(true);
+        return select;
     }
     
     public ComboBox populateEmploymentAllowanceEntry(String allowanceCaption){
@@ -190,9 +210,6 @@ public class DropDownComponent extends ComboBox {
         select.setItemCaptionPropertyId("y");
         
         Map<Integer, String> mapStatus = Constant.MAP_CONSTANT_EMPLOYMENT_ALLOWANCE_ENTRY;
-//        for(int i = 0; i < mapStatus.size(); i++){
-//            employmentAllowanceEntry.addItem(mapStatus.get(i));
-//        }
         Item item;
         for(Map.Entry<Integer, String> entry : mapStatus.entrySet()){
             item = select.addItem(entry.getKey());
