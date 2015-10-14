@@ -23,4 +23,13 @@ public interface SalaryInformationService {
     public boolean editEmploymentDateEntry(String employeeId, String entryDate);    
     
     public boolean updateBankAccountNo(String employeeId, String bankAccountNo);
+    
+    public boolean updateEmploymentWage(double amount, 
+            String remarks, 
+            String employeeId);
+    
+    public boolean updateEmploymentWageDetails(String column, 
+            String colValue, 
+            String employeeId, 
+            String remarks);
 }

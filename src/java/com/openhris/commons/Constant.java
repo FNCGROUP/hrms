@@ -257,4 +257,19 @@ public class Constant {
         }
         return null;
     }
+    
+    public static String getEmploymentWageDetailsColumn(String key){
+        Map<String, String> map = new HashMap<>();
+        map.put("employmentStatus", "Employment Status");
+        map.put("employmentWageStatus", "Employment Wage Status");
+        map.put("employmentWageEntry", "Employment Wage Entry");  
+        map.put("tinNo", "TIN No");
+        map.put("sssNo", "SSS No");
+        map.put("phicNo", "PHIC No");
+        map.put("hdmfNo", "HDMF No");
+        map.put("totalDependent", "Dependent");
+        map.put("bankAccountNo", "BANK Account No");
+        
+        return map.get(key);
+    }
 }

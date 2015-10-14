@@ -224,7 +224,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         return userRoleResult;
     }
     
-    Button.ClickListener updateClickListner = new Button.ClickListener() {
+    Button.ClickListener updateClickListener = new Button.ClickListener() {
 
         @Override
         public void buttonClick(Button.ClickEvent event) {
@@ -480,7 +480,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         
         Button b = new Button(buttonCaption);
         b.setWidth("100%");
-        b.addListener(updateClickListner);
+        b.addListener(updateClickListener);
         remarksSubWindow.addComponent(b);
         
         return remarksSubWindow;

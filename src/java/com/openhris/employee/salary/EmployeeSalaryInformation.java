@@ -19,12 +19,11 @@ import com.openhris.serviceprovider.SalaryInformationServiceImpl;
 import com.vaadin.data.Property;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
-import com.vaadin.ui.CheckBox;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.ComponentContainer;
-import com.vaadin.ui.Field;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -35,7 +34,7 @@ import com.vaadin.ui.Window;
  */
 public class EmployeeSalaryInformation extends VerticalLayout{
     
-    SalaryInformationService salaryInformationService = new SalaryInformationServiceImpl();
+    SalaryInformationService si = new SalaryInformationServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
     DropDownComponent dropDown = new DropDownComponent();
     CompanyService companyService = new CompanyServiceImpl();
@@ -79,6 +78,8 @@ public class EmployeeSalaryInformation extends VerticalLayout{
     ComboBox employmentWageStatus;
     ComboBox employmentWageEntry;
     TextField employmentWage;
+    TextArea remarks;
+    Window remarksSubWindow;
     
     public ComponentContainer layout(){        
         GridLayout glayout = new GridLayout(2, 8);
@@ -93,6 +94,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         Button esBtn = new Button("UPDATE EMPLOYMENT STATUS");
         esBtn.setWidth("100%");
         glayout.addComponent(esBtn, 1, 0);
+        esBtn.addListener(buttonClickListener);
         glayout.setColumnExpandRatio(1, 1);
         glayout.setComponentAlignment(esBtn, Alignment.BOTTOM_LEFT);
         
@@ -104,6 +106,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         
         Button ewsBtn = new Button("UPDATE EMPLOYMENT WAGE STATUS");
         ewsBtn.setWidth("100%");
+        ewsBtn.addListener(buttonClickListener);
         glayout.addComponent(ewsBtn, 1, 3);
         glayout.setComponentAlignment(ewsBtn, Alignment.BOTTOM_LEFT);
         
@@ -116,6 +119,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         Button eweBtn = new Button("UPDATE EMPLOYMENT WAGE ENTRY");
         eweBtn.setWidth("100%");
         glayout.addComponent(eweBtn, 1, 5);
+        eweBtn.addListener(buttonClickListener);
         glayout.setComponentAlignment(eweBtn, Alignment.BOTTOM_LEFT);
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 6, 1, 6);
@@ -128,10 +132,11 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         Button ewBtn = new Button("UPDATE EMPLOYMENT WAGE");
         ewBtn.setWidth("100%");
         glayout.addComponent(ewBtn, 1, 7);
+        ewBtn.addListener(buttonClickListener);
         glayout.setComponentAlignment(ewBtn, Alignment.BOTTOM_LEFT);
                                         
         if(getEmployeeId() != null){
-            EmploymentInformation ei = salaryInformationService.getEmployeeSalaryInformation(getEmployeeId());
+            EmploymentInformation ei = si.getEmployeeSalaryInformation(getEmployeeId());
             
             employmentStatus.setValue(Constant.getKeyByValue(Constant.MAP_CONSTANT_EMPLOYMENT_STATUS, ei.getEmploymentStatus()));
             employmentWageStatus.setValue(Constant.getKeyByValue(Constant.MAP_CONSTANT_EMPLOYMENT_WAGE_STATUS, ei.getEmploymentWageStatus()));
@@ -143,12 +148,98 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         return glayout;
     }
     
+    Button.ClickListener updateClickListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            if(remarks.getValue() == null || remarks.getValue().toString().trim().isEmpty()){
+                getWindow().showNotification("Add Remarks!", Window.Notification.TYPE_ERROR_MESSAGE);
+                return;
+            }
+            
+            switch(event.getButton().getCaption()){
+                case "UPDATE EMPLOYMENT STATUS" : {
+                    boolean result = si.updateEmploymentWageDetails("employmentStatus", 
+                            employmentStatus.getItem(employmentStatus.getValue()).toString(), 
+                            getEmployeeId(), 
+                            remarks.getValue().toString());
+                    
+                    if(result){
+                        getWindow().showNotification("Update Employment Status!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
+                    }
+                    
+                    break;
+                }
+                
+                case "UPDATE EMPLOYMENT WAGE STATUS" : {
+                    boolean result = si.updateEmploymentWageDetails("employmentWageStatus", 
+                            employmentWageStatus.getItem(employmentWageStatus.getValue()).toString(), 
+                            getEmployeeId(), 
+                            remarks.getValue().toString());
+                    
+                    if(result){
+                        getWindow().showNotification("Update Employment Wage Status!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
+                    }
+                    
+                    break;
+                }
+                
+                case "UPDATE EMPLOYMENT WAGE ENTRY" : {
+                    boolean result = si.updateEmploymentWageDetails("employmentWageEntry", 
+                            employmentWageEntry.getItem(employmentWageEntry.getValue()).toString(), 
+                            getEmployeeId(), 
+                            remarks.getValue().toString());
+                    
+                    if(result){
+                        getWindow().showNotification("Update Employment Wage Entry!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
+                    }
+                    
+                    break;
+                }
+                
+                default : {
+                    if(employmentWage.getValue() == null || employmentWage.getValue().toString().trim().isEmpty()){
+                        getWindow().showNotification("Enter Employment Wage!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    } else {
+                        if(!util.checkInputIfDouble(employmentWage.getValue().toString().trim())){
+                            getWindow().showNotification("Enter Numeric Format!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        }
+                    }
+                    
+                    boolean result = si.updateEmploymentWage(util.convertStringToDouble(employmentWage.getValue().toString().trim()), 
+                            remarks.getValue().toString().trim(), getEmployeeId());
+                    
+                    if(result){
+                        getWindow().showNotification("Update Employment Wage!", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                        (remarksSubWindow.getParent()).removeWindow(remarksSubWindow);
+                    }
+                    break;
+                }
+            }
+        }
+    };
+    
+    Button.ClickListener buttonClickListener = new Button.ClickListener() {
+
+        @Override
+        public void buttonClick(Button.ClickEvent event) {
+            Window sub = remarks(event.getButton().getCaption());
+            if(sub.getParent() == null){
+                getWindow().addWindow(sub);
+            }
+        }
+    };
+    
     public ComponentContainer layout2(){
-        GridLayout glayout = new GridLayout(3, 4);
+        GridLayout glayout = new GridLayout(2, 1);
         glayout.setSpacing(true);          
-        glayout.setSizeFull();
+        glayout.setWidth("600px");
         
         TextField employmentStatusField = new HRISTextField("Employment Status: ");
+        employmentStatusField.setWidth("200px");
         glayout.addComponent(employmentStatusField, 0, 0);
                 
         Button setContributionBtn = new Button("SET EMPLOYEE'S CONTRIBUTIONS MAIN BRANCH");
@@ -165,11 +256,12 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                 subWindow.center();
             }
         });
-        glayout.addComponent(setContributionBtn, 1, 0, 2, 0);
+        glayout.addComponent(setContributionBtn, 1, 0);
+        glayout.setColumnExpandRatio(1, 1);
         glayout.setComponentAlignment(setContributionBtn, Alignment.BOTTOM_CENTER);
                                                     
         if(getEmployeeId() != null){
-            EmploymentInformation employmentInformation = salaryInformationService.getEmployeeSalaryInformation(getEmployeeId());            
+            EmploymentInformation employmentInformation = si.getEmployeeSalaryInformation(getEmployeeId());            
             employmentStatusField.setValue(employmentInformation.getCurrentStatus().toUpperCase());                       
         }
         employmentStatusField.setReadOnly(true);
@@ -264,7 +356,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                         return;
                     }
                     
-                    boolean result = salaryInformationService.updateEmployeeContributionBranch(getEmployeeId(), branchId, remarks.getValue().toString());
+                    boolean result = si.updateEmployeeContributionBranch(getEmployeeId(), branchId, remarks.getValue().toString());
                     if(result){
                         getWindow().showNotification("Successfully transferred to new Branch!");
                         (subWindow.getParent()).removeWindow(subWindow);
@@ -294,7 +386,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                boolean result = salaryInformationService.editEmploymentDateEntry(getEmployeeId(), entryDate);
+                boolean result = si.editEmploymentDateEntry(getEmployeeId(), entryDate);
                 if(result){
                     getWindow().showNotification("Update Entry Date.", Window.Notification.TYPE_TRAY_NOTIFICATION);
                     (window.getParent()).removeWindow(window);
@@ -305,4 +397,28 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         
         return window;
     }    
+
+    Window remarks(final String buttonCaption){
+        VerticalLayout v = new VerticalLayout();
+        v.setWidth("100%");
+        v.setMargin(true);
+        v.setSpacing(true);        
+        
+        remarksSubWindow = new Window("REMARKS", v);
+        remarksSubWindow.setWidth("400px");
+        remarksSubWindow.setModal(true);
+        remarksSubWindow.center();
+        
+        remarks = new TextArea("Add Remarks: ");
+        remarks.setWidth("100%");
+        remarks.setRows(3);
+        remarksSubWindow.addComponent(remarks);
+        
+        Button b = new Button(buttonCaption);
+        b.setWidth("100%");
+        b.addListener(updateClickListener);
+        remarksSubWindow.addComponent(b);
+        
+        return remarksSubWindow;
+    }
 }

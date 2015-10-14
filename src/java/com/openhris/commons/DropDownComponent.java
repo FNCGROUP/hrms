@@ -133,16 +133,22 @@ public class DropDownComponent extends ComboBox {
         return employees;
     }
  
-    public ComboBox populateTotalDependent(ComboBox totalDependent){
-        totalDependent.setCaption("Total Dependent: ");
-        totalDependent.setWidth("100%");
-        totalDependent.setNullSelectionAllowed(false);         
-        Map<Integer, String> mapTotalDependent = Constant.MAP_CONSTANT_DEPENDENT;
-        for(int i = 0; i < mapTotalDependent.size(); i++){
-            totalDependent.addItem(mapTotalDependent.get(i));
+    public ComboBox populateTotalDependent(String caption){
+        ComboBox select = new ComboBox();
+        select.setCaption(caption);        
+        select.setWidth("100%");
+        select.setNullSelectionAllowed(false);
+        select.addContainerProperty("y", String.class, "");
+        select.setItemCaptionPropertyId("y");
+        
+//        Map<Integer, String> mapTotalDependent = Constant.MAP_CONSTANT_DEPENDENT;
+        Item item;
+        for(Map.Entry<Integer, String> entry : Constant.MAP_CONSTANT_DEPENDENT.entrySet()){
+            item = select.addItem(entry.getKey());
+            item.getItemProperty("y").setValue(entry.getValue());
         }
-        totalDependent.setImmediate(true);
-        return totalDependent;
+        select.setImmediate(true);
+        return select;
     }
     
     public ComboBox populateEmploymentWageStatus(String caption){

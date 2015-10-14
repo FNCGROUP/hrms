@@ -89,7 +89,7 @@ public class AddNewEmployeeWindow extends Window {
         corporation.addListener(corporateListener);
         grid.addComponent(trade, 0, 2, 1, 2);
         
-        final ComboBox dependent = dropDown.populateTotalDependent(new ComboBox());
+        final ComboBox dependent = dropDown.populateTotalDependent("Employee's Dependent");
         grid.addComponent(dependent, 2, 2);
         
         branch = new ComboBox("Branch: ");

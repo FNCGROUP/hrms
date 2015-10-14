@@ -23,7 +23,7 @@ public class AboutHRIS extends Window {
         vlayout.setSpacing(true);
         vlayout.setMargin(true);
         
-        Label version = new Label("Version: <b>1.1</b>");
+        Label version = new Label("Version: <b>1.5</b>");
         version.setContentMode(Label.CONTENT_XHTML);
         vlayout.addComponent(version);
         
