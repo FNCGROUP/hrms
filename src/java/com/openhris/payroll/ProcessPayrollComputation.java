@@ -38,8 +38,8 @@ public class ProcessPayrollComputation {
     double employmentWage;
     String employmentWageStatus;
     String employmentWageEntry;
-    double allowance;
-    String allowanceEntry;
+//    double allowance;
+//    String allowanceEntry;
     double allowanceForLiquidation;
     String totalDependent;
     
@@ -75,8 +75,8 @@ public class ProcessPayrollComputation {
         employmentWage = employeeService.getEmploymentWage(getEmployeeId());
         employmentWageStatus = employeeService.getEmploymentWageStatus(getEmployeeId());
         employmentWageEntry = employeeService.getEmploymentWageEntry(getEmployeeId());
-        allowance = employeeService.getEmploymentAllowance(getEmployeeId());
-        allowanceEntry = employeeService.getEmploymentAllowanceEntry(getEmployeeId());
+//        allowance = employeeService.getEmploymentAllowance(getEmployeeId());
+//        allowanceEntry = employeeService.getEmploymentAllowanceEntry(getEmployeeId());
         allowanceForLiquidation = employeeService.getEmploymentAllowanceForLiquidation(getEmployeeId());
         totalDependent = employeeService.getEmployeeTotalDependent(getEmployeeId());
     }

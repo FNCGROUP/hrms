@@ -123,7 +123,6 @@ public class PayrollMainUI extends VerticalLayout {
     
     public void payrollTable(int branchId, String employeeId){
         payrollTbl.removeAllItems();
-//        List<Payroll> payrollList = payrollService.getPayrollByBranchAndEmployee(branchId, employeeId);
         String payrollStatus = null;
         int i = 0;
         for(Payroll p : payrollService.getPayrollByBranchAndEmployee(branchId, employeeId)){

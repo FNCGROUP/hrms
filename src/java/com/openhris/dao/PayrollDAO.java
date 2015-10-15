@@ -39,41 +39,13 @@ public class PayrollDAO {
         String queryPayrollList;
         
         if(employeeId == null){
-//            queryPayrollList = "SELECT p.id AS id, p.employeeId AS employeeId, p.attendancePeriodFrom AS attendancePeriodFrom, "
-//                    + "p.attendancePeriodTo AS attendancePeriodTo, p.basicSalary AS basicSalary, p.halfMonthSalary AS halfMonthSalary, "
-//                    + "p.phic AS phic, p.sss AS sss, p.hdmf AS hdmf, p.absences AS absences, p.numberOfDays AS numberOfDays, "
-//                    + "p.taxableSalary AS taxableSalary, p.tax AS tax, p.cashBond AS cashBond, p.totalLatesDeduction AS totalLatesDeduction, "
-//                    + "p.totalUndertimeDeduction AS totalUndertimeDeduction, p.totalOvertimePaid AS totalOvertimePaid, "
-//                    + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
-//                    + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
-//                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.otherAllowances AS otherAllowances, "
-//                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiemAllowance AS perDiemAllowance, p.netSalary AS netSalary, "
-//                    + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
-//                    + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
-//		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
-//                    + "FROM payroll_table p INNER JOIN employee e ON p.employeeId = e.employeeId INNER JOIN employee_allowances ea ON "
-//                    + "p.employeeId = ea.employeeId WHERE e.branchId = "+branchId+" AND (e.currentStatus != 'removed' OR e.currentStatus IS NULL) "
-//                    + "ORDER BY id DESC";
             queryPayrollList = "SELECT * FROM payroll_view WHERE branchId = "+branchId+" "
-                    + "AND (currentStatus != 'removed' OR currentStatus IS NULL)";
+                    + "AND (currentStatus != 'removed' OR currentStatus IS NULL) "
+                    + "ORDER BY id DESC";
         } else {
-//            queryPayrollList = "SELECT p.id AS id, p.employeeId AS employeeId, p.attendancePeriodFrom AS attendancePeriodFrom, "
-//                    + "p.attendancePeriodTo AS attendancePeriodTo, p.basicSalary AS basicSalary, p.halfMonthSalary AS halfMonthSalary, "
-//                    + "p.phic AS phic, p.sss AS sss, p.hdmf AS hdmf, p.absences AS absences, p.numberOfDays AS numberOfDays, "
-//                    + "p.taxableSalary AS taxableSalary, p.tax AS tax, p.cashBond AS cashBond, p.totalLatesDeduction AS totalLatesDeduction, "
-//                    + "p.totalUndertimeDeduction AS totalUndertimeDeduction, p.totalOvertimePaid AS totalOvertimePaid, "
-//                    + "p.totalNightDifferentialPaid AS totalNightDifferentialPaid, p.totalDutyManagerPaid AS totalDutyManagerPaid, "
-//                    + "p.totalLegalHolidayPaid AS totalLegalHolidayPaid, p.totalSpecialHolidayPaid AS totalSpecialHolidayPaid, "
-//                    + "p.totalWorkingDayOffPaid AS totalWorkingDayOffPaid, p.otherAllowances AS otherAllowances, "
-//                    + "p.allowanceForLiquidation AS allowanceForLiquidation, p.perDiemAllowance AS perDiemAllowance, p.netSalary AS netSalary, "
-//                    + "p.amountToBeReceive AS amountToBeReceive, p.amountReceivable AS amountReceivable, e.branchId AS branchId, "
-//                    + "p.payrollPeriod AS payrollPeriod, p.payrollDate AS payrollDate, p.rowStatus AS rowStatus, "
-//		    + "p.forAdjustments AS forAdjustments, p.adjustments AS adjustments "
-//                    + "FROM payroll_table p INNER JOIN employee e ON p.employeeId = e.employeeId  INNER JOIN employee_allowances ea ON "
-//                    + "p.employeeId = ea.employeeId WHERE e.employeeId = '"+employeeId+"' AND (e.currentStatus != 'removed' OR e.currentStatus IS NULL) "
-//                    + "ORDER BY id DESC" ;
             queryPayrollList = "SELECT * FROM payroll_view WHERE employeeId = '"+employeeId+"' "
-                    + "AND (currentStatus != 'removed' OR currentStatus IS NULL)";
+                    + "AND (currentStatus != 'removed' OR currentStatus IS NULL) "
+                    + "ORDER BY id DESC";
         }
         
         List<Payroll> payrollList = new ArrayList<Payroll>();
