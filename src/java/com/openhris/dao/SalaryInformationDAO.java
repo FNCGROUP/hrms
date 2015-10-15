@@ -42,9 +42,6 @@ public class SalaryInformationDAO {
                 employeeInformation.setEmploymentWageStatus(rs.getString("employmentWageStatus"));
                 employeeInformation.setEmploymentWageEntry(rs.getString("employmentWageEntry"));
                 employeeInformation.setEmploymentWage(util.convertStringToDouble(rs.getString("employmentWage")));
-                employeeInformation.setAllowance(util.convertStringToDouble(rs.getString("allowance")));
-                employeeInformation.setAllowanceEntry(rs.getString("allowanceEntry"));
-                employeeInformation.setAfl(util.convertStringToDouble(rs.getString("allowanceForLiquidation")));
                 employeeInformation.setSssNo(rs.getString("sssNo"));
                 employeeInformation.setTinNo(rs.getString("tinNo"));
                 employeeInformation.setPhicNo(rs.getString("phicNo"));

@@ -11,7 +11,6 @@ import com.openhris.commons.HRISTextField;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.service.CompanyService;
 import com.openhris.serviceprovider.CompanyServiceImpl;
-import com.openhris.model.EmploymentInformation;
 import com.openhris.model.PostEmploymentInformationBean;
 import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
@@ -19,16 +18,11 @@ import com.vaadin.data.Property;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
-import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Label;
-import com.vaadin.ui.NativeButton;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.Window;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  *
@@ -75,12 +69,7 @@ public class AddNewEmployeeWindow extends Window {
         
         corporation = dropDown.populateCorporateComboBox(new ComboBox());        
         grid.addComponent(corporation, 0, 1, 1, 1);
-        
-//        TextField employeeIdField = new HRISTextField("Company ID:");
-//        employeeIdField.setValue(employeeId);
-//        employeeIdField.setEnabled(false);
-//        grid.addComponent(employeeIdField, 2, 1);
-        
+                
         final PopupDateField entryDate = new HRISPopupDateField("Entry Date:");
         grid.addComponent(entryDate, 2, 1);
         
@@ -129,188 +118,112 @@ public class AddNewEmployeeWindow extends Window {
         
         final ComboBox employmentWageEntry = dropDown.populateEmploymentWageEntry("Employment Wage Entry: ");
         grid.addComponent(employmentWageEntry, 2, 6);
-                
-//        final TextField employmentAllowance = new HRISTextField("Allowance");
-//        employmentAllowance.setValue("0.0");
-//        employmentAllowance.addListener(checkEntryIfDoubleListener);
-//        grid.addComponent(employmentAllowance, 1, 7);
-//        
-//        final ComboBox employmentAllowanceEntry = dropDown.populateEmploymentAllowanceEntry(new ComboBox());
-//        grid.addComponent(employmentAllowanceEntry, 2, 7);    
-        
-//        final TextField bankAccountNo = new HRISTextField("Bank Account #: ");
-//        grid.addComponent(bankAccountNo, 0, 8, 1, 8);
-        
-        if(getEmployeeId() != null){
-//            for(EmploymentInformation information : employeeService.getEmployeeEmploymentInformation(getEmployeeId())){
-//                firstname.setValue(information.getFirstname());
-//                middlename.setValue(information.getMiddlename());
-//                lastname.setValue(information.getLastname());
-//
-//                Object dependentStatusId = dependent.addItem();
-//                dependent.setItemCaption(dependentStatusId, information.getTotalDependent());
-//                dependent.setValue(dependentStatusId);
-//
-//                entryDate.setValue(information.getEntryDate());
-//                hdmfNo.setValue(information.gethdmfNo());
-//                sssNo.setValue(information.getSssNo());
-//                tinNo.setValue(information.getTinNo());
-//                peicNo.setValue(information.getPhicNo());
-//
-//                Object EmploymentStatusId = employmentStatus.addItem();
-//                employmentStatus.setItemCaption(EmploymentStatusId, information.getEmploymentStatus());
-//                employmentStatus.setValue(EmploymentStatusId);
-//
-//                Object EmploymentWageStatusId = employmentWageStatus.addItem();
-//                employmentWageStatus.setItemCaption(EmploymentWageStatusId, information.getEmploymentWageStatus());
-//                employmentWageStatus.setValue(EmploymentWageStatusId);
-//
-//                Object EmploymentWageEntryStatusId = employmentWageEntry.addItem();
-//                employmentWageEntry.setItemCaption(EmploymentWageEntryStatusId, information.getEmploymentWageEntry());
-//                employmentWageEntry.setValue(EmploymentWageEntryStatusId);
-//
-//                employmentWage.setValue(information.getEmploymentWage());
-//                employmentAllowance.setValue(information.getAllowance());
-//
-//                Object allowanceEntryStatusId = employmentAllowanceEntry.addItem();
-//                employmentAllowanceEntry.setItemCaption(allowanceEntryStatusId, information.getAllowanceEntry());
-//                employmentAllowanceEntry.setValue(allowanceEntryStatusId);
-//
-//                bankAccountNo.setValue(information.getBankAccountNo());
-//            }
-//            
-//            for(PostEmploymentInformationBean history : employeeService.getEmployeePositionHistory(getEmployeeId())){
-//                position.setValue(history.getPosition());
-//                
-//                Object companyStatusId = corporation.addItem();
-//                corporation.setItemCaption(companyStatusId, history.getCompany());
-//                corporation.setValue(companyStatusId);
-//
-//                Object tradeStatusId = trade.addItem();
-//                trade.setItemCaption(tradeStatusId, history.getTrade());
-//                trade.setValue(tradeStatusId);
-//
-//                Object branchStatusId = branch.addItem();
-//                branch.setItemCaption(tradeStatusId, history.getBranch());
-//                branch.setValue(tradeStatusId);
-//                
-//                department.setValue(history.getDepartment());
-//            }
-        } else {
-            Button saveButton = new Button("SAVE NEW EMPLOYEE");
-            saveButton.setWidth("100%");           
-            saveButton.addListener(new Button.ClickListener() {
+                        
+        Button saveButton = new Button("SAVE NEW EMPLOYEE");
+        saveButton.setWidth("100%");           
+        saveButton.addListener(new Button.ClickListener() {
 
-                @Override
-                public void buttonClick(Button.ClickEvent event) {
-                    boolean resultQueryInsert, result1, result2, checkId;
-                    boolean checkResultForDuplicate;
-                    result1 = utilities.checkInputIfDouble(employmentWage.getValue().toString().trim());
-//                    result2 = utilities.checkInputIfDouble(employmentAllowance.getValue().toString().trim());
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                boolean resultQueryInsert, result1, result2, checkId;
+                boolean checkResultForDuplicate;
+                result1 = utilities.checkInputIfDouble(employmentWage.getValue().toString().trim());
 
-                    if(corporation.getValue() == null){
-                        getWindow().showNotification("Select Corporation!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    if(trade.getValue() == null){
-                        getWindow().showNotification("Select Trade!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    if(branch.getValue() == null){
-                        getWindow().showNotification("Select Branch!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-                    
-                    if(dependent.getValue() == null){
-                        getWindow().showNotification("Select # of dependent!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if(employmentStatus.getValue() == null){
-                        getWindow().showNotification("Select Employment Status!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if(employmentWageStatus.getValue() == null){
-                        getWindow().showNotification("Select Employment Wage Status!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if(employmentWageEntry.getValue() == null){
-                        getWindow().showNotification("Select Employment Wage Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-//                    if(employmentAllowance.getValue() == null || employmentAllowance.getValue().toString().trim().equals("")){
-//                        employmentAllowanceEntry.setValue(0.0);
-//                    }
-//
-//                    if(employmentAllowanceEntry.getValue() == null){
-//                        getWindow().showNotification("Select N/A if no allowance!", Window.Notification.TYPE_ERROR_MESSAGE);
-//                        return;
-//                    }
-
-                    if(department.getValue() == null){
-                        getWindow().showNotification("Select Department!", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-                    if(result1 == false){
-                        getWindow().showNotification("Invalid Input for EmploymentWage/EmploymentAllowanceEntry", Window.Notification.TYPE_ERROR_MESSAGE);
-                        return;
-                    }
-
-                    checkResultForDuplicate = employeeService.checkForDuplicateEmployee(
-                            firstname.getValue().toString().trim().toLowerCase(), 
-                            middlename.getValue().toString().trim().toLowerCase(), 
-                            lastname.getValue().toString().trim().toLowerCase());
-                    if(checkResultForDuplicate){      
-                        try{                           
-                            errorLabel.setVisible(true);
-                        } catch (Exception e){
-                            e.printStackTrace(System.out);                            
-                        }                        
-                        return;
-                    }
-                    
-                    int corporate_id = companyService.getCorporateId(corporation.getValue().toString());
-                    int trade_id = companyService.getTradeId(trade.getValue().toString(), getCorporateId());
-                    int branch_id = companyService.getBranchId(getTradeId(), branch.getValue().toString());
-                    
-                    PostEmploymentInformationBean pe = new PostEmploymentInformationBean();
-                    pe.setFirstname(firstname.getValue().toString().trim());
-                    pe.setMiddlename(middlename.getValue().toString().trim());
-                    pe.setLastname(lastname.getValue().toString().trim());
-                    pe.setCompany(corporation.getValue().toString());
-                    pe.setTrade(trade.getValue().toString());
-                    pe.setBranch(branch.getValue().toString());
-                    pe.setBranchId(branch_id);
-                    pe.setDepartment(department.getValue().toString().trim());
-                    pe.setTotalDependent(dependent.getValue().toString());
-                    pe.setPosition(position.getValue().toString().trim());
-                    pe.setEntryDate(utilities.parsingDate(utilities.convertDateFormat(entryDate.getValue().toString())));
-                    pe.setSssNo(sssNo.getValue().toString().trim());
-                    pe.setTinNo(tinNo.getValue().toString().trim());
-                    pe.setPhicNo(peicNo.getValue().toString().trim());
-                    pe.setHdmfNo(hdmfNo.getValue().toString().trim());
-                    pe.setEmploymentStatus(employmentStatus.getValue().toString());
-                    pe.setEmploymentWageStatus(employmentWageStatus.getValue().toString().trim());
-                    pe.setEmploymentWageEntry(employmentWageEntry.getValue().toString());
-                    pe.setEmploymentWage(Double.parseDouble(employmentWage.getValue().toString().trim()));
-                    
-                    resultQueryInsert = employeeService.insertNewEmployee(pe);
-                    if(resultQueryInsert == true){
-                        close();          
-                    }else{
-                        getWindow().showNotification("SQL ERROR!");
-                    }
+                if(corporation.getValue() == null){
+                    getWindow().showNotification("Select Corporation!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
                 }
-            });
-            grid.addComponent(saveButton, 1, 7, 2, 7);
-            grid.addComponent(errorLabel, 1, 8, 2, 8);
-        }
+                    
+                if(trade.getValue() == null){
+                    getWindow().showNotification("Select Trade!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                    
+                if(branch.getValue() == null){
+                    getWindow().showNotification("Select Branch!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                    
+                if(dependent.getValue() == null){
+                    getWindow().showNotification("Select # of dependent!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+
+                if(employmentStatus.getValue() == null){
+                    getWindow().showNotification("Select Employment Status!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+
+                if(employmentWageStatus.getValue() == null){
+                    getWindow().showNotification("Select Employment Wage Status!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+
+                if(employmentWageEntry.getValue() == null){
+                    getWindow().showNotification("Select Employment Wage Entry!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+
+                if(department.getValue() == null){
+                    getWindow().showNotification("Select Department!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+
+                if(result1 == false){
+                    getWindow().showNotification("Invalid Input for EmploymentWage/EmploymentAllowanceEntry", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+
+                checkResultForDuplicate = employeeService.checkForDuplicateEmployee(
+                        firstname.getValue().toString().trim().toLowerCase(), 
+                        middlename.getValue().toString().trim().toLowerCase(), 
+                        lastname.getValue().toString().trim().toLowerCase());
+                
+                if(checkResultForDuplicate){      
+                    try{                           
+                        errorLabel.setVisible(true);
+                    } catch (Exception e){
+                        e.printStackTrace(System.out);                            
+                    }                        
+                
+                    return;
+                }
+                    
+                int corporate_id = companyService.getCorporateId(corporation.getValue().toString());
+                int trade_id = companyService.getTradeId(trade.getValue().toString(), getCorporateId());
+                int branch_id = companyService.getBranchId(getTradeId(), branch.getValue().toString());
+                    
+                PostEmploymentInformationBean pe = new PostEmploymentInformationBean();
+                pe.setFirstname(firstname.getValue().toString().trim());
+                pe.setMiddlename(middlename.getValue().toString().trim());
+                pe.setLastname(lastname.getValue().toString().trim());
+                pe.setCompany(corporation.getValue().toString());
+                pe.setTrade(trade.getValue().toString());
+                pe.setBranch(branch.getValue().toString());
+                pe.setBranchId(branch_id);
+                pe.setDepartment(department.getValue().toString().trim());
+                pe.setTotalDependent(dependent.getItem(dependent.getValue()).toString());
+                pe.setPosition(position.getValue().toString().trim());
+                pe.setEntryDate(utilities.parsingDate(utilities.convertDateFormat(entryDate.getValue().toString())));
+                pe.setSssNo(sssNo.getValue().toString().trim());
+                pe.setTinNo(tinNo.getValue().toString().trim());
+                pe.setPhicNo(peicNo.getValue().toString().trim());
+                pe.setHdmfNo(hdmfNo.getValue().toString().trim());
+                pe.setEmploymentStatus(employmentStatus.getItem(employmentStatus.getValue()).toString());
+                pe.setEmploymentWageStatus(employmentWageStatus.getItem(employmentWageStatus.getValue()).toString());
+                pe.setEmploymentWageEntry(employmentWageEntry.getItem(employmentWageEntry.getValue()).toString());
+                pe.setEmploymentWage(utilities.convertStringToDouble(employmentWage.getValue().toString().trim()));
+                    
+                resultQueryInsert = employeeService.insertNewEmployee(pe);
+                if(resultQueryInsert == true){
+                    close();          
+                }else{
+                    getWindow().showNotification("SQL ERROR!");
+                }
+            }
+        });
+        grid.addComponent(saveButton, 1, 7, 2, 7);
+        grid.addComponent(errorLabel, 1, 8, 2, 8);
         
         addComponent(grid);
     }

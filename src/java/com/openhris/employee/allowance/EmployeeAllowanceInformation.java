@@ -239,7 +239,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                         getWindow().showNotification("Enter Amount for Communication Allowance!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
                     } else {
-                        if(!util.checkInputIfInteger(communication.getValue().toString().trim())){
+                        if(!util.checkInputIfDouble(communication.getValue().toString().trim())){
                             getWindow().showNotification("Enter a Numeric Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
                             return;
                         } else {
@@ -271,7 +271,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                         getWindow().showNotification("Enter Amount for Per Diem Allowance!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
                     } else {
-                        if(!util.checkInputIfInteger(perDiem.getValue().toString().trim())){
+                        if(!util.checkInputIfDouble(perDiem.getValue().toString().trim())){
                             getWindow().showNotification("Enter a Numeric Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
                             return;
                         } else {
@@ -303,7 +303,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                         getWindow().showNotification("Enter Amount for COLA!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
                     } else {
-                        if(!util.checkInputIfInteger(cola.getValue().toString().trim())){
+                        if(!util.checkInputIfDouble(cola.getValue().toString().trim())){
                             getWindow().showNotification("Enter a Numeric Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
                             return;
                         } else {
@@ -335,7 +335,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                         getWindow().showNotification("Enter Amount for Meal Allowance!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
                     } else {
-                        if(!util.checkInputIfInteger(meal.getValue().toString().trim())){
+                        if(!util.checkInputIfDouble(meal.getValue().toString().trim())){
                             getWindow().showNotification("Enter a Numeric Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
                             return;
                         } else {
@@ -367,7 +367,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                         getWindow().showNotification("Enter Amount for Transportation Allowance!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
                     } else {
-                        if(!util.checkInputIfInteger(transportation.getValue().toString().trim())){
+                        if(!util.checkInputIfDouble(transportation.getValue().toString().trim())){
                             getWindow().showNotification("Enter a Numeric Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
                             return;
                         } else {
@@ -399,7 +399,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                         getWindow().showNotification("Enter Amount for Other Allowances!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
                     } else {
-                        if(!util.checkInputIfInteger(others.getValue().toString().trim())){
+                        if(!util.checkInputIfDouble(others.getValue().toString().trim())){
                             getWindow().showNotification("Enter a Numeric Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
                             return;
                         } else {
@@ -431,7 +431,7 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
                         getWindow().showNotification("Enter Amount for Allowance for Liquidation!", Window.Notification.TYPE_ERROR_MESSAGE);
                         return;
                     } else {
-                        if(!util.checkInputIfInteger(afl.getValue().toString().trim())){
+                        if(!util.checkInputIfDouble(afl.getValue().toString().trim())){
                             getWindow().showNotification("Enter a Numeric Amount!", Window.Notification.TYPE_ERROR_MESSAGE);
                             return;
                         } 
