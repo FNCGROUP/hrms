@@ -1157,6 +1157,13 @@ public class PayrollDAO {
                     double previousAdvances = 0;
 		    double previousAmountReceived = 0;
                     
+                    double communication = 0;
+                    double perDiem = 0;
+                    double cola = 0;
+                    double meal = 0;
+                    double transportation = 0;
+                    double others = 0;
+                                        
                     stmt = conn.createStatement();
                     rs = stmt.executeQuery("SELECT * FROM payroll_register WHERE salaryId = "+previousPayrollId+" ");
                     while(rs.next()){
@@ -1164,13 +1171,19 @@ public class PayrollDAO {
                         phic = util.convertStringToDouble(rs.getString("phic"));
                         hdmf = util.convertStringToDouble(rs.getString("hdmf"));
                         tax = util.convertStringToDouble(rs.getString("tax"));
-                        allowance = util.convertStringToDouble(rs.getString("allowance"));
                         afl = util.convertStringToDouble(rs.getString("allowanceForLiquidation"));
+                        communication = util.convertStringToDouble(rs.getString("communicationAllowance"));
+                        perDiem = util.convertStringToDouble(rs.getString("perDiemAllowance"));
+                        cola = util.convertStringToDouble(rs.getString("colaAllowance"));
+                        meal = util.convertStringToDouble(rs.getString("mealAllowance"));
+                        transportation = util.convertStringToDouble(rs.getString("transportationAllowance"));
+                        others = util.convertStringToDouble(rs.getString("otherAllowances"));
                         previousAdvances = util.convertStringToDouble(rs.getString("advances"));
                         previousAdjustments = util.convertStringToDouble(rs.getString("adjustments"));
                         previousAmountReceived = util.convertStringToDouble(rs.getString("amountReceivable"));
                     }
                     
+                    allowance = communication + perDiem + cola + meal + transportation + others;
                     double netSalary = payroll.getGrossPay() - sss - phic - hdmf - tax; 
                     double amountToBeReceive = (netSalary + allowance + afl + previousAdjustments + forAdjustment) - previousAdvances;
                     forAdjustment = amountToBeReceive - previousAmountReceived;
@@ -1181,7 +1194,6 @@ public class PayrollDAO {
                             + "hdmf = ?, "
                             + "tax = ?, "
                             + "netSalary = ?, "
-                            + "allowance = ?, "
                             + "allowanceForLiquidation = ?, " 
                             + "adjustments = ?, "
 			    + "amountToBeReceive = ?, "
@@ -1193,13 +1205,12 @@ public class PayrollDAO {
 		    pstmt.setDouble(3, hdmf);
                     pstmt.setDouble(4, tax);
 		    pstmt.setDouble(5, netSalary);
-		    pstmt.setDouble(6, allowance);
-                    pstmt.setDouble(7, afl);
-		    pstmt.setDouble(8, previousAdjustments);
-		    pstmt.setDouble(9, amountToBeReceive);
-                    pstmt.setDouble(10, previousAmountReceived);
-		    pstmt.setDouble(11, forAdjustment);
-                    pstmt.setInt(12, payrollId);
+                    pstmt.setDouble(6, afl);
+		    pstmt.setDouble(7, previousAdjustments);
+		    pstmt.setDouble(8, amountToBeReceive);
+                    pstmt.setDouble(9, previousAmountReceived);
+		    pstmt.setDouble(10, forAdjustment);
+                    pstmt.setInt(11, payrollId);
 		    pstmt.executeUpdate();
 		    
 		    pstmt = conn.prepareStatement("UPDATE payroll_table SET actionTaken = 'adjusted' WHERE id = "+payrollId+" ");

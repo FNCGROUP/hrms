@@ -187,8 +187,7 @@ public class ProcessPayrollComputation {
             double meal = pa.getMealAllowance(policyList, getEmployeeId());
             double transportation = pa.getTransportationAllowance(policyList, getEmployeeId());
             double others = pa.getOtherAllowance(policyList, getEmployeeId());
-//            allowance = payrollComputation.getAllowance(policyList, allowanceEntry, allowance);
-//            payroll.setAllowance(allowance);            
+            
             payroll.setCommunicationAllowance(communication);            
             payroll.setPerDiemAllowance(perDiem);           
             payroll.setColaAllowance(cola);         

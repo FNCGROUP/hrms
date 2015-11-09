@@ -46,7 +46,9 @@ public class PayrollAllowances {
             }
             amount = halfAllowance;
         }
-        return util.roundOffToTwoDecimalPlaces(amount);
+        
+//        return util.roundOffToTwoDecimalPlaces(amount);
+        return amount;
     }
     
     public double getPerDiemAllowance(List policyList, String employeeId){
@@ -75,7 +77,9 @@ public class PayrollAllowances {
             }
             amount = halfAllowance;
         }
-        return util.roundOffToTwoDecimalPlaces(amount);
+        
+//        return util.roundOffToTwoDecimalPlaces(amount);        
+        return amount;
     }
         
     public double getColaAllowance(List policyList, String employeeId){
@@ -104,7 +108,9 @@ public class PayrollAllowances {
             }
             amount = halfAllowance;
         }
-        return util.roundOffToTwoDecimalPlaces(amount);
+        
+//        return util.roundOffToTwoDecimalPlaces(amount);
+        return amount;
     }
     
     public double getMealAllowance(List policyList, String employeeId){
@@ -133,7 +139,9 @@ public class PayrollAllowances {
             }
             amount = halfAllowance;
         }
-        return util.roundOffToTwoDecimalPlaces(amount);
+        
+//        return util.roundOffToTwoDecimalPlaces(amount);
+        return amount;
     }
     
     public double getTransportationAllowance(List policyList, String employeeId){
@@ -162,7 +170,9 @@ public class PayrollAllowances {
             }
             amount = halfAllowance;
         }
-        return util.roundOffToTwoDecimalPlaces(amount);
+        
+//        return util.roundOffToTwoDecimalPlaces(amount);
+        return amount;
     }
     
     public double getOtherAllowance(List policyList, String employeeId){
@@ -191,6 +201,8 @@ public class PayrollAllowances {
             }
             amount = halfAllowance;
         }
-        return util.roundOffToTwoDecimalPlaces(amount);
+        
+//        return util.roundOffToTwoDecimalPlaces(amount);
+        return amount;
     }
 }

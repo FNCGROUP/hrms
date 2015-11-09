@@ -687,7 +687,7 @@ public class ServiceGetDAO {
         ResultSet rs = null; 
         double allowanceForLiquidation = 0;
         try {
-            pstmt = conn.prepareStatement(" SELECT allowanceForLiquidation FROM employee WHERE "
+            pstmt = conn.prepareStatement(" SELECT allowanceForLiquidation FROM employee_allowances WHERE "
                     + "employeeId = ? ");
             pstmt.setString(1, employeeId);
             rs = pstmt.executeQuery();

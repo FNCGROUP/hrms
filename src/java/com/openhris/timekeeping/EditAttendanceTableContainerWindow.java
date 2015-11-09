@@ -467,12 +467,12 @@ public class EditAttendanceTableContainerWindow extends Window {
             public void buttonClick(Button.ClickEvent event) {                
                 try{                                       
                     Collection attendanceTableCollection = table.getContainerDataSource().getItemIds();
-                    List<Timekeeping> attendanceList = new ArrayList<Timekeeping>();
+                    List<Timekeeping> attendanceList = new ArrayList<>();
                     Iterator iterator = attendanceTableCollection.iterator();
                     while(iterator.hasNext()){
                         String str = table.getItem(iterator.next()).toString();
                         String[] attStr = str.split(" ");
-                        List<String> tkeepList = new ArrayList<String>(Arrays.asList(attStr));                                                
+                        List<String> tkeepList = new ArrayList<>(Arrays.asList(attStr));                                                
 
                         Timekeeping t = new Timekeeping();
                         t.setAttendanceDate(utilities.parsingDate(tkeepList.get(1)));
