@@ -11,7 +11,6 @@ import com.openhris.model.Payroll;
 import com.openhris.model.PayrollRegister;
 import com.openhris.service.PayrollService;
 import com.openhris.model.Timekeeping;
-import com.vaadin.data.Item;
 import java.util.List;
 
 /**

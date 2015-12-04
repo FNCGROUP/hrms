@@ -10,6 +10,7 @@ import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.model.Adjustment;
 import com.openhris.model.Advances;
+import com.openhris.model.Branch;
 import com.openhris.model.Payroll;
 import com.openhris.model.PayrollRegister;
 import com.openhris.model.Timekeeping;
@@ -92,6 +93,12 @@ public class PayrollDAO {
 		p.setForAdjustments(util.convertStringToDouble(rs.getString("forAdjustments")));
 		p.setAdjustment(util.convertStringToDouble(rs.getString("adjustments")));
                 p.setRowStatus(rs.getString("rowStatus"));
+                
+                Branch b = new Branch();
+                b.setTradeName(rs.getString("tradeName"));
+                b.setBranchName(rs.getString("branchName"));
+                p.setBranch(b);
+                
                 payrollList.add(p);
             }
         } catch (SQLException ex) {

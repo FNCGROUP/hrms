@@ -57,6 +57,7 @@ public class Payroll extends Employee {
     private Date payrollDate;
     private String rowStatus;
     private String actionTaken;
+    private Branch branch;
 
     TimekeepingService tkService = new TimekeepingServiceImpl();
     
@@ -227,6 +228,10 @@ public class Payroll extends Employee {
         return actionTaken;
     }
 
+    public Branch getBranch() {
+        return branch;
+    }
+
     public void setId(int id){
         this.id = id;
     }
@@ -390,5 +395,9 @@ public class Payroll extends Employee {
     public void setActionTaken(String actionTaken) {
         this.actionTaken = actionTaken;
     }    
+
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
     
 }

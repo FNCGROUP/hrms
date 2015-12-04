@@ -28,11 +28,7 @@ import java.util.List;
 public class EmployeeMainUI extends VerticalLayout {
     
     Table employeesTbl = new Table();
-        
-//    final CorporateName corporateNames = new CorporateName();
-//    final TradeName tradeNames = new TradeName();
-//    final BranchName branchNames = new BranchName();
-    
+            
     EmployeeService employeeService = new EmployeeServiceImpl();
     CompanyService companyService = new CompanyServiceImpl();
     DropDownComponent dropDown = new DropDownComponent();    
@@ -74,11 +70,7 @@ public class EmployeeMainUI extends VerticalLayout {
 	hsplit.setSizeFull();
         addComponent(hsplit);
         setExpandRatio(hsplit, 1.0f);
-                        
-//        corporateNames.setUserRole(userRole);
-//        tradeNames.setUserRole(userRole);
-//        branchNames.setUserRole(userRole);
-        
+                                
     }
         
     public void employeesTable(List<Employee> employeeList){
@@ -128,6 +120,6 @@ public class EmployeeMainUI extends VerticalLayout {
     }
     
     public List<Employee> getEmployeeList(int branchId){
-        return employeeService.getEmployeePerBranch(branchId);
+        return employeeService.getEmployeePerBranchMainView(branchId);
     }    
 }

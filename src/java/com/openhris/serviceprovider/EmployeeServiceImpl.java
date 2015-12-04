@@ -131,5 +131,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     public boolean updateEmploymentAllowanceForLiquidation(double afl, String employeeId) {
         return serviceUpdate.updateEmploymentAllowanceForLiquidation(afl, employeeId);
     }
+
+    @Override
+    public List<Employee> getEmployeePerBranchMainView(int branchId) {
+        return employeeDAO.getEmployeePerBranchMainView(branchId);
+    }
     
 }

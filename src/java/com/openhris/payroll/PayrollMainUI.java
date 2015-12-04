@@ -167,7 +167,9 @@ public class PayrollMainUI extends VerticalLayout {
                     utililities.roundOffToTwoDecimalPlaces(p.getForAdjustments()), 
                     p.getPayrollPeriod(), 
                     utililities.convertDateFormat(p.getPayrollDate().toString()), 
-                    payrollStatus
+                    payrollStatus, 
+                    p.getBranch().getTradeName(), 
+                    p.getBranch().getBranchName()
                 }, new Integer(i));
             }
             i++;
