@@ -648,19 +648,11 @@ public class MainApp extends Application {
         payrollMenuGrid.addComponent(payrollAdvancesLedgerUI);
         ts.addComponent(payrollMenuGrid);
         
-//        payrollMenuGrid = new GridLayout();
-//        payrollMenuGrid.setSizeFull();
-//        payrollMenuGrid.setCaption("201 Summary");
-//        payrollMenuGrid.addComponent(form201);
-//        ts.addComponent(payrollMenuGrid);
         
         return ts;
     }
     
-    ComponentContainer buildLoansComponent(){
-//        loansModule = new LoansModule(GlobalVariables.getUserRole());
-//        ledgerModule = new LedgerModule(GlobalVariables.getUserRole());
-        
+    ComponentContainer buildLoansComponent(){        
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
         ts.addStyleName("bar");
@@ -874,11 +866,11 @@ public class MainApp extends Application {
     }
     
     public List<Employee> getEmployeeListByBranch(int branchId){
-        return employeeService.getEmployeePerBranch(branchId);
+        return employeeService.getEmployeePerBranchMainView(branchId);
     }
     
     public List<Employee> getAllEmployees(){
-        return employeeService.getAllEmployees();
+        return employeeService.getAllEmployeeMainView();
     }
     
     public int getUserId(){

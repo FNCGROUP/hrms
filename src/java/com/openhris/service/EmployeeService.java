@@ -27,6 +27,8 @@ public interface EmployeeService {
     
     public List<Employee> getEmployeePerBranchMainView(int branchId);
     
+    public List<Employee> getAllEmployeeMainView();
+    
     public List<PostEmploymentInformationBean> getEmployeePositionHistory(String employeeId);
     
     public List<EmploymentInformation> getEmployeeEmploymentInformation(String employeeId);

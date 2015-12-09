@@ -136,5 +136,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> getEmployeePerBranchMainView(int branchId) {
         return employeeDAO.getEmployeePerBranchMainView(branchId);
     }
+
+    @Override
+    public List<Employee> getAllEmployeeMainView() {
+        return employeeDAO.getAllEmployeeMainView();
+    }
     
 }
