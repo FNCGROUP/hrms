@@ -170,7 +170,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 			excelExport.excludeCollapsedColumns();
 			excelExport.setReportTitle(companyService.getTradeById(tradeId).toUpperCase()+" Payroll Register "
                                     +new Label(companyService.getBranchById(getBranchId()), Label.CONTENT_PREFORMATTED));
-			excelExport.setExportFileName(companyService.getTradeById(tradeId).toUpperCase()+"-Payroll Register");
+			excelExport.setExportFileName(companyService.getTradeById(tradeId).toUpperCase()+"-Payroll Register"+".xls");
 			excelExport.export();
 		}
 	});

@@ -14,9 +14,12 @@ import com.openhris.model.Employee;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.openhris.model.Advances;
 import com.openhris.model.Payroll;
+import com.openhris.service.CompanyService;
 import com.openhris.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;
+import com.openhris.serviceprovider.CompanyServiceImpl;
+import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
@@ -26,6 +29,7 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.DateField;
 import com.vaadin.ui.GridLayout;
+import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.TabSheet;
 import com.vaadin.ui.Table;
@@ -47,6 +51,7 @@ public class PayrollMainUI extends VerticalLayout {
     OpenHrisUtilities utililities = new OpenHrisUtilities();
     PayrollService payrollService = new PayrollServiceImpl();
     EmployeeService employeeService = new EmployeeServiceImpl();
+    CompanyService companyService = new CompanyServiceImpl();
     DropDownComponent dropDown = new DropDownComponent();
     ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
     AdministratorService administratorService = new AdministratorServiceImpl();
@@ -80,7 +85,7 @@ public class PayrollMainUI extends VerticalLayout {
         
         vsplit.setSplitPosition(90, Sizeable.UNITS_PIXELS);
         
-        GridLayout glayout = new GridLayout(2, 1);
+        GridLayout glayout = new GridLayout(3, 1);
         glayout.setWidth("60%");
         glayout.setMargin(true);
         glayout.setSpacing(true);
@@ -111,6 +116,40 @@ public class PayrollMainUI extends VerticalLayout {
         });
         glayout.addComponent(generatePayrollButton, 1, 0);
         glayout.setComponentAlignment(generatePayrollButton, Alignment.BOTTOM_LEFT);
+        
+        Button exportTableToExcel = new Button();
+	if(!UserAccessControl.isPayroll()){
+            exportTableToExcel.setCaption("Export Table to Excel is Disabled");
+            exportTableToExcel.setEnabled(UserAccessControl.isPayroll());
+        } else {
+            exportTableToExcel.setCaption("Export Table to Excel");
+            exportTableToExcel.setEnabled(UserAccessControl.isPayroll());
+        }
+	exportTableToExcel.setWidth("100%");
+	exportTableToExcel.addListener(new Button.ClickListener() {
+
+	    private static final long serialVersionUID = -73954695086117200L;
+            private ExcelExport excelExport;
+		
+		@Override
+		public void buttonClick(Button.ClickEvent event) {
+			
+                    if(employeesName.getValue() == null){
+                        getWindow().showNotification("Select an Employee!", Window.Notification.TYPE_WARNING_MESSAGE);
+                        return;
+                    }
+                    
+                    int tradeId = companyService.getTradeIdByBranchId(getBranchId());
+                    excelExport = new ExcelExport(payrollTbl, "Payroll Ledger");
+                    excelExport.excludeCollapsedColumns();
+                    excelExport.setReportTitle(employeesName.getValue().toString().toUpperCase()+" Payroll Ledger "
+                            +new Label(companyService.getBranchById(getBranchId()), Label.CONTENT_PREFORMATTED));
+                    excelExport.setExportFileName(employeesName.getValue().toString().replace(" ", "_").replace(",", "_").toUpperCase()+"-Payroll Ledger"+".xls");
+                    excelExport.export();
+		}
+	});
+	glayout.addComponent(exportTableToExcel, 2, 0);
+        glayout.setComponentAlignment(exportTableToExcel, Alignment.BOTTOM_LEFT);
         
         vsplit.setFirstComponent(glayout);        
         addComponent(vsplit);
