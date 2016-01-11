@@ -6,6 +6,7 @@ package com.openhris.service;
 
 import com.openhris.model.Phic;
 import com.openhris.model.Sss;
+import com.openhris.model.SssSchedule;
 import com.openhris.model.Tax;
 import java.util.List;
 
@@ -34,4 +35,6 @@ public interface ContributionService {
     public double getSssTableLastRowMaxSalary();
     
     public double getPhicTableLastRowMaxSalary();
+    
+    public List<SssSchedule> getSssEmployerShare(int corporateId, int month, int year);
 }

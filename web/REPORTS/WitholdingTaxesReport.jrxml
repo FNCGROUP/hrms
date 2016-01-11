@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WitholdingTaxesReport" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8f5e13d7-6ed5-408f-a6cc-101a4722300a">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="WitholdingTaxesReport" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8f5e13d7-6ed5-408f-a6cc-101a4722300a">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT e.tinNo AS tinNo, CONCAT_WS(', ', setNameToUpper(e.lastname), CONCAT_WS(' ', setNameToUpper(e.firstname), setNameToUpper(e.middlename))) AS name, ROUND(s.tax, 2) AS tax, b.name AS branch, tn.name AS tradeName, cn.name AS corporateName, tn.tinNo AS erTinNo, b.address AS address, s.payrollDate AS payrollDate 
-FROM employee e 
-INNER JOIN payroll_table s ON e.employeeId = s.employeeId 
-INNER JOIN branch_table b ON e.branchId = b.id 
-INNER JOIN trade_table tn ON b.tradeId = tn.id 
-INNER JOIN corporate_table cn ON 
-tn.corporateId = cn.id 
-WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) AND 
+		<![CDATA[SELECT e.tinNo AS tinNo, CONCAT_WS(', ', setNameToUpper(e.lastname), CONCAT_WS(' ', setNameToUpper(e.firstname), setNameToUpper(e.middlename))) AS name, ROUND(s.tax, 2) AS tax, b.name AS branch, tn.name AS tradeName, cn.name AS corporateName, tn.tinNo AS erTinNo, b.address AS address, s.payrollDate AS payrollDate
+FROM employee e
+INNER JOIN payroll_table s ON e.employeeId = s.employeeId
+INNER JOIN branch_table b ON e.branchId = b.id
+INNER JOIN trade_table tn ON b.tradeId = tn.id
+INNER JOIN corporate_table cn ON
+tn.corporateId = cn.id
+WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) AND
 (SELECT branchId FROM employee_contribution_main WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND s.tax != 0 ORDER BY e.lastname ASC]]>
 	</queryString>
 	<field name="tinNo" class="java.lang.String"/>
@@ -32,126 +32,147 @@ WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) AND
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="140" splitType="Stretch">
+		<band height="150" splitType="Stretch">
 			<line>
-				<reportElement uuid="2d8e2b77-1fb3-4f4e-937f-089a68132f8c" x="82" y="121" width="138" height="1"/>
+				<reportElement x="84" y="121" width="138" height="1" uuid="2d8e2b77-1fb3-4f4e-937f-089a68132f8c"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="edc11e37-f098-431a-a553-ea24eb1346f9" x="134" y="34" width="300" height="18"/>
+				<reportElement x="134" y="34" width="300" height="18" uuid="edc11e37-f098-431a-a553-ea24eb1346f9"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="bb107e4a-871f-401f-8664-a9535b868278" x="0" y="102" width="82" height="20"/>
+				<reportElement x="0" y="102" width="82" height="20" uuid="bb107e4a-871f-401f-8664-a9535b868278"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Employer's TIN ID No: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="0615b23a-4ea4-42f4-97aa-3d45b2b2a195" x="187" y="74" width="100" height="18"/>
+				<reportElement x="187" y="74" width="100" height="18" uuid="0615b23a-4ea4-42f4-97aa-3d45b2b2a195"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<text><![CDATA[For the Month of ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b" x="132" y="16" width="100" height="18"/>
+				<reportElement x="132" y="16" width="100" height="18" uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
 				<text><![CDATA[Operated By:  ]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="67583d33-b725-419b-b193-905114034554" x="82" y="102" width="138" height="20"/>
+				<reportElement x="84" y="102" width="138" height="20" uuid="67583d33-b725-419b-b193-905114034554"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{erTinNo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="8162cf8a-c02f-4c6c-a638-ea34624938be" x="183" y="-1" width="200" height="18"/>
+				<reportElement x="183" y="-1" width="200" height="18" uuid="8162cf8a-c02f-4c6c-a638-ea34624938be"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tradeName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM yyyy">
-				<reportElement uuid="1ad9c4d7-89ed-48db-acc5-b9217576f73f" x="290" y="74" width="100" height="18"/>
+				<reportElement x="290" y="74" width="100" height="18" uuid="1ad9c4d7-89ed-48db-acc5-b9217576f73f"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba" x="235" y="16" width="200" height="18"/>
+				<reportElement x="235" y="16" width="200" height="18" uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="d38d681d-8fee-469d-910e-f01c2bd3b846" x="173" y="56" width="230" height="18"/>
+				<reportElement x="173" y="56" width="230" height="18" uuid="d38d681d-8fee-469d-910e-f01c2bd3b846"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Schedule of Witholding Taxes - Compensation]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="0" y="121" width="82" height="20" uuid="514a207c-3ec8-4cfa-b19e-25bb549fb33b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Branch:   ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="84" y="121" width="100" height="20" uuid="e2c4b900-75bd-48a4-8832-e1b4ca209802"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{branch}.toUpperCase()]]></textFieldExpression>
+			</textField>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="99bb64be-bc8c-4437-8c37-8bce323105cd" x="151" y="0" width="100" height="20"/>
+				<reportElement x="151" y="0" width="100" height="20" uuid="99bb64be-bc8c-4437-8c37-8bce323105cd"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[TIN ID No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="fef1aebd-eeae-4320-a600-acf31c5ae4a8" x="251" y="0" width="100" height="20"/>
+				<reportElement x="251" y="0" width="100" height="20" uuid="fef1aebd-eeae-4320-a600-acf31c5ae4a8"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="65fadc56-4a18-4f39-bd8a-97c4264ddfea" x="351" y="0" width="80" height="20"/>
+				<reportElement x="351" y="0" width="80" height="20" uuid="65fadc56-4a18-4f39-bd8a-97c4264ddfea"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<line>
-				<reportElement uuid="e523e2c4-804a-4671-b66b-25ca597ff671" x="151" y="19" width="280" height="1"/>
+				<reportElement x="151" y="19" width="280" height="1" uuid="e523e2c4-804a-4671-b66b-25ca597ff671"/>
 			</line>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="703a57ec-9043-4fbb-b87f-57f31af74d71" x="151" y="0" width="100" height="20"/>
+				<reportElement x="151" y="0" width="100" height="20" uuid="703a57ec-9043-4fbb-b87f-57f31af74d71"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tinNo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="2adda820-85f1-4c14-addc-9957203aa14a" x="251" y="0" width="100" height="20"/>
+				<reportElement x="251" y="0" width="100" height="20" uuid="2adda820-85f1-4c14-addc-9957203aa14a"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement uuid="ba953864-a5eb-473a-8e15-35389f4e81e1" x="351" y="0" width="80" height="20"/>
+				<reportElement x="351" y="0" width="80" height="20" uuid="ba953864-a5eb-473a-8e15-35389f4e81e1"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tax}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="131" y="0" width="20" height="20" uuid="b1f1ad6c-4e24-4f37-8bd8-ffe7cc6a29ed"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}+"."]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<pageFooter>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement uuid="8440e653-e80d-4fd6-b456-2ae7d9d656a5" x="0" y="0" width="100" height="20"/>
+				<reportElement x="0" y="0" width="100" height="20" uuid="8440e653-e80d-4fd6-b456-2ae7d9d656a5"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -162,82 +183,82 @@ WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) AND
 	<summary>
 		<band height="110" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="2c63b0d7-4e68-4649-b5c9-d95895a8acea" x="206" y="60" width="100" height="20"/>
+				<reportElement x="206" y="60" width="100" height="20" uuid="2c63b0d7-4e68-4649-b5c9-d95895a8acea"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Vouchers Payable]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="f0460a76-ebe1-453c-b6cc-7c9f5b077600" x="206" y="20" width="81" height="20"/>
+				<reportElement x="206" y="20" width="81" height="20" uuid="f0460a76-ebe1-453c-b6cc-7c9f5b077600"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Journal Entry: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="d93a8be3-8a78-40b0-b9f1-aaa6b35d6f6b" x="270" y="0" width="81" height="20"/>
+				<reportElement x="270" y="0" width="81" height="20" uuid="d93a8be3-8a78-40b0-b9f1-aaa6b35d6f6b"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="de73cc35-aa74-41f7-b4ff-ee289f8f47bb" x="206" y="40" width="109" height="20"/>
+				<reportElement x="206" y="40" width="109" height="20" uuid="de73cc35-aa74-41f7-b4ff-ee289f8f47bb"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Witholding Taxes Payable]]></text>
 			</staticText>
 			<textField pattern="#,##0.00">
-				<reportElement uuid="b238023b-99e6-4062-976e-cc0413985eaa" x="351" y="0" width="80" height="20"/>
+				<reportElement x="351" y="0" width="80" height="20" uuid="b238023b-99e6-4062-976e-cc0413985eaa"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement uuid="dcf59eb3-9721-436e-8cb4-a14ecee5e169" x="351" y="40" width="80" height="20"/>
+				<reportElement x="351" y="40" width="80" height="20" uuid="dcf59eb3-9721-436e-8cb4-a14ecee5e169"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement uuid="87d7fb5e-aa54-4dd9-bbf0-4e9807dee8f7" x="431" y="60" width="80" height="20"/>
+				<reportElement x="431" y="60" width="80" height="20" uuid="87d7fb5e-aa54-4dd9-bbf0-4e9807dee8f7"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="e12d2aaf-7f78-41e4-a0b3-491db2d8c4ad" x="351" y="0" width="80" height="1"/>
+				<reportElement x="351" y="0" width="80" height="1" uuid="e12d2aaf-7f78-41e4-a0b3-491db2d8c4ad"/>
 			</line>
 			<line>
-				<reportElement uuid="0d8ded1f-54ae-44bd-8159-98da52b629c6" x="351" y="102" width="160" height="1"/>
+				<reportElement x="351" y="102" width="160" height="1" uuid="0d8ded1f-54ae-44bd-8159-98da52b629c6"/>
 			</line>
 			<line>
-				<reportElement uuid="12ccfeb0-352a-4095-9f9b-6a1524e2dc44" x="351" y="20" width="80" height="1"/>
+				<reportElement x="351" y="20" width="80" height="1" uuid="12ccfeb0-352a-4095-9f9b-6a1524e2dc44"/>
 			</line>
 			<line>
-				<reportElement uuid="8aefa1dc-1e39-4857-917c-389ce8283b82" x="351" y="80" width="160" height="1"/>
+				<reportElement x="351" y="80" width="160" height="1" uuid="8aefa1dc-1e39-4857-917c-389ce8283b82"/>
 			</line>
 			<textField pattern="#,##0.00">
-				<reportElement uuid="466a7436-1d7e-4687-8995-7aa57a758a8e" x="351" y="80" width="80" height="20"/>
+				<reportElement x="351" y="80" width="80" height="20" uuid="466a7436-1d7e-4687-8995-7aa57a758a8e"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement uuid="8fae1362-11c9-46cc-b260-2b9ee0dc620f" x="431" y="80" width="80" height="20"/>
+				<reportElement x="431" y="80" width="80" height="20" uuid="8fae1362-11c9-46cc-b260-2b9ee0dc620f"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="abc6cb5b-bb53-4d93-b61f-91af57b694e6" x="351" y="100" width="160" height="1"/>
+				<reportElement x="351" y="100" width="160" height="1" uuid="abc6cb5b-bb53-4d93-b61f-91af57b694e6"/>
 			</line>
 		</band>
 	</summary>

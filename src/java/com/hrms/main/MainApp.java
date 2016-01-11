@@ -38,6 +38,7 @@ import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.PayrollMainUI;
 import com.openhris.payroll.PayrollRegisterMainUI;
+import com.openhris.payroll.SssEmployerShareUI;
 import com.openhris.timekeeping.TimekeepingMainUI;
 import com.vaadin.Application;
 import com.vaadin.event.ItemClickEvent;
@@ -97,6 +98,7 @@ public class MainApp extends Application {
     UserAdvanceAccessMainUI userAdvanceAccessMainUI;    
     SchedulerMainUI schedulerMainUI;
     PayrollAdvancesLedgerUI payrollAdvancesLedgerUI;
+    SssEmployerShareUI shareUI;
     
     AdvanceUserAccessModule advanceUserAccess = new AdvanceUserAccessModule();
     CreateNewUser createNewUser;
@@ -454,6 +456,8 @@ public class MainApp extends Application {
                     
                     usersMainUI.employeeComboBox(branchId);
                     usersMainUI.setBranchId(branchId);
+                    
+                    shareUI.setBranchId(branchId);
                 }
                 
             }
@@ -625,6 +629,7 @@ public class MainApp extends Application {
         payrollMainUI = new PayrollMainUI(getBranchId());
         payrollRegisterMainUI = new PayrollRegisterMainUI(getBranchId());
         payrollAdvancesLedgerUI = new PayrollAdvancesLedgerUI(getBranchId());
+        shareUI = new SssEmployerShareUI(getBranchId());
         
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
@@ -644,8 +649,9 @@ public class MainApp extends Application {
         
         payrollMenuGrid = new GridLayout();
         payrollMenuGrid.setSizeFull();
-        payrollMenuGrid.setCaption("Ledger");
-        payrollMenuGrid.addComponent(payrollAdvancesLedgerUI);
+        payrollMenuGrid.setCaption("SSS");
+//        payrollMenuGrid.addComponent(payrollAdvancesLedgerUI);
+        payrollMenuGrid.addComponent(shareUI);
         ts.addComponent(payrollMenuGrid);
         
         
