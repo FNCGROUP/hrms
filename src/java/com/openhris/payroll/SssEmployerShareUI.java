@@ -81,7 +81,9 @@ public class SssEmployerShareUI extends VerticalLayout {
                 excelExport = new ExcelExport(sssTable, "SSS Remitance");
 		excelExport.excludeCollapsedColumns();
                 excelExport.setReportTitle(cs.getCorporateById(corporateId).toUpperCase()+" SSS Employer Share Remitance");
-		excelExport.setExportFileName(cs.getCorporateById(corporateId).replace(",", " ").toUpperCase()+"-SSS-Remitance"+".xls");
+		excelExport.setExportFileName(
+                        cs.getCorporateById(corporateId).replace(",", " ").toUpperCase()
+                        +"-SSS-Remitance-"+util.convertDateFormat(payrollDateField.getValue().toString())+".xls");
 		excelExport.export();
             }
         });

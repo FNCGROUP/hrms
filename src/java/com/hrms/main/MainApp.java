@@ -650,10 +650,14 @@ public class MainApp extends Application {
         payrollMenuGrid = new GridLayout();
         payrollMenuGrid.setSizeFull();
         payrollMenuGrid.setCaption("SSS");
-//        payrollMenuGrid.addComponent(payrollAdvancesLedgerUI);
         payrollMenuGrid.addComponent(shareUI);
         ts.addComponent(payrollMenuGrid);
         
+        payrollMenuGrid = new GridLayout();
+        payrollMenuGrid.setSizeFull();
+        payrollMenuGrid.setCaption("Bank Debit Memo");
+//        payrollMenuGrid.addComponent(shareUI);
+        ts.addComponent(payrollMenuGrid);        
         
         return ts;
     }
