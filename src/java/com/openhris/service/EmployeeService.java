@@ -17,7 +17,7 @@ public interface EmployeeService {
         
     public String getEmployeeId(String name);
     
-    public List<Employee> getEmployeeById(String employeeId);
+    public List<EmploymentInformation> findBankDebitMemo(int branchId, String payrollDate);
             
     public List<Employee> getAllEmployees();
         

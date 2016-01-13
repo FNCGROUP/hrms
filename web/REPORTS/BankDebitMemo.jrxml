@@ -97,70 +97,70 @@ WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) AND s.branchId =
 	<columnHeader>
 		<band height="23" splitType="Stretch">
 			<staticText>
-				<reportElement x="115" y="0" width="80" height="20" uuid="9ecf0f32-ddfa-4ff7-802e-d9bb67402b18"/>
+				<reportElement x="91" y="0" width="120" height="20" uuid="9ecf0f32-ddfa-4ff7-802e-d9bb67402b18"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Employee's ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="195" y="0" width="100" height="20" uuid="db0ff3af-ffdd-436e-aa2e-aca04786a4a1"/>
+				<reportElement x="211" y="0" width="100" height="20" uuid="db0ff3af-ffdd-436e-aa2e-aca04786a4a1"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Bank Account No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="295" y="0" width="120" height="20" uuid="e0d3e318-2c00-4988-99e0-39fa21567ef8"/>
+				<reportElement x="311" y="0" width="120" height="20" uuid="e0d3e318-2c00-4988-99e0-39fa21567ef8"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="415" y="0" width="80" height="20" uuid="798fc30c-a0f7-48e0-b491-370c6a9de1ea"/>
+				<reportElement x="431" y="0" width="80" height="20" uuid="798fc30c-a0f7-48e0-b491-370c6a9de1ea"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<line>
-				<reportElement x="115" y="21" width="380" height="1" uuid="91b073ce-2c7b-4c78-a19a-e8c7356e0045"/>
+				<reportElement x="91" y="21" width="420" height="1" uuid="91b073ce-2c7b-4c78-a19a-e8c7356e0045"/>
 			</line>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="22" splitType="Stretch">
 			<textField>
-				<reportElement x="115" y="0" width="80" height="20" uuid="e62a4e4a-8e68-405f-8718-647350338d60"/>
+				<reportElement x="91" y="0" width="120" height="20" uuid="e62a4e4a-8e68-405f-8718-647350338d60"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="195" y="0" width="100" height="20" uuid="1eb52a2d-8af1-4751-ab2f-84882e15329e"/>
+				<reportElement x="211" y="0" width="100" height="20" uuid="1eb52a2d-8af1-4751-ab2f-84882e15329e"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{bankAccountNo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="295" y="0" width="120" height="20" uuid="addbc93e-ed4c-428a-b830-3c23a4d2afcf"/>
+				<reportElement x="311" y="0" width="120" height="20" uuid="addbc93e-ed4c-428a-b830-3c23a4d2afcf"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="415" y="0" width="80" height="20" uuid="cd3652f1-9c87-4c5e-9383-1c89e491a07f"/>
+				<reportElement x="431" y="0" width="80" height="20" uuid="cd3652f1-9c87-4c5e-9383-1c89e491a07f"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="95" y="0" width="20" height="20" uuid="1928bf0d-25e1-4bcc-a736-04e14d8d71df"/>
+				<reportElement x="71" y="0" width="20" height="20" uuid="1928bf0d-25e1-4bcc-a736-04e14d8d71df"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>

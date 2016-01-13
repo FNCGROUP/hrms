@@ -33,6 +33,7 @@ import com.openhris.contributions.ContributionComponentContainer;
 import com.openhris.employee.AddNewEmployeeWindow;
 import com.openhris.employee.EmployeeMainUI;
 import com.openhris.model.Employee;
+import com.openhris.payroll.BankDebitMemoUI;
 import com.openhris.payroll.PayrollAdvancesLedgerUI;
 import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
@@ -99,6 +100,7 @@ public class MainApp extends Application {
     SchedulerMainUI schedulerMainUI;
     PayrollAdvancesLedgerUI payrollAdvancesLedgerUI;
     SssEmployerShareUI shareUI;
+    BankDebitMemoUI debitMemoUI;
     
     AdvanceUserAccessModule advanceUserAccess = new AdvanceUserAccessModule();
     CreateNewUser createNewUser;
@@ -458,6 +460,7 @@ public class MainApp extends Application {
                     usersMainUI.setBranchId(branchId);
                     
                     shareUI.setBranchId(branchId);
+                    debitMemoUI.setBranchId(branchId);
                 }
                 
             }
@@ -630,6 +633,7 @@ public class MainApp extends Application {
         payrollRegisterMainUI = new PayrollRegisterMainUI(getBranchId());
         payrollAdvancesLedgerUI = new PayrollAdvancesLedgerUI(getBranchId());
         shareUI = new SssEmployerShareUI(getBranchId());
+        debitMemoUI = new BankDebitMemoUI(getBranchId());
         
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
@@ -656,7 +660,7 @@ public class MainApp extends Application {
         payrollMenuGrid = new GridLayout();
         payrollMenuGrid.setSizeFull();
         payrollMenuGrid.setCaption("Bank Debit Memo");
-//        payrollMenuGrid.addComponent(shareUI);
+        payrollMenuGrid.addComponent(debitMemoUI);
         ts.addComponent(payrollMenuGrid);        
         
         return ts;

@@ -4,6 +4,8 @@
  */
 package com.openhris.serviceprovider;
 
+import com.hrms.dbconnection.GetSQLConnection;
+import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceInsertDAO;
 import com.openhris.dao.ServiceUpdateDAO;
@@ -12,13 +14,23 @@ import com.openhris.model.Employee;
 import com.openhris.model.EmploymentInformation;
 import com.openhris.model.PostEmploymentInformationBean;
 import com.openhris.service.EmployeeService;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author jet
  */
 public class EmployeeServiceImpl implements EmployeeService {
+    
+    GetSQLConnection getConnection = new GetSQLConnection(); 
+    OpenHrisUtilities util = new OpenHrisUtilities();
     
     ServiceGetDAO serviceGet = new ServiceGetDAO();
     ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
@@ -32,8 +44,50 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<Employee> getEmployeeById(String employeeId) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public List<EmploymentInformation> findBankDebitMemo(int branchId, String payrollDate) {
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<EmploymentInformation> eiList = new ArrayList<>();        
+        
+        try {
+            pstmt = conn.prepareStatement("SELECT e.bankAccountNo AS BankAccountNo, "
+                    + "e.employeeId AS EmployeeNo, "
+                    + "e.firstname As Firstname, "
+                    + "e.middlename AS Middlename, "
+                    + "e.lastname AS Lastname, "
+                    + "s.amountToBeReceive AS Amount "
+                    + "FROM employee e INNER JOIN payroll_table s ON e.employeeId = s.employeeId "
+                    + "WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) "
+                    + "AND s.branchId = ? AND s.payrollDate = ? ORDER BY e.lastname ASC ");
+            pstmt.setInt(1, branchId);
+            pstmt.setString(2, payrollDate);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                EmploymentInformation ei = new EmploymentInformation();
+                ei.setEmployeeId(rs.getString("EmployeeNo"));
+                ei.setBankAccountNo(rs.getString("BankAccountNo"));
+                ei.setFirstname(rs.getString("Firstname"));
+                ei.setMiddlename(rs.getString("Middlename"));
+                ei.setLastname(rs.getString("Lastname"));
+                ei.setEmploymentWage(util.convertStringToDouble(rs.getString("Amount")));
+                eiList.add(ei);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(EmployeeServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return eiList;
     }
 
     @Override
