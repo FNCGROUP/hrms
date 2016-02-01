@@ -123,6 +123,12 @@ public class PostEmploymentInfomation extends VerticalLayout{
         newPositionBtn.setValue(true);
         newPositionBtn.setImmediate(true);
         glayout.addComponent(newPositionBtn, 0, 2);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            newPositionBtn.setEnabled(true);
+        } else {
+            newPositionBtn.setEnabled(false);
+        }
         
         updateBtn = new Button();
         updateBtn.setCaption(BTN_CAPTION_1);
@@ -214,6 +220,12 @@ public class PostEmploymentInfomation extends VerticalLayout{
                 }
             }
         });
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            updateBtn.setEnabled(true);
+        } else {
+            updateBtn.setEnabled(false);
+        }
         glayout.addComponent(updateBtn, 1, 2, 2, 2);
         
         return glayout;
@@ -318,6 +330,12 @@ public class PostEmploymentInfomation extends VerticalLayout{
         });
         glayout2.addComponent(endDateBtn, 1, 0);
         glayout2.setComponentAlignment(endDateBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            endDateBtn.setEnabled(true);
+        } else {
+            endDateBtn.setEnabled(false);
+        }        
                                 
         hlayout.addComponent(glayout2);
         hlayout.setComponentAlignment(glayout2, Alignment.MIDDLE_RIGHT);
@@ -348,6 +366,12 @@ public class PostEmploymentInfomation extends VerticalLayout{
         });
         glayout2.addComponent(entryDateFromEmpBtn, 1, 1);
         glayout2.setComponentAlignment(entryDateFromEmpBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            entryDateFromEmpBtn.setEnabled(true);
+        } else {
+            entryDateFromEmpBtn.setEnabled(false);
+        }
         
         return hlayout;
     }

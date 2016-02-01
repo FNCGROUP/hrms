@@ -90,6 +90,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         communicationBtn.addListener(buttonClickListener);
         glayout.addComponent(communicationBtn, 2, 0);
         glayout.setComponentAlignment(communicationBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            communicationBtn.setEnabled(true);
+        } else {
+            communicationBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 1, 2, 1);
         
@@ -107,6 +113,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         perDiemBtn.addListener(buttonClickListener);
         glayout.addComponent(perDiemBtn, 2, 2);
         glayout.setComponentAlignment(perDiemBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            perDiemBtn.setEnabled(true);
+        } else {
+            perDiemBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 3, 2, 3);
         
@@ -124,6 +136,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         colaBtn.addListener(buttonClickListener);
         glayout.addComponent(colaBtn, 2, 4);
         glayout.setComponentAlignment(colaBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            colaBtn.setEnabled(true);
+        } else {
+            colaBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 5, 2, 5);
         
@@ -141,6 +159,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         mealBtn.addListener(buttonClickListener);
         glayout.addComponent(mealBtn, 2, 6);
         glayout.setComponentAlignment(mealBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            mealBtn.setEnabled(true);
+        } else {
+            mealBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 7, 2, 7);
         
@@ -158,6 +182,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         transportationBtn.addListener(buttonClickListener);
         glayout.addComponent(transportationBtn, 2, 8);
         glayout.setComponentAlignment(transportationBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            transportationBtn.setEnabled(true);
+        } else {
+            transportationBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 9, 2, 9);
         
@@ -175,6 +205,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         othersBtn.addListener(buttonClickListener);
         glayout.addComponent(othersBtn, 2, 10);
         glayout.setComponentAlignment(othersBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            othersBtn.setEnabled(true);
+        } else {
+            othersBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 11, 2, 11);
         
@@ -188,6 +224,12 @@ public class EmployeeAllowanceInformation extends VerticalLayout {
         aflBtn.addListener(buttonClickListener);
         glayout.addComponent(aflBtn, 1, 12, 2, 12);
         glayout.setComponentAlignment(aflBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            aflBtn.setEnabled(true);
+        } else {
+            aflBtn.setEnabled(false);
+        }
         
         if(getEmployeeId() != null){
             Allowances a = ais.getAllowancesByEmployee(getEmployeeId());

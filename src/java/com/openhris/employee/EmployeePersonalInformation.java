@@ -435,6 +435,12 @@ public class EmployeePersonalInformation extends VerticalLayout{
 		}
 	    }
 	});
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            saveButton.setEnabled(true);
+        } else {
+            saveButton.setEnabled(false);
+        }
         glayout.addComponent(saveButton, 2, 13, 3, 13);
                         
         glayout.setColumnExpandRatio(1, .10f);

@@ -75,6 +75,12 @@ public class OtherInformation extends VerticalLayout {
         tinBtn.addListener(buttonClickListener);
         glayout.addComponent(tinBtn, 1, 0);
         glayout.setComponentAlignment(tinBtn, Alignment.BOTTOM_CENTER);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            tinBtn.setEnabled(true);
+        } else {
+            tinBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 1, 1, 1);
         
@@ -87,6 +93,12 @@ public class OtherInformation extends VerticalLayout {
         edBtn.addListener(buttonClickListener);
         glayout.addComponent(edBtn, 1, 2);
         glayout.setComponentAlignment(edBtn, Alignment.BOTTOM_CENTER);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            edBtn.setEnabled(true);
+        } else {
+            edBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 3, 1, 3);
         
@@ -98,6 +110,12 @@ public class OtherInformation extends VerticalLayout {
         sssbtn.addListener(buttonClickListener);
         glayout.addComponent(sssbtn, 1, 4);
         glayout.setComponentAlignment(sssbtn, Alignment.BOTTOM_CENTER);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            sssbtn.setEnabled(true);
+        } else {
+            sssbtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 5, 1, 5);
         
@@ -109,6 +127,12 @@ public class OtherInformation extends VerticalLayout {
         phicBtn.addListener(buttonClickListener);
         glayout.addComponent(phicBtn, 1, 6);
         glayout.setComponentAlignment(phicBtn, Alignment.BOTTOM_CENTER);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            phicBtn.setEnabled(true);
+        } else {
+            phicBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 7, 1, 7);
         
@@ -120,6 +144,12 @@ public class OtherInformation extends VerticalLayout {
         hdmfBtn.addListener(buttonClickListener);
         glayout.addComponent(hdmfBtn, 1, 8);
         glayout.setComponentAlignment(hdmfBtn, Alignment.BOTTOM_CENTER);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            hdmfBtn.setEnabled(true);
+        } else {
+            hdmfBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 9, 1, 9);
                 
@@ -132,6 +162,12 @@ public class OtherInformation extends VerticalLayout {
         bankAccountBtn.addListener(buttonClickListener);
         glayout.addComponent(bankAccountBtn, 1, 10);
         glayout.setComponentAlignment(bankAccountBtn, Alignment.BOTTOM_CENTER);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            bankAccountBtn.setEnabled(true);
+        } else {
+            bankAccountBtn.setEnabled(false);
+        }
 
         if(getEmployeeId() != null){
             EmploymentInformation ei = si.getEmployeeSalaryInformation(getEmployeeId());
@@ -141,7 +177,6 @@ public class OtherInformation extends VerticalLayout {
             phicField.setValue(ei.getPhicNo());
             hdmfField.setValue(ei.gethdmfNo());
             bankAccountNo.setValue(ei.getBankAccountNo());
-//            employmentStatusField.setValue(ei.getEmploymentStatus());
             employeeDependent.setValue(Constant.getKeyByValue(Constant.MAP_CONSTANT_DEPENDENT, ei.getTotalDependent()));
         }
         

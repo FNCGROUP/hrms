@@ -41,7 +41,33 @@ public class SalaryInformationServiceImpl implements SalaryInformationService{
 
     @Override
     public boolean updateEmployeeContributionBranch(String employeeId, int branchId, String remarks) {
-        return siDAO.updateEmployeeContributionBranch(employeeId, branchId, remarks);
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        boolean result = false;
+        
+        try {
+            pstmt = conn.prepareStatement("INSERT INTO employee_contribution_main(employeeId, branchId, remarks, dateTransferred) "
+                    + "VALUES(?, ?, ?, now())");
+            pstmt.setString(1, employeeId);
+            pstmt.setInt(2, branchId);
+            pstmt.setString(3, remarks.toLowerCase());
+            pstmt.executeUpdate();
+            
+            result = true;
+        } catch (SQLException ex) {
+            Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(SalaryInformationDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 
     @Override

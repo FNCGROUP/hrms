@@ -28,7 +28,7 @@ import com.vaadin.ui.Window;
  *
  * @author jetdario
  */
-public class AddNewEmployeeWindow extends Window {
+public class NewEmployeeWindow extends Window {
     
     EmployeeService employeeService = new EmployeeServiceImpl();
     CompanyService companyService = new CompanyServiceImpl();
@@ -46,7 +46,7 @@ public class AddNewEmployeeWindow extends Window {
     
     Label errorLabel = new Label("<p style=\"color: red\">*Duplicate Entry!</p>", Label.CONTENT_RAW);
 
-    public AddNewEmployeeWindow(String employeeId) {
+    public NewEmployeeWindow(String employeeId) {
         this.employeeId = employeeId;
         
         setCaption("New Employee");

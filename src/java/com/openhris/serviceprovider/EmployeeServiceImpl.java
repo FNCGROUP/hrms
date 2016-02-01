@@ -18,6 +18,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -122,7 +123,41 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public boolean checkForDuplicateEmployee(String firstname, String middlename, String lastname) {
-        return serviceInsert.checkForDuplicateEntry(firstname, middlename, lastname);
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        Boolean result = true;
+        
+        try {
+            pstmt = conn.prepareStatement("SELECT COUNT(*) AS result FROM employee "
+                    + "WHERE firstname = ? "
+                    + "AND middlename = ? "
+                    + "AND lastname = ? "
+                    + "AND currentStatus IS NULL");
+            pstmt.setString(1, firstname);
+            pstmt.setString(2, middlename);
+            pstmt.setString(3, lastname);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                if(rs.getString("result").equals("0")){
+                    result = false;
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceInsertDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceInsertDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 
     @Override

@@ -97,6 +97,12 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         esBtn.addListener(buttonClickListener);
         glayout.setColumnExpandRatio(1, 1);
         glayout.setComponentAlignment(esBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            esBtn.setEnabled(true);
+        } else {
+            esBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 2, 1, 2);
         
@@ -109,6 +115,12 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         ewsBtn.addListener(buttonClickListener);
         glayout.addComponent(ewsBtn, 1, 3);
         glayout.setComponentAlignment(ewsBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            ewsBtn.setEnabled(true);
+        } else {
+            ewsBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 4, 1, 4);
         
@@ -121,6 +133,12 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         glayout.addComponent(eweBtn, 1, 5);
         eweBtn.addListener(buttonClickListener);
         glayout.setComponentAlignment(eweBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            eweBtn.setEnabled(true);
+        } else {
+            eweBtn.setEnabled(false);
+        }
         
         glayout.addComponent(new Label("<HR>", Label.CONTENT_XHTML), 0, 6, 1, 6);
         
@@ -134,6 +152,12 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         glayout.addComponent(ewBtn, 1, 7);
         ewBtn.addListener(buttonClickListener);
         glayout.setComponentAlignment(ewBtn, Alignment.BOTTOM_LEFT);
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            ewBtn.setEnabled(true);
+        } else {
+            ewBtn.setEnabled(false);
+        }
                                         
         if(getEmployeeId() != null){
             EmploymentInformation ei = si.getEmployeeSalaryInformation(getEmployeeId());
@@ -259,7 +283,13 @@ public class EmployeeSalaryInformation extends VerticalLayout{
         glayout.addComponent(setContributionBtn, 1, 0);
         glayout.setColumnExpandRatio(1, 1);
         glayout.setComponentAlignment(setContributionBtn, Alignment.BOTTOM_CENTER);
-                                                    
+        if(GlobalVariables.getUserRole().equals("administrator") || 
+                GlobalVariables.getUserRole().equals("hr")){
+            setContributionBtn.setEnabled(true);
+        } else {
+            setContributionBtn.setEnabled(false);
+        }                                 
+        
         if(getEmployeeId() != null){
             EmploymentInformation employmentInformation = si.getEmployeeSalaryInformation(getEmployeeId());            
             employmentStatusField.setValue(employmentInformation.getCurrentStatus().toUpperCase());                       

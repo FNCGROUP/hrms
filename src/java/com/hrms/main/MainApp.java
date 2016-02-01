@@ -30,7 +30,7 @@ import com.openhris.model.Trade;
 import com.openhris.service.CompanyService;
 import com.openhris.serviceprovider.CompanyServiceImpl;
 import com.openhris.contributions.ContributionComponentContainer;
-import com.openhris.employee.AddNewEmployeeWindow;
+import com.openhris.employee.NewEmployeeWindow;
 import com.openhris.employee.EmployeeMainUI;
 import com.openhris.model.Employee;
 import com.openhris.payroll.BankDebitMemoUI;
@@ -475,7 +475,7 @@ public class MainApp extends Application {
 
             @Override
             public void buttonClick(ClickEvent event) {
-                Window subWindow = new AddNewEmployeeWindow(null);
+                Window subWindow = new NewEmployeeWindow(null);
                 subWindow.setModal(true);
                 if(subWindow.getParent() == null){
                     window.getWindow().addWindow(subWindow);
