@@ -196,7 +196,7 @@ public class ProcessPayrollComputation {
             payroll.setOtherAllowances(others);            
 
             double allowances = communication + perDiem + cola + meal + transportation + others;
-            
+                        
             int numberOfDays = payrollComputation.getNumberOfDays(dateList, policyList);
             payroll.setNumOfDays(numberOfDays);
 
@@ -219,7 +219,7 @@ public class ProcessPayrollComputation {
             payroll.setAmountToBeReceive(amountToBeReceive); 
 
             double adjustment = payrollComputation.getAdjustmentFromPreviousPayroll(employeeId); 
-	    
+	                
             result = payrollService.insertPayrollAndAttendance(payroll, 
                     timekeepingList, 
                     adjustment, 

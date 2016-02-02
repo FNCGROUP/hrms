@@ -1060,6 +1060,10 @@ public class PayrollDAO {
         PreparedStatement pstmt = null;
         Statement stmt = null;
         ResultSet rs = null;
+        
+        System.out.println("cola: "+payroll.getColaAllowance());
+        System.out.println("meal: "+payroll.getMealAllowance());
+        
         try {
             conn.setAutoCommit(false);
                 pstmt = conn.prepareStatement("INSERT INTO payroll_table(employeeId, attendancePeriodFrom, attendancePeriodTo, "
@@ -1158,18 +1162,18 @@ public class PayrollDAO {
                     double hdmf = 0;
                     double tax = 0;
                     double allowance = 0;
-                    double afl = 0;
+                    double afl = payroll.getAllowanceForLiquidation();
                     double forAdjustment = 0;
                     double previousAdjustments = 0;
                     double previousAdvances = 0;
 		    double previousAmountReceived = 0;
                     
-                    double communication = 0;
-                    double perDiem = 0;
-                    double cola = 0;
-                    double meal = 0;
-                    double transportation = 0;
-                    double others = 0;
+                    double communication = payroll.getCommunicationAllowance();
+                    double perDiem = payroll.getPerDiemAllowance();
+                    double cola = payroll.getColaAllowance();
+                    double meal = payroll.getMealAllowance();
+                    double transportation = payroll.getTransportationAllowance();
+                    double others = payroll.getOtherAllowances();
                                         
                     stmt = conn.createStatement();
                     rs = stmt.executeQuery("SELECT * FROM payroll_register WHERE salaryId = "+previousPayrollId+" ");
@@ -1178,13 +1182,13 @@ public class PayrollDAO {
                         phic = util.convertStringToDouble(rs.getString("phic"));
                         hdmf = util.convertStringToDouble(rs.getString("hdmf"));
                         tax = util.convertStringToDouble(rs.getString("tax"));
-                        afl = util.convertStringToDouble(rs.getString("allowanceForLiquidation"));
-                        communication = util.convertStringToDouble(rs.getString("communicationAllowance"));
-                        perDiem = util.convertStringToDouble(rs.getString("perDiemAllowance"));
-                        cola = util.convertStringToDouble(rs.getString("colaAllowance"));
-                        meal = util.convertStringToDouble(rs.getString("mealAllowance"));
-                        transportation = util.convertStringToDouble(rs.getString("transportationAllowance"));
-                        others = util.convertStringToDouble(rs.getString("otherAllowances"));
+//                        afl = util.convertStringToDouble(rs.getString("allowanceForLiquidation"));
+//                        communication = util.convertStringToDouble(rs.getString("communicationAllowance"));
+//                        perDiem = util.convertStringToDouble(rs.getString("perDiemAllowance"));
+//                        cola = util.convertStringToDouble(rs.getString("colaAllowance"));
+//                        meal = util.convertStringToDouble(rs.getString("mealAllowance"));
+//                        transportation = util.convertStringToDouble(rs.getString("transportationAllowance"));
+//                        others = util.convertStringToDouble(rs.getString("otherAllowances"));
                         previousAdvances = util.convertStringToDouble(rs.getString("advances"));
                         previousAdjustments = util.convertStringToDouble(rs.getString("adjustments"));
                         previousAmountReceived = util.convertStringToDouble(rs.getString("amountReceivable"));
