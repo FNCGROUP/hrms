@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.payroll;
+package com.openhris.payroll.contributions;
 
 import com.openhris.commons.HRISPopupDateField;
 import com.openhris.commons.OpenHrisUtilities;
@@ -13,7 +13,6 @@ import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.VerticalLayout;
 import java.util.Calendar;
@@ -23,17 +22,17 @@ import java.util.Date;
  *
  * @author jetdario
  */
-public class SssEmployerShareUI extends VerticalLayout {
+public class BankDebitMemoUI extends VerticalLayout {
 
     CompanyService cs = new CompanyServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
     
-    SssTableProperties sssTable = new SssTableProperties();    
+    BankDebitMemoTableProperties debitMemoTable = new BankDebitMemoTableProperties();    
     private int branchId;
     private int tradeId;
     private int corporateId;
     
-    public SssEmployerShareUI(int branchId) {
+    public BankDebitMemoUI(int branchId) {
         this.branchId = branchId;
         
         setSizeFull();
@@ -49,7 +48,7 @@ public class SssEmployerShareUI extends VerticalLayout {
         payrollDateField.setWidth("200px");
         h.addComponent(payrollDateField);
         
-        Button generateBtn = new Button("GENERATE SSS ER-SHARE");
+        Button generateBtn = new Button("GENERATE BANK DEBIT MEMO");
         generateBtn.setWidth("200px");
         generateBtn.addListener(new Button.ClickListener() {
 
@@ -62,7 +61,7 @@ public class SssEmployerShareUI extends VerticalLayout {
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
                 
-                sssTable.setContainerDataSource(new SssDataContainer(corporateId, (1 + c.get(Calendar.MONTH)), c.get(Calendar.YEAR)));
+                debitMemoTable.setContainerDataSource(new BankDebitMemoContainer(getBranchId(), util.convertDateFormat(date.toString())));
                 
             }
         });
@@ -78,12 +77,12 @@ public class SssEmployerShareUI extends VerticalLayout {
             
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                excelExport = new ExcelExport(sssTable, "SSS Remitance");
+                excelExport = new ExcelExport(debitMemoTable, "BANK DEBIT MEMO");
 		excelExport.excludeCollapsedColumns();
-                excelExport.setReportTitle(cs.getCorporateById(corporateId).toUpperCase()+" SSS Employer Share Remitance");
+                excelExport.setReportTitle(cs.getCorporateById(corporateId).toUpperCase()+" Bank Debit Memo");
 		excelExport.setExportFileName(
                         cs.getCorporateById(corporateId).replace(",", " ").toUpperCase()
-                        +"-SSS-Remitance-"+util.convertDateFormat(payrollDateField.getValue().toString())+".xls");
+                        +"-Bank-Debit-Memo-"+util.convertDateFormat(payrollDateField.getValue().toString())+".xls");
 		excelExport.export();
             }
         });
@@ -92,8 +91,8 @@ public class SssEmployerShareUI extends VerticalLayout {
         h.setExpandRatio(exportTableToExcel, 2);
         
         addComponent(h);
-        addComponent(sssTable);
-        setExpandRatio(sssTable, 2);
+        addComponent(debitMemoTable);
+        setExpandRatio(debitMemoTable, 2);
     }
     
     int getBranchId(){

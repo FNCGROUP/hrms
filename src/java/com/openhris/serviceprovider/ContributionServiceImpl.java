@@ -12,6 +12,7 @@ import com.openhris.model.Tax;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceInsertDAO;
 import com.openhris.dao.ServiceUpdateDAO;
+import com.openhris.model.PhicSchedule;
 import com.openhris.model.SssSchedule;
 import com.openhris.service.ContributionService;
 import java.sql.Connection;
@@ -88,7 +89,7 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
-    public List<SssSchedule> getSssEmployerShare(int corporateId, int month, int year) {
+    public List<SssSchedule> getSssContribution(int corporateId, int month, int year) {
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -108,8 +109,11 @@ public class ContributionServiceImpl implements ContributionService {
                 SssSchedule s = new SssSchedule();
                 s.setEmployeeId(rs.getString("employeeId"));
                 s.setName(rs.getString("name"));
+                s.setSssNo(rs.getString("sssNo"));
+                s.setEeShare(util.convertStringToDouble(rs.getString("eeShare")));
                 s.setErShare(util.convertStringToDouble(rs.getString("erShare")));
                 s.setEc(util.convertStringToDouble(rs.getString("ec")));
+                s.setBranch(rs.getString("branch"));
                 sssList.add(s);
             }
         } catch (SQLException ex) {
@@ -128,5 +132,49 @@ public class ContributionServiceImpl implements ContributionService {
         
         return sssList;
     }
-    
+
+    @Override
+    public List<PhicSchedule> getPhicContribution(int corporateId, int month, int year) {
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<PhicSchedule> psList = new ArrayList<>();
+                
+        try {
+            pstmt = conn.prepareStatement("SELECT * FROM phic_schedule "
+                    + "WHERE (CurrentStatus != 'removed' OR CurrentStatus IS NULL) "
+                    + "AND CorporateID = ? "
+                    + "AND MONTH(payrollDate) = ? "
+                    + "AND YEAR(payrollDate) = ? "
+                    + "AND PhicAmount != 0 ORDER BY EmployeeName ASC");
+            pstmt.setInt(1, corporateId);
+            pstmt.setInt(2, month);
+            pstmt.setInt(3, year);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                PhicSchedule ps = new PhicSchedule();
+                ps.setEmployeeId(rs.getString("EmployeeID"));
+                ps.setEmployeeName(rs.getString("EmployeeName"));
+                ps.setPhicNo(rs.getString("PhicNo"));
+                ps.setEePhic(util.convertStringToDouble(rs.getString("PhicAmount")));
+                ps.setErPhic(util.convertStringToDouble(rs.getString("PhicAmount")));
+                ps.setBranchName(rs.getString("BranchName"));
+                psList.add(ps);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ContributionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ContributionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return psList;
+    }    
 }

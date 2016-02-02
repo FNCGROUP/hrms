@@ -33,13 +33,14 @@ import com.openhris.contributions.ContributionComponentContainer;
 import com.openhris.employee.NewEmployeeWindow;
 import com.openhris.employee.EmployeeMainUI;
 import com.openhris.model.Employee;
-import com.openhris.payroll.BankDebitMemoUI;
+import com.openhris.payroll.contributions.BankDebitMemoUI;
 import com.openhris.payroll.PayrollAdvancesLedgerUI;
 import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.PayrollMainUI;
 import com.openhris.payroll.PayrollRegisterMainUI;
-import com.openhris.payroll.SssEmployerShareUI;
+import com.openhris.payroll.contributions.PhicUI;
+import com.openhris.payroll.contributions.SssUI;
 import com.openhris.timekeeping.TimekeepingMainUI;
 import com.vaadin.Application;
 import com.vaadin.event.ItemClickEvent;
@@ -99,7 +100,8 @@ public class MainApp extends Application {
     UserAdvanceAccessMainUI userAdvanceAccessMainUI;    
     SchedulerMainUI schedulerMainUI;
     PayrollAdvancesLedgerUI payrollAdvancesLedgerUI;
-    SssEmployerShareUI shareUI;
+    SssUI sssUI;
+    PhicUI phicUI;
     BankDebitMemoUI debitMemoUI;
     
     AdvanceUserAccessModule advanceUserAccess = new AdvanceUserAccessModule();
@@ -268,20 +270,28 @@ public class MainApp extends Application {
                 event.getButton().addStyleName("selected");
                 hsplit.setSecondComponent((Component) event.getButton().getData());
                 
-                if(event.getButton().getCaption().equals("MAIN")){
-                    mainMenuBar = true;
-                } else if (event.getButton().getCaption().equals("TIMEKEEPING")) {
-                    timekeepingMenuBar = true;             
-                } else if (event.getButton().getCaption().equals("PAYROLL")) {
-                    payrollMenuBar = true;
-                } else if (event.getButton().getCaption().equals("LOANS")) {
-                    loansMenuBar = true;
-                } else if (event.getButton().getCaption().equals("CALENDAR")) {
-                    eventsMenuBar = true;
-                } else if (event.getButton().getCaption().equals("ADMINISTRATOR")) {
-                    contributionMenuBar = true;
-                } else {
-                    administratorMenuBar = true;
+                switch (event.getButton().getCaption()) {
+                    case "MAIN":
+                        mainMenuBar = true;
+                        break;
+                    case "TIMEKEEPING":
+                        timekeepingMenuBar = true;
+                        break;
+                    case "PAYROLL":
+                        payrollMenuBar = true;
+                        break;
+                    case "LOANS":
+                        loansMenuBar = true;
+                        break;
+                    case "CALENDAR":
+                        eventsMenuBar = true;
+                        break;
+                    case "ADMINISTRATOR":
+                        contributionMenuBar = true;
+                        break;
+                    default:
+                        administratorMenuBar = true;
+                        break;
                 }
                 setBooleanToolbar();
             }
@@ -459,7 +469,8 @@ public class MainApp extends Application {
                     usersMainUI.employeeComboBox(branchId);
                     usersMainUI.setBranchId(branchId);
                     
-                    shareUI.setBranchId(branchId);
+                    sssUI.setBranchId(branchId);
+                    phicUI.setBranchId(branchId);
                     debitMemoUI.setBranchId(branchId);
                 }
                 
@@ -632,7 +643,8 @@ public class MainApp extends Application {
         payrollMainUI = new PayrollMainUI(getBranchId());
         payrollRegisterMainUI = new PayrollRegisterMainUI(getBranchId());
         payrollAdvancesLedgerUI = new PayrollAdvancesLedgerUI(getBranchId());
-        shareUI = new SssEmployerShareUI(getBranchId());
+        sssUI = new SssUI(getBranchId());
+        phicUI = new PhicUI(getBranchId());
         debitMemoUI = new BankDebitMemoUI(getBranchId());
         
         TabSheet ts = new TabSheet();
@@ -654,7 +666,13 @@ public class MainApp extends Application {
         payrollMenuGrid = new GridLayout();
         payrollMenuGrid.setSizeFull();
         payrollMenuGrid.setCaption("SSS");
-        payrollMenuGrid.addComponent(shareUI);
+        payrollMenuGrid.addComponent(sssUI);
+        ts.addComponent(payrollMenuGrid);
+        
+        payrollMenuGrid = new GridLayout();
+        payrollMenuGrid.setSizeFull();
+        payrollMenuGrid.setCaption("PHIC");
+        payrollMenuGrid.addComponent(phicUI);
         ts.addComponent(payrollMenuGrid);
         
         payrollMenuGrid = new GridLayout();

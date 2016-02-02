@@ -14,8 +14,10 @@ public class SssSchedule {
     private String employeeId;
     private String name;
     private String sssNo;
+    private double eeShare;
     private double erShare;
     private double ec;
+    private String branch;
 
     public String getEmployeeId() {
         return employeeId;
@@ -29,12 +31,20 @@ public class SssSchedule {
         return sssNo;
     }
 
+    public double getEeShare() {
+        return eeShare;
+    }
+
     public double getErShare() {
         return erShare;
     }
 
     public double getEc() {
         return ec;
+    }
+
+    public String getBranch() {
+        return branch;
     }
 
     public void setEmployeeId(String employeeId) {
@@ -49,12 +59,20 @@ public class SssSchedule {
         this.sssNo = sssNo;
     }
 
+    public void setEeShare(double eeShare) {
+        this.eeShare = eeShare;
+    }
+
     public void setErShare(double erShare) {
         this.erShare = erShare;
     }
 
     public void setEc(double ec) {
         this.ec = ec;
+    }
+
+    public void setBranch(String branch) {
+        this.branch = branch;
     }
     
 }

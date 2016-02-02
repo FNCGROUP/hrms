@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.payroll;
+package com.openhris.payroll.contributions;
 
 import com.vaadin.ui.Table;
 
@@ -18,7 +18,7 @@ public class SssTableProperties extends Table {
     private int year;
 
     public SssTableProperties() {
-        setWidth("600px");
+        setWidth("900px");
         setHeight("100%");
         setImmediate(true);
         setSelectable(true);
@@ -26,9 +26,15 @@ public class SssTableProperties extends Table {
         
         setContainerDataSource(new SssDataContainer());
         
+        setColumnHeader("employeeId", "Employee ID.");
+        setColumnHeader("sssNo", "SSS No.");
+        setColumnHeader("eeShare", "Employee Share");
+        setColumnHeader("erShare", "Employer Share");
+        
         setColumnWidth("name", 250);
-        setColumnAlignment("employer share", Table.ALIGN_RIGHT);
-        setColumnAlignment("EC", Table.ALIGN_RIGHT);
+        setColumnAlignment("eeShare", Table.ALIGN_RIGHT);
+        setColumnAlignment("erShare", Table.ALIGN_RIGHT);
+        setColumnAlignment("ec", Table.ALIGN_RIGHT);
     }
         
     public SssTableProperties(int corporateId, 
@@ -38,7 +44,7 @@ public class SssTableProperties extends Table {
         this.month = month;
         this.year = year;
         
-        setWidth("600px");
+        setWidth("900px");
         setHeight("100%");
         setImmediate(true);
         setSelectable(true);
@@ -46,9 +52,15 @@ public class SssTableProperties extends Table {
         
         setContainerDataSource(new SssDataContainer(corporateId, month, year));
         
+        setColumnHeader("employeeId", "Employee ID.");
+        setColumnHeader("sssNo", "SSS No.");
+        setColumnHeader("eeShare", "Employee Share");
+        setColumnHeader("erShare", "Employer Share");
+        
         setColumnWidth("name", 250);
-        setColumnAlignment("employer share", Table.ALIGN_RIGHT);
-        setColumnAlignment("EC", Table.ALIGN_RIGHT);
+        setColumnAlignment("eeShare", Table.ALIGN_RIGHT);
+        setColumnAlignment("erShare", Table.ALIGN_RIGHT);
+        setColumnAlignment("ec", Table.ALIGN_RIGHT);
     }
     
     int getCorporateId(){
