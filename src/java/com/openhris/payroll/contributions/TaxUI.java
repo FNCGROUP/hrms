@@ -61,7 +61,10 @@ public class TaxUI extends VerticalLayout {
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
                 
-                taxTable.setContainerDataSource(new TaxDataContainer(corporateId, (1 + c.get(Calendar.MONTH)), c.get(Calendar.YEAR)));
+                taxTable.setContainerDataSource(
+                        new TaxDataContainer(
+                                corporateId, 
+                                util.parsingDate(util.convertDateFormat(payrollDateField.getValue().toString()))));
                 
             }
         });

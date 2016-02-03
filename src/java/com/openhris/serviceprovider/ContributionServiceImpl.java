@@ -22,6 +22,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -225,7 +226,7 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
-    public List<TaxSchedule> getTaxContribution(int corporateId, int month, int year) {
+    public List<TaxSchedule> getTaxContribution(int corporateId, Date payrollDate) {
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -235,12 +236,10 @@ public class ContributionServiceImpl implements ContributionService {
             pstmt = conn.prepareStatement("SELECT * FROM tax_schedule "
                     + "WHERE (CurrentStatus != 'removed' OR CurrentStatus IS NULL) "
                     + "AND CorporateID = ? "
-                    + "AND MONTH(payrollDate) = ? "
-                    + "AND YEAR(payrollDate) = ? "
+                    + "AND payrollDate = ? "
                     + "AND TaxAmount != 0 ORDER BY EmployeeName ASC");
             pstmt.setInt(1, corporateId);
-            pstmt.setInt(2, month);
-            pstmt.setInt(3, year);
+            pstmt.setString(2, util.convertDateFormat(payrollDate.toString()));
             rs = pstmt.executeQuery();
             while(rs.next()){
                 TaxSchedule ts = new TaxSchedule();

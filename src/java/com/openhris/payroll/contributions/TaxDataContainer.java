@@ -10,6 +10,7 @@ import com.openhris.service.ContributionService;
 import com.openhris.serviceprovider.ContributionServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import java.util.Date;
 
 /**
  *
@@ -20,8 +21,7 @@ public class TaxDataContainer extends IndexedContainer {
     ContributionService cs = new ContributionServiceImpl();
     
     private int corporateId;
-    private int month;
-    private int year;
+    private Date payrollDate;
     
     public TaxDataContainer() {
         addContainerProperty("employeeId", String.class, null);
@@ -31,10 +31,9 @@ public class TaxDataContainer extends IndexedContainer {
         addContainerProperty("branch", String.class, null);
     }
 
-    public TaxDataContainer(int corporateId, int month, int year) {
+    public TaxDataContainer(int corporateId, Date payrollDate) {
         this.corporateId = corporateId;
-        this.month = month;
-        this.year = year;
+        this.payrollDate = payrollDate;
         
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
@@ -42,7 +41,7 @@ public class TaxDataContainer extends IndexedContainer {
         addContainerProperty("amount", Double.class, null);
         addContainerProperty("branch", String.class, null);
         
-        for(TaxSchedule ts : cs.getTaxContribution(corporateId, month, year)){
+        for(TaxSchedule ts : cs.getTaxContribution(corporateId, payrollDate)){
             Item item = getItem(addItem());
             item.getItemProperty("employeeId").setValue(ts.getEmployeeId());
             item.getItemProperty("name").setValue(ts.getEmployeeName().toUpperCase());

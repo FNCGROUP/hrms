@@ -11,6 +11,7 @@ import com.openhris.model.Sss;
 import com.openhris.model.SssSchedule;
 import com.openhris.model.Tax;
 import com.openhris.model.TaxSchedule;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,5 +46,5 @@ public interface ContributionService {
     
     public List<HdmfSchedule> getHdmfContribution(int corporateId, int month, int year);
     
-    public List<TaxSchedule> getTaxContribution(int corporateId, int month, int year);
+    public List<TaxSchedule> getTaxContribution(int corporateId, Date payrollDate);
 }

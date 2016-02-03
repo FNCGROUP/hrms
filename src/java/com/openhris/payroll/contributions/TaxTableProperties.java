@@ -6,6 +6,7 @@
 package com.openhris.payroll.contributions;
 
 import com.vaadin.ui.Table;
+import java.util.Date;
 
 /**
  *
@@ -14,8 +15,7 @@ import com.vaadin.ui.Table;
 public class TaxTableProperties extends Table {
 
     private int corporateId;
-    private int month;
-    private int year;
+    private Date payrollDate;
     
     public TaxTableProperties() {
         setWidth("900px");
@@ -36,10 +36,9 @@ public class TaxTableProperties extends Table {
         setColumnAlignment("erHdmf", Table.ALIGN_RIGHT);
     }
 
-    public TaxTableProperties(int corporateId, int month, int year) {
+    public TaxTableProperties(int corporateId, Date payrollDate) {
         this.corporateId = corporateId;
-        this.month = month;
-        this.year = year;
+        this.payrollDate = payrollDate;
         
         setWidth("900px");
         setHeight("100%");
@@ -47,7 +46,7 @@ public class TaxTableProperties extends Table {
         setSelectable(true);
         addStyleName("hris-table-layout");
         
-        setContainerDataSource(new TaxDataContainer(corporateId, month, year));
+        setContainerDataSource(new TaxDataContainer(corporateId, payrollDate));
         
         setColumnHeader("employeeId", "Employee ID.");
         setColumnHeader("hdmfNo", "Hdmf No.");
