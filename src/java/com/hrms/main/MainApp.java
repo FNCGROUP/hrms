@@ -39,8 +39,10 @@ import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.PayrollMainUI;
 import com.openhris.payroll.PayrollRegisterMainUI;
+import com.openhris.payroll.contributions.HdmfUI;
 import com.openhris.payroll.contributions.PhicUI;
 import com.openhris.payroll.contributions.SssUI;
+import com.openhris.payroll.contributions.TaxUI;
 import com.openhris.timekeeping.TimekeepingMainUI;
 import com.vaadin.Application;
 import com.vaadin.event.ItemClickEvent;
@@ -102,6 +104,8 @@ public class MainApp extends Application {
     PayrollAdvancesLedgerUI payrollAdvancesLedgerUI;
     SssUI sssUI;
     PhicUI phicUI;
+    HdmfUI hdmfUI;
+    TaxUI taxUI;
     BankDebitMemoUI debitMemoUI;
     
     AdvanceUserAccessModule advanceUserAccess = new AdvanceUserAccessModule();
@@ -471,6 +475,8 @@ public class MainApp extends Application {
                     
                     sssUI.setBranchId(branchId);
                     phicUI.setBranchId(branchId);
+                    hdmfUI.setBranchId(branchId);
+                    taxUI.setBranchId(branchId);
                     debitMemoUI.setBranchId(branchId);
                 }
                 
@@ -645,6 +651,8 @@ public class MainApp extends Application {
         payrollAdvancesLedgerUI = new PayrollAdvancesLedgerUI(getBranchId());
         sssUI = new SssUI(getBranchId());
         phicUI = new PhicUI(getBranchId());
+        hdmfUI = new HdmfUI(getBranchId());
+        taxUI = new TaxUI(getBranchId());
         debitMemoUI = new BankDebitMemoUI(getBranchId());
         
         TabSheet ts = new TabSheet();
@@ -673,6 +681,18 @@ public class MainApp extends Application {
         payrollMenuGrid.setSizeFull();
         payrollMenuGrid.setCaption("PHIC");
         payrollMenuGrid.addComponent(phicUI);
+        ts.addComponent(payrollMenuGrid);
+        
+        payrollMenuGrid = new GridLayout();
+        payrollMenuGrid.setSizeFull();
+        payrollMenuGrid.setCaption("HDMF");
+        payrollMenuGrid.addComponent(hdmfUI);
+        ts.addComponent(payrollMenuGrid);
+        
+        payrollMenuGrid = new GridLayout();
+        payrollMenuGrid.setSizeFull();
+        payrollMenuGrid.setCaption("TAX");
+        payrollMenuGrid.addComponent(taxUI);
         ts.addComponent(payrollMenuGrid);
         
         payrollMenuGrid = new GridLayout();

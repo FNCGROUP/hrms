@@ -5,7 +5,7 @@
  */
 package com.openhris.payroll.contributions;
 
-import com.openhris.model.PhicSchedule;
+import com.openhris.model.HdmfSchedule;
 import com.openhris.service.ContributionService;
 import com.openhris.serviceprovider.ContributionServiceImpl;
 import com.vaadin.data.Item;
@@ -15,45 +15,43 @@ import com.vaadin.data.util.IndexedContainer;
  *
  * @author jetdario
  */
-public class PhicDataContainer extends IndexedContainer {
+public class HdmfDataContainer extends IndexedContainer {
 
     ContributionService cs = new ContributionServiceImpl();
     
     private int corporateId;
     private int month;
     private int year;
-
-    public PhicDataContainer() {
+    
+    public HdmfDataContainer() {
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
-        addContainerProperty("phicNo", String.class, null);
-        addContainerProperty("eePhic", Double.class, null);
-        addContainerProperty("erPhic", Double.class, null); 
+        addContainerProperty("hdmfNo", String.class, null);
+        addContainerProperty("eeHdmf", Double.class, null);
+        addContainerProperty("erHdmf", Double.class, null); 
         addContainerProperty("branch", String.class, null);
     }
-    
-    public PhicDataContainer(int corporateId, 
-            int month, 
-            int year) {
+
+    public HdmfDataContainer(int corporateId, int month, int year) {
         this.corporateId = corporateId;
         this.month = month;
         this.year = year;
         
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
-        addContainerProperty("phicNo", String.class, null);
-        addContainerProperty("eePhic", Double.class, null);
-        addContainerProperty("erPhic", Double.class, null); 
+        addContainerProperty("hdmfNo", String.class, null);
+        addContainerProperty("eeHdmf", Double.class, null);
+        addContainerProperty("erHdmf", Double.class, null); 
         addContainerProperty("branch", String.class, null);
         
-        for(PhicSchedule ps : cs.getPhicContribution(corporateId, month, year)){
+        for(HdmfSchedule hs : cs.getHdmfContribution(corporateId, month, year)){
             Item item = getItem(addItem());
-            item.getItemProperty("employeeId").setValue(ps.getEmployeeId());
-            item.getItemProperty("name").setValue(ps.getEmployeeName().toUpperCase());
-            item.getItemProperty("phicNo").setValue(ps.getPhicNo());
-            item.getItemProperty("eePhic").setValue(ps.getEePhic());
-            item.getItemProperty("erPhic").setValue(ps.getErPhic());
-            item.getItemProperty("branch").setValue(ps.getBranchName());
+            item.getItemProperty("employeeId").setValue(hs.getEmployeeId());
+            item.getItemProperty("name").setValue(hs.getEmployeeName().toUpperCase());
+            item.getItemProperty("hdmfNo").setValue(hs.getHdmfNo());
+            item.getItemProperty("eeHdmf").setValue(hs.getEeHdmf());
+            item.getItemProperty("erHdmf").setValue(hs.getErHdmf());
+            item.getItemProperty("branch").setValue(hs.getBranchName());
         }
     }
 
@@ -68,5 +66,6 @@ public class PhicDataContainer extends IndexedContainer {
     public int getYear() {
         return year;
     }
+    
     
 }

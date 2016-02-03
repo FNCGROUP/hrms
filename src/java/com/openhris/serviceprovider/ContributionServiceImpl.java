@@ -12,14 +12,15 @@ import com.openhris.model.Tax;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceInsertDAO;
 import com.openhris.dao.ServiceUpdateDAO;
+import com.openhris.model.HdmfSchedule;
 import com.openhris.model.PhicSchedule;
 import com.openhris.model.SssSchedule;
+import com.openhris.model.TaxSchedule;
 import com.openhris.service.ContributionService;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -177,4 +178,93 @@ public class ContributionServiceImpl implements ContributionService {
         
         return psList;
     }    
+
+    @Override
+    public List<HdmfSchedule> getHdmfContribution(int corporateId, int month, int year) {
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<HdmfSchedule> hsList = new ArrayList<>();
+                
+        try {
+            pstmt = conn.prepareStatement("SELECT * FROM hdmf_schedule "
+                    + "WHERE (CurrentStatus != 'removed' OR CurrentStatus IS NULL) "
+                    + "AND CorporateID = ? "
+                    + "AND MONTH(payrollDate) = ? "
+                    + "AND YEAR(payrollDate) = ? "
+                    + "AND HdmfAmount != 0 ORDER BY EmployeeName ASC");
+            pstmt.setInt(1, corporateId);
+            pstmt.setInt(2, month);
+            pstmt.setInt(3, year);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                HdmfSchedule hs = new HdmfSchedule();
+                hs.setEmployeeId(rs.getString("EmployeeID"));
+                hs.setEmployeeName(rs.getString("EmployeeName"));
+                hs.setHdmfNo(rs.getString("HdmfNo"));
+                hs.setEeHdmf(util.convertStringToDouble(rs.getString("HdmfAmount")));
+                hs.setErHdmf(util.convertStringToDouble(rs.getString("HdmfAmount")));
+                hs.setBranchName(rs.getString("BranchName"));
+                hsList.add(hs);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ContributionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ContributionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return hsList;
+    }
+
+    @Override
+    public List<TaxSchedule> getTaxContribution(int corporateId, int month, int year) {
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<TaxSchedule> tsList = new ArrayList<>();
+                
+        try {
+            pstmt = conn.prepareStatement("SELECT * FROM tax_schedule "
+                    + "WHERE (CurrentStatus != 'removed' OR CurrentStatus IS NULL) "
+                    + "AND CorporateID = ? "
+                    + "AND MONTH(payrollDate) = ? "
+                    + "AND YEAR(payrollDate) = ? "
+                    + "AND TaxAmount != 0 ORDER BY EmployeeName ASC");
+            pstmt.setInt(1, corporateId);
+            pstmt.setInt(2, month);
+            pstmt.setInt(3, year);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                TaxSchedule ts = new TaxSchedule();
+                ts.setEmployeeId(rs.getString("EmployeeID"));
+                ts.setEmployeeName(rs.getString("EmployeeName"));
+                ts.setTinNo(rs.getString("TinNo"));
+                ts.setTaxAmount(util.convertStringToDouble(rs.getString("TaxAmount")));
+                ts.setBranchName(rs.getString("BranchName"));
+                tsList.add(ts);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ContributionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ContributionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return tsList;
+    }
 }

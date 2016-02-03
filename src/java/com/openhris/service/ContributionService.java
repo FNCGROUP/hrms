@@ -4,11 +4,13 @@
  */
 package com.openhris.service;
 
+import com.openhris.model.HdmfSchedule;
 import com.openhris.model.Phic;
 import com.openhris.model.PhicSchedule;
 import com.openhris.model.Sss;
 import com.openhris.model.SssSchedule;
 import com.openhris.model.Tax;
+import com.openhris.model.TaxSchedule;
 import java.util.List;
 
 /**
@@ -40,4 +42,8 @@ public interface ContributionService {
     public List<SssSchedule> getSssContribution(int corporateId, int month, int year);
     
     public List<PhicSchedule> getPhicContribution(int corporateId, int month, int year);
+    
+    public List<HdmfSchedule> getHdmfContribution(int corporateId, int month, int year);
+    
+    public List<TaxSchedule> getTaxContribution(int corporateId, int month, int year);
 }

@@ -38,7 +38,7 @@ public class BankDebitMemoContainer extends IndexedContainer {
             Item item = getItem(addItem());
             item.getItemProperty("employeeId").setValue(ei.getEmployeeId());
             item.getItemProperty("bankAccountNo").setValue(ei.getBankAccountNo());
-            item.getItemProperty("name").setValue(ei.getLastname().toUpperCase()+", "+ei.getFirstname().toUpperCase()+" "+ei.getLastname().toUpperCase());
+            item.getItemProperty("name").setValue(ei.getLastname().toUpperCase()+", "+ei.getFirstname().toUpperCase()+" "+ei.getMiddlename().toUpperCase());
             item.getItemProperty("amount").setValue(util.roundOffToTwoDecimalPlaces(ei.getEmploymentWage()));            
         }
     }
