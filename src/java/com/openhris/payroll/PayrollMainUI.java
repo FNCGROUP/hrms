@@ -385,12 +385,12 @@ public class PayrollMainUI extends VerticalLayout {
                                                                         
                 }
                 
-                if(event.getPropertyId().equals("per diem")){                    
-                    Window sub = subModules.perDiemWindow(item);
-                    if(sub.getParent() == null){
-                        getWindow().addWindow(sub);
-                    }
-                }
+//                if(event.getPropertyId().equals("per diem")){                    
+//                    Window sub = subModules.perDiemWindow(item);
+//                    if(sub.getParent() == null){
+//                        getWindow().addWindow(sub);
+//                    }
+//                }
             }
         });
     }

@@ -6,8 +6,10 @@
 
 package com.openhris.dao;
 
+import com.hrms.classes.GlobalVariables;
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
+import com.openhris.global.SystemConstants;
 import com.openhris.model.Adjustment;
 import com.openhris.model.Advances;
 import com.openhris.model.Branch;
@@ -126,6 +128,16 @@ public class PayrollDAO {
         try {
             pstmt = conn.prepareStatement(queryRemove);
             pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, id);
+            pstmt.setString(2, SystemConstants.DELETE_PAYROLL+" with ID = "+id);
+            pstmt.setInt(3, GlobalVariables.getUserId());
             pstmt.executeUpdate();
             
             result = true;
@@ -320,6 +332,7 @@ public class PayrollDAO {
         PreparedStatement pstmt = null;
         String queryInsert = "INSERT INTO advance_table(payrollId, amount, advanceType, particulars, datePosted) VALUES(?, ?, ?, ?, ?)";
         String queryUpdate = "UPDATE payroll_table SET amountToBeReceive = ?, amountReceivable = ? WHERE id = ? ";
+        int payrollId = 0;
         try {
             conn.setAutoCommit(false);
             for(Advances a : advanceList){
@@ -330,6 +343,10 @@ public class PayrollDAO {
                 pstmt.setString(4, a.getParticulars());
                 pstmt.setString(5, util.convertDateFormat(a.getDatePosted().toString()));
                 pstmt.executeUpdate();
+                
+                if(payrollId == 0){
+                    payrollId = a.getId();
+                }
                 
                 double amountReceivable;
                 
@@ -346,6 +363,17 @@ public class PayrollDAO {
                 pstmt.setInt(3, a.getId());
                 pstmt.executeUpdate();
             }
+            
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, SystemConstants.UPDATE_PAYROLL+", add Advances");
+            pstmt.setInt(3, GlobalVariables.getUserId());
+            pstmt.executeUpdate();
+            
             conn.commit();
             System.out.println("Transaction commit...");
             result = true;
@@ -516,6 +544,18 @@ public class PayrollDAO {
                 pstmt.executeUpdate();
             }
             
+            System.out.println("phic update: "+payrollId);
+            
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, SystemConstants.UPDATE_PAYROLL+" PHIC Contribution");
+            pstmt.setInt(3, GlobalVariables.getUserId());
+            pstmt.executeUpdate();
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -607,6 +647,16 @@ public class PayrollDAO {
             pstmt.setInt(2, payrollId);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, SystemConstants.UPDATE_PAYROLL+" Payroll Date to "+date);
+            pstmt.setInt(3, GlobalVariables.getUserId());
+            pstmt.executeUpdate();
+            
             result = true;
         } catch (SQLException ex) {
             Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -650,6 +700,16 @@ public class PayrollDAO {
                 pstmt.setInt(2, payrollId);
                 pstmt.executeUpdate();
             }
+            
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, SystemConstants.UPDATE_PAYROLL+" Withholding Tax");
+            pstmt.setInt(3, GlobalVariables.getUserId());
+            pstmt.executeUpdate();
             
             conn.commit();
             result = true;
@@ -704,6 +764,16 @@ public class PayrollDAO {
                 pstmt.executeUpdate();
             }
             
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, SystemConstants.UPDATE_PAYROLL+" HDMF Contribution");
+            pstmt.setInt(3, GlobalVariables.getUserId());
+            pstmt.executeUpdate();
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -757,6 +827,16 @@ public class PayrollDAO {
                 pstmt.executeUpdate();
             }
             
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, SystemConstants.UPDATE_PAYROLL+" SSS Contributions");
+            pstmt.setInt(3, GlobalVariables.getUserId());
+            pstmt.executeUpdate();
+            
             conn.commit();
             result = true;
         } catch (SQLException ex) {
@@ -788,6 +868,16 @@ public class PayrollDAO {
         try {
             pstmt = conn.prepareStatement("UPDATE payroll_table SET rowStatus = 'locked' WHERE id = ?");
             pstmt.setInt(1, payrollId);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, "Locked Payroll");
+            pstmt.setInt(3, GlobalVariables.getUserId());
             pstmt.executeUpdate();
             
             result = true;
@@ -967,6 +1057,16 @@ public class PayrollDAO {
             pstmt.setDouble(2, amountReceived);
             pstmt.setDouble(3, new_adjustment);
             pstmt.setInt(4, payrollId);
+            pstmt.executeUpdate();
+            
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, SystemConstants.PAYROLL_ADJUSTMENT);
+            pstmt.setInt(3, GlobalVariables.getUserId());
             pstmt.executeUpdate();
             
             conn.commit();
@@ -1182,13 +1282,6 @@ public class PayrollDAO {
                         phic = util.convertStringToDouble(rs.getString("phic"));
                         hdmf = util.convertStringToDouble(rs.getString("hdmf"));
                         tax = util.convertStringToDouble(rs.getString("tax"));
-//                        afl = util.convertStringToDouble(rs.getString("allowanceForLiquidation"));
-//                        communication = util.convertStringToDouble(rs.getString("communicationAllowance"));
-//                        perDiem = util.convertStringToDouble(rs.getString("perDiemAllowance"));
-//                        cola = util.convertStringToDouble(rs.getString("colaAllowance"));
-//                        meal = util.convertStringToDouble(rs.getString("mealAllowance"));
-//                        transportation = util.convertStringToDouble(rs.getString("transportationAllowance"));
-//                        others = util.convertStringToDouble(rs.getString("otherAllowances"));
                         previousAdvances = util.convertStringToDouble(rs.getString("advances"));
                         previousAdjustments = util.convertStringToDouble(rs.getString("adjustments"));
                         previousAmountReceived = util.convertStringToDouble(rs.getString("amountReceivable"));
@@ -1259,6 +1352,16 @@ public class PayrollDAO {
                     }
 		}
  
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, SystemConstants.NEW_PAYROLL);
+            pstmt.setInt(3, GlobalVariables.getUserId());
+            pstmt.executeUpdate();
+                
             conn.commit();
             System.out.println("Transaction commit...");
             result = true;
@@ -1358,6 +1461,16 @@ public class PayrollDAO {
             pstmt.setInt(2, payrollId);
             pstmt.executeUpdate();
             
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, "Unlocked Payroll");
+            pstmt.setInt(3, GlobalVariables.getUserId());
+            pstmt.executeUpdate();
+            
             result = true;
         } catch (SQLException ex) {
             Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -1419,6 +1532,7 @@ public class PayrollDAO {
         double amount = newAmount - oldAmount;
         
         try {
+            conn.setAutoCommit(false);
             pstmt = conn.prepareStatement("UPDATE payroll_table "
                     + "SET perDiem = ?, "
                     + "amountToBeReceive = ?, "
@@ -1429,9 +1543,25 @@ public class PayrollDAO {
             pstmt.setDouble(3, amountReceived + amount);
             pstmt.setInt(4, payrollId);
             pstmt.executeUpdate();
-                        
+            
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, SystemConstants.UPDATE_PAYROLL+" Add Per Diem");
+            pstmt.setInt(3, GlobalVariables.getUserId());
+            pstmt.executeUpdate();
+            
+            conn.commit();
             result = true;
         } catch (SQLException ex) {
+            try {
+                conn.rollback();
+            } catch (SQLException ex1) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            }
             Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
