@@ -10,6 +10,8 @@ import com.openhris.service.ContributionService;
 import com.openhris.serviceprovider.ContributionServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -30,6 +32,7 @@ public class PhicDataContainer extends IndexedContainer {
         addContainerProperty("eePhic", Double.class, null);
         addContainerProperty("erPhic", Double.class, null); 
         addContainerProperty("branch", String.class, null);
+        addContainerProperty("date", String.class, null);
     }
     
     public PhicDataContainer(int corporateId, 
@@ -45,6 +48,7 @@ public class PhicDataContainer extends IndexedContainer {
         addContainerProperty("eePhic", Double.class, null);
         addContainerProperty("erPhic", Double.class, null); 
         addContainerProperty("branch", String.class, null);
+        addContainerProperty("date", String.class, null);
         
         for(PhicSchedule ps : cs.getPhicContribution(corporateId, month, year)){
             Item item = getItem(addItem());
@@ -54,6 +58,7 @@ public class PhicDataContainer extends IndexedContainer {
             item.getItemProperty("eePhic").setValue(ps.getEePhic());
             item.getItemProperty("erPhic").setValue(ps.getErPhic());
             item.getItemProperty("branch").setValue(ps.getBranchName());
+            item.getItemProperty("date").setValue(getMonthString().get(month)+" "+year);
         }
     }
 
@@ -69,4 +74,20 @@ public class PhicDataContainer extends IndexedContainer {
         return year;
     }
     
+    Map<Integer, String> getMonthString(){
+        Map<Integer, String> m = new HashMap<>();
+        m.put(1, "January");
+        m.put(2, "February");
+        m.put(3, "March");
+        m.put(4, "April");
+        m.put(5, "May");
+        m.put(6, "June");
+        m.put(7, "July");
+        m.put(8, "August");
+        m.put(9, "September");
+        m.put(10, "October");
+        m.put(11, "November");
+        m.put(12, "December");
+        return m;
+    }
 }

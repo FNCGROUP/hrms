@@ -52,6 +52,9 @@ public class PayrollRegisterTable extends Table {
         addContainerProperty("amount to be receive", Double.class, null);        
         addContainerProperty("amount received", Double.class, null);  
 	addContainerProperty("for adjustments", Double.class, null);
+        addContainerProperty("cut-off from", String.class, null);
+        addContainerProperty("cut-off to", String.class, null);
+        addContainerProperty("payroll period", String.class, null);
         
         setColumnAlignment("no. of days", Table.ALIGN_CENTER);
         setColumnAlignment("rate per day", Table.ALIGN_RIGHT);

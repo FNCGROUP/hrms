@@ -412,7 +412,10 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 		util.roundOffToTwoDecimalPlaces(pr.getAdjustment()), 
                 util.roundOffToTwoDecimalPlaces(pr.getAmountToBeReceive()), 
 		util.roundOffToTwoDecimalPlaces(pr.getAmountReceivable()), 
-		util.roundOffToTwoDecimalPlaces(pr.getForAdjustments())
+		util.roundOffToTwoDecimalPlaces(pr.getForAdjustments()), 
+                util.convertDateFormat(pr.getAttendancePeriodFrom().toString()), 
+                util.convertDateFormat(pr.getAttendancePeriodTo().toString()), 
+                util.convertDateFormat(pr.getPayrollDate().toString())
             }, i);
             i++;
         }
@@ -458,6 +461,9 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         
         payrollRegisterTbl.setColumnCollapsed("amount received", true);
 	payrollRegisterTbl.setColumnCollapsed("for adjustments", true);
+        payrollRegisterTbl.setColumnCollapsed("cut-off from", true);
+        payrollRegisterTbl.setColumnCollapsed("cut-off to", true);
+        payrollRegisterTbl.setColumnCollapsed("payroll period", true);
         
         return payrollRegisterTbl;
     }

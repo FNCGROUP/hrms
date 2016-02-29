@@ -230,5 +230,50 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<Employee> getAllEmployeeMainView() {
         return employeeDAO.getAllEmployeeMainView();
     }
+
+    @Override
+    public EmploymentInformation findEmployeeById(String employeeId) {
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        EmploymentInformation ei = new EmploymentInformation();
+        
+        try {
+            pstmt = conn.prepareStatement("SELECT * FROM employee WHERE employeeId = ? ");
+            pstmt.setString(1, employeeId);
+            rs  = pstmt.executeQuery();
+            while(rs.next()){
+                ei.setFirstname(rs.getString("firstname"));
+                ei.setMiddlename(rs.getString("middlename"));
+                ei.setLastname(rs.getString("lastname"));
+                ei.setSssNo(rs.getString("sssNo"));
+                ei.setTinNo(rs.getString("tinNo"));
+                ei.setPhicNo(rs.getString("phicNo"));
+                ei.setHdmfNo(rs.getString("hdmfNo"));
+                ei.setEmploymentStatus(rs.getString("employmentStatus"));
+                ei.setEmploymentWageStatus(rs.getString("employmentWageStatus"));
+                ei.setEmploymentWageEntry(rs.getString("employmentWageEntry"));
+                ei.setEmploymentWage(Double.parseDouble(rs.getString("employmentWage")));
+                ei.setAllowance(Double.parseDouble(rs.getString("allowance")));
+                ei.setAllowanceEntry(rs.getString("allowanceEntry"));
+                ei.setEntryDate(util.parsingDate(rs.getString("entryDate")));
+                ei.setTotalDependent(rs.getString("totalDependent"));
+                ei.setBankAccountNo(rs.getString("bankAccountNo"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return ei;
+    }
     
 }

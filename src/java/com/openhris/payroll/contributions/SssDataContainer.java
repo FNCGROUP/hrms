@@ -10,6 +10,9 @@ import com.openhris.service.ContributionService;
 import com.openhris.serviceprovider.ContributionServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
@@ -31,6 +34,7 @@ public class SssDataContainer extends IndexedContainer {
         addContainerProperty("erShare", Double.class, null); 
         addContainerProperty("ec", Double.class, null);
         addContainerProperty("branch", String.class, null);
+        addContainerProperty("date", String.class, null);
     }
         
     public SssDataContainer(int corporateId, 
@@ -47,6 +51,7 @@ public class SssDataContainer extends IndexedContainer {
         addContainerProperty("erShare", Double.class, null); 
         addContainerProperty("ec", Double.class, null);
         addContainerProperty("branch", String.class, null);
+        addContainerProperty("date", String.class, null);
         
         for(SssSchedule s : cs.getSssContribution(corporateId, month, year)){
             Item item = getItem(addItem());
@@ -57,7 +62,24 @@ public class SssDataContainer extends IndexedContainer {
             item.getItemProperty("erShare").setValue(s.getErShare());
             item.getItemProperty("ec").setValue(s.getEc());
             item.getItemProperty("branch").setValue(s.getBranch());
+            item.getItemProperty("date").setValue(getMonth().get(month)+" "+year);
         }
     }
     
+    Map<Integer, String> getMonth(){
+        Map<Integer, String> m = new HashMap<>();
+        m.put(1, "January");
+        m.put(2, "February");
+        m.put(3, "March");
+        m.put(4, "April");
+        m.put(5, "May");
+        m.put(6, "June");
+        m.put(7, "July");
+        m.put(8, "August");
+        m.put(9, "September");
+        m.put(10, "October");
+        m.put(11, "November");
+        m.put(12, "December");
+        return m;
+    }    
 }
