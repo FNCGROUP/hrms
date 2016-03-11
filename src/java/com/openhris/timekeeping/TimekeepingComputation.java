@@ -23,8 +23,9 @@ public class TimekeepingComputation {
         if(policy == null || policy.equals("working-holiday") || policy.isEmpty()){
             lateDeduction = lateDeductionPerMinute;
         }else if(policy.equals("working-day-off")){
-            double wdo = lateDeductionPerMinute * .3;
-            lateDeduction = lateDeductionPerMinute + wdo;
+//            double wdo = lateDeductionPerMinute * .3;
+//            lateDeduction = lateDeductionPerMinute + wdo;
+            lateDeduction = lateDeductionPerMinute;
         }
         
         return utilities.roundOffToTwoDecimalPlaces(lateDeduction);
@@ -43,8 +44,9 @@ public class TimekeepingComputation {
         if(policy == null || policy.equals("working-holiday") || policy.isEmpty()){
             undertimeDeduction = undertimeDeductionPerMinute;
         }else if(policy.equals("working-day-off")){
-            double wdo = undertimeDeductionPerMinute * .3;
-            undertimeDeduction = undertimeDeductionPerMinute + wdo;
+//            double wdo = undertimeDeductionPerMinute * .3;
+//            undertimeDeduction = undertimeDeductionPerMinute + wdo;
+            undertimeDeduction = undertimeDeductionPerMinute;
         }
         
         return utilities.roundOffToTwoDecimalPlaces(undertimeDeduction);

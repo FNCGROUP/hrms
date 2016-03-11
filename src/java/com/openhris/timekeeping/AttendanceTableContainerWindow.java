@@ -92,7 +92,6 @@ public class AttendanceTableContainerWindow extends Window {
         final Table table = new Table();        
         table.removeAllItems();
         table.setEnabled(true);
-//        table.setWidth("100%");
         table.setSizeFull();
         table.setImmediate(true);
         table.setColumnCollapsingAllowed(true);

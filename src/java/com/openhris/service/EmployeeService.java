@@ -4,6 +4,7 @@
  */
 package com.openhris.service;
 
+import com.openhris.model.BankDebitMemo;
 import com.openhris.model.Employee;
 import com.openhris.model.EmploymentInformation;
 import com.openhris.model.PostEmploymentInformationBean;
@@ -17,7 +18,7 @@ public interface EmployeeService {
         
     public String getEmployeeId(String name);
     
-    public List<EmploymentInformation> findBankDebitMemo(int branchId, String payrollDate);
+    public List<BankDebitMemo> findBankDebitMemo(int branchId, String payrollDate);
     
     public EmploymentInformation findEmployeeById(String employeeId);
             

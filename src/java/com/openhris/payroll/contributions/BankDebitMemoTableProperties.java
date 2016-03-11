@@ -14,7 +14,7 @@ import com.vaadin.ui.Table;
 public class BankDebitMemoTableProperties extends Table {
 
     public BankDebitMemoTableProperties() {
-        setWidth("700px");
+        setWidth("900px");
         setHeight("100%");
         setImmediate(true);
         setSelectable(true);
@@ -28,7 +28,7 @@ public class BankDebitMemoTableProperties extends Table {
     }
     
     public BankDebitMemoTableProperties(int branchId, String payrollDate) {
-        setWidth("700px");
+        setWidth("900px");
         setHeight("100%");
         setImmediate(true);
         setSelectable(true);

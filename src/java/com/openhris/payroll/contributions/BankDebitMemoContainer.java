@@ -6,6 +6,7 @@
 package com.openhris.payroll.contributions;
 
 import com.openhris.commons.OpenHrisUtilities;
+import com.openhris.model.BankDebitMemo;
 import com.openhris.model.EmploymentInformation;
 import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
@@ -25,7 +26,9 @@ public class BankDebitMemoContainer extends IndexedContainer {
         addContainerProperty("employeeId", String.class, "");
         addContainerProperty("bankAccountNo", String.class, "");
         addContainerProperty("name", String.class, "");
-        addContainerProperty("amount", Double.class, "");        
+        addContainerProperty("amount", Double.class, "");   
+        addContainerProperty("branch", String.class, null);
+        addContainerProperty("payrollDate", String.class, null);
     }
     
     public BankDebitMemoContainer(int branchId, String payrollDate) {
@@ -33,13 +36,17 @@ public class BankDebitMemoContainer extends IndexedContainer {
         addContainerProperty("bankAccountNo", String.class, "");
         addContainerProperty("name", String.class, "");
         addContainerProperty("amount", Double.class, "");
+        addContainerProperty("branch", String.class, null);
+        addContainerProperty("payrollDate", String.class, null);
         
-        for(EmploymentInformation ei : es.findBankDebitMemo(branchId, payrollDate)){
+        for(BankDebitMemo dbm : es.findBankDebitMemo(branchId, payrollDate)){
             Item item = getItem(addItem());
-            item.getItemProperty("employeeId").setValue(ei.getEmployeeId());
-            item.getItemProperty("bankAccountNo").setValue(ei.getBankAccountNo());
-            item.getItemProperty("name").setValue(ei.getLastname().toUpperCase()+", "+ei.getFirstname().toUpperCase()+" "+ei.getMiddlename().toUpperCase());
-            item.getItemProperty("amount").setValue(util.roundOffToTwoDecimalPlaces(ei.getEmploymentWage()));            
+            item.getItemProperty("employeeId").setValue(dbm.getEmployeeId());
+            item.getItemProperty("bankAccountNo").setValue(dbm.getBankAccountNo());
+            item.getItemProperty("name").setValue(dbm.getLastname().toUpperCase()+", "+dbm.getFirstname().toUpperCase()+" "+dbm.getMiddlename().toUpperCase());
+            item.getItemProperty("amount").setValue(util.roundOffToTwoDecimalPlaces(dbm.getAmount()));  
+            item.getItemProperty("branch").setValue(dbm.getBranch());
+            item.getItemProperty("payrollDate").setValue(util.convertDateFormat(dbm.getPayrollDate().toString()));
         }
     }
     

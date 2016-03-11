@@ -61,7 +61,7 @@ public class BankDebitMemoUI extends VerticalLayout {
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
                 
-                debitMemoTable.setContainerDataSource(new BankDebitMemoContainer(getBranchId(), util.convertDateFormat(date.toString())));
+                debitMemoTable.setContainerDataSource(new BankDebitMemoContainer(corporateId, util.convertDateFormat(date.toString())));
                 
             }
         });
