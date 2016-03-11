@@ -39,6 +39,12 @@ public class Payroll extends Employee {
     private double totalSpecialHolidayPaid;
     private double totalWorkingDayOffPaid;
     private double totalNonWorkingHolidayPaid;
+    private double totalLatesWHLHDeduction;
+    private double totalLatesWHSHDeduction;
+    private double totalLatesWDODeduction;
+    private double totalUndertimeWHLHDeduction;
+    private double totalUndertimeWHSHDeduction;
+    private double totalUndertimeWDODeduction;
     private double communicationAllowance;
     private double perDiemAllowance;
     private double colaAllowance;
@@ -96,7 +102,9 @@ public class Payroll extends Employee {
     public double getGrossPay(){
         return grossPay = (getHalfMonthSalary() + getTotalOvertimePaid() + getTotalLegalHolidayPaid() + getTotalSpecialHolidayPaid() + 
                 getTotalNightDifferentialPaid() + getTotalDutyManagerPaid() + getTotalWorkingDayOffPaid()) 
-                - (getAbsences() + getTotalLatesDeduction() + getTotalUndertimeDeduction());
+                - (getAbsences() + getTotalLatesDeduction() + getTotalUndertimeDeduction() + 
+                getTotalLatesWHLHDeduction() + getTotalLatesWHSHDeduction() + getTotalLatesWDODeduction() + 
+                getTotalUndertimeWHLHDeduction() + getTotalUndertimeWHSHDeduction() + getTotalUndertimeWDODeduction());
     }
     
     public double getAbsences() {
@@ -153,6 +161,34 @@ public class Payroll extends Employee {
 
     public double getTotalNonWorkingHolidayPaid(){
         return totalNonWorkingHolidayPaid;
+    }
+
+    public double getTotalLatesWHLHDeduction() {
+        return totalLatesWHLHDeduction;
+    }
+
+    public double getTotalLatesWHSHDeduction() {
+        return totalLatesWHSHDeduction;
+    }
+
+    public double getTotalLatesWDODeduction() {
+        return totalLatesWDODeduction;
+    }
+
+    public double getTotalUndertimeWHLHDeduction() {
+        return totalUndertimeWHLHDeduction;
+    }
+
+    public double getTotalUndertimeWHSHDeduction() {
+        return totalUndertimeWHSHDeduction;
+    }
+
+    public double getTotalUndertimeWDODeduction() {
+        return totalUndertimeWDODeduction;
+    }
+
+    public TimekeepingService getTkService() {
+        return tkService;
     }
 
     public double getCommunicationAllowance() {
@@ -318,6 +354,34 @@ public class Payroll extends Employee {
 
     public void setTotalNonWorkingHolidayPaid(double totalNonWorkingHolidayPaid){
         this.totalNonWorkingHolidayPaid = totalNonWorkingHolidayPaid;
+    }
+
+    public void setTotalLatesWHLHDeduction(double totalLatesWHLHDeduction) {
+        this.totalLatesWHLHDeduction = totalLatesWHLHDeduction;
+    }
+
+    public void setTotalLatesWHSHDeduction(double totalLatesWHSHDeduction) {
+        this.totalLatesWHSHDeduction = totalLatesWHSHDeduction;
+    }
+
+    public void setTotalLatesWDODeduction(double totalLatesWDODeduction) {
+        this.totalLatesWDODeduction = totalLatesWDODeduction;
+    }
+
+    public void setTotalUndertimeWHLHDeduction(double totalUndertimeWHLHDeduction) {
+        this.totalUndertimeWHLHDeduction = totalUndertimeWHLHDeduction;
+    }
+
+    public void setTotalUndertimeWHSHDeduction(double totalUndertimeWHSHDeduction) {
+        this.totalUndertimeWHSHDeduction = totalUndertimeWHSHDeduction;
+    }
+
+    public void setTotalUndertimeWDODeduction(double totalUndertimeWDODeduction) {
+        this.totalUndertimeWDODeduction = totalUndertimeWDODeduction;
+    }
+
+    public void setTkService(TimekeepingService tkService) {
+        this.tkService = tkService;
     }
 
     public void setGrossPay(double grossPay) {

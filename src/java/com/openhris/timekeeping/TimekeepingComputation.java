@@ -17,8 +17,8 @@ public class TimekeepingComputation {
     OpenHrisUtilities utilities = new OpenHrisUtilities();
     
     public double processEmployeesLates(String policy, String holiday, int lates, Double wage){
-        double rate = getHolidayRate(holiday, wage);
-        double lateDeductionPerMinute = calculateDeductionPerMinute(lates, rate);
+//        double rate = getHolidayRate(holiday, wage);
+        double lateDeductionPerMinute = calculateDeductionPerMinute(lates, wage);
         double lateDeduction = 0.0;
         if(policy == null || policy.equals("working-holiday") || policy.isEmpty()){
             lateDeduction = lateDeductionPerMinute;
@@ -32,14 +32,14 @@ public class TimekeepingComputation {
     }
     
     public double processEmployeesLatesForOnCall(String policy, String holiday, int lates, Double wage){
-        double rate = getHolidayRate(holiday, wage);
-        double lateDeductionPerMinute = calculateDeductionPerMinute(lates, rate);        
+//        double rate = getHolidayRate(holiday, wage);
+        double lateDeductionPerMinute = calculateDeductionPerMinute(lates, wage);        
         return utilities.roundOffToTwoDecimalPlaces(lateDeductionPerMinute);
     }
     
     public double processEmployeesUndertime(String policy, String holiday, int undertime, Double wage){
-        double rate = getHolidayRate(holiday, wage);
-        double undertimeDeductionPerMinute = calculateDeductionPerMinute(undertime, rate);
+//        double rate = getHolidayRate(holiday, wage);
+        double undertimeDeductionPerMinute = calculateDeductionPerMinute(undertime, wage);
         double undertimeDeduction = 0.0;
         if(policy == null || policy.equals("working-holiday") || policy.isEmpty()){
             undertimeDeduction = undertimeDeductionPerMinute;
@@ -53,8 +53,8 @@ public class TimekeepingComputation {
     }
     
     public double processEmployeesUndertimeForOnCall(String policy, String holiday, int undertime, Double wage){
-        double rate = getHolidayRate(holiday, wage);
-        double undertimeDeductionPerMinute = calculateDeductionPerMinute(undertime, rate);
+//        double rate = getHolidayRate(holiday, wage);
+        double undertimeDeductionPerMinute = calculateDeductionPerMinute(undertime, wage);
         
         return utilities.roundOffToTwoDecimalPlaces(undertimeDeductionPerMinute);
     }

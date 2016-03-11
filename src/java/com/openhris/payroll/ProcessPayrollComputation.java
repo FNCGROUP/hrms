@@ -64,6 +64,12 @@ public class ProcessPayrollComputation {
     double totalSpecialHolidayPaid;
     double totalWorkingDayOffPaid;
     double totalNonWorkingHolidayPaid;
+    double totalLatesWHLHDeduction;
+    double totalLatesWHSHDeduction;
+    double totalLatesWDODeduction;
+    double totalUndertimeWHLHDeduction;
+    double totalUndertimeWHSHDeduction;
+    double totalUndertimeWDODeduction;
     double totalAbsences;
         
     public ProcessPayrollComputation(String employeeId, int branchId){
@@ -104,6 +110,12 @@ public class ProcessPayrollComputation {
             totalSpecialHolidayPaid = totalSpecialHolidayPaid + t.getSpecialHolidayPaid();
             totalWorkingDayOffPaid = totalWorkingDayOffPaid + t.getWorkingDayOffPaid();
             totalNonWorkingHolidayPaid = totalNonWorkingHolidayPaid + t.getNonWorkingHolidayPaid();
+            totalLatesWHLHDeduction = totalLatesWHLHDeduction + t.getLatesLegalHolidayDeduction();
+            totalLatesWHSHDeduction = totalLatesWHSHDeduction = t.getLatesSpecialHolidayDeduction();
+            totalLatesWDODeduction = totalLatesWDODeduction + t.getLatesWorkingDayOffDeduction();
+            totalUndertimeWHLHDeduction = totalUndertimeWHLHDeduction + t.getUndertimeLegalHolidayDeduction();
+            totalUndertimeWHSHDeduction = totalUndertimeWHSHDeduction + t.getUndertimeSpecialHolidayDeduction();
+            totalUndertimeWDODeduction = totalUndertimeWDODeduction + t.getUndertimeWorkingDayOffDeduction();
         }
     }
     
@@ -129,6 +141,12 @@ public class ProcessPayrollComputation {
             payroll.setTotalLegalHolidayPaid(totalLegalHolidayPaid);
             payroll.setTotalSpecialHolidayPaid(totalSpecialHolidayPaid);
             payroll.setTotalWorkingDayOffPaid(totalWorkingDayOffPaid);
+            payroll.setTotalLatesWHLHDeduction(totalLatesWHLHDeduction);
+            payroll.setTotalLatesWHSHDeduction(totalLatesWHSHDeduction);
+            payroll.setTotalLatesWDODeduction(totalLatesWDODeduction);
+            payroll.setTotalUndertimeWHLHDeduction(totalUndertimeWHLHDeduction);
+            payroll.setTotalUndertimeWHSHDeduction(totalUndertimeWHSHDeduction);
+            payroll.setTotalUndertimeWDODeduction(totalUndertimeWDODeduction);
             payroll.setTotalNonWorkingHolidayPaid(getTotalNonWorkingHolidayPay());
             
             double basicSalary = payrollComputation.getBasicSalary(employmentWage, employmentWageEntry);

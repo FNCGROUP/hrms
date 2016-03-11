@@ -32,6 +32,12 @@ public class Timekeeping extends Payroll {
     private double specialHolidayPaid;
     private double workingDayOffPaid;
     private double nonWorkingHolidayPaid;
+    private double latesLegalHolidayDeduction;
+    private double latesSpecialHolidayDeduction;
+    private double latesWorkingDayOffDeduction;
+    private double undertimeLegalHolidayDeduction;
+    private double undertimeSpecialHolidayDeduction;
+    private double undertimeWorkingDayOffDeduction;
 
     public Date getAttendanceDate() {
         return attendanceDate;
@@ -105,6 +111,30 @@ public class Timekeeping extends Payroll {
         return nonWorkingHolidayPaid;
     }
 
+    public double getLatesLegalHolidayDeduction() {
+        return latesLegalHolidayDeduction;
+    }
+
+    public double getLatesSpecialHolidayDeduction() {
+        return latesSpecialHolidayDeduction;
+    }
+
+    public double getLatesWorkingDayOffDeduction() {
+        return latesWorkingDayOffDeduction;
+    }
+
+    public double getUndertimeLegalHolidayDeduction() {
+        return undertimeLegalHolidayDeduction;
+    }
+
+    public double getUndertimeSpecialHolidayDeduction() {
+        return undertimeSpecialHolidayDeduction;
+    }
+
+    public double getUndertimeWorkingDayOffDeduction() {
+        return undertimeWorkingDayOffDeduction;
+    }
+
     public void setAttendanceDate(Date attendanceDate) {
         this.attendanceDate = attendanceDate;
     }
@@ -176,4 +206,29 @@ public class Timekeeping extends Payroll {
     public void setNonWorkingHolidayPaid(double nonWorkingHolidayPaid) {
         this.nonWorkingHolidayPaid = nonWorkingHolidayPaid;
     }    
+
+    public void setLatesLegalHolidayDeduction(double latesLegalHolidayDeduction) {
+        this.latesLegalHolidayDeduction = latesLegalHolidayDeduction;
+    }
+
+    public void setLatesSpecialHolidayDeduction(double latesSpecialHolidayDeduction) {
+        this.latesSpecialHolidayDeduction = latesSpecialHolidayDeduction;
+    }
+
+    public void setLatesWorkingDayOffDeduction(double latesWorkingDayOffDeduction) {
+        this.latesWorkingDayOffDeduction = latesWorkingDayOffDeduction;
+    }
+
+    public void setUndertimeLegalHolidayDeduction(double undertimeLegalHolidayDeduction) {
+        this.undertimeLegalHolidayDeduction = undertimeLegalHolidayDeduction;
+    }
+
+    public void setUndertimeSpecialHolidayDeduction(double undertimeSpecialHolidayDeduction) {
+        this.undertimeSpecialHolidayDeduction = undertimeSpecialHolidayDeduction;
+    }
+
+    public void setUndertimeWorkingDayOffDeduction(double undertimeWorkingDayOffDeduction) {
+        this.undertimeWorkingDayOffDeduction = undertimeWorkingDayOffDeduction;
+    }
+    
 }
