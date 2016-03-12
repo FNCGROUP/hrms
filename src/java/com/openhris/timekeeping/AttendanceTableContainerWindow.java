@@ -446,7 +446,7 @@ public class AttendanceTableContainerWindow extends Window {
                     
                     if(!event.getText().isEmpty()){
                         if(getBranch().equals("on-call and trainees")){
-                            lateDeduction = computation.processEmployeesLates(policyStr, 
+                            lateDeduction = computation.processEmployeesLatesForOnCall(policyStr, 
                                 holidayStr, 
                                 utilities.convertStringToInteger(event.getText().trim()), 
                                 getEmploymentWage());
@@ -458,7 +458,6 @@ public class AttendanceTableContainerWindow extends Window {
                                     utilities.convertStringToInteger(event.getText().trim()), 
                                     getEmploymentWage());
                                 if(policyStr == null || policyStr.isEmpty()){
-                                    System.out.println("this is lates");
                                     item.getItemProperty("l/min").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction));
                                 }else if(policyStr.equals("working-holiday") && holidayStr.equals("legal-holiday")){
                                     item.getItemProperty("latesLH").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction));

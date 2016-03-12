@@ -148,6 +148,12 @@ public class EditAttendanceTableContainerWindow extends Window {
         table.addContainerProperty("sholiday", Double.class, null);
         table.addContainerProperty("wdo", Double.class, null);
         table.addContainerProperty("psday", Double.class, null); //paid non-working holiday
+        table.addContainerProperty("latesLH", Double.class, null);
+        table.addContainerProperty("latesSH", Double.class, null);
+        table.addContainerProperty("latesWO", Double.class, null);
+        table.addContainerProperty("undertimeLH", Double.class, null);
+        table.addContainerProperty("undertimeSH", Double.class, null);
+        table.addContainerProperty("undertimeWO", Double.class, null);
         
         table.setColumnAlignment("edit", Table.ALIGN_CENTER);
         table.setColumnAlignment("date", Table.ALIGN_CENTER);
@@ -165,7 +171,20 @@ public class EditAttendanceTableContainerWindow extends Window {
         table.setColumnAlignment("sholiday", Table.ALIGN_RIGHT);
         table.setColumnAlignment("wdo", Table.ALIGN_RIGHT);
         table.setColumnAlignment("psday", Table.ALIGN_RIGHT);
+        table.setColumnAlignment("latesLH", Table.ALIGN_RIGHT);
+        table.setColumnAlignment("latesSH", Table.ALIGN_RIGHT);
+        table.setColumnAlignment("latesWO", Table.ALIGN_RIGHT);
+        table.setColumnAlignment("undertimeLH", Table.ALIGN_RIGHT);
+        table.setColumnAlignment("undertimeSH", Table.ALIGN_RIGHT);
+        table.setColumnAlignment("undertimeWO", Table.ALIGN_RIGHT);
                 
+        table.setColumnCollapsed("latesLH", true);
+        table.setColumnCollapsed("latesSH", true);
+        table.setColumnCollapsed("latesWO", true);
+        table.setColumnCollapsed("undertimeLH", true);
+        table.setColumnCollapsed("undertimeSH", true);
+        table.setColumnCollapsed("undertimeWO", true);
+        
         final String[] holidayList = {"legal-holiday", "special-holiday"};
         for(int i = 0; i < getDateList().size(); i++){ 
             Object itemId = new Integer(i);
@@ -283,10 +302,27 @@ public class EditAttendanceTableContainerWindow extends Window {
                     if(!event.getText().isEmpty()){
                         if(utilities.convertStringToInteger(event.getText().trim()) > 5){
                             lateDeduction = computation.processEmployeesLates(policyStr, 
-                                holidayStr, 
-                                utilities.convertStringToInteger(event.getText().trim()), 
-                                getEmploymentWage());
-                            item.getItemProperty("l/min").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction + (lateDeduction*premiumRate)));
+                                    holidayStr, 
+                                    utilities.convertStringToInteger(event.getText().trim()), 
+                                    getEmploymentWage());
+                            if(policyStr == null || policyStr.isEmpty()){
+                                item.getItemProperty("l/min").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction));
+                            }else if(policyStr.equals("working-holiday") && holidayStr.equals("legal-holiday")){
+                                item.getItemProperty("latesLH").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction));
+                                item.getItemProperty("latesSH").setValue(0.0);
+                                item.getItemProperty("latesWO").setValue(0.0);
+                                item.getItemProperty("l/min").setValue(0.0);
+                            } else if(policyStr.equals("working-holiday") && holidayStr.equals("special-holiday")){
+                                item.getItemProperty("latesLH").setValue(0.0);
+                                item.getItemProperty("latesSH").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction));
+                                item.getItemProperty("latesWO").setValue(0.0);
+                                item.getItemProperty("l/min").setValue(0.0);
+                            } else if(policyStr.equals("working-day-off")){
+                                item.getItemProperty("latesLH").setValue(0.0);
+                                item.getItemProperty("latesSH").setValue(0.0);
+                                item.getItemProperty("latesWO").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction));
+                                item.getItemProperty("l/min").setValue(0.0);
+                            }                                 
                         } else {
                             item.getItemProperty("l/min").setValue(0.0);
                         }
@@ -314,8 +350,28 @@ public class EditAttendanceTableContainerWindow extends Window {
                     }
                     
                     if(!event.getText().isEmpty()){
-                        undertimeDeduction = computation.processEmployeesUndertime(policyStr, holidayStr, Integer.parseInt(event.getText().trim()), getEmploymentWage());
-                        item.getItemProperty("u/min").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction + (undertimeDeduction*premiumRate)));
+                        undertimeDeduction = computation.processEmployeesUndertime(policyStr, 
+                                holidayStr, 
+                                utilities.convertStringToInteger(event.getText().trim()), 
+                                getEmploymentWage());
+                        if(policyStr == null || policyStr.isEmpty()){
+                            item.getItemProperty("u/min").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction));
+                        }else if(policyStr.equals("working-holiday") && holidayStr.equals("legal-holiday")){
+                            item.getItemProperty("undertimeLH").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction));
+                            item.getItemProperty("undertimeSH").setValue(0.0);
+                            item.getItemProperty("undertimeWO").setValue(0.0);
+                            item.getItemProperty("u/min").setValue(0.0);
+                        } else if(policyStr.equals("working-holiday") && holidayStr.equals("special-holiday")){
+                            item.getItemProperty("undertimeLH").setValue(0.0);
+                            item.getItemProperty("undertimeSH").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction));
+                            item.getItemProperty("undertimeWO").setValue(0.0);
+                            item.getItemProperty("u/min").setValue(0.0);
+                        } else if(policyStr.equals("working-day-off")){
+                            item.getItemProperty("undertimeLH").setValue(0.0);
+                            item.getItemProperty("undertimeSH").setValue(0.0);
+                            item.getItemProperty("undertimeWO").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction));
+                            item.getItemProperty("u/min").setValue(0.0);
+                        }
                     }else{
                         item.getItemProperty("u/min").setValue(0.0);
                     }
@@ -411,7 +467,13 @@ public class EditAttendanceTableContainerWindow extends Window {
                     t.getLegalHolidayPaid(), 
                     t.getSpecialHolidayPaid(), 
                     t.getWorkingDayOffPaid(), 
-                    t.getNonWorkingHolidayPaid()
+                    t.getNonWorkingHolidayPaid(), 
+                    t.getLatesLegalHolidayDeduction(), 
+                    t.getLatesSpecialHolidayDeduction(), 
+                    t.getLatesWorkingDayOffDeduction(), 
+                    t.getUndertimeLegalHolidayDeduction(), 
+                    t.getUndertimeSpecialHolidayDeduction(), 
+                    t.getUndertimeWorkingDayOffDeduction()
                 }, new Integer(i));
             }                       
         }                
@@ -491,6 +553,12 @@ public class EditAttendanceTableContainerWindow extends Window {
                         t.setSpecialHolidayPaid(utilities.convertStringToDouble(tkeepList.get(14)));
                         t.setWorkingDayOffPaid(utilities.convertStringToDouble(tkeepList.get(15)));
                         t.setNonWorkingHolidayPaid(utilities.convertStringToDouble(tkeepList.get(16)));
+                        t.setLatesLegalHolidayDeduction(utilities.convertStringToDouble(tkeepList.get(17)));
+                        t.setLatesSpecialHolidayDeduction(utilities.convertStringToDouble(tkeepList.get(18)));
+                        t.setLatesWorkingDayOffDeduction(utilities.convertStringToDouble(tkeepList.get(19)));
+                        t.setUndertimeLegalHolidayDeduction(utilities.convertStringToDouble(tkeepList.get(20)));
+                        t.setUndertimeSpecialHolidayDeduction(utilities.convertStringToDouble(tkeepList.get(21)));
+                        t.setUndertimeWorkingDayOffDeduction(utilities.convertStringToDouble(tkeepList.get(22)));
                         attendanceList.add(t);
                     }
                     

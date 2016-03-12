@@ -213,6 +213,12 @@ public class TimekeepingDAO {
                 t.setSpecialHolidayPaid(util.convertStringToDouble(rs.getString("specialHolidayPaid")));
                 t.setWorkingDayOffPaid(util.convertStringToDouble(rs.getString("workingDayOffPaid")));
                 t.setNonWorkingHolidayPaid(util.convertStringToDouble(rs.getString("psHolidayPaid")));
+                t.setLatesLegalHolidayDeduction(util.convertStringToDouble(rs.getString("latesLegalHolidayDeduction")));
+                t.setLatesSpecialHolidayDeduction(util.convertStringToDouble(rs.getString("latesSpecialHolidayDeduction")));
+                t.setLatesWorkingDayOffDeduction(util.convertStringToDouble(rs.getString("latesWorkingDayOffDeduction")));
+                t.setUndertimeLegalHolidayDeduction(util.convertStringToDouble(rs.getString("undertimeLegalHolidayDeduction")));
+                t.setUndertimeSpecialHolidayDeduction(util.convertStringToDouble(rs.getString("undertimeSpecialHolidayDeduction")));
+                t.setUndertimeWorkingDayOffDeduction(util.convertStringToDouble(rs.getString("undertimeWorkingDayOffDeduction")));
                 attendanceList.add(t);
             }
         } catch (SQLException ex) {
@@ -385,9 +391,16 @@ public class TimekeepingDAO {
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT round(sum(latesDeduction),2) AS latesDeduction FROM timekeeping_table WHERE payrollId = "+payrollId+"");
-            while(rs.next()){
-                total = util.convertStringToDouble(rs.getString("latesDeduction"));
+            rs = stmt.executeQuery("SELECT round(sum(latesDeduction),2) AS latesDeduction, "
+                    + "sum(ifnull(latesLegalHolidayDeduction, 0)) AS latesLH, "
+                    + "sum(ifnull(latesSpecialHolidayDeduction, 0)) AS latesSH, "
+                    + "sum(ifnull(latesWorkingDayOffDeduction, 0)) AS latesWDO "
+                    + "FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            while(rs.next()){                
+                total = util.convertStringToDouble(rs.getString("latesDeduction")) + 
+                        util.convertStringToDouble(rs.getString("latesLH")) + 
+                        util.convertStringToDouble(rs.getString("latesSH")) + 
+                        util.convertStringToDouble(rs.getString("latesWDO"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -414,9 +427,16 @@ public class TimekeepingDAO {
         
         try {
             stmt = conn.createStatement();
-            rs = stmt.executeQuery("SELECT round(sum(undertimeDeduction),2) AS undertimeDeduction FROM timekeeping_table WHERE payrollId = "+payrollId+"");
+            rs = stmt.executeQuery("SELECT round(sum(undertimeDeduction),2) AS undertimeDeduction, "
+                    + "sum(ifnull(undertimeLegalHolidayDeduction, 0)) AS undertimeLH, "
+                    + "sum(ifnull(undertimeSpecialHolidayDeduction, 0)) AS undertimeSH, "
+                    + "sum(ifnull(undertimeWorkingDayOffDeduction, 0)) AS undertimeWDO "
+                    + "FROM timekeeping_table WHERE payrollId = "+payrollId+"");
             while(rs.next()){
-                total = util.convertStringToDouble(rs.getString("undertimeDeduction"));
+                total = util.convertStringToDouble(rs.getString("undertimeDeduction")) + 
+                        util.convertStringToDouble(rs.getString("undertimeLH")) + 
+                        util.convertStringToDouble(rs.getString("undertimeSH")) + 
+                        util.convertStringToDouble(rs.getString("undertimeWDO"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(TimekeepingDAO.class.getName()).log(Level.SEVERE, null, ex);

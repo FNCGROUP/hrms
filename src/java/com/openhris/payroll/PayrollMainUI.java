@@ -18,7 +18,9 @@ import com.openhris.service.CompanyService;
 import com.openhris.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;
+import com.openhris.service.TimekeepingService;
 import com.openhris.serviceprovider.CompanyServiceImpl;
+import com.openhris.serviceprovider.TimekeepingServiceImpl;
 import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
@@ -163,6 +165,7 @@ public class PayrollMainUI extends VerticalLayout {
     public void payrollTable(int branchId, String employeeId){
         payrollTbl.removeAllItems();
         String payrollStatus = null;
+        TimekeepingService tk = new TimekeepingServiceImpl();
         int i = 0;
         for(Payroll p : payrollService.getPayrollByBranchAndEmployee(branchId, employeeId)){
             if(p.getId() != 0){
@@ -171,6 +174,7 @@ public class PayrollMainUI extends VerticalLayout {
                 } else {
                     payrollStatus = "locked";
                 }
+                                
                 payrollTbl.addItem(new Object[]{
                     p.getId(), 
                     utililities.convertDateFormat(p.getAttendancePeriodFrom().toString()), 
@@ -183,8 +187,8 @@ public class PayrollMainUI extends VerticalLayout {
                     utililities.roundOffToTwoDecimalPlaces(p.getTotalNightDifferentialPaid()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getTotalWorkingDayOffPaid()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getAbsences()), 
-                    utililities.roundOffToTwoDecimalPlaces(p.getTotalLatesDeduction()), 
-                    utililities.roundOffToTwoDecimalPlaces(p.getTotalUndertimeDeduction()), 
+                    utililities.roundOffToTwoDecimalPlaces(tk.getTotalLatesDeduction(p.getId())), 
+                    utililities.roundOffToTwoDecimalPlaces(tk.getTotalUndertimeDeduction(p.getId())), 
                     utililities.roundOffToTwoDecimalPlaces(p.getGrossPay()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getSss()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getPhic()), 
