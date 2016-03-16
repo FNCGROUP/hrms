@@ -4,9 +4,7 @@
  */
 package com.openhris.model;
 
-import com.openhris.model.Payroll;
 import java.util.Date;
-import java.util.List;
 
 /**
  *

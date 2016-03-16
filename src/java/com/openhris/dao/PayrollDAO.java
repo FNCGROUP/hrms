@@ -72,7 +72,9 @@ public class PayrollDAO {
                 p.setTax(util.convertStringToDouble(rs.getString("tax")));
                 p.setCashBond(util.convertStringToDouble(rs.getString("cashBond")));
                 p.setTotalLatesDeduction(util.convertStringToDouble(rs.getString("totalLatesDeduction")));
+                p.setTotalLatesHolidayDeduction(util.convertStringToDouble(rs.getString("totalLatesHolidayDeduction")));
                 p.setTotalUndertimeDeduction(util.convertStringToDouble(rs.getString("totalUndertimeDeduction")));
+                p.setTotalUndertimeHolidayDeduction(util.convertStringToDouble(rs.getString("totalUndertimeHolidayDeduction")));
                 p.setTotalOvertimePaid(util.convertStringToDouble(rs.getString("totalOvertimePaid")));
                 p.setTotalNightDifferentialPaid(util.convertStringToDouble(rs.getString("totalNightDifferentialPaid")));
                 p.setTotalDutyManagerPaid(util.convertStringToDouble(rs.getString("totalDutyManagerPaid")));
@@ -1181,7 +1183,9 @@ public class PayrollDAO {
                         + "tax = ?, "
                         + "cashBond = ?, "
                         + "totalLatesDeduction = ?, "
+                        + "totalLatesHolidayDeduction = ?, "
                         + "totalUndertimeDeduction = ?, "
+                        + "totalUndertimeHolidayDeduction = ?, "
                         + "totalOvertimePaid = ?, "
                         + "totalNightDifferentialPaid = ?, "
                         + "totalDutyManagerPaid = ?, "
@@ -1217,28 +1221,30 @@ public class PayrollDAO {
                 pstmt.setDouble(12, payroll.getTax());
                 pstmt.setDouble(13, payroll.getCashBond());
                 pstmt.setDouble(14, payroll.getTotalLatesDeduction());
-                pstmt.setDouble(15, payroll.getTotalUndertimeDeduction());
-                pstmt.setDouble(16, payroll.getTotalOvertimePaid());
-                pstmt.setDouble(17, payroll.getTotalNightDifferentialPaid());
-                pstmt.setDouble(18, payroll.getTotalDutyManagerPaid());
-                pstmt.setDouble(19, payroll.getTotalLegalHolidayPaid());
-                pstmt.setDouble(20, payroll.getTotalSpecialHolidayPaid());
-                pstmt.setDouble(21, payroll.getTotalWorkingDayOffPaid());
-                pstmt.setDouble(22, payroll.getTotalNonWorkingHolidayPaid());
-                pstmt.setDouble(23, payroll.getCommunicationAllowance());
-                pstmt.setDouble(24, payroll.getPerDiemAllowance());
-                pstmt.setDouble(25, payroll.getColaAllowance());
-                pstmt.setDouble(26, payroll.getMealAllowance());
-                pstmt.setDouble(27, payroll.getTransportationAllowance());
-                pstmt.setDouble(28, payroll.getOtherAllowances());
-                pstmt.setDouble(29, payroll.getAllowanceForLiquidation());
-                pstmt.setDouble(30, payroll.getNetSalary());
-		pstmt.setDouble(31, adjustments);
-                pstmt.setDouble(32, payroll.getAmountToBeReceive() + adjustments);
-                pstmt.setDouble(33, payroll.getAmountReceivable() + adjustments);
-                pstmt.setInt(34, payroll.getBranchId());
-                pstmt.setString(35, payroll.getPayrollPeriod());
-                pstmt.setString(36, util.convertDateFormat(payroll.getPayrollDate().toString()));                
+                pstmt.setDouble(15, payroll.getTotalLatesHolidayDeduction());
+                pstmt.setDouble(16, payroll.getTotalUndertimeDeduction());
+                pstmt.setDouble(17, payroll.getTotalUndertimeHolidayDeduction());
+                pstmt.setDouble(18, payroll.getTotalOvertimePaid());
+                pstmt.setDouble(19, payroll.getTotalNightDifferentialPaid());
+                pstmt.setDouble(20, payroll.getTotalDutyManagerPaid());
+                pstmt.setDouble(21, payroll.getTotalLegalHolidayPaid());
+                pstmt.setDouble(22, payroll.getTotalSpecialHolidayPaid());
+                pstmt.setDouble(23, payroll.getTotalWorkingDayOffPaid());
+                pstmt.setDouble(24, payroll.getTotalNonWorkingHolidayPaid());
+                pstmt.setDouble(25, payroll.getCommunicationAllowance());
+                pstmt.setDouble(26, payroll.getPerDiemAllowance());
+                pstmt.setDouble(27, payroll.getColaAllowance());
+                pstmt.setDouble(28, payroll.getMealAllowance());
+                pstmt.setDouble(29, payroll.getTransportationAllowance());
+                pstmt.setDouble(30, payroll.getOtherAllowances());
+                pstmt.setDouble(31, payroll.getAllowanceForLiquidation());
+                pstmt.setDouble(32, payroll.getNetSalary());
+		pstmt.setDouble(33, adjustments);
+                pstmt.setDouble(34, payroll.getAmountToBeReceive() + adjustments);
+                pstmt.setDouble(35, payroll.getAmountReceivable() + adjustments);
+                pstmt.setInt(36, payroll.getBranchId());
+                pstmt.setString(37, payroll.getPayrollPeriod());
+                pstmt.setString(38, util.convertDateFormat(payroll.getPayrollDate().toString()));                
                 pstmt.executeUpdate();
                 
                 int payrollId = 0;            

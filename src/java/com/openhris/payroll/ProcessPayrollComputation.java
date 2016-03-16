@@ -111,7 +111,7 @@ public class ProcessPayrollComputation {
             totalWorkingDayOffPaid = totalWorkingDayOffPaid + t.getWorkingDayOffPaid();
             totalNonWorkingHolidayPaid = totalNonWorkingHolidayPaid + t.getNonWorkingHolidayPaid();
             totalLatesWHLHDeduction = totalLatesWHLHDeduction + t.getLatesLegalHolidayDeduction();
-            totalLatesWHSHDeduction = totalLatesWHSHDeduction = t.getLatesSpecialHolidayDeduction();
+            totalLatesWHSHDeduction = totalLatesWHSHDeduction + t.getLatesSpecialHolidayDeduction();
             totalLatesWDODeduction = totalLatesWDODeduction + t.getLatesWorkingDayOffDeduction();
             totalUndertimeWHLHDeduction = totalUndertimeWHLHDeduction + t.getUndertimeLegalHolidayDeduction();
             totalUndertimeWHSHDeduction = totalUndertimeWHSHDeduction + t.getUndertimeSpecialHolidayDeduction();
@@ -141,12 +141,8 @@ public class ProcessPayrollComputation {
             payroll.setTotalLegalHolidayPaid(totalLegalHolidayPaid);
             payroll.setTotalSpecialHolidayPaid(totalSpecialHolidayPaid);
             payroll.setTotalWorkingDayOffPaid(totalWorkingDayOffPaid);
-            payroll.setTotalLatesWHLHDeduction(totalLatesWHLHDeduction);
-            payroll.setTotalLatesWHSHDeduction(totalLatesWHSHDeduction);
-            payroll.setTotalLatesWDODeduction(totalLatesWDODeduction);
-            payroll.setTotalUndertimeWHLHDeduction(totalUndertimeWHLHDeduction);
-            payroll.setTotalUndertimeWHSHDeduction(totalUndertimeWHSHDeduction);
-            payroll.setTotalUndertimeWDODeduction(totalUndertimeWDODeduction);
+            payroll.setTotalLatesHolidayDeduction(totalLatesWHLHDeduction + totalLatesWHSHDeduction + totalLatesWDODeduction);
+            payroll.setTotalUndertimeHolidayDeduction(totalUndertimeWHLHDeduction + totalUndertimeWHSHDeduction + totalUndertimeWDODeduction);
             payroll.setTotalNonWorkingHolidayPaid(getTotalNonWorkingHolidayPay());
             
             double basicSalary = payrollComputation.getBasicSalary(employmentWage, employmentWageEntry);
