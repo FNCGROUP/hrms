@@ -46,18 +46,18 @@ public class PHICReport extends Window {
         center();
         
         Connection conn = getConnection.connection();
-//        URL url = this.getClass().getResource("/com/openhris/reports/PhicReport.jasper");
-        File url = new File("C:/reportsJasper/PhicReport.jasper");
+        URL url = this.getClass().getResource("/com/openhris/reports/PhilhealthReport.jasper");
+//        File url = new File("C:/reportsJasper/PhicReport.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("BRANCH_ID", getBranchId());
         hm.put("PAYROLL_DATE", getPayrollDate());
 
         try{
-             JasperPrint jpReport = JasperFillManager.fillReport(url.getAbsolutePath(), hm, conn);
+             JasperPrint jpReport = JasperFillManager.fillReport(url.getPath(), hm, conn);
              SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
              String timestamp = df.format(new Date());
-             file = File.createTempFile("PhicReport_"+timestamp, ".pdf");
+             file = File.createTempFile("PhilhealthReport_"+timestamp, ".pdf");
 //             filePath = "C:/reportsPdf/PhicReport_"+timestamp+".pdf";
              JasperExportManager.exportReportToPdfFile(jpReport, file.getAbsolutePath());             
         }catch(Exception e){
