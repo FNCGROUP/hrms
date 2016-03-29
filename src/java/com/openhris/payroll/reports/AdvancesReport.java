@@ -14,6 +14,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URL;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -47,22 +49,26 @@ public class AdvancesReport extends Window {
         setWidth("800px");
         setHeight("600px");
         center();
-        
+                
         Connection conn = getConnection.connection();
-        URL url = this.getClass().getResource("/com/openhris/reports/AdvancesReport.jasper");
-//        File reportFile = new File("C:/reportsJasper/AdvancesReport.jasper");
+        URL url = AdvancesReport.class.getResource("/com/openhris/reports/AdvancesReport.jasper");
         
-        final HashMap hm = new HashMap();
-        hm.put("BRANCH_ID", getBranchId());
-        hm.put("PAYROLL_DATE", getPayrollDate());
-
         try{
-             JasperPrint jpReport = JasperFillManager.fillReport(url.getPath(), hm, conn);
-             SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
-             String timestamp = df.format(new Date());
-             file = File.createTempFile("AdvancesReport_"+timestamp, ".pdf");
-//             filePath = "C:/reportsPdf/AdvancesReport_"+timestamp+".pdf";
-             JasperExportManager.exportReportToPdfFile(jpReport, file.getAbsolutePath());             
+            Path path = Paths.get(url.toURI());
+            String subReportDir = "/"+path.getParent().toString().replace("\\", "/")+"/";
+            System.out.println("sub dir: "+subReportDir);
+            
+            final HashMap hm = new HashMap();
+            hm.put("BRANCH_ID", getBranchId());
+            hm.put("PAYROLL_DATE", getPayrollDate());
+            hm.put("SUBREPORT_DIR", subReportDir);
+            
+            JasperPrint jpReport = JasperFillManager.fillReport(url.getPath(), hm, conn);
+            SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
+            String timestamp = df.format(new Date());
+            file = File.createTempFile("AdvancesReport_"+timestamp, ".pdf");
+//             file = File("C:/reportsPdf/AdvancesReport_"+timestamp+".pdf");
+            JasperExportManager.exportReportToPdfFile(jpReport, file.getAbsolutePath());             
         }catch(Exception e){
              e.getMessage();
         }

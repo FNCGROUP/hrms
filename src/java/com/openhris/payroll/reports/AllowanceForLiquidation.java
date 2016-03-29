@@ -47,6 +47,7 @@ public class AllowanceForLiquidation extends Window {
         
         Connection conn = getConnection.connection();
         URL url = this.getClass().getResource("/com/openhris/reports/AllowanceForLiquidation.jasper");
+        System.out.println("url: "+url.getPath());
 //        File reportFile = new File("C:/reportsJasper/AllowanceForLiquidation.jasper");
         
         final HashMap hm = new HashMap();
