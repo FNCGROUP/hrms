@@ -13,6 +13,7 @@ import com.vaadin.ui.Window;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,7 +32,7 @@ public class AdvancesReport extends Window {
     private int branchId;
     private String payrollDate;
         
-    String filePath;
+    File file;
     Application payrollApplication;
 
     public AdvancesReport(int branchId, 
@@ -48,18 +49,20 @@ public class AdvancesReport extends Window {
         center();
         
         Connection conn = getConnection.connection();
-        File reportFile = new File("C:/reportsJasper/AdvancesReport.jasper");
+        URL url = this.getClass().getResource("/com/openhris/reports/AdvancesReport.jasper");
+//        File reportFile = new File("C:/reportsJasper/AdvancesReport.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("BRANCH_ID", getBranchId());
         hm.put("PAYROLL_DATE", getPayrollDate());
 
         try{
-             JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+             JasperPrint jpReport = JasperFillManager.fillReport(url.getPath(), hm, conn);
              SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
              String timestamp = df.format(new Date());
-             filePath = "C:/reportsPdf/AdvancesReport_"+timestamp+".pdf";
-             JasperExportManager.exportReportToPdfFile(jpReport, filePath);             
+             file = File.createTempFile("AdvancesReport_"+timestamp, ".pdf");
+//             filePath = "C:/reportsPdf/AdvancesReport_"+timestamp+".pdf";
+             JasperExportManager.exportReportToPdfFile(jpReport, file.getAbsolutePath());             
         }catch(Exception e){
              e.getMessage();
         }
@@ -68,8 +71,8 @@ public class AdvancesReport extends Window {
             @Override
             public InputStream getStream() {
                 try {
-                    File f = new File(filePath);
-                    FileInputStream fis = new FileInputStream(f);
+//                    File f = new File(filePath);
+                    FileInputStream fis = new FileInputStream(file);
                     return fis;
                 } catch (Exception e) {
                     e.getMessage();
@@ -78,7 +81,7 @@ public class AdvancesReport extends Window {
             }
         };
 
-        StreamResource resource = new StreamResource(source, filePath, getPayrollApplication());
+        StreamResource resource = new StreamResource(source, file.getAbsolutePath(), getPayrollApplication());
         resource.setMIMEType("application/pdf");       
 
         Embedded e = new Embedded();

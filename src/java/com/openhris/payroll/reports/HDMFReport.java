@@ -13,6 +13,7 @@ import com.vaadin.ui.Window;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,7 +31,7 @@ public class HDMFReport extends Window {
     private int branchId;
     private String payrollDate;
         
-    String filePath;
+    File file;
     Application payrollApplication;
 
     public HDMFReport(int branchId, String payrollDate, Application payrollApplication) {
@@ -45,18 +46,20 @@ public class HDMFReport extends Window {
         center();
         
         Connection conn = getConnection.connection();
-        File reportFile = new File("C:/reportsJasper/HdmfReport.jasper");
+        URL url = this.getClass().getResource("/com/openhris/reports/HdmfReport.jasper");
+//        File reportFile = new File("C:/reportsJasper/HdmfReport.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("BRANCH_ID", getBranchId());
         hm.put("PAYROLL_DATE", getPayrollDate());
 
         try{
-             JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getAbsolutePath(), hm, conn);
+             JasperPrint jpReport = JasperFillManager.fillReport(url.getPath(), hm, conn);
              SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
              String timestamp = df.format(new Date());
-             filePath = "C:/reportsPdf/HdmfReport_"+timestamp+".pdf";
-             JasperExportManager.exportReportToPdfFile(jpReport, filePath);             
+             file = File.createTempFile("HdmfReport_"+timestamp, ".pdf");
+//             filePath = "C:/reportsPdf/HdmfReport_"+timestamp+".pdf";
+             JasperExportManager.exportReportToPdfFile(jpReport, file.getAbsolutePath());             
         }catch(Exception e){
              e.getMessage();
         }
@@ -65,8 +68,8 @@ public class HDMFReport extends Window {
             @Override
             public InputStream getStream() {
                 try {
-                    File f = new File(filePath);
-                    FileInputStream fis = new FileInputStream(f);
+//                    File f = new File(filePath);
+                    FileInputStream fis = new FileInputStream(file);
                     return fis;
                 } catch (Exception e) {
                     e.getMessage();
@@ -75,7 +78,7 @@ public class HDMFReport extends Window {
             }
         };
 
-        StreamResource resource = new StreamResource(source, filePath, getPayrollApplication());
+        StreamResource resource = new StreamResource(source, file.getAbsolutePath(), getPayrollApplication());
         resource.setMIMEType("application/pdf");       
 
         Embedded e = new Embedded();

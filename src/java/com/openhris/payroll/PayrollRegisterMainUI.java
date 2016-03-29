@@ -222,20 +222,20 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                 }
                 
                 if(reportType.getValue().equals("Payroll Register")){
-                    String fileName = "payrollRegisterReport_";
-                    reports.deleteFile(fileName);
+//                    String fileName = "payrollRegisterReport_";
+//                    reports.deleteFile(fileName);
                     Window reportWindow = new PayrollRegisterReport(getBranchId(), 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 }else if(reportType.getValue().equals("Adjusted Payroll Register")){
-		    String fileName = "PayrollRegisterReportAdjusted_";
-                    reports.deleteFile(fileName);
+//		    String fileName = "PayrollRegisterReportAdjusted_";
+//                    reports.deleteFile(fileName);
                     Window reportWindow = new AdjustedPayrollRegisterReport(getBranchId(), 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
 		}else if(reportType.getValue().equals("Payslip Report")){
-                    String fileName = "PayslipReport_";
-                    reports.deleteFile(fileName);
+//                    String fileName = "PayslipReport_";
+//                    reports.deleteFile(fileName);
                     Window payslipReport = new PayslipReport(getBranchId(), 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
@@ -243,8 +243,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     if(day == 15){
                         getWindow().showNotification("SSS Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
                     }else{                        
-			String fileName = "SssReport_";
-                        reports.deleteFile(fileName);
+//			String fileName = "SssReport_";
+//                        reports.deleteFile(fileName);
                         Window sssGeneralReport = new SSSGeneralReport(getBranchId(), 
                                 util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
@@ -253,16 +253,16 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     if(day == 15){
                         getWindow().showNotification("SSS Report Sbarro is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
                     }else{                        
-			String fileName = "SssReportSbarro_";
-                        reports.deleteFile(fileName);
+//			String fileName = "SssReportSbarro_";
+//                        reports.deleteFile(fileName);
                         Window sssSbarroReport = new SSSSbarroReport(getBranchId(), 
                                 util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
                     }
                 }else if(reportType.getValue().equals("HDMF Report")){
                     if(day == 15){
-                        String fileName = "HdmfReport_";
-                        reports.deleteFile(fileName);
+//                        String fileName = "HdmfReport_";
+//                        reports.deleteFile(fileName);
                         Window hdmfReport = new HDMFReport(getBranchId(), 
                                 util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
@@ -271,8 +271,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     }
                 }else if(reportType.getValue().equals("HDMF Savings")){
                     if(day == 15){
-                        String fileName = "HdmfVoluntarySavingsReport_";
-                        reports.deleteFile(fileName);
+//                        String fileName = "HdmfVoluntarySavingsReport_";
+//                        reports.deleteFile(fileName);
                         Window hdmfSavingsReport = new HDMFSavingsReport(getBranchId(), 
                                 util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
@@ -281,8 +281,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     }
                 }else if(reportType.getValue().equals("HDMF Loans Payable")){
                     if(day == 15){
-                        String fileName = "HdmfLoanReport_";
-                        reports.deleteFile(fileName);
+//                        String fileName = "HdmfLoanReport_";
+//                        reports.deleteFile(fileName);
                         Window hdmfLoansPayableReport = new HDMFLoansPayableReport(getBranchId(), 
                                 util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
@@ -292,8 +292,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     }
                 }else if(reportType.getValue().equals("Philhealth Report")){
                     if(day == 15){
-                        String fileName = "PhicReport_";
-                        reports.deleteFile(fileName);
+//                        String fileName = "PhicReport_";
+//                        reports.deleteFile(fileName);
                         Window phicReport = new PHICReport(getBranchId(), 
                                 util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
@@ -301,20 +301,20 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                         getWindow().showNotification("Philhealth Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
                     }
                 }else if(reportType.getValue().equals("Witholding Tax")){
-                    String fileName = "WitholdingTaxesReport_";
-                    reports.deleteFile(fileName);
+//                    String fileName = "WitholdingTaxesReport_";
+//                    reports.deleteFile(fileName);
                     Window witholdingTaxReport = new WitholdingTaxReport(getBranchId(), 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 }else if(reportType.getValue().equals("Attendance Report")){
-                    String fileName = "AttendanceReport_";
-                    reports.deleteFile(fileName);
+//                    String fileName = "AttendanceReport_";
+//                    reports.deleteFile(fileName);
                     AttendanceReport attendanceReport = new AttendanceReport(getBranchId(), 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 }else if(reportType.getValue().equals("Bank Debit Memo")){
-                    String fileName = "BankDebitMemo_";
-                    reports.deleteFile(fileName);
+//                    String fileName = "BankDebitMemo_";
+//                    reports.deleteFile(fileName);
                     Window bankDebitMemoReport = new BankDebitMemoReport(getBranchId(), 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
@@ -322,25 +322,25 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     if(day == 15){
                         getWindow().showNotification("SSS Loan Report is disabled for this payroll period", Window.Notification.TYPE_WARNING_MESSAGE);
                     }else{
-                        String fileName = "SssLoanReport_";
-                        reports.deleteFile(fileName);
+//                        String fileName = "SssLoanReport_";
+//                        reports.deleteFile(fileName);
                         SSSLoansPayable sssLoansPayable = new SSSLoansPayable(getBranchId(), 
                                 util.convertDateFormat(payrollDateField.getValue().toString()), 
                                 getApplication());
                     }
                 }else if(reportType.getValue().equals("Advances")){
-                    reports.deleteFile("AdvancesReport_");
+//                    reports.deleteFile("AdvancesReport_");
                     Window advancesReport = new AdvancesReport(getBranchId(), 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 } else if(reportType.getValue().equals("AFL")){
-                    reports.deleteFile("AllowanceForLiquidation_");
+//                    reports.deleteFile("AllowanceForLiquidation_");
                     String corporate = companyService.getCorporateNameByBranchId(getBranchId());
                     Window afl = new AllowanceForLiquidation(corporate, 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 } else if(reportType.getValue().equals("Allowances")){
-                    reports.deleteFile("AllowancesReport_");
+//                    reports.deleteFile("AllowancesReport_");
                     String corporate = companyService.getCorporateNameByBranchId(getBranchId());
                     Window allowance = new AllowanceReport(getBranchId(), 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
