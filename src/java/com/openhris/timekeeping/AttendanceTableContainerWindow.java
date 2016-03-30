@@ -466,9 +466,13 @@ public class AttendanceTableContainerWindow extends Window {
                                     item.getItemProperty("l/min").setValue(0.0);
                                 } else if(policyStr.equals("working-holiday") && holidayStr.equals("special-holiday")){
                                     item.getItemProperty("latesLH").setValue(0.0);
-                                    item.getItemProperty("latesSH").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction));
+                                    item.getItemProperty("latesSH").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction * 0.3));
                                     item.getItemProperty("latesWO").setValue(0.0);
-                                    item.getItemProperty("l/min").setValue(0.0);
+                                    if(getEmploymentWageEntry().equals("daily")){
+                                        item.getItemProperty("l/min").setValue(lateDeduction);
+                                    }else {
+                                        item.getItemProperty("l/min").setValue(0.0);
+                                    }                                    
                                 } else if(policyStr.equals("working-day-off")){
                                     item.getItemProperty("latesLH").setValue(0.0);
                                     item.getItemProperty("latesSH").setValue(0.0);
@@ -524,9 +528,14 @@ public class AttendanceTableContainerWindow extends Window {
                                 item.getItemProperty("u/min").setValue(0.0);
                             } else if(policyStr.equals("working-holiday") && holidayStr.equals("special-holiday")){
                                 item.getItemProperty("undertimeLH").setValue(0.0);
-                                item.getItemProperty("undertimeSH").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction));
+                                item.getItemProperty("undertimeSH").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction *0.3));
                                 item.getItemProperty("undertimeWO").setValue(0.0);
-                                item.getItemProperty("u/min").setValue(0.0);
+                                if(getEmploymentWageEntry().equals("daily")){
+                                    item.getItemProperty("u/min").setValue(undertimeDeduction);
+                                } else {
+                                    item.getItemProperty("u/min").setValue(0.0);
+                                }
+                                
                             } else if(policyStr.equals("working-day-off")){
                                 item.getItemProperty("undertimeLH").setValue(0.0);
                                 item.getItemProperty("undertimeSH").setValue(0.0);

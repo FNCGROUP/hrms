@@ -31,7 +31,8 @@ public class PayslipReport extends Window {
     private int branchId;
     private String payrollDate;
         
-    File file;
+//    File file;
+    String file;
     Application payrollApplication;
 
     public PayslipReport(int branchId, String payrollDate, Application payrollApplication) {
@@ -46,20 +47,20 @@ public class PayslipReport extends Window {
         center();
         
         Connection conn = getConnection.connection();
-        URL url = this.getClass().getResource("/com/openhris/reports/PayslipReport.jasper");
-//        File reportFile = new File("C:/reportsJasper/PayslipReport.jasper");
+//        URL url = this.getClass().getResource("/com/openhris/reports/PayslipReport.jasper");
+        File reportFile = new File("C:/reportsJasper/PayslipReport.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("BRANCH_ID", getBranchId());
         hm.put("PAYROLL_DATE", getPayrollDate());
 
         try{
-             JasperPrint jpReport = JasperFillManager.fillReport(url.getPath(), hm, conn);
+             JasperPrint jpReport = JasperFillManager.fillReport(reportFile.getPath(), hm, conn);
              SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
              String timestamp = df.format(new Date());
-             file = File.createTempFile("PayslipReport_"+timestamp, ".pdf");
-//             filePath = "C:/reportsPdf/PayslipReport_"+timestamp+".pdf";
-             JasperExportManager.exportReportToPdfFile(jpReport, file.getAbsolutePath());             
+//             file = File.createTempFile("PayslipReport_"+timestamp, ".pdf");
+             file = "C:/reportsPdf/PayslipReport_"+timestamp+".pdf";
+             JasperExportManager.exportReportToPdfFile(jpReport, file);             
         }catch(Exception e){
              e.getMessage();
         }
@@ -68,8 +69,8 @@ public class PayslipReport extends Window {
             @Override
             public InputStream getStream() {
                 try {
-//                    File f = new File(filePath);
-                    FileInputStream fis = new FileInputStream(file);
+                    File f = new File(file);
+                    FileInputStream fis = new FileInputStream(f);
                     return fis;
                 } catch (Exception e) {
                     e.getMessage();
@@ -78,7 +79,7 @@ public class PayslipReport extends Window {
             }
         };
 
-        StreamResource resource = new StreamResource(source, file.getAbsolutePath(), getPayrollApplication());
+        StreamResource resource = new StreamResource(source, file, getPayrollApplication());
         resource.setMIMEType("application/pdf");       
 
         Embedded e = new Embedded();

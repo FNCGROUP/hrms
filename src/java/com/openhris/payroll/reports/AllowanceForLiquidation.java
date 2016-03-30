@@ -31,7 +31,8 @@ public class AllowanceForLiquidation extends Window {
     private String corporate;
     private String payrollDate;
         
-    File file;
+//    File file;
+    String file;
     Application payrollApplication;
 
     public AllowanceForLiquidation(String corporate, String payrollDate, Application payrollApplication) {
@@ -46,9 +47,8 @@ public class AllowanceForLiquidation extends Window {
         center();
         
         Connection conn = getConnection.connection();
-        URL url = this.getClass().getResource("/com/openhris/reports/AllowanceForLiquidation.jasper");
-        System.out.println("url: "+url.getPath());
-//        File reportFile = new File("C:/reportsJasper/AllowanceForLiquidation.jasper");
+//        URL url = this.getClass().getResource("/com/openhris/reports/AllowanceForLiquidation.jasper");
+        File url = new File("C:/reportsJasper/AllowanceForLiquidation.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("CORPORATE_NAME", getCorporate());
@@ -58,9 +58,9 @@ public class AllowanceForLiquidation extends Window {
              JasperPrint jpReport = JasperFillManager.fillReport(url.getPath(), hm, conn);
              SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
              String timestamp = df.format(new Date());
-             file = File.createTempFile("AllowanceForLiquidation_"+timestamp, ".pdf");
-//             filePath = "C:/reportsPdf/AllowanceForLiquidation_"+timestamp+".pdf";
-             JasperExportManager.exportReportToPdfFile(jpReport, file.getAbsolutePath());             
+//             file = File.createTempFile("AllowanceForLiquidation_"+timestamp, ".pdf");
+             file = "C:/reportsPdf/AllowanceForLiquidation_"+timestamp+".pdf";
+             JasperExportManager.exportReportToPdfFile(jpReport, file);             
         }catch(Exception e){
              e.getMessage();
         }
@@ -69,8 +69,8 @@ public class AllowanceForLiquidation extends Window {
             @Override
             public InputStream getStream() {
                 try {
-//                    File f = new File(filePath);
-                    FileInputStream fis = new FileInputStream(file);
+                    File f = new File(file);
+                    FileInputStream fis = new FileInputStream(f);
                     return fis;
                 } catch (Exception e) {
                     e.getMessage();
@@ -79,7 +79,7 @@ public class AllowanceForLiquidation extends Window {
             }
         };
 
-        StreamResource resource = new StreamResource(source, file.getAbsolutePath(), getPayrollApplication());
+        StreamResource resource = new StreamResource(source, file, getPayrollApplication());
         resource.setMIMEType("application/pdf");       
 
         Embedded e = new Embedded();

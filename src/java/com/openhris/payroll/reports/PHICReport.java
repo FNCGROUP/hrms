@@ -31,7 +31,8 @@ public class PHICReport extends Window {
     private int branchId;
     private String payrollDate;
         
-    File file;
+//    File file;
+    String file;
     Application payrollApplication;
 
     public PHICReport(int branchId, String payrollDate, Application payrollApplication) {
@@ -46,8 +47,8 @@ public class PHICReport extends Window {
         center();
         
         Connection conn = getConnection.connection();
-        URL url = this.getClass().getResource("/com/openhris/reports/PhilhealthReport.jasper");
-//        File url = new File("C:/reportsJasper/PhicReport.jasper");
+//        URL url = this.getClass().getResource("/com/openhris/reports/PhilhealthReport.jasper");
+        File url = new File("C:/reportsJasper/PhicReport.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("BRANCH_ID", getBranchId());
@@ -57,9 +58,9 @@ public class PHICReport extends Window {
              JasperPrint jpReport = JasperFillManager.fillReport(url.getPath(), hm, conn);
              SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
              String timestamp = df.format(new Date());
-             file = File.createTempFile("PhilhealthReport_"+timestamp, ".pdf");
-//             filePath = "C:/reportsPdf/PhicReport_"+timestamp+".pdf";
-             JasperExportManager.exportReportToPdfFile(jpReport, file.getAbsolutePath());             
+//             file = File.createTempFile("PhilhealthReport_"+timestamp, ".pdf");
+             file = "C:/reportsPdf/PhicReport_"+timestamp+".pdf";
+             JasperExportManager.exportReportToPdfFile(jpReport, file);             
         }catch(Exception e){
              e.getMessage();
         }
@@ -68,8 +69,8 @@ public class PHICReport extends Window {
             @Override
             public InputStream getStream() {
                 try {
-//                    File f = new File(filePath);
-                    FileInputStream fis = new FileInputStream(file);
+                    File f = new File(file);
+                    FileInputStream fis = new FileInputStream(f);
                     return fis;
                 } catch (Exception e) {
                     e.getMessage();
@@ -78,7 +79,7 @@ public class PHICReport extends Window {
             }
         };
 
-        StreamResource resource = new StreamResource(source, file.getAbsolutePath(), getPayrollApplication());
+        StreamResource resource = new StreamResource(source, file, getPayrollApplication());
         resource.setMIMEType("application/pdf");       
 
         Embedded e = new Embedded();
