@@ -51,74 +51,74 @@ WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.
 	<title>
 		<band height="150" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="103" width="100" height="20" uuid="bb107e4a-871f-401f-8664-a9535b868278"/>
+				<reportElement uuid="bb107e4a-871f-401f-8664-a9535b868278" x="0" y="103" width="100" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Employer's HDMF ID No:   ]]></text>
 			</staticText>
 			<line>
-				<reportElement x="102" y="122" width="121" height="1" uuid="2d8e2b77-1fb3-4f4e-937f-089a68132f8c"/>
+				<reportElement uuid="2d8e2b77-1fb3-4f4e-937f-089a68132f8c" x="102" y="122" width="121" height="1"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="103" y="103" width="120" height="20" uuid="67583d33-b725-419b-b193-905114034554"/>
+				<reportElement uuid="67583d33-b725-419b-b193-905114034554" x="103" y="103" width="120" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{erHdmfNo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="133" y="17" width="100" height="18" uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b"/>
+				<reportElement uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b" x="133" y="17" width="100" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
 				<text><![CDATA[Operated By:  ]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="135" y="35" width="300" height="18" uuid="edc11e37-f098-431a-a553-ea24eb1346f9"/>
+				<reportElement uuid="edc11e37-f098-431a-a553-ea24eb1346f9" x="135" y="35" width="300" height="18"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="184" y="0" width="200" height="18" uuid="8162cf8a-c02f-4c6c-a638-ea34624938be"/>
+				<reportElement uuid="8162cf8a-c02f-4c6c-a638-ea34624938be" x="184" y="0" width="200" height="18"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tradeName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM yyyy">
-				<reportElement x="291" y="75" width="100" height="18" uuid="1ad9c4d7-89ed-48db-acc5-b9217576f73f"/>
+				<reportElement uuid="1ad9c4d7-89ed-48db-acc5-b9217576f73f" x="291" y="75" width="100" height="18"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="182" y="57" width="200" height="18" uuid="d38d681d-8fee-469d-910e-f01c2bd3b846"/>
+				<reportElement uuid="d38d681d-8fee-469d-910e-f01c2bd3b846" x="182" y="57" width="200" height="18"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Schedule of HDMF Contributions]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="236" y="17" width="200" height="18" uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba"/>
+				<reportElement uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba" x="236" y="17" width="200" height="18"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="188" y="75" width="100" height="18" uuid="0615b23a-4ea4-42f4-97aa-3d45b2b2a195"/>
+				<reportElement uuid="0615b23a-4ea4-42f4-97aa-3d45b2b2a195" x="188" y="75" width="100" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<text><![CDATA[For the Month of ]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="102" y="123" width="121" height="20" uuid="44bd4719-aabe-4287-af89-6d5576b2c0f0"/>
+				<reportElement uuid="44bd4719-aabe-4287-af89-6d5576b2c0f0" x="102" y="123" width="250" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{branch}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="123" width="100" height="20" uuid="aee43c83-1cdb-4059-9c33-afb02f09b4ec"/>
+				<reportElement uuid="aee43c83-1cdb-4059-9c33-afb02f09b4ec" x="0" y="123" width="100" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -129,84 +129,84 @@ WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.
 	<columnHeader>
 		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement x="76" y="0" width="100" height="20" uuid="e1728dd6-0dcd-4571-a898-f6e703bbcf94"/>
+				<reportElement uuid="e1728dd6-0dcd-4571-a898-f6e703bbcf94" x="76" y="0" width="100" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[hdmfNo]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="176" y="0" width="120" height="20" uuid="bea8258f-cffa-4415-8719-a2bb6b80b4dd"/>
+				<reportElement uuid="bea8258f-cffa-4415-8719-a2bb6b80b4dd" x="176" y="0" width="120" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="296" y="0" width="80" height="20" uuid="67fa8eb5-fcdb-4906-8e60-ea240bf3ca15"/>
+				<reportElement uuid="67fa8eb5-fcdb-4906-8e60-ea240bf3ca15" x="296" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Employee's Share]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="376" y="0" width="80" height="20" uuid="a73e27b7-a65d-484b-846d-44f462a3a3bf"/>
+				<reportElement uuid="a73e27b7-a65d-484b-846d-44f462a3a3bf" x="376" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Employer's Share]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="456" y="0" width="80" height="20" uuid="1a17a04c-ff58-4478-adf5-981d4d9b4247"/>
+				<reportElement uuid="1a17a04c-ff58-4478-adf5-981d4d9b4247" x="456" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Total]]></text>
 			</staticText>
 			<line>
-				<reportElement x="76" y="19" width="460" height="1" uuid="5b1146ae-13cd-45da-8496-e16e43911f6f"/>
+				<reportElement uuid="5b1146ae-13cd-45da-8496-e16e43911f6f" x="76" y="19" width="460" height="1"/>
 			</line>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="76" y="0" width="100" height="20" uuid="74222347-a2ec-487b-8603-4b9edac9126c"/>
+				<reportElement uuid="74222347-a2ec-487b-8603-4b9edac9126c" x="76" y="0" width="100" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{hdmfNo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="176" y="0" width="120" height="20" uuid="87159720-3a04-42de-a04b-2fcda8ecfe39"/>
+				<reportElement uuid="87159720-3a04-42de-a04b-2fcda8ecfe39" x="176" y="0" width="120" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="296" y="0" width="80" height="20" uuid="5390e57f-06cb-457f-90ee-3e26ab6f98ba"/>
+				<reportElement uuid="5390e57f-06cb-457f-90ee-3e26ab6f98ba" x="296" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{hdmf}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="456" y="0" width="80" height="20" uuid="6e865300-5d40-4d40-829d-880e41fc1fed"/>
+				<reportElement uuid="6e865300-5d40-4d40-829d-880e41fc1fed" x="456" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{hdmf} +$F{erHdmf}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="376" y="0" width="80" height="20" uuid="e6441668-578a-4e23-9ca5-f66b709f3ed5"/>
+				<reportElement uuid="e6441668-578a-4e23-9ca5-f66b709f3ed5" x="376" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{erHdmf}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="56" y="0" width="20" height="20" uuid="55b19619-63f4-430f-8408-0293c28dbf33"/>
+				<reportElement uuid="55b19619-63f4-430f-8408-0293c28dbf33" x="56" y="0" width="20" height="20"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="7" isStrikeThrough="false"/>
 				</textElement>
@@ -217,7 +217,7 @@ WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.
 	<pageFooter>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="daeb3134-1c8f-4f38-8449-4bb6b6982664"/>
+				<reportElement uuid="daeb3134-1c8f-4f38-8449-4bb6b6982664" x="0" y="0" width="100" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -228,103 +228,103 @@ WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.
 	<summary>
 		<band height="125" splitType="Stretch">
 			<staticText>
-				<reportElement x="202" y="0" width="81" height="20" uuid="d93a8be3-8a78-40b0-b9f1-aaa6b35d6f6b"/>
+				<reportElement uuid="d93a8be3-8a78-40b0-b9f1-aaa6b35d6f6b" x="202" y="0" width="81" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<line>
-				<reportElement x="284" y="0" width="241" height="1" uuid="563f3d62-4501-49ef-b4ff-52bd86055147"/>
+				<reportElement uuid="563f3d62-4501-49ef-b4ff-52bd86055147" x="284" y="0" width="241" height="1"/>
 			</line>
 			<line>
-				<reportElement x="284" y="19" width="240" height="1" uuid="a879b058-bcdb-4200-a982-ee2d3740a2db"/>
+				<reportElement uuid="a879b058-bcdb-4200-a982-ee2d3740a2db" x="284" y="19" width="240" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="202" y="20" width="81" height="20" uuid="f0460a76-ebe1-453c-b6cc-7c9f5b077600"/>
+				<reportElement uuid="f0460a76-ebe1-453c-b6cc-7c9f5b077600" x="202" y="20" width="81" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Journal Entry: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="202" y="40" width="109" height="20" uuid="de73cc35-aa74-41f7-b4ff-ee289f8f47bb"/>
+				<reportElement uuid="de73cc35-aa74-41f7-b4ff-ee289f8f47bb" x="202" y="40" width="109" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[HDMF Contributions Payable]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="202" y="60" width="109" height="20" uuid="f516e515-6f8e-4fed-a11d-0eb6adcc78bf"/>
+				<reportElement uuid="f516e515-6f8e-4fed-a11d-0eb6adcc78bf" x="202" y="60" width="109" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[HDMF Contributions Expense]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="202" y="80" width="100" height="20" uuid="2c63b0d7-4e68-4649-b5c9-d95895a8acea"/>
+				<reportElement uuid="2c63b0d7-4e68-4649-b5c9-d95895a8acea" x="202" y="80" width="100" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Vouchers Payable]]></text>
 			</staticText>
 			<line>
-				<reportElement x="364" y="100" width="160" height="1" uuid="c93118df-93cb-4c86-b64c-a5ca4769ab75"/>
+				<reportElement uuid="c93118df-93cb-4c86-b64c-a5ca4769ab75" x="364" y="100" width="160" height="1"/>
 			</line>
 			<line>
-				<reportElement x="364" y="121" width="160" height="1" uuid="acb308a9-00f1-48cc-8bef-012c39acbade"/>
+				<reportElement uuid="acb308a9-00f1-48cc-8bef-012c39acbade" x="364" y="121" width="160" height="1"/>
 			</line>
 			<textField pattern="#,##0.00">
-				<reportElement x="283" y="1" width="81" height="20" uuid="f113ef20-0905-4779-9481-7f344b124f4c"/>
+				<reportElement uuid="f113ef20-0905-4779-9481-7f344b124f4c" x="283" y="1" width="81" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{eeTotal}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="364" y="1" width="81" height="20" uuid="24ef3c2f-f0e0-4e6d-8724-7dad46d344e9"/>
+				<reportElement uuid="24ef3c2f-f0e0-4e6d-8724-7dad46d344e9" x="364" y="1" width="81" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{erTotal}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="444" y="1" width="82" height="20" uuid="8933a20d-2f8f-42a8-afc8-d1b16e427d9f"/>
+				<reportElement uuid="8933a20d-2f8f-42a8-afc8-d1b16e427d9f" x="444" y="1" width="82" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{eeTotal} + $V{erTotal}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="364" y="40" width="80" height="20" uuid="3ac01035-65e9-4486-b6c9-fd3cdfcc66c9"/>
+				<reportElement uuid="3ac01035-65e9-4486-b6c9-fd3cdfcc66c9" x="364" y="40" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{eeTotal}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="364" y="60" width="80" height="20" uuid="cdc710a6-ebb5-4018-a5ec-1fba7e70b561"/>
+				<reportElement uuid="cdc710a6-ebb5-4018-a5ec-1fba7e70b561" x="364" y="60" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{erTotal}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="444" y="80" width="80" height="20" uuid="8e934260-cf6d-4cf9-88fc-8788099b3867"/>
+				<reportElement uuid="8e934260-cf6d-4cf9-88fc-8788099b3867" x="444" y="80" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{eeTotal} + $V{erTotal}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="364" y="100" width="80" height="20" uuid="500450d5-28a8-4bb1-9a74-5bd1a54fa4c6"/>
+				<reportElement uuid="500450d5-28a8-4bb1-9a74-5bd1a54fa4c6" x="364" y="100" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{eeTotal} + $V{erTotal}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="444" y="101" width="80" height="20" uuid="62db2558-8b85-4e36-ad96-019f4834fe66"/>
+				<reportElement uuid="62db2558-8b85-4e36-ad96-019f4834fe66" x="444" y="101" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>

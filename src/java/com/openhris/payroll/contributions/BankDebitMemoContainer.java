@@ -31,7 +31,7 @@ public class BankDebitMemoContainer extends IndexedContainer {
         addContainerProperty("payrollDate", String.class, null);
     }
     
-    public BankDebitMemoContainer(int branchId, String payrollDate) {
+    public BankDebitMemoContainer(int corporateId, String payrollDate) {
         addContainerProperty("employeeId", String.class, "");
         addContainerProperty("bankAccountNo", String.class, "");
         addContainerProperty("name", String.class, "");
@@ -39,7 +39,7 @@ public class BankDebitMemoContainer extends IndexedContainer {
         addContainerProperty("branch", String.class, null);
         addContainerProperty("payrollDate", String.class, null);
         
-        for(BankDebitMemo dbm : es.findBankDebitMemo(branchId, payrollDate)){
+        for(BankDebitMemo dbm : es.findBankDebitMemo(corporateId, payrollDate)){
             Item item = getItem(addItem());
             item.getItemProperty("employeeId").setValue(dbm.getEmployeeId());
             item.getItemProperty("bankAccountNo").setValue(dbm.getBankAccountNo());

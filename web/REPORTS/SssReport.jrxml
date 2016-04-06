@@ -49,74 +49,74 @@ WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND
 	<title>
 		<band height="150" splitType="Stretch">
 			<textField>
-				<reportElement x="185" y="0" width="200" height="18" uuid="8162cf8a-c02f-4c6c-a638-ea34624938be"/>
+				<reportElement uuid="8162cf8a-c02f-4c6c-a638-ea34624938be" x="185" y="0" width="200" height="18"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tradeName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="237" y="17" width="200" height="18" uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba"/>
+				<reportElement uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba" x="237" y="17" width="200" height="18"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="134" y="17" width="100" height="18" uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b"/>
+				<reportElement uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b" x="134" y="17" width="100" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="7"/>
 				</textElement>
 				<text><![CDATA[Operated By:  ]]></text>
 			</staticText>
 			<textField isBlankWhenNull="true">
-				<reportElement x="136" y="35" width="300" height="18" uuid="edc11e37-f098-431a-a553-ea24eb1346f9"/>
+				<reportElement uuid="edc11e37-f098-431a-a553-ea24eb1346f9" x="136" y="35" width="300" height="18"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{branchAddress}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="183" y="57" width="200" height="18" uuid="d38d681d-8fee-469d-910e-f01c2bd3b846"/>
+				<reportElement uuid="d38d681d-8fee-469d-910e-f01c2bd3b846" x="183" y="57" width="200" height="18"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Schedule of SSS Contributions]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="189" y="75" width="100" height="18" uuid="0615b23a-4ea4-42f4-97aa-3d45b2b2a195"/>
+				<reportElement uuid="0615b23a-4ea4-42f4-97aa-3d45b2b2a195" x="189" y="75" width="100" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<text><![CDATA[For the Month of ]]></text>
 			</staticText>
 			<textField pattern="MMMMM yyyy">
-				<reportElement x="292" y="75" width="100" height="18" uuid="1ad9c4d7-89ed-48db-acc5-b9217576f73f"/>
+				<reportElement uuid="1ad9c4d7-89ed-48db-acc5-b9217576f73f" x="292" y="75" width="100" height="18"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="0" y="101" width="105" height="20" uuid="f81e63dc-35fd-4b7d-b984-a5aa1fe55d94"/>
+				<reportElement uuid="f81e63dc-35fd-4b7d-b984-a5aa1fe55d94" x="0" y="101" width="105" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Employer's SSS ID No:  ]]></text>
 			</staticText>
 			<line>
-				<reportElement x="107" y="121" width="120" height="1" uuid="7d18a9af-37ea-4399-9c82-89b2d3edc10b"/>
+				<reportElement uuid="7d18a9af-37ea-4399-9c82-89b2d3edc10b" x="107" y="121" width="120" height="1"/>
 			</line>
 			<textField isBlankWhenNull="true">
-				<reportElement x="107" y="102" width="120" height="20" uuid="9394deb9-c970-4970-9004-0265777ea67f"/>
+				<reportElement uuid="9394deb9-c970-4970-9004-0265777ea67f" x="107" y="102" width="120" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{erSssNo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="107" y="121" width="100" height="20" uuid="84e73974-755c-4fcd-b413-3555ac1a6cc1"/>
+				<reportElement uuid="84e73974-755c-4fcd-b413-3555ac1a6cc1" x="107" y="121" width="250" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{branch}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="1" y="121" width="104" height="20" uuid="6914a0a9-fe99-4304-8bb6-44ead4f1132b"/>
+				<reportElement uuid="6914a0a9-fe99-4304-8bb6-44ead4f1132b" x="1" y="121" width="104" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -127,98 +127,98 @@ WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND
 	<columnHeader>
 		<band height="22" splitType="Stretch">
 			<staticText>
-				<reportElement x="45" y="0" width="100" height="18" uuid="a3317993-ea70-40e6-9b10-913c032b6320"/>
+				<reportElement uuid="a3317993-ea70-40e6-9b10-913c032b6320" x="45" y="0" width="100" height="18"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[SSS ID No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="145" y="0" width="120" height="18" uuid="6fae0885-2cf4-41b1-bd38-1d275014e071"/>
+				<reportElement uuid="6fae0885-2cf4-41b1-bd38-1d275014e071" x="145" y="0" width="120" height="18"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Employee's Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="265" y="0" width="80" height="18" uuid="0b1aab6a-e6b7-4068-a494-a1f9c8d92ddc"/>
+				<reportElement uuid="0b1aab6a-e6b7-4068-a494-a1f9c8d92ddc" x="265" y="0" width="80" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Employee's Share]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="345" y="0" width="80" height="18" uuid="75cc1281-2d19-41b7-b87f-3bdbc8f9de0d"/>
+				<reportElement uuid="75cc1281-2d19-41b7-b87f-3bdbc8f9de0d" x="345" y="0" width="80" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[Employer's Share]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="425" y="0" width="50" height="18" uuid="d4f9620c-7374-4752-9b04-66360e0fcbe2"/>
+				<reportElement uuid="d4f9620c-7374-4752-9b04-66360e0fcbe2" x="425" y="0" width="50" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[EC]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="475" y="0" width="80" height="18" uuid="d367fe42-54ae-48ae-a477-3116e04a32fd"/>
+				<reportElement uuid="d367fe42-54ae-48ae-a477-3116e04a32fd" x="475" y="0" width="80" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>
 				<text><![CDATA[TOTAL]]></text>
 			</staticText>
 			<line>
-				<reportElement x="45" y="19" width="510" height="1" uuid="f4e44bba-d6fe-49ac-aefe-a4dc6804b038"/>
+				<reportElement uuid="f4e44bba-d6fe-49ac-aefe-a4dc6804b038" x="45" y="19" width="510" height="1"/>
 			</line>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement x="45" y="0" width="100" height="18" uuid="a498eef1-3d23-4f5e-adc9-627c07d8bebd"/>
+				<reportElement uuid="a498eef1-3d23-4f5e-adc9-627c07d8bebd" x="45" y="0" width="100" height="18"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{sssNo}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="145" y="0" width="120" height="18" uuid="d3218b62-9b7c-4a7c-a399-3b331db2c804"/>
+				<reportElement uuid="d3218b62-9b7c-4a7c-a399-3b331db2c804" x="145" y="0" width="120" height="18"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="265" y="0" width="80" height="18" uuid="2b05ca84-6459-4e5f-a643-2a6ce9a216ca"/>
+				<reportElement uuid="2b05ca84-6459-4e5f-a643-2a6ce9a216ca" x="265" y="0" width="80" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{eeShare}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="345" y="0" width="80" height="18" uuid="5df4b01f-2d4e-4c0b-8a01-ee1ba9e42ac4"/>
+				<reportElement uuid="5df4b01f-2d4e-4c0b-8a01-ee1ba9e42ac4" x="345" y="0" width="80" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{erShare}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement x="425" y="0" width="50" height="18" uuid="8f24477b-bf8a-4607-97db-742aab6ebabb"/>
+				<reportElement uuid="8f24477b-bf8a-4607-97db-742aab6ebabb" x="425" y="0" width="50" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{ec}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="475" y="0" width="80" height="18" uuid="9fe80fb9-6b25-4e02-910d-1888225a5d74"/>
+				<reportElement uuid="9fe80fb9-6b25-4e02-910d-1888225a5d74" x="475" y="0" width="80" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="25" y="0" width="20" height="18" uuid="1a622f26-d448-4d5f-a381-30d5c5417530"/>
+				<reportElement uuid="1a622f26-d448-4d5f-a381-30d5c5417530" x="25" y="0" width="20" height="18"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -229,7 +229,7 @@ WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND
 	<pageFooter>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="100" height="20" uuid="bd036963-5d0f-4d56-8778-9cf550a78086"/>
+				<reportElement uuid="bd036963-5d0f-4d56-8778-9cf550a78086" x="0" y="0" width="100" height="20"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -240,107 +240,107 @@ WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND
 	<summary>
 		<band height="115" splitType="Stretch">
 			<line>
-				<reportElement x="265" y="0" width="290" height="1" uuid="ecb00114-b4be-4c69-838f-aac6ad1629e5"/>
+				<reportElement uuid="ecb00114-b4be-4c69-838f-aac6ad1629e5" x="265" y="0" width="290" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="185" y="0" width="80" height="20" uuid="f78580b1-0f15-40e7-86c9-52e96636b4a1"/>
+				<reportElement uuid="f78580b1-0f15-40e7-86c9-52e96636b4a1" x="185" y="0" width="80" height="20"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[TOTAL: ]]></text>
 			</staticText>
 			<textField pattern="#,##0.00">
-				<reportElement x="265" y="0" width="80" height="20" uuid="1862c6cd-00bd-4605-8de2-11f6a6c814e0"/>
+				<reportElement uuid="1862c6cd-00bd-4605-8de2-11f6a6c814e0" x="265" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalEeShare}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="345" y="0" width="80" height="20" uuid="c061b125-cbfe-423e-ba5b-522ef280e7ed"/>
+				<reportElement uuid="c061b125-cbfe-423e-ba5b-522ef280e7ed" x="345" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalErShare}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="425" y="0" width="50" height="20" uuid="3d727a69-a80f-482e-b54b-c55b8f063690"/>
+				<reportElement uuid="3d727a69-a80f-482e-b54b-c55b8f063690" x="425" y="0" width="50" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalEc}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="475" y="0" width="80" height="20" uuid="b0acce0f-f066-42f5-848e-a03124f7e841"/>
+				<reportElement uuid="b0acce0f-f066-42f5-848e-a03124f7e841" x="475" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{grandTotal}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="265" y="20" width="290" height="1" uuid="ad472897-5857-4e0b-899f-3a68ef457ae5"/>
+				<reportElement uuid="ad472897-5857-4e0b-899f-3a68ef457ae5" x="265" y="20" width="290" height="1"/>
 			</line>
 			<staticText>
-				<reportElement x="185" y="21" width="80" height="20" uuid="1435e736-ca17-4524-8488-337e22939770"/>
+				<reportElement uuid="1435e736-ca17-4524-8488-337e22939770" x="185" y="21" width="80" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Journal Entry: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="185" y="41" width="132" height="18" uuid="932e2c24-8186-4795-80ee-439b66609373"/>
+				<reportElement uuid="932e2c24-8186-4795-80ee-439b66609373" x="185" y="41" width="132" height="18"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[SSS Contributions Payable: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="185" y="59" width="132" height="18" uuid="1994d027-2159-4fe2-8a53-3a809e8ff0f2"/>
+				<reportElement uuid="1994d027-2159-4fe2-8a53-3a809e8ff0f2" x="185" y="59" width="132" height="18"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[SSS Contributions Expense: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="185" y="77" width="100" height="18" uuid="4df65428-aa47-455d-86ec-3702ad06194b"/>
+				<reportElement uuid="4df65428-aa47-455d-86ec-3702ad06194b" x="185" y="77" width="100" height="18"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Voucher's Payable: ]]></text>
 			</staticText>
 			<textField pattern="#,##0.00">
-				<reportElement x="317" y="41" width="60" height="18" uuid="1862c6cd-00bd-4605-8de2-11f6a6c814e0"/>
+				<reportElement uuid="1862c6cd-00bd-4605-8de2-11f6a6c814e0" x="317" y="41" width="60" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalEeShare}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="317" y="59" width="60" height="18" uuid="8909a574-6834-4791-bc3f-dd6376aac274"/>
+				<reportElement uuid="8909a574-6834-4791-bc3f-dd6376aac274" x="317" y="59" width="60" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalErShare} + $V{totalEc}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="377" y="77" width="60" height="18" uuid="b0acce0f-f066-42f5-848e-a03124f7e841"/>
+				<reportElement uuid="b0acce0f-f066-42f5-848e-a03124f7e841" x="377" y="77" width="60" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{grandTotal}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement x="317" y="94" width="120" height="1" uuid="cad8e71c-85f9-46e9-a867-5d4e50694e45"/>
+				<reportElement uuid="cad8e71c-85f9-46e9-a867-5d4e50694e45" x="317" y="94" width="120" height="1"/>
 			</line>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement x="317" y="95" width="60" height="18" uuid="7d6b13c1-8530-4146-b747-bdd6bb5facdd"/>
+				<reportElement uuid="7d6b13c1-8530-4146-b747-bdd6bb5facdd" x="317" y="95" width="60" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$V{totalEeShare} + $V{totalErShare} + $V{totalEc}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement x="377" y="95" width="60" height="18" uuid="b0acce0f-f066-42f5-848e-a03124f7e841"/>
+				<reportElement uuid="b0acce0f-f066-42f5-848e-a03124f7e841" x="377" y="95" width="60" height="18"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>

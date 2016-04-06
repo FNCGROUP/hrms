@@ -470,7 +470,9 @@ public class PayrollDAO {
                 pr.setTotalWorkingDayOffPaid(util.convertStringToDouble(rs.getString("workingDayOffPay")));
                 pr.setAbsences(util.convertStringToDouble(rs.getString("absences")));
                 pr.setTotalLatesDeduction(util.convertStringToDouble(rs.getString("totalLatesDeduction")));
+                pr.setTotalLatesHolidayDeduction(util.convertStringToDouble(rs.getString("totalLatesHolidayDeduction")));
                 pr.setTotalUndertimeDeduction(util.convertStringToDouble(rs.getString("totalUndertimeDeduction")));
+                pr.setTotalUndertimeHolidayDeduction(util.convertStringToDouble(rs.getString("totalUndertimeHolidayDeduction")));
                 pr.setSss(util.convertStringToDouble(rs.getString("sss")));
                 pr.setPhic(util.convertStringToDouble(rs.getString("phic")));
                 pr.setHdmf(util.convertStringToDouble(rs.getString("hdmf")));

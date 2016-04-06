@@ -107,7 +107,7 @@ WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND s.
 				<text><![CDATA[For the Month of ]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="8e3d8ff9-b352-412e-879c-051f91161dbe" x="107" y="125" width="100" height="20"/>
+				<reportElement uuid="8e3d8ff9-b352-412e-879c-051f91161dbe" x="107" y="125" width="250" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>

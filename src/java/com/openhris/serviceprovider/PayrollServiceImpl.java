@@ -4,6 +4,8 @@
  */
 package com.openhris.serviceprovider;
 
+import com.hrms.dbconnection.GetSQLConnection;
+import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.PayrollDAO;
 import com.openhris.model.Adjustment;
 import com.openhris.model.Advances;
@@ -11,7 +13,14 @@ import com.openhris.model.Payroll;
 import com.openhris.model.PayrollRegister;
 import com.openhris.service.PayrollService;
 import com.openhris.model.Timekeeping;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -20,6 +29,8 @@ import java.util.List;
 public class PayrollServiceImpl implements PayrollService {
 
     PayrollDAO payrollDAO = new PayrollDAO();
+    GetSQLConnection getConnection = new GetSQLConnection(); 
+    OpenHrisUtilities util = new OpenHrisUtilities();
     
     @Override
     public List<Payroll> getPayrollByBranchAndEmployee(int branchId, String employeeId) {
@@ -74,9 +85,95 @@ public class PayrollServiceImpl implements PayrollService {
     public List<PayrollRegister> getPayrollRegisterByBranch(int branchId, 
         String payrollDate, 
         boolean prev) {
-            return payrollDAO.getPayrollRegisterByBranch(branchId, 
-                    payrollDate, 
-                    prev);
+        
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null; 
+        String queryPayrollRegisterList;
+        
+        if(prev){
+            queryPayrollRegisterList = "SELECT * FROM payroll_register Where "
+                    + "branchId = "+branchId+" AND payrollDate = '"+payrollDate+"' "
+                    + "AND (currentStatus != 'removed' OR currentStatus IS NULL) AND "
+                    + "(actionTaken = 'previous' OR actionTaken IS NULL ) ORDER BY name ASC";            
+        } else {
+            queryPayrollRegisterList = "SELECT * FROM payroll_register Where "
+                    + "branchId = "+branchId+" AND payrollDate = '"+payrollDate+"' "
+                    + "AND (currentStatus != 'removed' OR currentStatus IS NULL) AND "
+                    + "(actionTaken = 'adjusted' OR actionTaken IS NULL ) ORDER BY name ASC";
+        }
+        
+        List<PayrollRegister> payrollRegisterList = new ArrayList<PayrollRegister>();
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery(queryPayrollRegisterList);
+            while(rs.next()){
+                PayrollRegister pr = new PayrollRegister();
+                pr.setId(util.convertStringToInteger(rs.getString("salaryId")));
+                pr.setName(rs.getString("name"));
+                pr.setNumOfDays(util.convertStringToInteger(rs.getString("numberOfDays")));                
+                pr.setBasicSalary(util.convertStringToDouble(rs.getString("basicSalary")));
+                pr.setRatePerDay(util.convertStringToDouble(rs.getString("ratePerDay")));
+                pr.setHalfMonthSalary(util.convertStringToDouble(rs.getString("halfMonthSalary")));
+                pr.setTotalOvertimePaid(util.convertStringToDouble(rs.getString("overtimePay")));
+                pr.setTotalLegalHolidayPaid(util.convertStringToDouble(rs.getString("legalHolidayPay")));
+                pr.setTotalSpecialHolidayPaid(util.convertStringToDouble(rs.getString("specialHolidayPay")));
+                pr.setTotalNightDifferentialPaid(util.convertStringToDouble(rs.getString("nightDifferentialPay")));
+                pr.setTotalDutyManagerPaid(util.convertStringToDouble(rs.getString("dutyManagerPay")));
+                pr.setTotalWorkingDayOffPaid(util.convertStringToDouble(rs.getString("workingDayOffPay")));
+                pr.setAbsences(util.convertStringToDouble(rs.getString("absences")));
+                pr.setTotalLatesDeduction(util.convertStringToDouble(rs.getString("totalLatesDeduction")));
+                pr.setTotalLatesHolidayDeduction(util.convertStringToDouble(rs.getString("totalLatesHolidayDeduction")));
+                pr.setTotalUndertimeDeduction(util.convertStringToDouble(rs.getString("totalUndertimeDeduction")));
+                pr.setTotalUndertimeHolidayDeduction(util.convertStringToDouble(rs.getString("totalUndertimeHolidayDeduction")));
+                pr.setSss(util.convertStringToDouble(rs.getString("sss")));
+                pr.setPhic(util.convertStringToDouble(rs.getString("phic")));
+                pr.setHdmf(util.convertStringToDouble(rs.getString("hdmf")));
+                pr.setTax(util.convertStringToDouble(rs.getString("tax")));
+                pr.setNetSalary(util.convertStringToDouble(rs.getString("netSalary")));
+                pr.setCommunicationAllowance(util.convertStringToDouble(rs.getString("communicationAllowance")));
+                pr.setPerDiemAllowance(util.convertStringToDouble(rs.getString("perDiemAllowance")));
+                pr.setColaAllowance(util.convertStringToDouble(rs.getString("colaAllowance")));
+                pr.setMealAllowance(util.convertStringToDouble(rs.getString("mealAllowance")));
+                pr.setTransportationAllowance(util.convertStringToDouble(rs.getString("transportationAllowance")));
+                pr.setOtherAllowances(util.convertStringToDouble(rs.getString("otherAllowances")));
+                pr.setAllowanceForLiquidation(util.convertStringToDouble(rs.getString("allowanceForLiquidation")));
+                pr.setAmount(util.convertStringToDouble(rs.getString("advances")));
+                pr.setAdjustment(util.convertStringToDouble(rs.getString("adjustments")));
+                pr.setAmountReceivable(util.convertStringToDouble(rs.getString("amountReceivable")));
+                pr.setAmountToBeReceive(util.convertStringToDouble(rs.getString("amountToBeReceive")));
+                pr.setForAdjustments(util.convertStringToDouble(rs.getString("forAdjustments")));
+                pr.setActionTaken(rs.getString("actionTaken"));
+                pr.setPayrollDate(util.parsingDate(rs.getString("payrollDate")));
+                pr.setAttendancePeriodFrom(util.parsingDate(rs.getString("attendancePeriodFrom")));
+                pr.setAttendancePeriodTo(util.parsingDate(rs.getString("attendancePeriodTo")));
+                pr.setBranchId(util.convertStringToInteger(rs.getString("branchId")));
+                pr.setEmploymentWageEntry(rs.getString("employmentWageEntry"));
+                pr.setBranchName(rs.getString("branchName"));
+                pr.setTradeName(rs.getString("tradeName"));
+                pr.setCorporateName(rs.getString("corporateName"));
+                pr.setCurrentStatus(rs.getString("currentStatus"));
+                payrollRegisterList.add(pr);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return payrollRegisterList;
+        
+//            return payrollDAO.getPayrollRegisterByBranch(branchId, 
+//                    payrollDate, 
+//                    prev);
     }
 
     @Override

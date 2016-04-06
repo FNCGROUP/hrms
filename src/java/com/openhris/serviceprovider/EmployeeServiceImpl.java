@@ -45,27 +45,33 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<BankDebitMemo> findBankDebitMemo(int branchId, String payrollDate) {
+    public List<BankDebitMemo> findBankDebitMemo(int corporateId, String payrollDate) {
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         List<BankDebitMemo> dbmList = new ArrayList<>();        
         
         try {
-//            pstmt = conn.prepareStatement("SELECT e.bankAccountNo AS BankAccountNo, "
-//                    + "e.employeeId AS EmployeeNo, "
-//                    + "e.firstname As Firstname, "
-//                    + "e.middlename AS Middlename, "
-//                    + "e.lastname AS Lastname, "
-//                    + "s.amountToBeReceive AS Amount "
-//                    + "FROM employee e INNER JOIN payroll_table s ON e.employeeId = s.employeeId "
-//                    + "WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) "
-//                    + "AND s.branchId = ? AND s.payrollDate = ? ORDER BY e.lastname ASC ");
-            pstmt = conn.prepareStatement("SELECT * FROM bank_debit_memo "
-                    + "WHERE CorporateID = ? "
-                    + "AND PayrollDate = ? "
-                    + "ORDER BY Lastname ASC");
-            pstmt.setInt(1, branchId);
+            pstmt = conn.prepareStatement("SELECT "
+                    + "e.bankAccountNo AS BankAccountNo, "
+                    + "e.employeeId AS EmployeeNo, "    
+                    + "e.lastname AS Lastname, "
+                    + "e.firstname AS Firstname, "
+                    + "e.middlename AS Middlename, "
+                    + "s.amountToBeReceive AS Amount, "
+                    + "b.name AS Branch, "
+                    + "tn.name AS tradeName, "
+                    + "cn.name AS corporateName, "
+                    + "b.address AS address, "
+                    + "s.payrollDate AS PayrollDate "
+                    + "FROM employee e INNER JOIN payroll_table s "
+                    + "ON e.employeeId = s.employeeId INNER JOIN branch_table b "
+                    + "ON e.branchId = b.id INNER JOIN trade_table tn "
+                    + "ON b.tradeId = tn.id INNER JOIN corporate_table cn "
+                    + "ON tn.corporateId = cn.id "
+                    + "WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) "
+                    + "AND cn.id = ? AND s.payrollDate = ? ORDER BY e.lastname ASC ");
+            pstmt.setInt(1, corporateId);
             pstmt.setString(2, payrollDate);
             rs = pstmt.executeQuery();
             while(rs.next()){

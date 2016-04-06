@@ -47,8 +47,8 @@ public class BankDebitMemoReport extends Window {
         center();
         
         Connection conn = getConnection.connection();
-        URL url = this.getClass().getResource("/com/openhris/reports/BankDebitMemo.jasper");
-//        File reportFile = new File("C:/reportsJasper/BankDebitMemo.jasper");
+//        URL url = this.getClass().getResource("/com/openhris/reports/BankDebitMemo.jasper");
+        File url = new File("C:/reportsJasper/BankDebitMemo.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("BRANCH_ID", getBranchId());
