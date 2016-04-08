@@ -27,17 +27,23 @@ import net.sf.jasperreports.engine.JasperPrint;
  * @author jetdario
  */
 public class AllowanceForLiquidation extends Window {
+    
     GetSQLConnection getConnection = new GetSQLConnection();
     private String corporate;
     private String payrollDate;
+    private int branchId;
         
 //    File file;
     String file;
     Application payrollApplication;
 
-    public AllowanceForLiquidation(String corporate, String payrollDate, Application payrollApplication) {
+    public AllowanceForLiquidation(String corporate, 
+            String payrollDate, 
+            int branchId, 
+            Application payrollApplication) {
         this.corporate = corporate;
         this.payrollDate = payrollDate;
+        this.branchId = branchId;
         this.payrollApplication = payrollApplication;
         
         setCaption("Advances Report");
@@ -53,6 +59,7 @@ public class AllowanceForLiquidation extends Window {
         final HashMap hm = new HashMap();
         hm.put("CORPORATE_NAME", getCorporate());
         hm.put("PAYROLL_DATE", getPayrollDate());
+        hm.put("BRANCH_ID", getBranchId());
 
         try{
              JasperPrint jpReport = JasperFillManager.fillReport(url.getPath(), hm, conn);
@@ -103,6 +110,10 @@ public class AllowanceForLiquidation extends Window {
 
     Application getPayrollApplication() {
         return payrollApplication;
+    }
+
+    public int getBranchId() {
+        return branchId;
     }
     
 }

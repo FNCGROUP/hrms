@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="payrollRegisterReport" language="groovy" pageWidth="975" pageHeight="637" orientation="Landscape" columnWidth="960" leftMargin="5" rightMargin="10" topMargin="15" bottomMargin="15" uuid="7597f17b-009e-422f-a85f-5fabd44ba177">
 	<property name="ireport.zoom" value="1.2100000000000004"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="13"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="BRANCH_ID" class="java.lang.Integer">
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
@@ -128,77 +128,77 @@ $F{transportationAllowance} + $F{otherAllowances}]]></variableExpression>
 	<title>
 		<band height="146" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="eac4cc7a-3b2e-4a2e-bc45-d349261c3dc9" x="0" y="63" width="134" height="20"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
+				<reportElement uuid="eac4cc7a-3b2e-4a2e-bc45-d349261c3dc9" x="0" y="114" width="959" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Payroll Register]]></text>
+				<text><![CDATA[PAYROLL REGISTER]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="97b04a1b-bf91-4a08-a110-3c7861d483ff" x="0" y="0" width="214" height="20"/>
+				<reportElement uuid="97b04a1b-bf91-4a08-a110-3c7861d483ff" x="0" y="0" width="960" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="15" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tradeName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="b52060ea-3b71-4376-a28c-e47ef33974fc" x="-1" y="20" width="68" height="20"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
+				<reportElement uuid="b52060ea-3b71-4376-a28c-e47ef33974fc" x="-1" y="19" width="86" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Operated By:  ]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="fe7962fa-285d-496e-9be6-8b7d6fd36aea" x="67" y="20" width="222" height="20"/>
+				<reportElement uuid="fe7962fa-285d-496e-9be6-8b7d6fd36aea" x="100" y="19" width="860" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font isBold="true"/>
+					<font size="8" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="04d1a4af-9096-43d4-b07e-b743f0e8e1eb" x="-1" y="83" width="100" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+				<reportElement uuid="04d1a4af-9096-43d4-b07e-b743f0e8e1eb" x="-1" y="57" width="86" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Payroll Period: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="0c6cb669-fa2c-452c-b1e2-156f3460439f" x="0" y="103" width="100" height="40"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+				<reportElement uuid="0c6cb669-fa2c-452c-b1e2-156f3460439f" x="0" y="76" width="85" height="39"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Cut-off Date: ]]></text>
 			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement uuid="38286bfd-1cb8-48f0-b096-03b429219659" x="99" y="83" width="154" height="20"/>
+				<reportElement uuid="38286bfd-1cb8-48f0-b096-03b429219659" x="100" y="57" width="153" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement uuid="edb1c94f-8ae8-4e81-9c2c-a6f5eaefb13f" x="100" y="103" width="100" height="20"/>
+				<reportElement uuid="edb1c94f-8ae8-4e81-9c2c-a6f5eaefb13f" x="100" y="76" width="153" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{attendancePeriodFrom}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement uuid="7435c6bb-23b1-4c8b-8138-c2dc9ec2f650" x="99" y="123" width="100" height="20"/>
+				<reportElement uuid="7435c6bb-23b1-4c8b-8138-c2dc9ec2f650" x="99" y="95" width="154" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{attendancePeriodTo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="299b1bcd-6422-436e-b8a4-2b016889c98d" x="-1" y="40" width="39" height="20"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="8" isBold="true"/>
+				<reportElement uuid="299b1bcd-6422-436e-b8a4-2b016889c98d" x="-1" y="38" width="86" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Branch: ]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="a3336aa2-0edf-4908-a8e1-fb1714060803" x="38" y="40" width="100" height="20"/>
+				<reportElement uuid="a3336aa2-0edf-4908-a8e1-fb1714060803" x="100" y="38" width="860" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8" isBold="true"/>
 				</textElement>

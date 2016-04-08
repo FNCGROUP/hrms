@@ -5,6 +5,9 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="CORPORATE_NAME" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
+	<parameter name="BRANCH_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<queryString>
 		<![CDATA[SELECT 
 	corporateName, 
@@ -12,8 +15,10 @@
 	attendancePeriodFrom, 
 	payrollDate, 
 	name, 
-	allowanceForLiquidation 
-FROM payroll_register WHERE corporateName = $P{CORPORATE_NAME} AND 
+	allowanceForLiquidation, 
+	tradeName, 
+	branchName  
+FROM payroll_register WHERE branchId = $P{BRANCH_ID} AND 
 payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'previous' OR actionTaken IS NULL ) AND allowanceForLiquidation != 0 ORDER BY employmentWageEntry, name ASC]]>
 	</queryString>
 	<field name="corporateName" class="java.lang.String"/>
@@ -22,6 +27,8 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 	<field name="payrollDate" class="java.sql.Date"/>
 	<field name="name" class="java.lang.String"/>
 	<field name="allowanceForLiquidation" class="java.lang.Double"/>
+	<field name="tradeName" class="java.lang.String"/>
+	<field name="branchName" class="java.lang.String"/>
 	<variable name="TOTAL_ALLOWANCES" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{allowanceForLiquidation}]]></variableExpression>
 	</variable>
@@ -29,80 +36,108 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="129" splitType="Stretch">
+		<band height="155" splitType="Stretch">
 			<textField>
-				<reportElement uuid="fe7962fa-285d-496e-9be6-8b7d6fd36aea" x="0" y="0" width="250" height="30"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement uuid="fe7962fa-285d-496e-9be6-8b7d6fd36aea" x="0" y="0" width="572" height="30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="04d1a4af-9096-43d4-b07e-b743f0e8e1eb" x="0" y="50" width="100" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+				<reportElement uuid="04d1a4af-9096-43d4-b07e-b743f0e8e1eb" x="1" y="90" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Payroll Period: ]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="eac4cc7a-3b2e-4a2e-bc45-d349261c3dc9" x="0" y="30" width="134" height="20"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
+				<reportElement uuid="eac4cc7a-3b2e-4a2e-bc45-d349261c3dc9" x="0" y="30" width="572" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Allowances]]></text>
+				<text><![CDATA[Allowance for Liquidation]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="0c6cb669-fa2c-452c-b1e2-156f3460439f" x="0" y="70" width="100" height="40"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+				<reportElement uuid="0c6cb669-fa2c-452c-b1e2-156f3460439f" x="1" y="110" width="80" height="40"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Cut-off Date: ]]></text>
 			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement uuid="7435c6bb-23b1-4c8b-8138-c2dc9ec2f650" x="99" y="90" width="100" height="20"/>
+				<reportElement uuid="7435c6bb-23b1-4c8b-8138-c2dc9ec2f650" x="90" y="130" width="208" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font size="9" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{attendancePeriodTo}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement uuid="edb1c94f-8ae8-4e81-9c2c-a6f5eaefb13f" x="100" y="70" width="100" height="20"/>
+				<reportElement uuid="edb1c94f-8ae8-4e81-9c2c-a6f5eaefb13f" x="90" y="110" width="208" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font size="9" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{attendancePeriodFrom}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement uuid="38286bfd-1cb8-48f0-b096-03b429219659" x="100" y="50" width="154" height="20"/>
+				<reportElement uuid="38286bfd-1cb8-48f0-b096-03b429219659" x="90" y="90" width="208" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font size="9" isBold="true"/>
+					<font size="9" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="c1c37cb9-c9f5-49cc-b02a-02916094aeda" x="1" y="70" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Branch: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="f25f6169-8abb-4fa6-a67d-679700e49be6" x="90" y="70" width="472" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{branchName}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="870dc62f-48c4-4118-834b-6430e8ae7d85" x="0" y="50" width="81" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Trade: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="d39de9bd-67d5-4844-a0e4-7d5af8a987bf" x="90" y="50" width="472" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tradeName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="22" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="6fc5c13d-d722-42db-bb70-7d78eebd2657" x="100" y="0" width="154" height="20"/>
+				<reportElement uuid="6fc5c13d-d722-42db-bb70-7d78eebd2657" x="100" y="0" width="217" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="SansSerif" size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[Name:]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="47a9e450-7733-4c6c-a4af-6b5d2d466585" x="254" y="0" width="60" height="20"/>
+				<reportElement uuid="47a9e450-7733-4c6c-a4af-6b5d2d466585" x="317" y="0" width="60" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[Allowance]]></text>
+				<text><![CDATA[Amount]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField>
-				<reportElement uuid="257e8ad2-d76a-4483-a6ff-ca39816e0375" x="100" y="0" width="154" height="20"/>
+				<reportElement uuid="257e8ad2-d76a-4483-a6ff-ca39816e0375" x="100" y="0" width="217" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="9" isBold="true"/>
 				</textElement>
@@ -116,14 +151,14 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 				<textFieldExpression><![CDATA[$V{REPORT_COUNT}+"."]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
-				<reportElement uuid="a351e9d6-f36b-462b-a93c-521ec101bd1f" x="254" y="0" width="60" height="20"/>
+				<reportElement uuid="a351e9d6-f36b-462b-a93c-521ec101bd1f" x="317" y="0" width="60" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9" isStrikeThrough="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{allowanceForLiquidation}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="5525d80c-8cf6-47b9-af92-46102cb59171" x="100" y="0" width="227" height="1"/>
+				<reportElement uuid="5525d80c-8cf6-47b9-af92-46102cb59171" x="100" y="0" width="277" height="1"/>
 			</line>
 		</band>
 	</detail>
@@ -149,10 +184,10 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 	<summary>
 		<band height="42" splitType="Stretch">
 			<line>
-				<reportElement uuid="dcd5cfc5-a6fa-4e6d-9577-b9df341a2a94" x="100" y="0" width="227" height="1"/>
+				<reportElement uuid="dcd5cfc5-a6fa-4e6d-9577-b9df341a2a94" x="100" y="0" width="277" height="1"/>
 			</line>
 			<textField pattern="#,##0.00">
-				<reportElement uuid="827cf901-22c6-4742-9daa-74c408367c16" x="254" y="1" width="60" height="20"/>
+				<reportElement uuid="827cf901-22c6-4742-9daa-74c408367c16" x="317" y="1" width="60" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>

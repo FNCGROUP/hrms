@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="HdmfLoanReport" language="groovy" pageWidth="612" pageHeight="792" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ab9d7e45-d28d-4177-8cfd-7b62e301b54f">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="53"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
@@ -45,119 +45,151 @@ a.advanceType = 'hdmf loan' AND a.rowStatus IS NULL AND
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="140" splitType="Stretch">
+		<band height="145" splitType="Stretch">
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="edc11e37-f098-431a-a553-ea24eb1346f9" x="136" y="35" width="300" height="18"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
+				<reportElement uuid="edc11e37-f098-431a-a553-ea24eb1346f9" x="105" y="92" width="467" height="18"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
 			</textField>
 			<line>
-				<reportElement uuid="7d18a9af-37ea-4399-9c82-89b2d3edc10b" x="109" y="118" width="128" height="1"/>
+				<reportElement uuid="7d18a9af-37ea-4399-9c82-89b2d3edc10b" x="98" y="135" width="128" height="1"/>
 			</line>
 			<staticText>
-				<reportElement uuid="0615b23a-4ea4-42f4-97aa-3d45b2b2a195" x="189" y="75" width="100" height="18"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<text><![CDATA[For the Month of ]]></text>
+				<reportElement uuid="0615b23a-4ea4-42f4-97aa-3d45b2b2a195" x="0" y="36" width="100" height="18"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Month & Year: ]]></text>
 			</staticText>
 			<textField pattern="MMMMM yyyy">
-				<reportElement uuid="1ad9c4d7-89ed-48db-acc5-b9217576f73f" x="292" y="75" width="100" height="18"/>
-				<textElement verticalAlignment="Middle"/>
+				<reportElement uuid="1ad9c4d7-89ed-48db-acc5-b9217576f73f" x="105" y="36" width="467" height="18"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
 				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
 			</textField>
 			<textField isBlankWhenNull="true">
-				<reportElement uuid="9394deb9-c970-4970-9004-0265777ea67f" x="116" y="99" width="120" height="20"/>
+				<reportElement uuid="9394deb9-c970-4970-9004-0265777ea67f" x="105" y="116" width="120" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{erHdmfNo}]]></textFieldExpression>
 			</textField>
-			<staticText>
-				<reportElement uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b" x="134" y="17" width="100" height="18"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font size="7"/>
-				</textElement>
-				<text><![CDATA[Operated By:  ]]></text>
-			</staticText>
-			<staticText>
-				<reportElement uuid="f81e63dc-35fd-4b7d-b984-a5aa1fe55d94" x="0" y="99" width="116" height="20"/>
-				<textElement verticalAlignment="Middle">
-					<font size="9"/>
-				</textElement>
-				<text><![CDATA[Employer's HDMF ID No: ]]></text>
-			</staticText>
 			<textField>
-				<reportElement uuid="8162cf8a-c02f-4c6c-a638-ea34624938be" x="185" y="0" width="200" height="18"/>
+				<reportElement uuid="8162cf8a-c02f-4c6c-a638-ea34624938be" x="0" y="0" width="572" height="18"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font size="10"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tradeName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="d38d681d-8fee-469d-910e-f01c2bd3b846" x="183" y="57" width="200" height="18"/>
+				<reportElement uuid="d38d681d-8fee-469d-910e-f01c2bd3b846" x="0" y="18" width="572" height="18"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<text><![CDATA[Schedule of HDMF Loan Payment]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba" x="237" y="17" width="200" height="18"/>
+				<reportElement uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba" x="105" y="54" width="467" height="18"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="1418da6c-f88d-49a0-a7ba-aab8cdeb941d" x="0" y="90" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Address:  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="794fab47-a565-436e-a9e3-ce347e69eaa5" x="0" y="72" width="100" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Branch:   ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="f81e63dc-35fd-4b7d-b984-a5aa1fe55d94" x="0" y="116" width="99" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Employer's SSS ID No:  ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b" x="0" y="54" width="100" height="18"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<text><![CDATA[Operated By:  ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="0e7f4612-7605-40e8-9b2b-7782327d6332" x="105" y="72" width="467" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{branch}.toUpperCase()]]></textFieldExpression>
 			</textField>
 		</band>
 	</title>
 	<columnHeader>
 		<band height="22" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="007cc089-d095-42ad-835d-801561aab626" x="143" y="0" width="100" height="20"/>
+				<reportElement uuid="007cc089-d095-42ad-835d-801561aab626" x="166" y="0" width="100" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[HDMF ID No.]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="45c9eda3-4682-40f8-8823-9cc2a40a4d55" x="243" y="0" width="100" height="20"/>
+				<reportElement uuid="45c9eda3-4682-40f8-8823-9cc2a40a4d55" x="266" y="0" width="157" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Name]]></text>
 			</staticText>
 			<staticText>
-				<reportElement uuid="6511d091-2770-49cf-9471-c47750e3f70e" x="343" y="0" width="80" height="20"/>
+				<reportElement uuid="6511d091-2770-49cf-9471-c47750e3f70e" x="423" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Amount]]></text>
 			</staticText>
 			<line>
-				<reportElement uuid="8a4f473f-0aec-41ac-a4c1-20238295928c" x="143" y="20" width="280" height="1"/>
+				<reportElement uuid="8a4f473f-0aec-41ac-a4c1-20238295928c" x="166" y="20" width="337" height="1"/>
 			</line>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="21" splitType="Stretch">
 			<textField pattern="#,##0.00">
-				<reportElement uuid="21bb2e72-8eef-49f9-b47a-aea997b00149" x="343" y="0" width="80" height="20"/>
+				<reportElement uuid="21bb2e72-8eef-49f9-b47a-aea997b00149" x="423" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="a411fb1e-a289-4080-9202-f5eb2ea2c8a4" x="143" y="0" width="100" height="20"/>
+				<reportElement uuid="a411fb1e-a289-4080-9202-f5eb2ea2c8a4" x="166" y="0" width="100" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{hdmfNo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="c8791775-3c5c-4419-ae4d-3a1f718eadb8" x="243" y="0" width="100" height="20"/>
+				<reportElement uuid="c8791775-3c5c-4419-ae4d-3a1f718eadb8" x="266" y="0" width="157" height="20"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{name}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement uuid="b3ee670c-788a-49e7-9709-a1dfcb75826b" x="141" y="0" width="25" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}+"."]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
@@ -170,10 +202,10 @@ a.advanceType = 'hdmf loan' AND a.rowStatus IS NULL AND
 				<reportElement uuid="e2818cc7-f22d-4529-bbe7-70ea96af6f02" x="343" y="101" width="160" height="1"/>
 			</line>
 			<line>
-				<reportElement uuid="f3812eb2-57a4-4cdb-8470-286603c91326" x="343" y="0" width="80" height="1"/>
+				<reportElement uuid="f3812eb2-57a4-4cdb-8470-286603c91326" x="343" y="0" width="160" height="1"/>
 			</line>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
-				<reportElement uuid="14a1ea82-2cda-440a-92fe-f258a56c9c4b" x="343" y="0" width="80" height="20"/>
+				<reportElement uuid="14a1ea82-2cda-440a-92fe-f258a56c9c4b" x="423" y="0" width="80" height="20"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
@@ -215,11 +247,12 @@ a.advanceType = 'hdmf loan' AND a.rowStatus IS NULL AND
 				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="d93a8be3-8a78-40b0-b9f1-aaa6b35d6f6b" x="262" y="0" width="81" height="20"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement uuid="d93a8be3-8a78-40b0-b9f1-aaa6b35d6f6b" x="285" y="0" width="126" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<text><![CDATA[TOTAL]]></text>
+				<text><![CDATA[TOTAL: 
+]]></text>
 			</staticText>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="1bfcd7f7-a1f3-4041-9795-a45435f871fd" x="343" y="40" width="80" height="20"/>

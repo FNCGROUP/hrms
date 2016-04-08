@@ -56,63 +56,82 @@ WHERE e.branchId = $P{BRANCH_ID} AND s.payrollDate = $P{PAYROLL_DATE} AND (e.cur
 		<band splitType="Stretch"/>
 	</background>
 	<title>
-		<band height="120" splitType="Stretch">
+		<band height="140" splitType="Stretch">
 			<staticText>
-				<reportElement uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b" x="0" y="18" width="67" height="18"/>
-				<textElement textAlignment="Left" verticalAlignment="Middle">
+				<reportElement uuid="2368ba47-0043-4804-bf21-6b7f2c2a8f9b" x="0" y="18" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
-				<text><![CDATA[Operated By:    ]]></text>
+				<text><![CDATA[Operated By: ]]></text>
 			</staticText>
 			<textField>
-				<reportElement uuid="8162cf8a-c02f-4c6c-a638-ea34624938be" x="0" y="0" width="238" height="18"/>
+				<reportElement uuid="8162cf8a-c02f-4c6c-a638-ea34624938be" x="0" y="0" width="732" height="18"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{tradeName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba" x="67" y="18" width="200" height="18"/>
+				<reportElement uuid="556fa459-1bc8-466d-bc9c-d9e87f2c0dba" x="90" y="18" width="642" height="20"/>
 				<textElement textAlignment="Left" verticalAlignment="Middle">
 					<font size="9"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{corporateName}.toUpperCase()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="49379bd1-80a7-4afe-a6f4-e5f5c7c30783" x="0" y="40" width="149" height="20"/>
+				<reportElement uuid="49379bd1-80a7-4afe-a6f4-e5f5c7c30783" x="90" y="58" width="149" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
+					<font size="8" isBold="false"/>
 				</textElement>
-				<text><![CDATA[Attendance Summary]]></text>
+				<text><![CDATA[ATTENDANCE SUMMARY]]></text>
 			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement uuid="1453a469-c1ff-40bb-9634-bd5e74bcb632" x="0" y="60" width="149" height="20"/>
+				<reportElement uuid="1453a469-c1ff-40bb-9634-bd5e74bcb632" x="90" y="78" width="149" height="20"/>
 				<textElement verticalAlignment="Middle">
-					<font size="10" isBold="true"/>
+					<font size="8" isBold="false"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{payrollDate}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement uuid="92b624ad-fd2a-4ede-b0b0-834f6ab7fbb7" x="1" y="84" width="79" height="32"/>
-				<textElement verticalAlignment="Middle">
+				<reportElement uuid="92b624ad-fd2a-4ede-b0b0-834f6ab7fbb7" x="1" y="98" width="79" height="32"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<text><![CDATA[Payroll Period: ]]></text>
 			</staticText>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement uuid="b3d9be9a-d4b1-42a3-b5f3-155802fafba3" x="80" y="84" width="125" height="16"/>
+				<reportElement uuid="b3d9be9a-d4b1-42a3-b5f3-155802fafba3" x="90" y="98" width="125" height="16"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{startDate}]]></textFieldExpression>
 			</textField>
 			<textField pattern="MMMMM dd, yyyy">
-				<reportElement uuid="bb7b85d8-5948-4bbd-bcdd-1c5ffee34c15" x="80" y="100" width="125" height="16"/>
+				<reportElement uuid="bb7b85d8-5948-4bbd-bcdd-1c5ffee34c15" x="90" y="114" width="125" height="16"/>
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{cutOffDate}]]></textFieldExpression>
 			</textField>
+			<staticText>
+				<reportElement uuid="47d2306f-cf38-438a-b575-5db3ec202b3f" x="0" y="38" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="9"/>
+				</textElement>
+				<text><![CDATA[Branch: ]]></text>
+			</staticText>
+			<textField>
+				<reportElement uuid="8b7a7b18-3426-489a-a53f-6fd7404dc110" x="90" y="38" width="642" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{branch}.toUpperCase()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement uuid="6402056e-d461-4c9d-9355-2c141171cc8e" x="0" y="78" width="80" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[Payroll Date: ]]></text>
+			</staticText>
 		</band>
 	</title>
 	<columnHeader>

@@ -338,6 +338,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
                     String corporate = companyService.getCorporateNameByBranchId(getBranchId());
                     Window afl = new AllowanceForLiquidation(corporate, 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
+                            getBranchId(), 
                             getApplication());
                 } else if(reportType.getValue().equals("Allowances")){
                     reports.deleteFile("AllowancesReport_");
