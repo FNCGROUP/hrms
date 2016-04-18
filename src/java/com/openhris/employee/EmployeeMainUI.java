@@ -12,6 +12,7 @@ import com.openhris.model.Employee;
 import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.vaadin.data.Item;
+import com.vaadin.data.Property;
 import com.vaadin.event.ItemClickEvent;
 import com.vaadin.terminal.Sizeable;
 import com.vaadin.ui.ComboBox;
@@ -59,6 +60,28 @@ public class EmployeeMainUI extends VerticalLayout {
 	setSizeFull();
         
         employeesTable(getEmployeeList(getBranchId()));
+        
+//        VerticalLayout v = new VerticalLayout();
+//        v.setWidth("100%");
+//        
+//        ComboBox currentStatus = new ComboBox();
+//        currentStatus.setWidth("100%");
+//        currentStatus.setNullSelectionAllowed(true);
+//        currentStatus.addItem("resigned");
+//        currentStatus.addListener(new Property.ValueChangeListener() {
+//
+//            @Override
+//            public void valueChange(Property.ValueChangeEvent event) {
+//                if(event.getProperty().getValue() == null){
+//                    employeesTable(getEmployeeList(getBranchId()));
+//                } else {
+//                    employeesTable(findAllResignedEmployees(getBranchId()));
+//                }
+//            }
+//        });
+//        v.addComponent(currentStatus);
+//        v.addComponent(employeesTbl);
+//        v.setExpandRatio(employeesTbl, 2);
         
 	hsplit = new HorizontalSplitPanel();        
         hsplit.addStyleName("small blue white");
@@ -122,4 +145,8 @@ public class EmployeeMainUI extends VerticalLayout {
     public List<Employee> getEmployeeList(int branchId){
         return employeeService.getEmployeePerBranchMainView(branchId);
     }    
+    
+    public List<Employee> findAllResignedEmployees(int branchId){
+        return employeeService.findAllResignedEmployees(branchId);
+    }
 }

@@ -21,9 +21,11 @@ public interface EmployeeService {
     public List<BankDebitMemo> findBankDebitMemo(int branchId, String payrollDate);
     
     public EmploymentInformation findEmployeeById(String employeeId);
-            
+                
     public List<Employee> getAllEmployees();
         
+    public List<Employee> findAllResignedEmployees(int branchId);
+    
     public List<Employee> getEmployeePerBranchForDropDownList(int branchId);
     
     public List<Employee> getEmployeePerBranch(int branchId);
