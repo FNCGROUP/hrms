@@ -473,11 +473,17 @@ public class AttendanceTableContainerWindow extends Window {
                                     }else {
                                         item.getItemProperty("l/min").setValue(0.0);
                                     }                                    
-                                } else if(policyStr.equals("working-day-off")){
+                                } else if(policyStr.equals("working-day-off")){                                    
                                     item.getItemProperty("latesLH").setValue(0.0);
                                     item.getItemProperty("latesSH").setValue(0.0);
-                                    item.getItemProperty("latesWO").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction));
-                                    item.getItemProperty("l/min").setValue(0.0);
+                                    
+                                    if(getEmploymentWageEntry().equals("daily")){
+                                        item.getItemProperty("latesWO").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction * .3));
+                                        item.getItemProperty("l/min").setValue(lateDeduction);
+                                    } else {
+                                        item.getItemProperty("latesWO").setValue(utilities.roundOffToTwoDecimalPlaces(lateDeduction * .3));
+                                        item.getItemProperty("l/min").setValue(0.0);
+                                    }
                                 }                                 
                             } else {
                                 item.getItemProperty("l/min").setValue(0.0);
@@ -541,6 +547,13 @@ public class AttendanceTableContainerWindow extends Window {
                                 item.getItemProperty("undertimeSH").setValue(0.0);
                                 item.getItemProperty("undertimeWO").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction));
                                 item.getItemProperty("u/min").setValue(0.0);
+                                if(getEmploymentWageEntry().equals("daily")){
+                                    item.getItemProperty("undertimeWO").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction * .3));
+                                    item.getItemProperty("u/min").setValue(undertimeDeduction);
+                                } else {
+                                    item.getItemProperty("undertimeWO").setValue(utilities.roundOffToTwoDecimalPlaces(undertimeDeduction * .3));
+                                    item.getItemProperty("u/min").setValue(0.0);
+                                }
                             }
                         }
                         

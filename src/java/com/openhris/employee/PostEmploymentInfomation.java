@@ -117,6 +117,7 @@ public class PostEmploymentInfomation extends VerticalLayout{
         glayout.addComponent(position, 1, 1);
         
         entryDate = new HRISPopupDateField("Entry Date:");
+        entryDate.setDateFormat("MM/dd/yyyy");
         glayout.addComponent(entryDate, 2, 1);
                 
         newPositionBtn.addListener(newBtnPositionListener);
@@ -243,7 +244,7 @@ public class PostEmploymentInfomation extends VerticalLayout{
                 p.getTrade(), 
                 p.getBranch(), 
                 p.getDepartment(), 
-                utilities.convertDateFormat(p.getEntryDate().toString())
+                utilities.convertDateFormatForTableData(utilities.convertDateFormat(p.getEntryDate().toString())) 
             }, i);
             i++;
         }
@@ -308,6 +309,7 @@ public class PostEmploymentInfomation extends VerticalLayout{
         
         final PopupDateField endDate = new HRISPopupDateField("Exit Date: ");
         endDate.setWidth("250px");
+        endDate.setDateFormat("MM/dd/yyyy");
         glayout2.addComponent(endDate, 0, 0);
         glayout2.setComponentAlignment(endDate, Alignment.BOTTOM_LEFT);
         
@@ -342,6 +344,7 @@ public class PostEmploymentInfomation extends VerticalLayout{
         
         final PopupDateField entryDateFromEmp = new HRISPopupDateField("Entry Date from Employment: ");
         entryDateFromEmp.setWidth("250px");
+        entryDateFromEmp.setDateFormat("MM/dd/yyyy");
         entryDateFromEmp.setValue(utilities.parsingDate(employeeService.getEmploymentEntryDate(getEmployeeId())));
         glayout2.addComponent(entryDateFromEmp, 0, 1);
         glayout2.setComponentAlignment(entryDateFromEmp, Alignment.BOTTOM_LEFT);

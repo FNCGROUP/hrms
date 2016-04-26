@@ -63,6 +63,19 @@ public class OpenHrisUtilities {
         return formattedValue;
     }
     
+    public String convertDateFormatForTableData(String date){
+        DateFormat currentDateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat newDateFormat = new SimpleDateFormat("MM/dd/yyyy");
+        String dateConvert = "2009-08-24";
+        try {
+            Date newDate = currentDateFormat.parse(date);
+            dateConvert = newDateFormat.format(newDate);
+        } catch (ParseException ex) {
+            Logger.getLogger(OpenHrisUtilities.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return dateConvert;
+    }
+    
     /**
      * 
      * @param date = EEE MMM dd HH:mm:ss z yyyy     * 

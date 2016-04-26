@@ -31,6 +31,18 @@ public class TimekeepingComputation {
         return utilities.roundOffToTwoDecimalPlaces(lateDeduction);
     }
     
+    public double processEmployeesLatesWDO(String holiday, int lates, Double wage){
+        double lateDeductionPerMinute = calculateDeductionPerMinute(lates, wage);
+        double lateDeduction = 0.0;
+        if(holiday == null){
+            lateDeduction = lateDeductionPerMinute;
+        } else if (holiday.equals("legal-holiday")){            
+        } else {            
+        }
+        
+        return utilities.roundOffToTwoDecimalPlaces(lateDeduction);
+    }
+    
     public double processEmployeesLatesForOnCall(String policy, String holiday, int lates, Double wage){
 //        double rate = getHolidayRate(holiday, wage);
         double lateDeductionPerMinute = calculateDeductionPerMinute(lates, wage);        
@@ -144,7 +156,7 @@ public class TimekeepingComputation {
     public double processAdditionalWorkingDayOff(Double wage, String wageEntry){
         double rate = 0;
         if(wageEntry.equals("daily")){
-            rate = wage * .3; 
+            rate = 0; 
         } else {
             rate = wage * 1.3; 
         }     

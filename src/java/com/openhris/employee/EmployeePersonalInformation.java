@@ -169,7 +169,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
                 
         dobField = new PopupDateField("Date of Birth: ");
         dobField.addStyleName("mydate");          
-        dobField.setDateFormat("yyyy-MM-dd");
+        dobField.setDateFormat("MM/dd/yyyy");
         dobField.setWidth("100%");
         dobField.setResolution(DateField.RESOLUTION_DAY);
         glayout.addComponent(dobField, 1, 2);
