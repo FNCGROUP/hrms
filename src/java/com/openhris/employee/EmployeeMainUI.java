@@ -41,6 +41,7 @@ public class EmployeeMainUI extends VerticalLayout {
     ComboBox trade;
     ComboBox branch;
     ComboBox employeesName = new ComboBox();
+    ComboBox currentStatus = new ComboBox();
     
     OpenHrisUtilities util = new OpenHrisUtilities();
     
@@ -51,8 +52,8 @@ public class EmployeeMainUI extends VerticalLayout {
     
     public EmployeeMainUI(){}
     
-    public EmployeeMainUI(final String userRole, int branchId){
-        
+    public EmployeeMainUI(final String userRole, 
+            int branchId){        
         this.userRole = userRole;
         this.branchId = branchId;
                 
@@ -61,33 +62,18 @@ public class EmployeeMainUI extends VerticalLayout {
         
         employeesTable(getEmployeeList(getBranchId()));
         
-//        VerticalLayout v = new VerticalLayout();
-//        v.setWidth("100%");
-//        
-//        ComboBox currentStatus = new ComboBox();
-//        currentStatus.setWidth("100%");
-//        currentStatus.setNullSelectionAllowed(true);
-//        currentStatus.addItem("resigned");
-//        currentStatus.addListener(new Property.ValueChangeListener() {
-//
-//            @Override
-//            public void valueChange(Property.ValueChangeEvent event) {
-//                if(event.getProperty().getValue() == null){
-//                    employeesTable(getEmployeeList(getBranchId()));
-//                } else {
-//                    employeesTable(findAllResignedEmployees(getBranchId()));
-//                }
-//            }
-//        });
-//        v.addComponent(currentStatus);
-//        v.addComponent(employeesTbl);
-//        v.setExpandRatio(employeesTbl, 2);
+        VerticalLayout v = new VerticalLayout();
+        v.setSizeFull();
+                
+        v.addComponent(employeeCurrentStatus());
+        v.addComponent(employeesTbl);
+        v.setExpandRatio(employeesTbl, 2);
         
 	hsplit = new HorizontalSplitPanel();        
         hsplit.addStyleName("small blue white");
         hsplit.setLocked(true);
-        hsplit.setSplitPosition(33, Sizeable.UNITS_PERCENTAGE);
-	hsplit.setFirstComponent(employeesTbl);
+        hsplit.setSplitPosition(25, Sizeable.UNITS_PERCENTAGE);
+	hsplit.setFirstComponent(v);
 	hsplit.setSecondComponent(new EmployeeInformationUI(null, null));
 	
 	hsplit.setSizeFull();
@@ -101,13 +87,16 @@ public class EmployeeMainUI extends VerticalLayout {
         employeesTbl.setSizeFull();
         employeesTbl.setSelectable(true);
 	employeesTbl.addStyleName("employees-table-layout");
+        employeesTbl.setColumnCollapsingAllowed(true);
         
         employeesTbl.addContainerProperty("employee id", String.class, null);
         employeesTbl.addContainerProperty("name", String.class, null);
         
+        employeesTbl.setColumnCollapsed("employee id", true);
+        
         int i = 0; 
         for(Employee e : employeeList){
-            String name = e.getLastname()+", "+e.getFirstname()+" "+e.getMiddlename();
+            String name = e.getLastname()+", "+e.getFirstname()+" "+e.getMiddlename();            
             employeesTbl.addItem(new Object[]{
                 e.getEmployeeId(), 
                 name.toUpperCase() 
@@ -119,7 +108,7 @@ public class EmployeeMainUI extends VerticalLayout {
         for(Object listener : employeesTbl.getListeners(ItemClickEvent.class)){
             employeesTbl.removeListener(ItemClickEvent.class, listener);
         }
-        
+                
         employeesTbl.addListener(new ItemClickEvent.ItemClickListener() {
 
             @Override
@@ -134,6 +123,10 @@ public class EmployeeMainUI extends VerticalLayout {
         employeesTbl.setImmediate(true);
     }
         
+    public void setBranchId(int branchId){
+        this.branchId = branchId;
+    }
+    
     public int getBranchId(){
         return branchId;
     }
@@ -148,5 +141,26 @@ public class EmployeeMainUI extends VerticalLayout {
     
     public List<Employee> findAllResignedEmployees(int branchId){
         return employeeService.findAllResignedEmployees(branchId);
+    }
+    
+    public ComboBox employeeCurrentStatus(){
+        currentStatus.removeAllItems();
+        currentStatus.setWidth("100%");
+        currentStatus.setNullSelectionAllowed(true);
+        currentStatus.addItem("resigned");
+        currentStatus.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                if(event.getProperty().getValue() == null){
+                    employeesTable(getEmployeeList(getBranchId()));
+                } else {
+                    employeesTable(findAllResignedEmployees(getBranchId()));
+                }
+            }
+        });
+        currentStatus.setImmediate(true);
+        
+        return currentStatus;
     }
 }

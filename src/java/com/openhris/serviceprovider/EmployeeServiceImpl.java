@@ -236,12 +236,93 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public List<Employee> getEmployeePerBranchMainView(int branchId) {
-        return employeeDAO.getEmployeePerBranchMainView(branchId);
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null; 
+                
+        List<Employee> employeesListPerBranch = new ArrayList<>();
+        try {
+            pstmt = conn.prepareStatement("SELECT e.employeeId AS employeeId, e.firstname AS firstname, "
+                    + "e.middlename AS middlename, e.lastname AS lastname, "
+                    + "ct.name as corporate, tt.name AS trade, bt.name AS branch FROM employee e "
+                    + "INNER JOIN branch_table bt ON e.branchId = bt.id "
+                    + "INNER JOIN trade_table tt ON bt.tradeId = tt.id "
+                    + "INNER JOIN corporate_table ct ON tt.corporateId = ct.id "
+                    + "WHERE branchId = ? "
+                    + "AND currentStatus IS NULL "
+                    + "ORDER BY lastname ASC");
+            pstmt.setInt(1, branchId);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                PostEmploymentInformationBean p = new PostEmploymentInformationBean();
+                p.setEmployeeId(rs.getString("employeeId"));
+                p.setFirstname(rs.getString("firstname"));
+                p.setMiddlename(rs.getString("middlename"));
+                p.setLastname(rs.getString("lastname"));
+                p.setCompany(rs.getString("corporate"));
+                p.setTrade(rs.getString("trade"));
+                p.setBranch(rs.getString("branch"));
+                employeesListPerBranch.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return employeesListPerBranch;
     }
 
     @Override
     public List<Employee> getAllEmployeeMainView() {
-        return employeeDAO.getAllEmployeeMainView();
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null; 
+                
+        List<Employee> employeesListPerBranch = new ArrayList<>();
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT e.employeeId AS employeeId, e.firstname AS firstname, "
+                    + "e.middlename AS middlename, e.lastname AS lastname, "
+                    + "ct.name as corporate, tt.name AS trade, bt.name AS branch FROM employee e "
+                    + "INNER JOIN branch_table bt ON e.branchId = bt.id "
+                    + "INNER JOIN trade_table tt ON bt.tradeId = tt.id "
+                    + "INNER JOIN corporate_table ct ON tt.corporateId = ct.id "
+                    + "WHERE currentStatus IS NULL "
+                    + "OR currentStatus = 'resigned' "
+                    + "ORDER BY lastname ASC");
+            while(rs.next()){
+                PostEmploymentInformationBean p = new PostEmploymentInformationBean();
+                p.setEmployeeId(rs.getString("employeeId"));
+                p.setFirstname(rs.getString("firstname"));
+                p.setMiddlename(rs.getString("middlename"));
+                p.setLastname(rs.getString("lastname"));
+                p.setCompany(rs.getString("corporate"));
+                p.setTrade(rs.getString("trade"));
+                p.setBranch(rs.getString("branch"));
+                employeesListPerBranch.add(p);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return employeesListPerBranch;
     }
 
     @Override

@@ -460,7 +460,9 @@ public class MainApp extends Application {
                     }                                 
                     
                     if(mainMenuBar){
+                        employeeMainUI.setBranchId(branchId);
                         employeeMainUI.employeesTable(getEmployeeListByBranch(branchId));
+                        employeeMainUI.employeeCurrentStatus();
                     } 
                     
                     timekeepingMainUI.setBranchId(branchId);
