@@ -4,6 +4,7 @@
  */
 package com.openhris.service;
 
+import com.openhris.model.AFLSchedule;
 import com.openhris.model.HdmfSchedule;
 import com.openhris.model.Phic;
 import com.openhris.model.PhicSchedule;
@@ -46,5 +47,7 @@ public interface ContributionService {
     
     public List<HdmfSchedule> getHdmfContribution(int corporateId, int month, int year);
     
-    public List<TaxSchedule> getTaxContribution(int corporateId, Date payrollDate);
+    public List<TaxSchedule> getTaxContribution(int corporateId, Date payrollDate); 
+    
+    public List<AFLSchedule> findAFLByCompany(int corporateId, Date payrollDate);
 }

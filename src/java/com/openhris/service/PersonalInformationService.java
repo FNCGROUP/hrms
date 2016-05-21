@@ -19,7 +19,7 @@ public interface PersonalInformationService {
     
     public PersonalInformation getPersonalInformationData(String employeeId);
     
-    public boolean updatePersonalInformation(PersonalInformation personalInformation);
+    public boolean updatePersonalInformation(PersonalInformation pi, String remarks);
 	
     public boolean uploadImageForEmployee(FileInputStream inputStream, File file, String employeeId);
 }

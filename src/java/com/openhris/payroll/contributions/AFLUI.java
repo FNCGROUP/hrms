@@ -5,10 +5,11 @@
  */
 package com.openhris.payroll.contributions;
 
-import com.openhris.payroll.tables.PhicTableProperties;
-import com.openhris.payroll.containers.PhicDataContainer;
 import com.openhris.commons.HRISPopupDateField;
 import com.openhris.commons.OpenHrisUtilities;
+import com.openhris.payroll.containers.AFLContainer;
+import com.openhris.payroll.tables.AFLTableProperties;
+import com.openhris.payroll.tables.TaxTableProperties;
 import com.openhris.service.CompanyService;
 import com.openhris.serviceprovider.CompanyServiceImpl;
 import com.vaadin.addon.tableexport.ExcelExport;
@@ -17,24 +18,22 @@ import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.VerticalLayout;
-import java.util.Calendar;
-import java.util.Date;
 
 /**
  *
  * @author jetdario
  */
-public class PhicUI extends VerticalLayout {
-
+public class AFLUI extends VerticalLayout {
+    
     CompanyService cs = new CompanyServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
     
-    PhicTableProperties phicTable = new PhicTableProperties();    
+    AFLTableProperties afl = new AFLTableProperties();    
     private int branchId;
     private int tradeId;
     private int corporateId;
-    
-    public PhicUI(int branchId) {
+
+    public AFLUI(int branchId) {
         this.branchId = branchId;
         
         setSizeFull();
@@ -50,21 +49,19 @@ public class PhicUI extends VerticalLayout {
         payrollDateField.setWidth("200px");
         h.addComponent(payrollDateField);
         
-        Button generateBtn = new Button("GENERATE PHIC SHARE");
+        Button generateBtn = new Button("GENERATE AFL");
         generateBtn.setWidth("200px");
         generateBtn.addListener(new Button.ClickListener() {
 
             @Override
-            public void buttonClick(Button.ClickEvent event) {
+            public void buttonClick(Button.ClickEvent event) {    
                 tradeId = cs.getTradeIdByBranchId(getBranchId());
                 corporateId = cs.getCorporateIdByTradeId(tradeId);
                 
-                Date date = util.parsingDate(util.convertDateFormat(payrollDateField.getValue().toString()));
-                Calendar c = Calendar.getInstance();
-                c.setTime(date);
-                
-                phicTable.setContainerDataSource(new PhicDataContainer(corporateId, (1 + c.get(Calendar.MONTH)), c.get(Calendar.YEAR)));
-                
+                afl.setContainerDataSource(
+                        new AFLContainer(
+                                corporateId, 
+                                util.parsingDate(util.convertDateFormat(payrollDateField.getValue().toString()))));
             }
         });
         h.addComponent(generateBtn);  
@@ -79,38 +76,31 @@ public class PhicUI extends VerticalLayout {
             
             @Override
             public void buttonClick(Button.ClickEvent event) {
-                excelExport = new ExcelExport(phicTable, "PHIC Remitance");
+                excelExport = new ExcelExport(afl, "AFL Remitance");
 		excelExport.excludeCollapsedColumns();
-                excelExport.setReportTitle(cs.getCorporateById(corporateId).toUpperCase()+" PHIC Remitances");
+                excelExport.setReportTitle(cs.getCorporateById(corporateId).toUpperCase()+" AFL Remitances");
 		excelExport.setExportFileName(
                         cs.getCorporateById(corporateId).replace(",", " ").toUpperCase()
-                        +"-PHIC-Remitance-"+util.convertDateFormat(payrollDateField.getValue().toString())+".xls");
+                        +"-AFL-Remitance-"+util.convertDateFormat(payrollDateField.getValue().toString())+".xls");
 		excelExport.export();
             }
+            
         });
         h.addComponent(exportTableToExcel);
         h.setComponentAlignment(exportTableToExcel, Alignment.BOTTOM_LEFT);
         h.setExpandRatio(exportTableToExcel, 2);
         
         addComponent(h);
-        addComponent(phicTable);
-        setExpandRatio(phicTable, 2);
-    }
+        addComponent(afl);
+        setExpandRatio(afl, 2);
+    }        
 
     public int getBranchId() {
         return branchId;
     }
 
-    public int getTradeId() {
-        return tradeId;
-    }
-
-    public int getCorporateId() {
-        return corporateId;
-    }
-
-    public void setBranchId(int branchId){
+    public void setBranchId(int branchId) {
         this.branchId = branchId;
     }
-    
+
 }

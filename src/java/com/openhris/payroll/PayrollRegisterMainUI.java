@@ -49,7 +49,6 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.VerticalSplitPanel;
 import com.vaadin.ui.Window;
 import java.util.Calendar;
-import java.util.List;
 
 /**
  *

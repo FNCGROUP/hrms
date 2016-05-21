@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.payroll.contributions;
+package com.openhris.payroll.tables;
 
+import com.openhris.payroll.containers.TaxDataContainer;
 import com.vaadin.ui.Table;
 import java.util.Date;
 
@@ -26,14 +27,14 @@ public class TaxTableProperties extends Table {
         
         setContainerDataSource(new TaxDataContainer());
         
-        setColumnHeader("employeeId", "Employee ID.");
-        setColumnHeader("hdmfNo", "Hdmf No.");
-        setColumnHeader("eeHdmf", "Employee Share");
-        setColumnHeader("erHdmf", "Employer Share");
-        
-        setColumnWidth("name", 250);
-        setColumnAlignment("eeHdmf", Table.ALIGN_RIGHT);
-        setColumnAlignment("erHdmf", Table.ALIGN_RIGHT);
+//        setColumnHeader("employeeId", "Employee ID.");
+//        setColumnHeader("hdmfNo", "Hdmf No.");
+//        setColumnHeader("eeHdmf", "Employee Share");
+//        setColumnHeader("erHdmf", "Employer Share");
+//        
+//        setColumnWidth("name", 250);
+//        setColumnAlignment("eeHdmf", Table.ALIGN_RIGHT);
+//        setColumnAlignment("erHdmf", Table.ALIGN_RIGHT);
     }
 
     public TaxTableProperties(int corporateId, Date payrollDate) {
@@ -48,14 +49,14 @@ public class TaxTableProperties extends Table {
         
         setContainerDataSource(new TaxDataContainer(corporateId, payrollDate));
         
-        setColumnHeader("employeeId", "Employee ID.");
-        setColumnHeader("hdmfNo", "Hdmf No.");
-        setColumnHeader("eeHdmf", "Employee Share");
-        setColumnHeader("erHdmf", "Employer Share");
-        
-        setColumnWidth("name", 250);
-        setColumnAlignment("eeHdmf", Table.ALIGN_RIGHT);
-        setColumnAlignment("erHdmf", Table.ALIGN_RIGHT);
+//        setColumnHeader("employeeId", "Employee ID.");
+//        setColumnHeader("hdmfNo", "Hdmf No.");
+//        setColumnHeader("eeHdmf", "Employee Share");
+//        setColumnHeader("erHdmf", "Employer Share");
+//        
+//        setColumnWidth("name", 250);
+//        setColumnAlignment("eeHdmf", Table.ALIGN_RIGHT);
+//        setColumnAlignment("erHdmf", Table.ALIGN_RIGHT);
     }
     
 }

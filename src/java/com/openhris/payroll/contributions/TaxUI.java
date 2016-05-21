@@ -5,6 +5,8 @@
  */
 package com.openhris.payroll.contributions;
 
+import com.openhris.payroll.tables.TaxTableProperties;
+import com.openhris.payroll.containers.TaxDataContainer;
 import com.openhris.commons.HRISPopupDateField;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.service.CompanyService;

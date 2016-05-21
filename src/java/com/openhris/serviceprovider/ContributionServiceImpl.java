@@ -12,6 +12,7 @@ import com.openhris.model.Tax;
 import com.openhris.dao.ServiceGetDAO;
 import com.openhris.dao.ServiceInsertDAO;
 import com.openhris.dao.ServiceUpdateDAO;
+import com.openhris.model.AFLSchedule;
 import com.openhris.model.HdmfSchedule;
 import com.openhris.model.PhicSchedule;
 import com.openhris.model.SssSchedule;
@@ -265,5 +266,47 @@ public class ContributionServiceImpl implements ContributionService {
         }
         
         return tsList;
+    }
+
+    @Override
+    public List<AFLSchedule> findAFLByCompany(int corporateId, Date payrollDate) {
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        List<AFLSchedule> aflList = new ArrayList<>();
+                        
+        try {
+            pstmt = conn.prepareStatement("SELECT * FROM afl_schedule "
+                    + "WHERE (CurrentStatus != 'removed' OR CurrentStatus IS NULL) "
+                    + "AND CorporateID = ? "
+                    + "AND payrollDate = ? "
+                    + "AND AllowanceForLiquidation != 0 "
+                    + "ORDER BY EmployeeName ASC");
+            pstmt.setInt(1, corporateId);
+            pstmt.setString(2, util.convertDateFormat(payrollDate.toString()));
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                AFLSchedule a = new AFLSchedule();
+                a.setEmployeeId(rs.getString("EmployeeID"));
+                a.setEmployeeName(rs.getString("EmployeeName"));
+                a.setAmount(util.convertStringToDouble(rs.getString("AllowanceForLiquidation")));
+                a.setBranchName(rs.getString("BranchName"));
+                aflList.add(a);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ContributionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ContributionServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return aflList;        
     }
 }

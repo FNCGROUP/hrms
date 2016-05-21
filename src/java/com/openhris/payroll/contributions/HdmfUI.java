@@ -5,6 +5,8 @@
  */
 package com.openhris.payroll.contributions;
 
+import com.openhris.payroll.tables.HdmfTableProperties;
+import com.openhris.payroll.containers.HdmfDataContainer;
 import com.openhris.commons.HRISPopupDateField;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.service.CompanyService;

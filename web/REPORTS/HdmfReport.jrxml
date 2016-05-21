@@ -19,7 +19,7 @@ tn.hdmfNo AS erHdmfNo,
 b.address AS address,
 s.payrollDate AS payrollDate
 FROM employee e INNER JOIN payroll_table s ON e.employeeId = s.employeeId
-INNER JOIN branch_table b ON e.branchId = b.id
+INNER JOIN branch_table b ON s.branchId = b.id
 INNER JOIN trade_table tn ON b.tradeId = tn.id
 INNER JOIN corporate_table cn ON tn.corporateId = cn.id
 WHERE (e.currentStatus != 'removed' OR e.currentStatus IS NULL) AND

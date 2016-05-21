@@ -39,6 +39,7 @@ import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.openhris.payroll.PayrollMainUI;
 import com.openhris.payroll.PayrollRegisterMainUI;
+import com.openhris.payroll.contributions.AFLUI;
 import com.openhris.payroll.contributions.HdmfUI;
 import com.openhris.payroll.contributions.PhicUI;
 import com.openhris.payroll.contributions.SssUI;
@@ -106,6 +107,7 @@ public class MainApp extends Application {
     PhicUI phicUI;
     HdmfUI hdmfUI;
     TaxUI taxUI;
+    AFLUI aflUI;
     BankDebitMemoUI debitMemoUI;
     
     AdvanceUserAccessModule advanceUserAccess = new AdvanceUserAccessModule();
@@ -480,6 +482,7 @@ public class MainApp extends Application {
                     hdmfUI.setBranchId(branchId);
                     taxUI.setBranchId(branchId);
                     debitMemoUI.setBranchId(branchId);
+                    aflUI.setBranchId(branchId);
                 }
                 
             }
@@ -656,6 +659,7 @@ public class MainApp extends Application {
         hdmfUI = new HdmfUI(getBranchId());
         taxUI = new TaxUI(getBranchId());
         debitMemoUI = new BankDebitMemoUI(getBranchId());
+        aflUI = new AFLUI(getBranchId());
         
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
@@ -701,7 +705,13 @@ public class MainApp extends Application {
         payrollMenuGrid.setSizeFull();
         payrollMenuGrid.setCaption("Bank Debit Memo");
         payrollMenuGrid.addComponent(debitMemoUI);
-        ts.addComponent(payrollMenuGrid);        
+        ts.addComponent(payrollMenuGrid);    
+        
+        payrollMenuGrid = new GridLayout();
+        payrollMenuGrid.setSizeFull();
+        payrollMenuGrid.setCaption("AFL");
+        payrollMenuGrid.addComponent(aflUI);
+        ts.addComponent(payrollMenuGrid);  
         
         return ts;
     }
@@ -933,6 +943,10 @@ public class MainApp extends Application {
     
     public int getBranchId(){
         return branchId;
+    }
+
+    public int getCompanyId() {
+        return companyId;
     }
     
     Window.CloseListener newEmployeeWindowCloseListener = new Window.CloseListener() {

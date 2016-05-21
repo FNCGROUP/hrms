@@ -3,21 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.payroll.contributions;
+package com.openhris.payroll.containers;
 
-import com.openhris.model.PhicSchedule;
+import com.openhris.model.SssSchedule;
 import com.openhris.service.ContributionService;
 import com.openhris.serviceprovider.ContributionServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /**
  *
  * @author jetdario
  */
-public class PhicDataContainer extends IndexedContainer {
+public class SssDataContainer extends IndexedContainer {
 
     ContributionService cs = new ContributionServiceImpl();
     
@@ -25,17 +26,18 @@ public class PhicDataContainer extends IndexedContainer {
     private int month;
     private int year;
 
-    public PhicDataContainer() {
+    public SssDataContainer() {
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
-        addContainerProperty("phicNo", String.class, null);
-        addContainerProperty("eePhic", Double.class, null);
-        addContainerProperty("erPhic", Double.class, null); 
+        addContainerProperty("sssNo", String.class, null);
+        addContainerProperty("eeShare", Double.class, null);
+        addContainerProperty("erShare", Double.class, null); 
+        addContainerProperty("ec", Double.class, null);
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
     }
-    
-    public PhicDataContainer(int corporateId, 
+        
+    public SssDataContainer(int corporateId, 
             int month, 
             int year) {
         this.corporateId = corporateId;
@@ -44,37 +46,27 @@ public class PhicDataContainer extends IndexedContainer {
         
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
-        addContainerProperty("phicNo", String.class, null);
-        addContainerProperty("eePhic", Double.class, null);
-        addContainerProperty("erPhic", Double.class, null); 
+        addContainerProperty("sssNo", String.class, null);
+        addContainerProperty("eeShare", Double.class, null);
+        addContainerProperty("erShare", Double.class, null); 
+        addContainerProperty("ec", Double.class, null);
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
         
-        for(PhicSchedule ps : cs.getPhicContribution(corporateId, month, year)){
+        for(SssSchedule s : cs.getSssContribution(corporateId, month, year)){
             Item item = getItem(addItem());
-            item.getItemProperty("employeeId").setValue(ps.getEmployeeId());
-            item.getItemProperty("name").setValue(ps.getEmployeeName().toUpperCase());
-            item.getItemProperty("phicNo").setValue(ps.getPhicNo());
-            item.getItemProperty("eePhic").setValue(ps.getEePhic());
-            item.getItemProperty("erPhic").setValue(ps.getErPhic());
-            item.getItemProperty("branch").setValue(ps.getBranchName());
-            item.getItemProperty("date").setValue(getMonthString().get(month)+" "+year);
+            item.getItemProperty("employeeId").setValue(s.getEmployeeId());
+            item.getItemProperty("name").setValue(s.getName().toUpperCase());
+            item.getItemProperty("sssNo").setValue(s.getSssNo());
+            item.getItemProperty("eeShare").setValue(s.getEeShare());
+            item.getItemProperty("erShare").setValue(s.getErShare());
+            item.getItemProperty("ec").setValue(s.getEc());
+            item.getItemProperty("branch").setValue(s.getBranch());
+            item.getItemProperty("date").setValue(getMonth().get(month)+" "+year);
         }
     }
-
-    public int getCorporateId() {
-        return corporateId;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public int getYear() {
-        return year;
-    }
     
-    Map<Integer, String> getMonthString(){
+    Map<Integer, String> getMonth(){
         Map<Integer, String> m = new HashMap<>();
         m.put(1, "January");
         m.put(2, "February");
@@ -89,5 +81,5 @@ public class PhicDataContainer extends IndexedContainer {
         m.put(11, "November");
         m.put(12, "December");
         return m;
-    }
+    }    
 }

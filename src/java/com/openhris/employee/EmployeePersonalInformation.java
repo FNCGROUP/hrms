@@ -33,6 +33,7 @@ import com.vaadin.ui.Embedded;
 import com.vaadin.ui.GridLayout;
 import com.vaadin.ui.Panel;
 import com.vaadin.ui.PopupDateField;
+import com.vaadin.ui.TextArea;
 import com.vaadin.ui.TextField;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -427,12 +428,19 @@ public class EmployeePersonalInformation extends VerticalLayout{
                 personalInformation.setSkills((skillsField.getValue() == null) ? "N/A" : skillsField.getValue().toString());
                 personalInformation.setHobby((hobbyField.getValue() == null) ? "N/A" : hobbyField.getValue().toString());
 		
-		boolean result = piService.updatePersonalInformation(personalInformation);
-		if(result){
-		    getWindow().showNotification("Information Updated", Window.Notification.TYPE_TRAY_NOTIFICATION);
-		} else {
-		    getWindow().showNotification("SQL Error", Window.Notification.TYPE_ERROR_MESSAGE);
-		}
+//                boolean result = piService.updatePersonalInformation(personalInformation);
+                Window window = updatePersonalInformationConfirmation(personalInformation);
+                window.setModal(true);
+                if(window.getParent() == null){
+                    getWindow().addWindow(window);
+                }
+                window.center();
+                		
+//		if(result){
+//		    getWindow().showNotification("Information Updated", Window.Notification.TYPE_TRAY_NOTIFICATION);
+//		} else {
+//		    getWindow().showNotification("SQL Error", Window.Notification.TYPE_ERROR_MESSAGE);
+//		}
 	    }
 	});
         if(GlobalVariables.getUserRole().equals("administrator") || 
@@ -480,6 +488,45 @@ public class EmployeePersonalInformation extends VerticalLayout{
         return window;
     }
             
+    private Window updatePersonalInformationConfirmation(PersonalInformation pi){
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setSpacing(true);
+        vlayout.setMargin(true);
+
+        final Window window = new Window("UPDATE WINDOW", vlayout);
+        window.setWidth("350px");
+        
+        final TextArea remarks = new TextArea("Remarks");
+        remarks.setWidth("100%");
+        remarks.setRows(3);
+        window.addComponent(remarks);
+        
+        Button removeBtn = new Button("UPDATE EMPLOYEE?");
+        removeBtn.setWidth("100%");
+        removeBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                if(remarks.getValue() ==  null || remarks.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Add remarks!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
+                boolean result = piService.updatePersonalInformation(personalInformation, remarks.getValue().toString().trim());
+                if(result){
+		    getWindow().showNotification("Information Updated", Window.Notification.TYPE_TRAY_NOTIFICATION);
+                    (window.getParent()).removeWindow(window);
+		} else {
+		    getWindow().showNotification("SQL Error", Window.Notification.TYPE_ERROR_MESSAGE);
+		}
+            }
+            
+        });
+        window.addComponent(removeBtn);
+        
+        return window;
+    }
+    
     public String getEmployeeId(){
 	return employeeId;    
     }

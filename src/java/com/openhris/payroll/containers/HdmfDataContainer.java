@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.openhris.payroll.contributions;
+package com.openhris.payroll.containers;
 
 import com.openhris.model.Employee;
 import com.openhris.model.EmploymentInformation;
