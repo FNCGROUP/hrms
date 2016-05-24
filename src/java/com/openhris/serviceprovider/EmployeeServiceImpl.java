@@ -4,6 +4,7 @@
  */
 package com.openhris.serviceprovider;
 
+import com.hrms.beans.EmployeePositionHistoryBean;
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.ServiceGetDAO;
@@ -12,6 +13,7 @@ import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.dao.EmployeeDAO;
 import com.openhris.model.BankDebitMemo;
 import com.openhris.model.Employee;
+import com.openhris.model.EmployeeSummary;
 import com.openhris.model.EmploymentInformation;
 import com.openhris.model.PostEmploymentInformationBean;
 import com.openhris.service.EmployeeService;
@@ -416,6 +418,50 @@ public class EmployeeServiceImpl implements EmployeeService {
             }
         }
         return employeesListPerBranch;
+    }
+
+    @Override
+    public List<EmployeeSummary> findAllEmployeeSummaryByCorporateId(int corporateId) {
+        Connection conn = getConnection.connection();
+        PreparedStatement pstmt = null;
+        ResultSet rs = null; 
+        List<EmployeeSummary> esList = new ArrayList<>();
+        try {
+            pstmt  = conn.prepareStatement("SELECT `e`.`employeeId` AS `EmployeeID`, "
+                    + "concat_ws(', ', setNameToUpper(`e`.`lastname`), "
+                    + "concat_ws(' ', setNameToUpper(`e`.`firstname`), setNameToUpper(`e`.`middlename`))) AS `EmployeeName`, "
+                    + "(SELECT position FROM employee_position_history WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) AS Position, "
+                    + "(SELECT name FROM branch_table b WHERE id = e.branchId) AS BranchName "
+                    + "FROM employee e "
+                    + "INNER JOIN branch_table bt ON e.branchId = bt.id "
+                    + "INNER JOIN trade_table tt ON bt.tradeId = tt.id "
+                    + "INNER JOIN corporate_table ct ON tt.corporateId = ct.id "
+                    + "WHERE ct.id = ? ORDER BY e.lastname ASC ");
+            pstmt.setInt(1, corporateId);
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                EmployeeSummary es = new EmployeeSummary();
+                es.setEmployeeId(rs.getString("EmployeeID"));
+                es.setEmployeeName(rs.getString("EmployeeName"));
+                es.setPosition(rs.getString("Position"));
+                es.setBranch(rs.getString("BranchName"));
+                esList.add(es);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return esList;
     }
     
 }

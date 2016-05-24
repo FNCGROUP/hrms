@@ -32,6 +32,7 @@ import com.openhris.serviceprovider.CompanyServiceImpl;
 import com.openhris.contributions.ContributionComponentContainer;
 import com.openhris.employee.NewEmployeeWindow;
 import com.openhris.employee.EmployeeMainUI;
+import com.openhris.employee.EmployeeSummaryUI;
 import com.openhris.model.Employee;
 import com.openhris.payroll.contributions.BankDebitMemoUI;
 import com.openhris.payroll.PayrollAdvancesLedgerUI;
@@ -109,6 +110,7 @@ public class MainApp extends Application {
     TaxUI taxUI;
     AFLUI aflUI;
     BankDebitMemoUI debitMemoUI;
+    EmployeeSummaryUI employeeSummaryUI;
     
     AdvanceUserAccessModule advanceUserAccess = new AdvanceUserAccessModule();
     CreateNewUser createNewUser;
@@ -483,6 +485,7 @@ public class MainApp extends Application {
                     taxUI.setBranchId(branchId);
                     debitMemoUI.setBranchId(branchId);
                     aflUI.setBranchId(branchId);
+                    employeeSummaryUI.setBranchId(branchId);
                 }
                 
             }
@@ -601,6 +604,7 @@ public class MainApp extends Application {
     ComponentContainer buildEmployeesComponent(){
         employeeMainUI = new EmployeeMainUI(GlobalVariables.getUserRole(), getBranchId());
         companyModule = new CompanyModule(GlobalVariables.getUserRole());
+        employeeSummaryUI = new EmployeeSummaryUI(getBranchId());
         
         TabSheet ts = new TabSheet();
         ts.setSizeFull();
@@ -620,6 +624,12 @@ public class MainApp extends Application {
                 GlobalVariables.getUserRole().equals("accounting")){
             mainMenuGrid.setEnabled(false);
         }
+	mainMenuGrid.setSizeFull();
+        ts.addComponent(mainMenuGrid);
+        
+        mainMenuGrid = new VerticalLayout();
+        mainMenuGrid.setCaption("Summary");
+        mainMenuGrid.addComponent(employeeSummaryUI);
 	mainMenuGrid.setSizeFull();
         ts.addComponent(mainMenuGrid);
         
