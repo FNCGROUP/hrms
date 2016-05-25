@@ -15,6 +15,7 @@ import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import org.apache.poi.hpsf.SummaryInformation;
 
 /**
@@ -51,7 +52,7 @@ public class EmployeeSummaryUI extends VerticalLayout {
             public void buttonClick(Button.ClickEvent event) {
                 tradeId = cs.getTradeIdByBranchId(getBranchId());
                 corporateId = cs.getCorporateIdByTradeId(tradeId);
-                                
+                                   
                 summary.setContainerDataSource(new EmployeeSummaryDataContainer(corporateId));
             }
         });

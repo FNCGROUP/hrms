@@ -13,6 +13,8 @@ public class EmployeeSummary {
     
     private String employeeId;
     private String employeeName;
+    private double employmentWage;
+    private String employmentWageEntry;
     private String position;
     private String branch;
 
@@ -22,6 +24,14 @@ public class EmployeeSummary {
 
     public String getEmployeeName() {
         return employeeName;
+    }
+
+    public double getEmploymentWage() {
+        return employmentWage;
+    }
+
+    public String getEmploymentWageEntry() {
+        return employmentWageEntry;
     }
 
     public String getPosition() {
@@ -38,6 +48,14 @@ public class EmployeeSummary {
 
     public void setEmployeeName(String employeeName) {
         this.employeeName = employeeName;
+    }
+
+    public void setEmploymentWage(double employmentWage) {
+        this.employmentWage = employmentWage;
+    }
+
+    public void setEmploymentWageEntry(String employmentWageEntry) {
+        this.employmentWageEntry = employmentWageEntry;
     }
 
     public void setPosition(String position) {

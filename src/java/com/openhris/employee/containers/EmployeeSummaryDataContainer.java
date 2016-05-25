@@ -25,6 +25,8 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
         addContainerProperty("position", String.class, null);
+        addContainerProperty("salary", String.class, "");
+        addContainerProperty("entry", String.class, "");
         addContainerProperty("branch", String.class, null);
     }
 
@@ -34,6 +36,8 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
         addContainerProperty("position", String.class, null);
+        addContainerProperty("salary", String.class, "");
+        addContainerProperty("entry", String.class, "");
         addContainerProperty("branch", String.class, null);
         
         for(EmployeeSummary esum : es.findAllEmployeeSummaryByCorporateId(corporateId)){
@@ -45,6 +49,8 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
             } else {
                 item.getItemProperty("position").setValue(esum.getPosition().toUpperCase());  
             }            
+            item.getItemProperty("salary").setValue(esum.getEmploymentWage());
+            item.getItemProperty("entry").setValue(esum.getEmploymentWageEntry());
             item.getItemProperty("branch").setValue(esum.getBranch());
         }
     }

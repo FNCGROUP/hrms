@@ -431,6 +431,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                     + "concat_ws(', ', setNameToUpper(`e`.`lastname`), "
                     + "concat_ws(' ', setNameToUpper(`e`.`firstname`), setNameToUpper(`e`.`middlename`))) AS `EmployeeName`, "
                     + "(SELECT position FROM employee_position_history WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) AS Position, "
+                    + "e.employmentWage AS EmploymentWage, "
+                    + "e.employmentWageEntry AS EmploymentWageEntry, "
                     + "(SELECT name FROM branch_table b WHERE id = e.branchId) AS BranchName "
                     + "FROM employee e "
                     + "INNER JOIN branch_table bt ON e.branchId = bt.id "
@@ -443,6 +445,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 EmployeeSummary es = new EmployeeSummary();
                 es.setEmployeeId(rs.getString("EmployeeID"));
                 es.setEmployeeName(rs.getString("EmployeeName"));
+                es.setEmploymentWage(util.convertStringToDouble(rs.getString("EmploymentWage")));
+                es.setEmploymentWageEntry(rs.getString("EmploymentWageEntry"));
                 es.setPosition(rs.getString("Position"));
                 es.setBranch(rs.getString("BranchName"));
                 esList.add(es);

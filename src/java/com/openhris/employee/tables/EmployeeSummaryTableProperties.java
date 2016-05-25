@@ -24,6 +24,9 @@ public class EmployeeSummaryTableProperties extends Table {
         addStyleName("hris-table-layout");
         
         setContainerDataSource(new EmployeeSummaryDataContainer());
+        
+        setColumnAlignment("salary", Table.ALIGN_RIGHT);
+        setColumnAlignment("entry", Table.ALIGN_CENTER);
     }
 
     public EmployeeSummaryTableProperties(int corporateId) {
@@ -36,5 +39,8 @@ public class EmployeeSummaryTableProperties extends Table {
         addStyleName("hris-table-layout");
         
         setContainerDataSource(new EmployeeSummaryDataContainer(corporateId));
+        
+        setColumnAlignment("salary", Table.ALIGN_RIGHT);
+        setColumnAlignment("entry", Table.ALIGN_CENTER);
     }
 }
