@@ -430,14 +430,34 @@ public class EmployeeServiceImpl implements EmployeeService {
             pstmt  = conn.prepareStatement("SELECT `e`.`employeeId` AS `EmployeeID`, "
                     + "concat_ws(', ', setNameToUpper(`e`.`lastname`), "
                     + "concat_ws(' ', setNameToUpper(`e`.`firstname`), setNameToUpper(`e`.`middlename`))) AS `EmployeeName`, "
+                    + "e.employmentStatus AS EmploymentStatus, "
                     + "(SELECT position FROM employee_position_history WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) AS Position, "
-                    + "e.employmentWage AS EmploymentWage, "
+                    + "(SELECT name FROM branch_table b WHERE id = e.branchId) AS BranchName, "
+                    + "(SELECT department FROM employee_position_history WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) AS Department, "
+                    + "ct.name AS corporateName, "
+                    + "e.employmentWageStatus AS EmploymentWageStatus, "
                     + "e.employmentWageEntry AS EmploymentWageEntry, "
-                    + "(SELECT name FROM branch_table b WHERE id = e.branchId) AS BranchName "
+                    + "e.employmentWage AS EmploymentWage, "
+                    + "e.allowanceForLiquidation AS AFL, "
+                    + "ea.PerDiem AS PerDiem, "
+                    + "ea.Transportation AS Transporation, "
+                    + "ea.Communication AS Communication, "
+                    + "ea.Others AS OtherAllowance, "
+                    + "ea.Cola AS Cola, "
+                    + "ea.Meal AS Meal, "
+                    + "e.endDate AS EntryDate, "
+                    + "epi.dob AS DOB, epi.gender AS Gender, "
+                    + "epi.civilStatus AS CivilStatus, "
+                    + "e.totalDependent AS Dependent, "
+                    + "e.hdmfNo AS HDMFNo, "
+                    + "e.sssNo AS SSSNo, "
+                    + "e.tinNo AS TINNo "
                     + "FROM employee e "
                     + "INNER JOIN branch_table bt ON e.branchId = bt.id "
                     + "INNER JOIN trade_table tt ON bt.tradeId = tt.id "
                     + "INNER JOIN corporate_table ct ON tt.corporateId = ct.id "
+                    + "INNER JOIN employee_allowances ea ON e.employeeId = ea.EmployeeID "
+                    + "INNER JOIN employee_personal_information epi ON epi.employeeId = e.employeeId "
                     + "WHERE ct.id = ? ORDER BY e.lastname ASC ");
             pstmt.setInt(1, corporateId);
             rs = pstmt.executeQuery();
@@ -445,10 +465,29 @@ public class EmployeeServiceImpl implements EmployeeService {
                 EmployeeSummary es = new EmployeeSummary();
                 es.setEmployeeId(rs.getString("EmployeeID"));
                 es.setEmployeeName(rs.getString("EmployeeName"));
-                es.setEmploymentWage(util.convertStringToDouble(rs.getString("EmploymentWage")));
-                es.setEmploymentWageEntry(rs.getString("EmploymentWageEntry"));
+                es.setEmploymentStatus(rs.getString("EmploymentStatus"));
                 es.setPosition(rs.getString("Position"));
                 es.setBranch(rs.getString("BranchName"));
+                es.setDepartment(rs.getString("Department"));
+                es.setCorporate(rs.getString("CorporateName"));
+                es.setEmploymentWageStatus(rs.getString("EmploymentWageStatus"));
+                es.setEmploymentWageEntry(rs.getString("EmploymentWageEntry"));
+                es.setEmploymentWage(util.convertStringToDouble(rs.getString("EmploymentWage")));
+                es.setAfl(util.convertStringToDouble(rs.getString("AFL")));
+                es.setPerDiem(util.convertStringToDouble(rs.getString("PerDiem")));
+                es.setTransportation(util.convertStringToDouble(rs.getString("Transporation")));
+                es.setCommunication(util.convertStringToDouble(rs.getString("Communication")));
+                es.setOtherAllowance(util.convertStringToDouble(rs.getString("OtherAllowance")));
+                es.setCola(util.convertStringToDouble(rs.getString("Cola")));
+                es.setMeal(util.convertStringToDouble(rs.getString("Meal")));
+                es.setEntryDate(util.parsingDate(rs.getString("EntryDate")));
+                es.setDob(util.parsingDate(rs.getString("DOB")));
+                es.setGender(rs.getString("Gender"));
+                es.setCivilStatus(rs.getString("CivilStatus"));
+                es.setDependent(rs.getString("Dependent"));
+                es.setHdmfNo(rs.getString("HDMFNo"));
+                es.setSssNo(rs.getString("SSSNo"));
+                es.setTinNo(rs.getString("TINNo"));                
                 esList.add(es);
             }
         } catch (SQLException ex) {

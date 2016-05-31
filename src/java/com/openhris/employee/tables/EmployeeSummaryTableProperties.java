@@ -17,11 +17,23 @@ public class EmployeeSummaryTableProperties extends Table {
     private int corporateId;
     
     public EmployeeSummaryTableProperties() {
-        setWidth("800px");
+        setWidth("100%");
         setHeight("100%");
         setImmediate(true);
         setSelectable(true);
         addStyleName("hris-table-layout");
+        
+        setColumnHeader("employmentStatus", "EMPLOYMENT STATUS");
+        setColumnHeader("employmentWageStatus", "WAGE STATUS");
+        setColumnHeader("wageEntry", "WAGE ENTRY");
+        setColumnHeader("perDiem", "PER DIEM");
+        setColumnHeader("hdmfNo", "HDMF #");
+        setColumnHeader("otherAllowance", "OTHER ALLOWANCE");
+        setColumnHeader("entryDate", "ENTRY DATE");
+        setColumnHeader("civilStatus", "CIVIL STATUS");
+        setColumnHeader("hdmfNo", "HDMF #");
+        setColumnHeader("sssNo", "SSS #");
+        setColumnHeader("tinNo", "TIN #");
         
         setContainerDataSource(new EmployeeSummaryDataContainer());
         
@@ -32,11 +44,23 @@ public class EmployeeSummaryTableProperties extends Table {
     public EmployeeSummaryTableProperties(int corporateId) {
         this.corporateId = corporateId;
         
-        setWidth("900px");
+        setWidth("100%");
         setHeight("100%");
         setImmediate(true);
         setSelectable(true);
         addStyleName("hris-table-layout");
+        
+        setColumnHeader("employmentStatus", "EMPLOYMENT STATUS");
+        setColumnHeader("employmentWageStatus", "WAGE STATUS");
+        setColumnHeader("wageEntry", "WAGE ENTRY");
+        setColumnHeader("perDiem", "PER DIEM");
+        setColumnHeader("hdmfNo", "HDMF #");
+        setColumnHeader("otherAllowance", "OTHER ALLOWANCE");
+        setColumnHeader("entryDate", "ENTRY DATE");
+        setColumnHeader("civilStatus", "CIVIL STATUS");
+        setColumnHeader("hdmfNo", "HDMF #");
+        setColumnHeader("sssNo", "SSS #");
+        setColumnHeader("tinNo", "TIN #");
         
         setContainerDataSource(new EmployeeSummaryDataContainer(corporateId));
         
