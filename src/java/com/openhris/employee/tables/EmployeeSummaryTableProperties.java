@@ -15,6 +15,7 @@ import com.vaadin.ui.Table;
 public class EmployeeSummaryTableProperties extends Table {
 
     private int corporateId;
+    private String employeeStatus;
     
     public EmployeeSummaryTableProperties() {
         setWidth("100%");
@@ -41,8 +42,9 @@ public class EmployeeSummaryTableProperties extends Table {
         setColumnAlignment("entry", Table.ALIGN_CENTER);
     }
 
-    public EmployeeSummaryTableProperties(int corporateId) {
+    public EmployeeSummaryTableProperties(int corporateId, String employeeStatus) {
         this.corporateId = corporateId;
+        this.employeeStatus = employeeStatus;
         
         setWidth("100%");
         setHeight("100%");
@@ -62,7 +64,7 @@ public class EmployeeSummaryTableProperties extends Table {
         setColumnHeader("sssNo", "SSS #");
         setColumnHeader("tinNo", "TIN #");
         
-        setContainerDataSource(new EmployeeSummaryDataContainer(corporateId));
+        setContainerDataSource(new EmployeeSummaryDataContainer(corporateId, employeeStatus));
         
         setColumnAlignment("salary", Table.ALIGN_RIGHT);
         setColumnAlignment("entry", Table.ALIGN_CENTER);

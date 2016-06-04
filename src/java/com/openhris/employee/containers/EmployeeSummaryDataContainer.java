@@ -22,6 +22,7 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
     EmployeeService es = new EmployeeServiceImpl();
     
     private int corporateId;
+    private String employeeStatus;
     
     public EmployeeSummaryDataContainer() {
         addContainerProperty("employeeId", String.class, null);
@@ -51,8 +52,9 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
         addContainerProperty("tinNo", String.class, null);
     }
 
-    public EmployeeSummaryDataContainer(int corporateId) {
+    public EmployeeSummaryDataContainer(int corporateId, String employeeStatus) {
         this.corporateId = corporateId;
+        this.employeeStatus = employeeStatus;
         
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);     
@@ -80,7 +82,7 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
         addContainerProperty("sssNo", String.class, null);
         addContainerProperty("tinNo", String.class, null);
         
-        for(EmployeeSummary esum : es.findAllEmployeeSummaryByCorporateId(corporateId)){
+        for(EmployeeSummary esum : es.findAllEmployeeSummaryByCorporateId(corporateId, employeeStatus)){
             Item item = getItem(addItem());
             item.getItemProperty("employeeId").setValue(esum.getEmployeeId());
             item.getItemProperty("name").setValue(esum.getEmployeeName().toUpperCase());

@@ -4,7 +4,6 @@
  */
 package com.openhris.service;
 
-import com.hrms.beans.EmployeePositionHistoryBean;
 import com.openhris.model.BankDebitMemo;
 import com.openhris.model.Employee;
 import com.openhris.model.EmployeeSummary;
@@ -68,5 +67,5 @@ public interface EmployeeService {
     
     public boolean updateEmploymentAllowanceForLiquidation(double afl, String employeeId);
     
-    public List<EmployeeSummary> findAllEmployeeSummaryByCorporateId(int corporateId);
+    public List<EmployeeSummary> findAllEmployeeSummaryByCorporateId(int corporateId, String employeeStatus);
 }

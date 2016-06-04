@@ -421,45 +421,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public List<EmployeeSummary> findAllEmployeeSummaryByCorporateId(int corporateId) {
+    public List<EmployeeSummary> findAllEmployeeSummaryByCorporateId(int corporateId, String employeeStatus) {
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         ResultSet rs = null; 
         List<EmployeeSummary> esList = new ArrayList<>();
+        String query;
+        
+        if(employeeStatus.equals("employed")){
+            query = "SELECT * FROM employee_summary WHERE CorporateID = "+corporateId+" AND CurrentStatus IS NULL";
+        } else {
+            query = "SELECT * FROM employee_summary WHERE CorporateID = "+corporateId+" AND CurrentStatus = '"+employeeStatus+"' ";
+        } 
+        
         try {
-            pstmt  = conn.prepareStatement("SELECT `e`.`employeeId` AS `EmployeeID`, "
-                    + "concat_ws(', ', setNameToUpper(`e`.`lastname`), "
-                    + "concat_ws(' ', setNameToUpper(`e`.`firstname`), setNameToUpper(`e`.`middlename`))) AS `EmployeeName`, "
-                    + "e.employmentStatus AS EmploymentStatus, "
-                    + "(SELECT position FROM employee_position_history WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) AS Position, "
-                    + "(SELECT name FROM branch_table b WHERE id = e.branchId) AS BranchName, "
-                    + "(SELECT department FROM employee_position_history WHERE employeeId = e.employeeId ORDER BY id DESC LIMIT 1) AS Department, "
-                    + "ct.name AS corporateName, "
-                    + "e.employmentWageStatus AS EmploymentWageStatus, "
-                    + "e.employmentWageEntry AS EmploymentWageEntry, "
-                    + "e.employmentWage AS EmploymentWage, "
-                    + "e.allowanceForLiquidation AS AFL, "
-                    + "ea.PerDiem AS PerDiem, "
-                    + "ea.Transportation AS Transporation, "
-                    + "ea.Communication AS Communication, "
-                    + "ea.Others AS OtherAllowance, "
-                    + "ea.Cola AS Cola, "
-                    + "ea.Meal AS Meal, "
-                    + "e.endDate AS EntryDate, "
-                    + "epi.dob AS DOB, epi.gender AS Gender, "
-                    + "epi.civilStatus AS CivilStatus, "
-                    + "e.totalDependent AS Dependent, "
-                    + "e.hdmfNo AS HDMFNo, "
-                    + "e.sssNo AS SSSNo, "
-                    + "e.tinNo AS TINNo "
-                    + "FROM employee e "
-                    + "INNER JOIN branch_table bt ON e.branchId = bt.id "
-                    + "INNER JOIN trade_table tt ON bt.tradeId = tt.id "
-                    + "INNER JOIN corporate_table ct ON tt.corporateId = ct.id "
-                    + "INNER JOIN employee_allowances ea ON e.employeeId = ea.EmployeeID "
-                    + "INNER JOIN employee_personal_information epi ON epi.employeeId = e.employeeId "
-                    + "WHERE ct.id = ? ORDER BY e.lastname ASC ");
-            pstmt.setInt(1, corporateId);
+            pstmt = conn.prepareStatement(query);
             rs = pstmt.executeQuery();
             while(rs.next()){
                 EmployeeSummary es = new EmployeeSummary();

@@ -13,6 +13,7 @@ import com.openhris.serviceprovider.CompanyServiceImpl;
 import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.ui.Alignment;
 import com.vaadin.ui.Button;
+import com.vaadin.ui.ComboBox;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
@@ -44,16 +45,28 @@ public class EmployeeSummaryUI extends VerticalLayout {
         h.setMargin(true);
         h.setSpacing(true);
         
+        final ComboBox employeeStatus = new ComboBox("Status: ");
+        employeeStatus.setWidth("150px");
+        employeeStatus.setNullSelectionAllowed(false);
+        employeeStatus.addItem("employed");
+        employeeStatus.addItem("resigned");
+        h.addComponent(employeeStatus);
+        
         Button generateBtn = new Button("GENERATE EMPLOYEE SUMMARY");
         generateBtn.setWidth("250px");
         generateBtn.addListener(new Button.ClickListener() {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
+                if(employeeStatus.getValue() == null){
+                    getWindow().showNotification("Employee Status!", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                }
+                
                 tradeId = cs.getTradeIdByBranchId(getBranchId());
                 corporateId = cs.getCorporateIdByTradeId(tradeId);
                                    
-                summary.setContainerDataSource(new EmployeeSummaryDataContainer(corporateId));
+                summary.setContainerDataSource(new EmployeeSummaryDataContainer(corporateId, employeeStatus.getValue().toString()));
             }
         });
         h.addComponent(generateBtn);  
@@ -78,7 +91,7 @@ public class EmployeeSummaryUI extends VerticalLayout {
         });
         h.addComponent(exportTableToExcel);
         h.setComponentAlignment(exportTableToExcel, Alignment.BOTTOM_LEFT);
-        h.setExpandRatio(exportTableToExcel, 2);
+        h.setExpandRatio(exportTableToExcel, 3);
         
         addComponent(h);
         addComponent(summary);

@@ -110,7 +110,7 @@ public class PayrollMainUI extends VerticalLayout {
             public void buttonClick(Button.ClickEvent event) {
                 if(employeesName.getValue() == null){
                     getWindow().showNotification("Select an Employee!", Window.Notification.TYPE_WARNING_MESSAGE);
-                        return;
+                    return;
                 }
                 
                 payrollTable(getBranchId(), getEmployeeId());
