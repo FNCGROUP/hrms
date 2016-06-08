@@ -16,6 +16,7 @@ import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.openhris.model.PayrollRegister;
+import com.openhris.payroll.containers.PayrollRegisterDataContainer;
 import com.openhris.payroll.reports.AdjustedPayrollRegisterReport;
 import com.openhris.payroll.reports.AdvancesReport;
 import com.openhris.payroll.reports.AllowanceForLiquidation;
@@ -32,6 +33,7 @@ import com.openhris.payroll.reports.SSSGeneralReport;
 import com.openhris.payroll.reports.SSSLoansPayable;
 import com.openhris.payroll.reports.SSSSbarroReport;
 import com.openhris.payroll.reports.WitholdingTaxReport;
+import com.openhris.payroll.tables.PayrollRegisterTableProperties;
 import com.openhris.service.PayrollService;
 import com.openhris.serviceprovider.PayrollServiceImpl;
 import com.vaadin.addon.tableexport.ExcelExport;
@@ -71,7 +73,8 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     String payrollPeriod;
     int day = 0;
     
-    Table payrollRegisterTbl = new PayrollRegisterTable();
+//    Table payrollRegisterTbl = new PayrollRegisterTable();
+    PayrollRegisterTableProperties payrollRegisterTbl = new PayrollRegisterTableProperties();
     Table advancesTbl = new Table();
     Table adjustmentTbl = new Table();
     ComboBox employeesName = new ComboBox("Employees: ");
@@ -115,11 +118,23 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
+                if(getBranchId() == 0){
+                    getWindow().showNotification("Select a Branch!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
                 payrollDate = util.convertDateFormat(payrollDateField.getValue().toString());
-                payrollRegisterTable(getBranchId(), 
-                        getPayrollDate(), 
-                        false); 
-		
+//                payrollRegisterTable(getBranchId(), 
+//                        getPayrollDate(), 
+//                        false); 
+                
+                payrollRegisterTbl.setContainerDataSource(new PayrollRegisterDataContainer(getBranchId(), getPayrollDate(), false));
+                payrollRegisterTbl.setColumnCollapsed("amount received", true);
+                payrollRegisterTbl.setColumnCollapsed("for adjustments", true);
+                payrollRegisterTbl.setColumnCollapsed("cut-off from", true);
+                payrollRegisterTbl.setColumnCollapsed("cut-off to", true);
+                payrollRegisterTbl.setColumnCollapsed("payroll period", true);
+                
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(util.parsingDate(util.convertDateFormat(payrollDateField.getValue().toString())));
 		day = cal.get(Calendar.DAY_OF_MONTH);
@@ -135,10 +150,17 @@ public class PayrollRegisterMainUI extends VerticalLayout {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 payrollDate = util.convertDateFormat(payrollDateField.getValue().toString());
-                payrollRegisterTable(getBranchId(), 
-                        getPayrollDate(), 
-                        true); 
+//                payrollRegisterTable(getBranchId(), 
+//                        getPayrollDate(), 
+//                        true); 
 		
+                payrollRegisterTbl.setContainerDataSource(new PayrollRegisterDataContainer(getBranchId(), getPayrollDate(), true));
+                payrollRegisterTbl.setColumnCollapsed("amount received", true);
+                payrollRegisterTbl.setColumnCollapsed("for adjustments", true);
+                payrollRegisterTbl.setColumnCollapsed("cut-off from", true);
+                payrollRegisterTbl.setColumnCollapsed("cut-off to", true);
+                payrollRegisterTbl.setColumnCollapsed("payroll period", true);
+                
 		Calendar cal = Calendar.getInstance();
 		cal.setTime(util.parsingDate(util.convertDateFormat(payrollDateField.getValue().toString())));
 		day = cal.get(Calendar.DAY_OF_MONTH);
@@ -376,50 +398,50 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     }
     
     public Table payrollRegisterTable(int branchId, String payrollDate, boolean prev){
-        payrollRegisterTbl.removeAllItems();        
+//        payrollRegisterTbl.removeAllItems();        
 //        List<PayrollRegister> payrollRegisterList = payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev);
-        int i = 0;
-        for(PayrollRegister pr : payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev)){
-            payrollRegisterTbl.addItem(new Object[]{
-                pr.getId(), 
-		pr.getName().toUpperCase(), 
-		pr.getNumOfDays(), 
-		util.roundOffToTwoDecimalPlaces(pr.getRatePerDay()), 
-		util.roundOffToTwoDecimalPlaces(pr.getBasicSalary()), 
-                util.roundOffToTwoDecimalPlaces(pr.getHalfMonthSalary()), 
-		util.roundOffToTwoDecimalPlaces(pr.getTotalOvertimePaid()), 
-		util.roundOffToTwoDecimalPlaces(pr.getTotalLegalHolidayPaid()), 
-                util.roundOffToTwoDecimalPlaces(pr.getTotalSpecialHolidayPaid()), 
-		util.roundOffToTwoDecimalPlaces(pr.getTotalNightDifferentialPaid()), 
-                util.roundOffToTwoDecimalPlaces(pr.getTotalWorkingDayOffPaid()), 
-		util.roundOffToTwoDecimalPlaces(pr.getAbsences()), 
-		util.roundOffToTwoDecimalPlaces(pr.getTotalLatesDeduction()), 
-                util.roundOffToTwoDecimalPlaces(pr.getTotalUndertimeDeduction()), 
-		util.roundOffToTwoDecimalPlaces(pr.getGrossPay()), 
-		util.roundOffToTwoDecimalPlaces(pr.getSss()), 
-		util.roundOffToTwoDecimalPlaces(pr.getPhic()), 
-                util.roundOffToTwoDecimalPlaces(pr.getHdmf()), 
-		util.roundOffToTwoDecimalPlaces(pr.getTax()), 
-		util.roundOffToTwoDecimalPlaces(pr.getNetSalary()), 
-		util.roundOffToTwoDecimalPlaces(pr.getCommunicationAllowance()), 
-                util.roundOffToTwoDecimalPlaces(pr.getPerDiemAllowance()), 
-                util.roundOffToTwoDecimalPlaces(pr.getColaAllowance()), 
-                util.roundOffToTwoDecimalPlaces(pr.getMealAllowance()), 
-                util.roundOffToTwoDecimalPlaces(pr.getTransportationAllowance()), 
-                util.roundOffToTwoDecimalPlaces(pr.getOtherAllowances()),  
-                util.roundOffToTwoDecimalPlaces(pr.getAllowanceForLiquidation()),                  
-		util.roundOffToTwoDecimalPlaces(pr.getAmount()), 
-		util.roundOffToTwoDecimalPlaces(pr.getAdjustment()), 
-                util.roundOffToTwoDecimalPlaces(pr.getAmountToBeReceive()), 
-		util.roundOffToTwoDecimalPlaces(pr.getAmountReceivable()), 
-		util.roundOffToTwoDecimalPlaces(pr.getForAdjustments()), 
-                util.convertDateFormat(pr.getAttendancePeriodFrom().toString()), 
-                util.convertDateFormat(pr.getAttendancePeriodTo().toString()), 
-                util.convertDateFormat(pr.getPayrollDate().toString())
-            }, i);
-            i++;
-        }
-        payrollRegisterTbl.setPageLength(payrollRegisterTbl.size());
+//        int i = 0;
+//        for(PayrollRegister pr : payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev)){
+//            payrollRegisterTbl.addItem(new Object[]{
+//                pr.getId(), 
+//		pr.getName().toUpperCase(), 
+//		pr.getNumOfDays(), 
+//		util.roundOffToTwoDecimalPlaces(pr.getRatePerDay()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getBasicSalary()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getHalfMonthSalary()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getTotalOvertimePaid()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getTotalLegalHolidayPaid()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getTotalSpecialHolidayPaid()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getTotalNightDifferentialPaid()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getTotalWorkingDayOffPaid()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getAbsences()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getTotalLatesDeduction()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getTotalUndertimeDeduction()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getGrossPay()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getSss()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getPhic()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getHdmf()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getTax()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getNetSalary()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getCommunicationAllowance()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getPerDiemAllowance()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getColaAllowance()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getMealAllowance()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getTransportationAllowance()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getOtherAllowances()),  
+//                util.roundOffToTwoDecimalPlaces(pr.getAllowanceForLiquidation()),                  
+//		util.roundOffToTwoDecimalPlaces(pr.getAmount()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getAdjustment()), 
+//                util.roundOffToTwoDecimalPlaces(pr.getAmountToBeReceive()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getAmountReceivable()), 
+//		util.roundOffToTwoDecimalPlaces(pr.getForAdjustments()), 
+//                util.convertDateFormat(pr.getAttendancePeriodFrom().toString()), 
+//                util.convertDateFormat(pr.getAttendancePeriodTo().toString()), 
+//                util.convertDateFormat(pr.getPayrollDate().toString())
+//            }, i);
+//            i++;
+//        }
+//        payrollRegisterTbl.setPageLength(payrollRegisterTbl.size());
         
         for(Object listener : payrollRegisterTbl.getListeners(ItemClickEvent.class)){
             payrollRegisterTbl.removeListener(ItemClickEvent.class, listener);
@@ -459,11 +481,11 @@ public class PayrollRegisterMainUI extends VerticalLayout {
             }
         });
         
-        payrollRegisterTbl.setColumnCollapsed("amount received", true);
-	payrollRegisterTbl.setColumnCollapsed("for adjustments", true);
-        payrollRegisterTbl.setColumnCollapsed("cut-off from", true);
-        payrollRegisterTbl.setColumnCollapsed("cut-off to", true);
-        payrollRegisterTbl.setColumnCollapsed("payroll period", true);
+//        payrollRegisterTbl.setColumnCollapsed("amount received", true);
+//	payrollRegisterTbl.setColumnCollapsed("for adjustments", true);
+//        payrollRegisterTbl.setColumnCollapsed("cut-off from", true);
+//        payrollRegisterTbl.setColumnCollapsed("cut-off to", true);
+//        payrollRegisterTbl.setColumnCollapsed("payroll period", true);
         
         return payrollRegisterTbl;
     }
@@ -484,7 +506,13 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 
         @Override
         public void windowClose(Window.CloseEvent e) {
-            payrollRegisterTable(getBranchId(), getPayrollDate(), false);
+//            payrollRegisterTable(getBranchId(), getPayrollDate(), false);
+            payrollRegisterTbl.setContainerDataSource(new PayrollRegisterDataContainer(getBranchId(), getPayrollDate(), true));
+            payrollRegisterTbl.setColumnCollapsed("amount received", true);
+            payrollRegisterTbl.setColumnCollapsed("for adjustments", true);
+            payrollRegisterTbl.setColumnCollapsed("cut-off from", true);
+            payrollRegisterTbl.setColumnCollapsed("cut-off to", true);
+            payrollRegisterTbl.setColumnCollapsed("payroll period", true);
         }
     };
 }
