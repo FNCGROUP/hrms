@@ -177,6 +177,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
         glayout.setComponentAlignment(dobField, Alignment.MIDDLE_LEFT);
                 
         pobField = createTextField("Birth Place: ");
+        pobField.setValue("N/A");
         glayout.addComponent(pobField, 2, 2, 3, 2);
         glayout.setComponentAlignment(pobField, Alignment.MIDDLE_LEFT);
                 
@@ -191,76 +192,92 @@ public class EmployeePersonalInformation extends VerticalLayout{
         glayout.setComponentAlignment(civilStatusBox, Alignment.MIDDLE_LEFT);
                 
 	citizenshipField = createTextField("Citizenship: ");
+        citizenshipField.setValue("N/A");
         glayout.addComponent(citizenshipField, 3, 3);
         glayout.setComponentAlignment(citizenshipField, Alignment.MIDDLE_LEFT);   
 	
         heightField = createTextField("Height(cm):");
-        heightField.setValue(0);
+        heightField.setValue(0.0);
         glayout.addComponent(heightField, 1, 4);
         glayout.setComponentAlignment(heightField, Alignment.MIDDLE_LEFT);
                 
         weightField = createTextField("Weight(kg): ");
-        weightField.setValue(0);
+        weightField.setValue(0.0);
         glayout.addComponent(weightField, 2, 4);
         glayout.setComponentAlignment(weightField, Alignment.MIDDLE_LEFT);
                 
         religionField = createTextField("Religion: ");
+        religionField.setValue("N/A");
         glayout.addComponent(religionField, 3, 4);
         glayout.setComponentAlignment(religionField, Alignment.MIDDLE_LEFT);
                             
         spouseNameField = createTextField("Spouse Name: ");
+        spouseNameField.setValue("N/A");
         glayout.addComponent(spouseNameField, 1, 5, 2, 5);
         glayout.setComponentAlignment(spouseNameField, Alignment.MIDDLE_LEFT);
         
         spouseOccupationField = createTextField("Spouse Occupation: ");
+        spouseOccupationField.setValue("N/A");
         glayout.addComponent(spouseOccupationField, 3, 5);
         glayout.setComponentAlignment(spouseOccupationField, Alignment.MIDDLE_LEFT);
         
         spouseOfficeAddressField = createTextField("Spouse Office Address: ");
+        spouseOfficeAddressField.setValue("N/A");
         glayout.addComponent(spouseOfficeAddressField, 1, 6, 3, 6);
         glayout.setComponentAlignment(spouseOfficeAddressField, Alignment.MIDDLE_LEFT);
         
         fathersNameField = createTextField("Father's Name: ");
+        fathersNameField.setValue("N/A");
         glayout.addComponent(fathersNameField, 1, 7, 2, 7);
         glayout.setComponentAlignment(fathersNameField, Alignment.MIDDLE_LEFT);
         
         fathersOccupationField = createTextField("Father's Occupation: ");
+        fathersOccupationField.setValue("N/A");
         glayout.addComponent(fathersOccupationField, 3, 7);
         glayout.setComponentAlignment(fathersOccupationField, Alignment.MIDDLE_LEFT);
         
         mothersNameField = createTextField("Mother's Maiden Name: ");
+        mothersNameField.setValue("N/A");
         glayout.addComponent(mothersNameField, 1, 8, 2, 8);
         glayout.setComponentAlignment(mothersNameField, Alignment.MIDDLE_LEFT);
         
         mothersOccupationField = createTextField("Mother's Occupation: ");
+        mothersOccupationField.setValue("N/A");
         glayout.addComponent(mothersOccupationField, 3, 8);
         glayout.setComponentAlignment(mothersOccupationField, Alignment.MIDDLE_LEFT);
         
         parentsAddressField = createTextField("Parents Address");
+        parentsAddressField.setValue("N/A");
         glayout.addComponent(parentsAddressField, 1, 9, 3, 9);
         glayout.setComponentAlignment(parentsAddressField, Alignment.MIDDLE_LEFT);
         
         dialectSpeakWriteField = createTextField("Language or Dialect you can speak or write: ");
+        dialectSpeakWriteField.setValue("N/A");
         glayout.addComponent(dialectSpeakWriteField, 1, 10, 3, 10);
         glayout.setComponentAlignment(dialectSpeakWriteField, Alignment.MIDDLE_LEFT);
         
         contactPersonNameField = createTextField("Contact Person: ");
+        contactPersonNameField.setValue("N/A");
         glayout.addComponent(contactPersonNameField, 1, 11);
         glayout.setComponentAlignment(contactPersonNameField, Alignment.MIDDLE_LEFT);
         
         contactPersonAddressField = createTextField("Contact Person's Address: ");
+        contactPersonAddressField.setValue("N/A");
         glayout.addComponent(contactPersonAddressField, 2, 11, 3, 11);
         glayout.setComponentAlignment(contactPersonAddressField, Alignment.MIDDLE_LEFT);
         
         contactPersonNoField = createTextField("Contact Person's Tel No: ");
+        contactPersonNoField.setValue("N/A");
         glayout.addComponent(contactPersonNoField, 1, 12);
         glayout.setComponentAlignment(contactPersonNoField, Alignment.MIDDLE_LEFT);
         
         skillsField = createTextField("Skills: ");
+        skillsField.setValue("N/A");
         glayout.addComponent(skillsField, 2, 12);
         glayout.setComponentAlignment(skillsField, Alignment.MIDDLE_LEFT);
         
         hobbyField = createTextField("Hobbies");
+        hobbyField.setValue("N/A");
         glayout.addComponent(hobbyField, 3, 12);
         glayout.setComponentAlignment(hobbyField, Alignment.MIDDLE_LEFT);
         
@@ -389,47 +406,48 @@ public class EmployeePersonalInformation extends VerticalLayout{
                     return;
                 }
                 
-		personalInformation = new PersonalInformation();
-		personalInformation.setFirstname(fnField.getValue().toString().toLowerCase().trim());
-		personalInformation.setMiddlename(mnField.getValue().toString().toLowerCase().trim());
-		personalInformation.setLastname(lnField.getValue().toString().toLowerCase().trim());
-		personalInformation.setEmployeeId(employeeId);
-		personalInformation.setDob((Date) dobField.getValue());
-		personalInformation.setPob((pobField.getValue() == null) ? "N/A" : pobField.getValue().toString().toLowerCase().trim());                
-                personalInformation.setHeight(convertionUtilities.convertStringToDouble(heightField.getValue().toString()));
-                personalInformation.setWeight(convertionUtilities.convertStringToDouble(weightField.getValue().toString()));
+		PersonalInformation pi = new PersonalInformation();
+		pi.setFirstname(fnField.getValue().toString().toLowerCase().trim());
+		pi.setMiddlename(mnField.getValue().toString().toLowerCase().trim());
+		pi.setLastname(lnField.getValue().toString().toLowerCase().trim());
+		pi.setEmployeeId(employeeId);
+		pi.setDob((Date) dobField.getValue());
+		pi.setPob((pobField.getValue() == null) ? "N/A" : pobField.getValue().toString().toLowerCase().trim());                
+                pi.setHeight(convertionUtilities.convertStringToDouble(heightField.getValue().toString()));
+                pi.setWeight(convertionUtilities.convertStringToDouble(weightField.getValue().toString()));
                 
                 if(convertionUtilities.checkInputIfInteger(genderBox.getValue().toString())){
-                    personalInformation.setGender(genderBox.getItemCaption(genderBox.getValue()));
+                    pi.setGender(genderBox.getItemCaption(genderBox.getValue()));
                 } else {
-                    personalInformation.setGender(genderBox.getValue().toString());
+                    pi.setGender(genderBox.getValue().toString());
                 }
                 
                 if(convertionUtilities.checkInputIfInteger(civilStatusBox.getValue().toString())){
-                    personalInformation.setCivilStatus(civilStatusBox.getItemCaption(civilStatusBox.getValue()));
+                    pi.setCivilStatus(civilStatusBox.getItemCaption(civilStatusBox.getValue()));
                 } else {
-                    personalInformation.setCivilStatus(civilStatusBox.getValue().toString());
+                    pi.setCivilStatus(civilStatusBox.getValue().toString());
                 }
                 
-                personalInformation.setCitizenship((citizenshipField.getValue() == null) ? "N/A" : citizenshipField.getValue().toString());
-                personalInformation.setReligion((religionField.getValue() == null)? "N/A" : religionField.getValue().toString());
-                personalInformation.setSpouseName((spouseNameField.getValue() == null) ? "N/A" : spouseNameField.getValue().toString());
-                personalInformation.setSpouseOccupation((spouseOccupationField.getValue() == null) ? "N/A" : spouseOccupationField.getValue().toString());
-                personalInformation.setSpouseOfficeAddress((spouseOfficeAddressField.getValue() == null) ? "N/A" : spouseOfficeAddressField.getValue().toString());
-                personalInformation.setFathersName((fathersNameField.getValue() == null) ? "N/A" : fathersNameField.getValue().toString());
-                personalInformation.setFathersOccupation((fathersOccupationField.getValue() == null) ? "N/A" : fathersOccupationField.getValue().toString());
-                personalInformation.setMothersName((mothersNameField.getValue() == null) ? "N/A" : mothersNameField.getValue().toString());
-                personalInformation.setMothersOccupation((mothersOccupationField.getValue() == null) ? "N/A" : mothersOccupationField.getValue().toString());
-                personalInformation.setParentsAddress((parentsAddressField.getValue() == null) ? "N/A" : parentsAddressField.getValue().toString());
-                personalInformation.setDialectSpeakWrite((dialectSpeakWriteField.getValue() == null) ? "N/A" : dialectSpeakWriteField.getValue().toString());
-                personalInformation.setContactPersonName((contactPersonNameField.getValue() == null) ? "N/A" : contactPersonNameField.getValue().toString());
-                personalInformation.setContactPersonAddress((contactPersonAddressField.getValue() == null) ? "N/A" : contactPersonAddressField.getValue().toString());
-                personalInformation.setContactPersonNo((contactPersonNoField.getValue() == null) ? "N/A" : contactPersonNoField.getValue().toString());
-                personalInformation.setSkills((skillsField.getValue() == null) ? "N/A" : skillsField.getValue().toString());
-                personalInformation.setHobby((hobbyField.getValue() == null) ? "N/A" : hobbyField.getValue().toString());
+                pi.setCitizenship((citizenshipField.getValue() == null) ? "N/A" : citizenshipField.getValue().toString());
+                pi.setReligion((religionField.getValue() == null)? "N/A" : religionField.getValue().toString());
+                pi.setSpouseName((spouseNameField.getValue() == null) ? "N/A" : spouseNameField.getValue().toString());
+                pi.setSpouseOccupation((spouseOccupationField.getValue() == null) ? "N/A" : spouseOccupationField.getValue().toString());
+                pi.setSpouseOfficeAddress((spouseOfficeAddressField.getValue() == null) ? "N/A" : spouseOfficeAddressField.getValue().toString());
+                pi.setFathersName((fathersNameField.getValue() == null) ? "N/A" : fathersNameField.getValue().toString());
+                pi.setFathersOccupation((fathersOccupationField.getValue() == null) ? "N/A" : fathersOccupationField.getValue().toString());
+                pi.setMothersName((mothersNameField.getValue() == null) ? "N/A" : mothersNameField.getValue().toString());
+                pi.setMothersOccupation((mothersOccupationField.getValue() == null) ? "N/A" : mothersOccupationField.getValue().toString());
+                pi.setParentsAddress((parentsAddressField.getValue() == null) ? "N/A" : parentsAddressField.getValue().toString());
+                pi.setDialectSpeakWrite((dialectSpeakWriteField.getValue() == null) ? "N/A" : dialectSpeakWriteField.getValue().toString());
+                pi.setContactPersonName((contactPersonNameField.getValue() == null) ? "N/A" : contactPersonNameField.getValue().toString());
+                pi.setContactPersonAddress((contactPersonAddressField.getValue() == null) ? "N/A" : contactPersonAddressField.getValue().toString());
+                pi.setContactPersonNo((contactPersonNoField.getValue() == null) ? "N/A" : contactPersonNoField.getValue().toString());
+                pi.setSkills((skillsField.getValue() == null) ? "N/A" : skillsField.getValue().toString());
+                pi.setHobby((hobbyField.getValue() == null) ? "N/A" : hobbyField.getValue().toString());
+                pi.setEmployeeId(getEmployeeId());
 		
-//                boolean result = piService.updatePersonalInformation(personalInformation);
-                Window window = updatePersonalInformationConfirmation(personalInformation);
+//                boolean result = piService.updatePersonalInformation(pi, "UPDATE PERSONAL INFORMATION");
+                Window window = updatePersonalInformationConfirmation(pi);
                 window.setModal(true);
                 if(window.getParent() == null){
                     getWindow().addWindow(window);
@@ -488,7 +506,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
         return window;
     }
             
-    private Window updatePersonalInformationConfirmation(PersonalInformation pi){
+    private Window updatePersonalInformationConfirmation(final PersonalInformation pi){
         VerticalLayout vlayout = new VerticalLayout();
         vlayout.setSpacing(true);
         vlayout.setMargin(true);
@@ -512,7 +530,7 @@ public class EmployeePersonalInformation extends VerticalLayout{
                     return;
                 }
                 
-                boolean result = piService.updatePersonalInformation(personalInformation, remarks.getValue().toString().trim());
+                boolean result = piService.updatePersonalInformation(pi, remarks.getValue().toString().trim());
                 if(result){
 		    getWindow().showNotification("Information Updated", Window.Notification.TYPE_TRAY_NOTIFICATION);
                     (window.getParent()).removeWindow(window);

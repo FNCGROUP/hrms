@@ -72,15 +72,16 @@ public class PayrollRegisterDataContainer extends IndexedContainer {
         addContainerProperty("no. of days", Integer.class, null);        
         addContainerProperty("rate per day", Double.class, null);        
         addContainerProperty("basic salary", Double.class, null);        
-        addContainerProperty("half-month salary", Double.class, null);        
+        addContainerProperty("half-month salary", Double.class, null);
+        addContainerProperty("absent", Double.class, 0);        
+        addContainerProperty("lates", Double.class, 0);        
+        addContainerProperty("undertime", Double.class, 0); 
+        addContainerProperty("basicPay", Double.class, 0);
         addContainerProperty("overtime pay", Double.class, null);        
         addContainerProperty("legal holiday", Double.class, null);        
         addContainerProperty("special holiday", Double.class, null);        
         addContainerProperty("night differential", Double.class, null);        
-        addContainerProperty("wdo", Double.class, null);        
-        addContainerProperty("absent", Double.class, null);        
-        addContainerProperty("lates", Double.class, null);        
-        addContainerProperty("undertime", Double.class, null);        
+        addContainerProperty("wdo", Double.class, null);                   
         addContainerProperty("gross pay", Double.class, null);         
         addContainerProperty("sss", Double.class, null);        
         addContainerProperty("phic", Double.class, null);        
@@ -103,6 +104,7 @@ public class PayrollRegisterDataContainer extends IndexedContainer {
         addContainerProperty("cut-off to", String.class, null);
         addContainerProperty("payroll period", String.class, null);
         
+        double basicPay = 0;
         for(PayrollRegister pr : payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev)){
             Item item = getItem(addItem());
             item.getItemProperty("id").setValue(pr.getId());
@@ -110,15 +112,17 @@ public class PayrollRegisterDataContainer extends IndexedContainer {
             item.getItemProperty("no. of days").setValue(pr.getNumOfDays());
             item.getItemProperty("rate per day").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getRatePerDay()));
             item.getItemProperty("basic salary").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getBasicSalary()));
-            item.getItemProperty("half-month salary").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getHalfMonthSalary()));
+            item.getItemProperty("half-month salary").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getHalfMonthSalary()));            
+            item.getItemProperty("absent").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getAbsences()));
+            item.getItemProperty("lates").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalLatesDeduction()));
+            item.getItemProperty("undertime").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalUndertimeDeduction()));
+            basicPay = pr.getHalfMonthSalary() - (pr.getAbsences() + pr.getTotalLatesDeduction() + pr.getTotalUndertimeDeduction());
+            item.getItemProperty("basicPay").setValue(CommonUtil.roundOffToTwoDecimalPlaces(basicPay));
             item.getItemProperty("overtime pay").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalOvertimePaid()));
             item.getItemProperty("legal holiday").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalLegalHolidayPaid()));
             item.getItemProperty("special holiday").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalSpecialHolidayPaid()));
             item.getItemProperty("night differential").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalNightDifferentialPaid()));
-            item.getItemProperty("wdo").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalWorkingDayOffPaid()));
-            item.getItemProperty("absent").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getAbsences()));
-            item.getItemProperty("lates").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalLatesDeduction()));
-            item.getItemProperty("undertime").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalUndertimeDeduction()));
+            item.getItemProperty("wdo").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalWorkingDayOffPaid()));            
             item.getItemProperty("gross pay").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getGrossPay()));
             item.getItemProperty("sss").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getSss()));
             item.getItemProperty("phic").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getPhic()));

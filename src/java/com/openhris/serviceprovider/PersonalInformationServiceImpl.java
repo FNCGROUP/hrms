@@ -8,6 +8,7 @@ package com.openhris.serviceprovider;
 
 import com.hrms.classes.GlobalVariables;
 import com.hrms.dbconnection.GetSQLConnection;
+import com.hrms.utilities.CommonUtil;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.PersonalInformationDAO;
 import com.openhris.model.PersonalInformation;
@@ -101,65 +102,112 @@ public class PersonalInformationServiceImpl implements PersonalInformationServic
         boolean result = false;
         PreparedStatement pstmt = null;
 	ResultSet rs = null;
+        
 	try {
 	    conn.setAutoCommit(false);
 	    
-	    pstmt = conn.prepareStatement("UPDATE employee SET firstname = ?, middlename = ?, lastname = ? WHERE employeeId = ? ");
+	    pstmt = conn.prepareStatement("UPDATE "
+                    + "employee SET firstname = ?, "
+                    + "middlename = ?, "
+                    + "lastname = ? "
+                    + "WHERE employeeId = ? ");
 	    pstmt.setString(1, pi.getFirstname());
 	    pstmt.setString(2, pi.getMiddlename());
 	    pstmt.setString(3, pi.getLastname());
 	    pstmt.setString(4, pi.getEmployeeId());
 	    pstmt.executeUpdate();
 	    
-	    pstmt = conn.prepareStatement("UPDATE employee_personal_information "
-                    + "SET dob = ?, "
-                    + "pob = ?, "
-                    + "gender = ?, "
-                    + "citizenship = ?, "
-                    + "height = ?, "
-                    + "weight = ?, "
-                    + "civilStatus = ?, "
-                    + "religion = ?, "
-                    + "spouseName = ?, "
-                    + "spouseOccupation = ?, "
-                    + "spouseOfficeAddress = ?, "
-                    + "fathersName = ?, "
-                    + "fathersOccupation = ?, "
-                    + "mothersName = ?, "
-                    + "mothersOccupation = ?, "
-                    + "parentsAddress = ?, "
-                    + "dialectSpeakWrite = ?, "
-                    + "contactPerson = ?, "
-                    + "contactPersonAddress = ?, "
-                    + "contactPersonNo = ?, "
-                    + "skills = ?, "
-                    + "hobby = ? "
-                    + "WHERE employeeId = ?");
-            pstmt.setString(1, util.convertDateFormat(pi.getDob().toString()));
-            pstmt.setString(2, pi.getPob());
-            pstmt.setString(3, pi.getGender());
-            pstmt.setString(4, pi.getCitizenship());
-            pstmt.setDouble(5, pi.getHeight());
-            pstmt.setDouble(6, pi.getWeight());
-            pstmt.setString(7, pi.getCivilStatus());
-            pstmt.setString(8, pi.getReligion());
-            pstmt.setString(9, pi.getSpouseName());
-            pstmt.setString(10, pi.getSpouseOccupation());
-            pstmt.setString(11, pi.getSpouseOfficeAddress());
-            pstmt.setString(12, pi.getFathersName());
-            pstmt.setString(13, pi.getFathersOccupation());
-            pstmt.setString(14, pi.getMothersName());
-            pstmt.setString(15, pi.getMothersOccupation());
-            pstmt.setString(16, pi.getParentsAddress());
-            pstmt.setString(17, pi.getDialectSpeakWrite());
-            pstmt.setString(18, pi.getContactPersonName());
-            pstmt.setString(19, pi.getContactPersonAddress());
-            pstmt.setString(20, pi.getContactPersonNo());
-            pstmt.setString(21, pi.getSkills());
-            pstmt.setString(22, pi.getHobby());
-            pstmt.setString(23, pi.getEmployeeId());
-            pstmt.executeUpdate();	    
-	    	    
+            int epiId = 0;
+            pstmt = conn.prepareStatement("SELECT COUNT(*) AS EPIID "
+                    + "FROM employee_personal_information "
+                    + "WHERE employeeId = ? ");
+            pstmt.setString(1, pi.getEmployeeId());
+            rs = pstmt.executeQuery();
+            while(rs.next()){
+                epiId = CommonUtil.convertStringToInteger(rs.getString("EPIID"));
+            }
+            
+            if(epiId == 0){
+                pstmt = conn.prepareStatement("INSERT INTO employee_personal_information (employeeId, dob, pob, gender, citizenship, height, weight, "
+                            + "civilStatus, religion, spouseName, spouseOccupation, spouseOfficeAddress, fathersName, fathersOccupation, "
+                            + "mothersName, mothersOccupation, parentsAddress, dialectSpeakWrite, contactPerson, contactPersonAddress, "
+                            + "contactPersonNo, skills, hobby) "
+                            + "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+		    pstmt.setString(1, pi.getEmployeeId());
+		    pstmt.setString(2, util.convertDateFormat(pi.getDob().toString()));
+		    pstmt.setString(3, pi.getPob());
+                    pstmt.setString(4, pi.getGender());
+                    pstmt.setString(5, pi.getCitizenship());
+                    pstmt.setDouble(6, pi.getHeight());
+                    pstmt.setDouble(7, pi.getWeight());
+                    pstmt.setString(8, pi.getCivilStatus());
+                    pstmt.setString(9, pi.getReligion());
+                    pstmt.setString(10, pi.getSpouseName());
+                    pstmt.setString(11, pi.getSpouseOccupation());
+                    pstmt.setString(12, pi.getSpouseOfficeAddress());
+                    pstmt.setString(13, pi.getFathersName());
+                    pstmt.setString(14, pi.getFathersOccupation());
+                    pstmt.setString(15, pi.getMothersName());
+                    pstmt.setString(16, pi.getMothersOccupation());
+                    pstmt.setString(17, pi.getParentsAddress());
+                    pstmt.setString(18, pi.getDialectSpeakWrite());
+                    pstmt.setString(19, pi.getContactPersonName());
+                    pstmt.setString(20, pi.getContactPersonAddress());
+                    pstmt.setString(21, pi.getContactPersonNo());
+                    pstmt.setString(22, pi.getSkills());
+                    pstmt.setString(23, pi.getHobby());
+		    pstmt.executeUpdate();
+            } else {
+                pstmt = conn.prepareStatement("UPDATE employee_personal_information "
+                        + "SET dob = ?, "
+                        + "pob = ?, "
+                        + "gender = ?, "
+                        + "citizenship = ?, "
+                        + "height = ?, "
+                        + "weight = ?, "
+                        + "civilStatus = ?, "
+                        + "religion = ?, "
+                        + "spouseName = ?, "
+                        + "spouseOccupation = ?, "
+                        + "spouseOfficeAddress = ?, "
+                        + "fathersName = ?, "
+                        + "fathersOccupation = ?, "
+                        + "mothersName = ?, "
+                        + "mothersOccupation = ?, "
+                        + "parentsAddress = ?, "
+                        + "dialectSpeakWrite = ?, "
+                        + "contactPerson = ?, "
+                        + "contactPersonAddress = ?, "
+                        + "contactPersonNo = ?, "
+                        + "skills = ?, "
+                        + "hobby = ? "
+                        + "WHERE employeeId = ?");
+                pstmt.setString(1, util.convertDateFormat(pi.getDob().toString()));
+                pstmt.setString(2, pi.getPob());
+                pstmt.setString(3, pi.getGender());
+                pstmt.setString(4, pi.getCitizenship());
+                pstmt.setDouble(5, pi.getHeight());
+                pstmt.setDouble(6, pi.getWeight());
+                pstmt.setString(7, pi.getCivilStatus());
+                pstmt.setString(8, pi.getReligion());
+                pstmt.setString(9, pi.getSpouseName());
+                pstmt.setString(10, pi.getSpouseOccupation());
+                pstmt.setString(11, pi.getSpouseOfficeAddress());
+                pstmt.setString(12, pi.getFathersName());
+                pstmt.setString(13, pi.getFathersOccupation());
+                pstmt.setString(14, pi.getMothersName());
+                pstmt.setString(15, pi.getMothersOccupation());
+                pstmt.setString(16, pi.getParentsAddress());
+                pstmt.setString(17, pi.getDialectSpeakWrite());
+                pstmt.setString(18, pi.getContactPersonName());
+                pstmt.setString(19, pi.getContactPersonAddress());
+                pstmt.setString(20, pi.getContactPersonNo());
+                pstmt.setString(21, pi.getSkills());
+                pstmt.setString(22, pi.getHobby());
+                pstmt.setString(23, pi.getEmployeeId());
+                pstmt.executeUpdate();
+            }
+            	    	    
             pstmt = conn.prepareStatement("INSERT INTO employee_logs "
                     + "SET EmployeeID = ?, "
                     + "Remarks = ?, "
