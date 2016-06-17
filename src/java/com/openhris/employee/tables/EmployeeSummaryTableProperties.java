@@ -35,6 +35,9 @@ public class EmployeeSummaryTableProperties extends Table {
         setColumnHeader("hdmfNo", "HDMF #");
         setColumnHeader("sssNo", "SSS #");
         setColumnHeader("tinNo", "TIN #");
+        setColumnHeader("phicNo", "PHIC #");
+        setColumnHeader("entryDate", "DATE HIRED");
+        setColumnHeader("endDate", "DATE END");
         
         setContainerDataSource(new EmployeeSummaryDataContainer());
         
@@ -63,6 +66,9 @@ public class EmployeeSummaryTableProperties extends Table {
         setColumnHeader("hdmfNo", "HDMF #");
         setColumnHeader("sssNo", "SSS #");
         setColumnHeader("tinNo", "TIN #");
+        setColumnHeader("phicNo", "PHIC #");
+        setColumnHeader("entryDate", "DATE HIRED");
+        setColumnHeader("endDate", "DATE END");
         
         setContainerDataSource(new EmployeeSummaryDataContainer(corporateId, employeeStatus));
         

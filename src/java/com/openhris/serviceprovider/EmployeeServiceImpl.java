@@ -463,7 +463,9 @@ public class EmployeeServiceImpl implements EmployeeService {
                 es.setDependent(rs.getString("Dependent"));
                 es.setHdmfNo(rs.getString("HDMFNo"));
                 es.setSssNo(rs.getString("SSSNo"));
-                es.setTinNo(rs.getString("TINNo"));                
+                es.setTinNo(rs.getString("TINNo")); 
+                es.setPhicNo(rs.getString("PHICNo"));
+                es.setEndDate(util.parsingDate(rs.getString("EndDate")));
                 esList.add(es);
             }
         } catch (SQLException ex) {

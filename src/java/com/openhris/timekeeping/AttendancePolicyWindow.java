@@ -95,7 +95,6 @@ public class AttendancePolicyWindow extends Window {
                     item.getItemProperty("psday").setValue(0.0);
                     holidayType.setVisible(true);
                     
-                    System.out.println("wage: "+getEmploymentWage()+" entry: "+getEmploymentWageEntry());
                     double additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
                     item.getItemProperty("wdo").setValue(df.format(additionalWorkingDayOffPay));
                 } else{

@@ -41,8 +41,7 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
         addContainerProperty("communication", Double.class, null);
         addContainerProperty("otherAllowance", Double.class, null);
         addContainerProperty("cola", Double.class, null);
-        addContainerProperty("meal", Double.class, null);
-        addContainerProperty("entryDate", String.class, null);
+        addContainerProperty("meal", Double.class, null);        
         addContainerProperty("dob", String.class, null);
         addContainerProperty("gender", String.class, null);
         addContainerProperty("civilStatus", String.class, null);
@@ -50,6 +49,9 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
         addContainerProperty("hdmfNo", String.class, null);
         addContainerProperty("sssNo", String.class, null);
         addContainerProperty("tinNo", String.class, null);
+        addContainerProperty("phicNo", String.class, null);
+        addContainerProperty("entryDate", String.class, null);
+        addContainerProperty("endDate", String.class, null);
     }
 
     public EmployeeSummaryDataContainer(int corporateId, String employeeStatus) {
@@ -73,7 +75,6 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
         addContainerProperty("otherAllowance", Double.class, null);
         addContainerProperty("cola", Double.class, null);
         addContainerProperty("meal", Double.class, null);
-        addContainerProperty("entryDate", String.class, null);
         addContainerProperty("dob", String.class, null);
         addContainerProperty("gender", String.class, null);
         addContainerProperty("civilStatus", String.class, null);
@@ -81,6 +82,9 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
         addContainerProperty("hdmfNo", String.class, null);
         addContainerProperty("sssNo", String.class, null);
         addContainerProperty("tinNo", String.class, null);
+        addContainerProperty("phicNo", String.class, null);
+        addContainerProperty("entryDate", String.class, null);
+        addContainerProperty("endDate", String.class, null);
         
         for(EmployeeSummary esum : es.findAllEmployeeSummaryByCorporateId(corporateId, employeeStatus)){
             Item item = getItem(addItem());
@@ -104,8 +108,7 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
             item.getItemProperty("communication").setValue(esum.getCommunication());
             item.getItemProperty("otherAllowance").setValue(esum.getOtherAllowance());
             item.getItemProperty("cola").setValue(esum.getCola());
-            item.getItemProperty("meal").setValue(esum.getMeal());
-            item.getItemProperty("entryDate").setValue((esum.getEntryDate() == null) ? "" : util.convertDateFormat(esum.getEntryDate().toString()));
+            item.getItemProperty("meal").setValue(esum.getMeal());            
             item.getItemProperty("dob").setValue((esum.getDob()== null) ? "" : util.convertDateFormat(esum.getDob().toString()));
             item.getItemProperty("gender").setValue(esum.getGender());
             item.getItemProperty("civilStatus").setValue(esum.getCivilStatus());
@@ -113,6 +116,9 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
             item.getItemProperty("hdmfNo").setValue(esum.getHdmfNo());
             item.getItemProperty("sssNo").setValue(esum.getSssNo());
             item.getItemProperty("tinNo").setValue(esum.getTinNo());
+            item.getItemProperty("phicNo").setValue((esum.getPhicNo()== null) ? "" : esum.getPhicNo());
+            item.getItemProperty("entryDate").setValue((esum.getEntryDate() == null) ? "" : util.convertDateFormat(esum.getEntryDate().toString()));
+            item.getItemProperty("endDate").setValue((esum.getEndDate()== null) ? "" : util.convertDateFormat(esum.getEndDate().toString()));
         }
     }
     

@@ -293,6 +293,7 @@ public class AttendanceTableContainerWindow extends Window {
                         dutyManager.setEnabled(true);
                         
                         additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
+                        System.out.println("wdo: "+additionalWorkingDayOffPay);
                         if(getBranch().equals("on-call and trainees")){
                             item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(getEmploymentWage()));
                         } else {
@@ -336,52 +337,52 @@ public class AttendanceTableContainerWindow extends Window {
                     item.getItemProperty("undertimeSH").setValue(0.0);
                     item.getItemProperty("undertimeWO").setValue(0.0);
                     
-                    if(policyStr.equals("holiday") || policy.getValue().toString().equals("working-holiday")){
+                    if(policyStr == null){                        
+                    } else if(policyStr.equals("holiday") || policy.getValue().toString().equals("working-holiday")){
                         if(event.getProperty().getValue() == null || event.getProperty().getValue().toString().isEmpty()){
                             getWindow().showNotification("Select Type of Holiday!", Window.Notification.TYPE_WARNING_MESSAGE);
-                            return;
                         }
+                    } else {
+                        switch (policyStr) {
+                            case "working-holiday":
+                                if(event.getProperty().getValue().equals("legal-holiday")){
+                                    additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                                    item.getItemProperty("lholiday").setValue(utilities.roundOffToTwoDecimalPlaces(additionalHolidayPay)); 
+                                    item.getItemProperty("sholiday").setValue(0.0);
+                                } else {
+                                    additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                                    item.getItemProperty("sholiday").setValue(utilities.roundOffToTwoDecimalPlaces(additionalHolidayPay));
+                                    item.getItemProperty("lholiday").setValue(0.0);
+                                }   break;
+                            case "holiday":
+                                if(event.getProperty().getValue().equals("legal-holiday")){
+                                    if(getEmploymentWageEntry().equals("daily")){
+                                        additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                                        item.getItemProperty("psday").setValue(utilities.roundOffToTwoDecimalPlaces(additionalHolidayPay));
+                                    } else {
+                                        item.getItemProperty("psday").setValue(0.0);
+                                    }
+                                } else {
+                                    item.getItemProperty("psday").setValue(0.0);
+                            }   break;
+                            case "working-day-off":
+                                if(event.getProperty().getValue() == null){
+                                    item.getItemProperty("psday").setValue(0.0);
+                                } else if(event.getProperty().getValue().equals("legal-holiday")){
+                                    additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
+                                    item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(additionalWorkingDayOffPay));
+                                    multiplePremiumPay = computation.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                                    item.getItemProperty("lholiday").setValue(multiplePremiumPay);
+                                    item.getItemProperty("sholiday").setValue(0.0);
+                                } else {
+                                    additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
+                                    item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(additionalWorkingDayOffPay));
+                                    multiplePremiumPay = computation.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
+                                    item.getItemProperty("sholiday").setValue(multiplePremiumPay);
+                                    item.getItemProperty("lholiday").setValue(0.0);
+                            }   break;
+                        }    
                     }
-                    
-                    if(policyStr.equals("working-holiday")){
-                        if(event.getProperty().getValue().equals("legal-holiday")){
-                            additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                            item.getItemProperty("lholiday").setValue(utilities.roundOffToTwoDecimalPlaces(additionalHolidayPay));
-                            item.getItemProperty("sholiday").setValue(0.0);
-                        } else {
-                            additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                            item.getItemProperty("sholiday").setValue(utilities.roundOffToTwoDecimalPlaces(additionalHolidayPay));
-                            item.getItemProperty("lholiday").setValue(0.0);
-                        }                        
-                    } else if(policyStr.equals("holiday")) {
-                        if(event.getProperty().getValue().equals("legal-holiday")){
-                            if(getEmploymentWageEntry().equals("daily")){
-                                additionalHolidayPay = computation.processAdditionalHolidayPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                                item.getItemProperty("psday").setValue(utilities.roundOffToTwoDecimalPlaces(additionalHolidayPay)); 
-                            } else {
-                                item.getItemProperty("psday").setValue(0.0);
-                            }
-                        } else {
-                            item.getItemProperty("psday").setValue(0.0);
-                        }
-                        
-                    } else if(policyStr.equals("working-day-off")) {   
-                        if(event.getProperty().getValue() == null){
-                            item.getItemProperty("psday").setValue(0.0);
-                        } else if(event.getProperty().getValue().equals("legal-holiday")){
-                            additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
-                            item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(additionalWorkingDayOffPay));
-                            multiplePremiumPay = computation.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                            item.getItemProperty("lholiday").setValue(multiplePremiumPay); 
-                            item.getItemProperty("sholiday").setValue(0.0);
-                        } else {
-                            additionalWorkingDayOffPay = computation.processAdditionalWorkingDayOff(getEmploymentWage(), getEmploymentWageEntry());
-                            item.getItemProperty("wdo").setValue(utilities.roundOffToTwoDecimalPlaces(additionalWorkingDayOffPay));
-                            multiplePremiumPay = computation.processMultiplePremiumPay(event.getProperty().getValue().toString(), getEmploymentWage());
-                            item.getItemProperty("sholiday").setValue(multiplePremiumPay);   
-                            item.getItemProperty("lholiday").setValue(0.0);
-                        }                       
-                    }                   
                 }
             });
             holidays.setImmediate(true);

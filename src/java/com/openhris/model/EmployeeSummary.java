@@ -38,6 +38,8 @@ public class EmployeeSummary {
     private String hdmfNo;
     private String sssNo;
     private String tinNo;
+    private String phicNo;
+    private Date endDate;
 
     public String getEmployeeId() {
         return employeeId;
@@ -139,6 +141,14 @@ public class EmployeeSummary {
         return tinNo;
     }
 
+    public String getPhicNo() {
+        return phicNo;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
@@ -237,6 +247,14 @@ public class EmployeeSummary {
 
     public void setTinNo(String tinNo) {
         this.tinNo = tinNo;
+    }
+
+    public void setPhicNo(String phicNo) {
+        this.phicNo = phicNo;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
     
 }

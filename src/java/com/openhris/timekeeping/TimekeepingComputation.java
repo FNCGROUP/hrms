@@ -156,7 +156,7 @@ public class TimekeepingComputation {
     public double processAdditionalWorkingDayOff(Double wage, String wageEntry){
         double rate = 0;
         if(wageEntry.equals("daily")){
-            rate = 0; 
+            rate = wage * .3; 
         } else {
             rate = wage * 1.3; 
         }     
