@@ -4,7 +4,6 @@
  */
 package com.openhris.serviceprovider;
 
-import com.hrms.beans.EmployeePositionHistoryBean;
 import com.hrms.dbconnection.GetSQLConnection;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.dao.ServiceGetDAO;
