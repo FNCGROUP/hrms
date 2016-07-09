@@ -8,7 +8,9 @@ package com.openhris.payroll.containers;
 import com.hrms.utilities.CommonUtil;
 import com.openhris.model.PayrollRegister;
 import com.openhris.service.PayrollService;
+import com.openhris.service.TimekeepingService;
 import com.openhris.serviceprovider.PayrollServiceImpl;
+import com.openhris.timekeeping.serviceprovider.TimekeepingServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 
@@ -19,6 +21,7 @@ import com.vaadin.data.util.IndexedContainer;
 public class PayrollRegisterDataContainer extends IndexedContainer {
 
     PayrollService payrollService = new PayrollServiceImpl();
+    TimekeepingService ts = new TimekeepingServiceImpl();
     
     private int branchId;
     private String payrollDate;
@@ -105,6 +108,9 @@ public class PayrollRegisterDataContainer extends IndexedContainer {
         addContainerProperty("payroll period", String.class, null);
         
         double basicPay = 0;
+        double totalLegalHoliday = 0;
+        double totalSpecialHoliday = 0;
+        double totalWDO = 0;
         for(PayrollRegister pr : payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev)){
             Item item = getItem(addItem());
             item.getItemProperty("id").setValue(pr.getId());
@@ -116,13 +122,24 @@ public class PayrollRegisterDataContainer extends IndexedContainer {
             item.getItemProperty("absent").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getAbsences()));
             item.getItemProperty("lates").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalLatesDeduction()));
             item.getItemProperty("undertime").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalUndertimeDeduction()));
+            
             basicPay = pr.getHalfMonthSalary() - (pr.getAbsences() + pr.getTotalLatesDeduction() + pr.getTotalUndertimeDeduction());
             item.getItemProperty("basicPay").setValue(CommonUtil.roundOffToTwoDecimalPlaces(basicPay));
             item.getItemProperty("overtime pay").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalOvertimePaid()));
-            item.getItemProperty("legal holiday").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalLegalHolidayPaid()));
-            item.getItemProperty("special holiday").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalSpecialHolidayPaid()));
+            
+            totalLegalHoliday = CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalLegalHolidayPaid()) - 
+                    (ts.findTotalLatesLegalHolidayDeduction(pr.getId()) + ts.findTotalUndertimeLegalHolidayDeduction(pr.getId()));            
+            item.getItemProperty("legal holiday").setValue(totalLegalHoliday);
+            
+            totalSpecialHoliday = CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalSpecialHolidayPaid()) - 
+                    (ts.findTotalLatesSpecialHolidayDeduction(pr.getId()) + ts.findTotalUndertimeSpecialHolidayDeduction(pr.getId()));
+            item.getItemProperty("special holiday").setValue(totalSpecialHoliday);
+            
             item.getItemProperty("night differential").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalNightDifferentialPaid()));
-            item.getItemProperty("wdo").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalWorkingDayOffPaid()));            
+            
+            totalWDO = CommonUtil.roundOffToTwoDecimalPlaces(pr.getTotalWorkingDayOffPaid()) - 
+                    (ts.findTotalLatesWorkingDayOffDeduction(pr.getId()) + ts.findTotalUndertimeWorkingDayOffDeduction(pr.getId()));
+            item.getItemProperty("wdo").setValue(totalWDO);            
             item.getItemProperty("gross pay").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getGrossPay()));
             item.getItemProperty("sss").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getSss()));
             item.getItemProperty("phic").setValue(CommonUtil.roundOffToTwoDecimalPlaces(pr.getPhic()));

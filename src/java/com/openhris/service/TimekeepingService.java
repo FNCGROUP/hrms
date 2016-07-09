@@ -49,4 +49,16 @@ public interface TimekeepingService {
     public double getTotalWorkingDayOffPaid(int payrollId);
     
     public double getTotalPsHolidayPaid(int payrollId);
+    
+    public double findTotalLatesLegalHolidayDeduction(int payrollId);
+    
+    public double findTotalLatesSpecialHolidayDeduction(int payrollId);
+    
+    public double findTotalLatesWorkingDayOffDeduction(int payrollId);
+    
+    public double findTotalUndertimeLegalHolidayDeduction(int payrollId);
+    
+    public double findTotalUndertimeSpecialHolidayDeduction(int payrollId);
+    
+    public double findTotalUndertimeWorkingDayOffDeduction(int payrollId);
 }

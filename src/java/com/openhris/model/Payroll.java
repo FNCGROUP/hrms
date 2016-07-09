@@ -7,7 +7,7 @@ package com.openhris.model;
 import com.openhris.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.PayrollService;
 import com.openhris.service.TimekeepingService;
-import com.openhris.serviceprovider.TimekeepingServiceImpl;
+import com.openhris.timekeeping.serviceprovider.TimekeepingServiceImpl;
 import java.util.Date;
 
 /**

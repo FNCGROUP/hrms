@@ -13,7 +13,7 @@ import com.openhris.payroll.ProcessPayrollComputation;
 import com.openhris.model.Timekeeping;
 import com.openhris.timekeeping.reports.IndividualAttendanceReport;
 import com.openhris.service.TimekeepingService;
-import com.openhris.serviceprovider.TimekeepingServiceImpl;
+import com.openhris.timekeeping.serviceprovider.TimekeepingServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.event.FieldEvents;
 import com.vaadin.event.ItemClickEvent;

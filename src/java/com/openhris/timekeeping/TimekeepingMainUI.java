@@ -18,7 +18,7 @@ import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;
 import com.openhris.service.TimekeepingService;
 import com.openhris.model.Timekeeping;
-import com.openhris.serviceprovider.TimekeepingServiceImpl;
+import com.openhris.timekeeping.serviceprovider.TimekeepingServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeListener;

@@ -20,7 +20,7 @@ import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;
 import com.openhris.service.TimekeepingService;
 import com.openhris.serviceprovider.CompanyServiceImpl;
-import com.openhris.serviceprovider.TimekeepingServiceImpl;
+import com.openhris.timekeeping.serviceprovider.TimekeepingServiceImpl;
 import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
