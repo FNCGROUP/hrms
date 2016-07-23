@@ -13,6 +13,8 @@ import com.openhris.model.Payroll;
 import com.openhris.service.PayrollService;
 import com.openhris.serviceprovider.PayrollServiceImpl;
 import com.openhris.model.Timekeeping;
+import com.openhris.service.CompanyService;
+import com.openhris.serviceprovider.CompanyServiceImpl;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +31,8 @@ public class ProcessPayrollComputation {
     PayrollAllowances pa = new PayrollAllowances();
     ContributionUtilities contributionUtil = new ContributionUtilities();
     ServiceInsertDAO serviceInsert = new ServiceInsertDAO();
-    PayrollService payrollService = new PayrollServiceImpl();    
+    PayrollService payrollService = new PayrollServiceImpl();  
+    CompanyService cs = new CompanyServiceImpl();
     DecimalFormat df = new DecimalFormat("0.00");
         
     String employeeId;
@@ -72,6 +75,8 @@ public class ProcessPayrollComputation {
     double totalUndertimeWDODeduction;
     double totalAbsences;
         
+    private String branch;
+    
     public ProcessPayrollComputation(String employeeId, int branchId){
         this.employeeId = employeeId;
         this.branchId = branchId;
@@ -183,6 +188,13 @@ public class ProcessPayrollComputation {
                 payroll.setTaxableSalary(taxableSalary);
             }
             
+            branch = cs.getBranchById(getBranchId()).replaceAll("\\(.*?\\)", "");
+            if(branch.trim().equals("on-call and trainees")){
+                payroll.setSss(0);
+                payroll.setPhic(0);
+                payroll.setHdmf(0);
+                payroll.setTaxableSalary(taxableSalary);
+            }
                         
             payroll.setAbsences(payrollComputation.getTotalAbsences());            
             

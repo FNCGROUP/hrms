@@ -575,13 +575,14 @@ public class AttendanceTableContainerWindow extends Window {
                         return;
                     }
                     
-                    if(!event.getText().isEmpty()){
-                        if(getBranch().equals("on-call and trainees")){
+                    if(!event.getText().isEmpty()){                        
+                        String branch = getBranch().replaceAll("\\(.*?\\)", "");
+                        if(branch.trim().equals("on-call and trainees")){
                             overtimeAddition = computation.processEmployeesOvertimeForOnCall(policyStr, 
                                     holidayStr, 
                                     utilities.convertStringToInteger(event.getText().trim()), 
                                     getEmploymentWage());
-                            item.getItemProperty("o/min").setValue(utilities.roundOffToTwoDecimalPlaces(overtimeAddition + (overtimeAddition*premiumRate)));
+                            item.getItemProperty("o/min").setValue(utilities.roundOffToTwoDecimalPlaces(overtimeAddition));
                         } else {
                             overtimeAddition = computation.processEmployeesOvertime(policyStr, 
                                     holidayStr, 

@@ -65,7 +65,7 @@ public class TimekeepingComputation {
     }
     
     public double processEmployeesUndertimeForOnCall(String policy, String holiday, int undertime, Double wage){
-//        double rate = getHolidayRate(holiday, wage);
+        double rate = getHolidayRate(holiday, wage);
         double undertimeDeductionPerMinute = calculateDeductionPerMinute(undertime, wage);
         
         return utilities.roundOffToTwoDecimalPlaces(undertimeDeductionPerMinute);
@@ -88,8 +88,9 @@ public class TimekeepingComputation {
     }
     
     public double processEmployeesOvertimeForOnCall(String policy, String holiday, int overtime, Double wage){
-        double rate = getHolidayRate(holiday, wage);
-        double overtimeAdditionPerMinute = calculateOvertimePerMinute(overtime, rate);
+//        double rate = getHolidayRate(holiday, wage);
+        double ratePerMinute = wage / 480;
+        double overtimeAdditionPerMinute = (overtime * ratePerMinute);
         
         return utilities.roundOffToTwoDecimalPlaces(overtimeAdditionPerMinute);
     }

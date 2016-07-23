@@ -99,9 +99,16 @@ public class ContributionServiceImpl implements ContributionService {
         List<SssSchedule> sssList = new ArrayList<>();
         
         try {
-            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule "
-                    + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND "
-                    + "CorporateID = ? AND MONTH(payrollDate) = ? AND YEAR(payrollDate) = ? AND "
+//            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule "
+//                    + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND "
+//                    + "CorporateID = ? AND MONTH(payrollDate) = ? AND YEAR(payrollDate) = ? AND "
+//                    + "(eeShare != 0 AND erShare IS NOT NULL) "
+//                    + "ORDER BY name ASC");                        
+            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule sss "
+                    + "LEFT JOIN (SELECT ecm.CorporateID, ecm.employeeId FROM employee_contribution_main ecm) ec "
+                    + "ON sss.employeeId = ec.employeeId "
+                    + "WHERE ec.CorporateId = ? "
+                    + "AND MONTH(payrollDate) = ? AND YEAR(payrollDate) = ? AND "
                     + "(eeShare != 0 AND erShare IS NOT NULL) "
                     + "ORDER BY name ASC");
             pstmt.setInt(1, corporateId);
