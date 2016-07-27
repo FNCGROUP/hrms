@@ -40,17 +40,18 @@ public class SalaryInformationServiceImpl implements SalaryInformationService{
     }
 
     @Override
-    public boolean updateEmployeeContributionBranch(String employeeId, int branchId, String remarks) {
+    public boolean updateEmployeeContributionBranch(String employeeId, int branchId, String remarks, int corporateId) {
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         boolean result = false;
         
         try {
-            pstmt = conn.prepareStatement("INSERT INTO employee_contribution_main(employeeId, branchId, remarks, dateTransferred) "
-                    + "VALUES(?, ?, ?, now())");
+            pstmt = conn.prepareStatement("INSERT INTO employee_contribution_main(employeeId, branchId, remarks, dateTransferred, CorporateID) "
+                    + "VALUES(?, ?, ?, now(), ?)");
             pstmt.setString(1, employeeId);
             pstmt.setInt(2, branchId);
             pstmt.setString(3, remarks.toLowerCase());
+            pstmt.setInt(4, corporateId);
             pstmt.executeUpdate();
             
             result = true;

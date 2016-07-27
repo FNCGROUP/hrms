@@ -386,7 +386,7 @@ public class EmployeeSalaryInformation extends VerticalLayout{
                         return;
                     }
                     
-                    boolean result = si.updateEmployeeContributionBranch(getEmployeeId(), branchId, remarks.getValue().toString());
+                    boolean result = si.updateEmployeeContributionBranch(getEmployeeId(), branchId, remarks.getValue().toString(), corporateId);
                     if(result){
                         getWindow().showNotification("Successfully transferred to new Branch!");
                         (subWindow.getParent()).removeWindow(subWindow);

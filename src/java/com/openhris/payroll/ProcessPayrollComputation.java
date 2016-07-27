@@ -163,37 +163,42 @@ public class ProcessPayrollComputation {
                 double newTaxableSalary = payroll.getGrossPay() - (payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid());
                 taxableSalary = payrollComputation.getTaxableSalary(employmentWage, employmentWageEntry, policyList, newTaxableSalary);
             }
+            
+            branch = cs.getBranchById(getBranchId()).replaceAll("\\(.*?\\)", "");
+            if(branch.trim().equals("on-call and trainees")){
+                taxableSalary = payroll.getGrossPay();
+            }
+            
             double sssContribution = 0;
             double phicContribution = 0;
             double hdmfContribution = 0;
-                        
-            if(employmentWageStatus.equals("senior citizen")){
-                payroll.setSss(0);
-                payroll.setPhic(0);
-                payroll.setHdmf(0);
-                payroll.setTaxableSalary(taxableSalary);
-            } else {
-                if(payrollPeriod.equals("15th of the month")){ 
-                    phicContribution = contributionUtil.getPhilhealth(basicSalary);
-                    hdmfContribution = contributionUtil.getHdmf(basicSalary);
-                    taxableSalary = taxableSalary - (phicContribution + hdmfContribution);
-                }else{              
-                    sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate);
-                    taxableSalary = taxableSalary - (sssContribution);
-                }
-                
-                payroll.setSss(sssContribution);
-                payroll.setPhic(phicContribution);
-                payroll.setHdmf(hdmfContribution);
-                payroll.setTaxableSalary(taxableSalary);
-            }
-            
-            branch = cs.getBranchById(getBranchId()).replaceAll("\\(.*?\\)", "");
+                              
             if(branch.trim().equals("on-call and trainees")){
                 payroll.setSss(0);
                 payroll.setPhic(0);
                 payroll.setHdmf(0);
                 payroll.setTaxableSalary(taxableSalary);
+            } else {
+                if(employmentWageStatus.equals("senior citizen")){
+                    payroll.setSss(0);
+                    payroll.setPhic(0);
+                    payroll.setHdmf(0);
+                    payroll.setTaxableSalary(taxableSalary);
+                } else {
+                    if(payrollPeriod.equals("15th of the month")){ 
+                        phicContribution = contributionUtil.getPhilhealth(basicSalary);
+                        hdmfContribution = contributionUtil.getHdmf(basicSalary);
+                        taxableSalary = taxableSalary - (phicContribution + hdmfContribution);
+                    }else{              
+                        sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate);
+                        taxableSalary = taxableSalary - (sssContribution);
+                    }
+
+                    payroll.setSss(sssContribution);
+                    payroll.setPhic(phicContribution);
+                    payroll.setHdmf(hdmfContribution);
+                    payroll.setTaxableSalary(taxableSalary);
+                }
             }
                         
             payroll.setAbsences(payrollComputation.getTotalAbsences());            
@@ -202,6 +207,11 @@ public class ProcessPayrollComputation {
             if(employmentWageStatus.equals("minimum") || tax < 0 || employmentWageStatus.equals("senior citizen")){
                 tax = 0;
             }        
+            
+            if(branch.trim().equals("on-call and trainees")){
+                tax = 0;
+            }
+            
             payroll.setTax(tax);
 
             double cashBond = 0;   
@@ -230,11 +240,17 @@ public class ProcessPayrollComputation {
             payroll.setAllowanceForLiquidation(afl);
                           
             double netSalary;
-            if(employmentWageStatus.equals("senior citizen")){
-                netSalary = taxableSalary + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
+            if(branch.trim().equals("on-call and trainees")){
+                netSalary = taxableSalary;
+                System.out.println("sss"+payroll.getSss());
             } else {
-                netSalary = taxableSalary - tax + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
+                if(employmentWageStatus.equals("senior citizen")){
+                    netSalary = taxableSalary + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
+                } else {
+                    netSalary = taxableSalary - tax + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
+                }
             }
+            
             
             payroll.setNetSalary(netSalary);
 
