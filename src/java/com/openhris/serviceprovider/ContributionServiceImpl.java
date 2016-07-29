@@ -99,22 +99,24 @@ public class ContributionServiceImpl implements ContributionService {
         List<SssSchedule> sssList = new ArrayList<>();
         
         try {
-//            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule "
-//                    + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND "
-//                    + "CorporateID = ? AND MONTH(payrollDate) = ? AND YEAR(payrollDate) = ? AND "
+            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule "
+                    + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) "
+                    + "AND MONTH(payrollDate) = ? "
+                    + "AND YEAR(payrollDate) = ? "
+                    + "AND (eeShare != 0 AND erShare IS NOT NULL) "
+                    + "AND ECMCorporateID = ? "
+                    + "ORDER BY name ASC");                        
+//            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule sss "
+//                    + "LEFT JOIN (SELECT ecm.CorporateID, ecm.employeeId FROM employee_contribution_main ecm ORDER BY ecm.id DESC) ec "
+//                    + "ON sss.employeeId = ec.employeeId "
+//                    + "WHERE ec.CorporateId = ? "
+//                    + "AND MONTH(payrollDate) = ? AND YEAR(payrollDate) = ? AND "
 //                    + "(eeShare != 0 AND erShare IS NOT NULL) "
-//                    + "ORDER BY name ASC");                        
-            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule sss "
-                    + "LEFT JOIN (SELECT ecm.CorporateID, ecm.employeeId FROM employee_contribution_main ecm ORDER BY ecm.id DESC) ec "
-                    + "ON sss.employeeId = ec.employeeId "
-                    + "WHERE ec.CorporateId = ? "
-                    + "AND MONTH(payrollDate) = ? AND YEAR(payrollDate) = ? AND "
-                    + "(eeShare != 0 AND erShare IS NOT NULL) "
-                    + "GROUP BY sss.sssNo "
-                    + "ORDER BY name ASC");
-            pstmt.setInt(1, corporateId);
-            pstmt.setInt(2, month);
-            pstmt.setInt(3, year);
+//                    + "GROUP BY sss.employeeId "
+//                    + "ORDER BY name ASC");
+            pstmt.setInt(1, month);
+            pstmt.setInt(2, year);
+            pstmt.setInt(3, corporateId);
             rs = pstmt.executeQuery();
             while(rs.next()){
                 SssSchedule s = new SssSchedule();
@@ -164,7 +166,9 @@ public class ContributionServiceImpl implements ContributionService {
                     + "WHERE ec.CorporateId = ? "
                     + "AND MONTH(payrollDate) = ? "
                     + "AND YEAR(payrollDate) = ? "
-                    + "AND phic.PhicAmount != 0 ORDER BY phic.EmployeeName ASC ");
+                    + "AND phic.PhicAmount != 0 "
+                    + "GROUP BY phic.EmployeeID "
+                    + "ORDER BY phic.EmployeeName ASC ");
             pstmt.setInt(1, corporateId);
             pstmt.setInt(2, month);
             pstmt.setInt(3, year);
@@ -216,7 +220,9 @@ public class ContributionServiceImpl implements ContributionService {
                     + "WHERE ec.CorporateId = ? "
                     + "AND MONTH(payrollDate) = ? "
                     + "AND YEAR(payrollDate) = ? "
-                    + "AND hdmf.HdmfAmount != 0 ORDER BY hdmf.EmployeeName ASC");
+                    + "AND hdmf.HdmfAmount != 0 "
+                    + "GROUP BY hdmf.EmployeeID "
+                    + "ORDER BY hdmf.EmployeeName ASC");
             pstmt.setInt(1, corporateId);
             pstmt.setInt(2, month);
             pstmt.setInt(3, year);
