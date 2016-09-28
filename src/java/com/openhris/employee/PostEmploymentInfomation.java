@@ -42,11 +42,11 @@ import java.util.List;
  */
 public class PostEmploymentInfomation extends VerticalLayout{
         
-    PostEmploymentInformationService positionHistoryService = new PostEmploymentInformationServiceImpl();
+    PostEmploymentInformationService phs = new PostEmploymentInformationServiceImpl();
     CompanyService companyService = new CompanyServiceImpl();
     OpenHrisUtilities utilities = new OpenHrisUtilities();
     DropDownComponent dropDown = new DropDownComponent();
-    EmployeeService employeeService = new EmployeeServiceImpl();
+    EmployeeService es = new EmployeeServiceImpl();
     
     ComboBox corporate;
     ComboBox trade;
@@ -212,7 +212,7 @@ public class PostEmploymentInfomation extends VerticalLayout{
                     isEdit = false;
                 }
                 
-                boolean result = positionHistoryService.updatePositionHistory(getEmployeeId(), positionHistory, isEdit, getPositionId());
+                boolean result = phs.updatePositionHistory(getEmployeeId(), positionHistory, isEdit, getPositionId());
                 if(result){
                     positionHistoryTable();
                     getWindow().showNotification("Position has been updated.", Window.Notification.TYPE_TRAY_NOTIFICATION);
@@ -234,7 +234,7 @@ public class PostEmploymentInfomation extends VerticalLayout{
     
     public Table positionHistoryTable(){   
         positionHistoryTbl.removeAllItems();        
-        List<PostEmploymentInformationBean> positionList = positionHistoryService.getPositionHistory(getEmployeeId());
+        List<PostEmploymentInformationBean> positionList = phs.getPositionHistory(getEmployeeId());
         int i = 0;
         for(PostEmploymentInformationBean p: positionList){
             positionHistoryTbl.addItem(new Object[]{
@@ -274,7 +274,7 @@ public class PostEmploymentInfomation extends VerticalLayout{
                     window.center();
                     window.addListener(subWindowCloseListener);
                 } else {
-                    List<PostEmploymentInformationBean> positionListById = positionHistoryService.getPositionHistoryById(utilities.convertStringToInteger(item.getItemProperty("id").getValue().toString()));
+                    List<PostEmploymentInformationBean> positionListById = phs.getPositionHistoryById(utilities.convertStringToInteger(item.getItemProperty("id").getValue().toString()));
                     for(PostEmploymentInformationBean history : positionListById){
                         Object corporateObjectId = corporate.addItem();
                         corporate.setItemCaption(corporateObjectId, history.getCompany());
@@ -307,9 +307,14 @@ public class PostEmploymentInfomation extends VerticalLayout{
         GridLayout glayout2 = new GridLayout(2, 2);
         glayout2.setSpacing(true);
         
-        final PopupDateField endDate = new HRISPopupDateField("Exit Date: ");
+        final PopupDateField endDate = new HRISPopupDateField("End Date: ");
         endDate.setWidth("250px");
         endDate.setDateFormat("MM/dd/yyyy");
+        if(es.getEmploymentEndDate(getEmployeeId())== null){
+            endDate.setValue(null);
+        } else {
+            endDate.setValue(utilities.parsingDate(es.getEmploymentEndDate(getEmployeeId())));
+        }        
         glayout2.addComponent(endDate, 0, 0);
         glayout2.setComponentAlignment(endDate, Alignment.BOTTOM_LEFT);
         
@@ -345,7 +350,7 @@ public class PostEmploymentInfomation extends VerticalLayout{
         final PopupDateField entryDateFromEmp = new HRISPopupDateField("Entry Date from Employment: ");
         entryDateFromEmp.setWidth("250px");
         entryDateFromEmp.setDateFormat("MM/dd/yyyy");
-        entryDateFromEmp.setValue(utilities.parsingDate(employeeService.getEmploymentEntryDate(getEmployeeId())));
+        entryDateFromEmp.setValue(utilities.parsingDate(es.getEmploymentEntryDate(getEmployeeId())));
         glayout2.addComponent(entryDateFromEmp, 0, 1);
         glayout2.setComponentAlignment(entryDateFromEmp, Alignment.BOTTOM_LEFT);
         

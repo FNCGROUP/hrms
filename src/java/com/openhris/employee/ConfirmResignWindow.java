@@ -23,7 +23,8 @@ public class ConfirmResignWindow extends Window implements Button.ClickListener 
     public ConfirmResignWindow(String employeeId, String endDate) {
         this.employeeId = employeeId;
         this.endDate = endDate;
-        setCaption("END DATE (RESIGN)");
+        setCaption("CONFIRMATION WINDOW");
+        setWidth("300px");
         setModal(true);
         setResizable(false);
         center();
