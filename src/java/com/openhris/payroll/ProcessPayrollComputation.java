@@ -242,7 +242,6 @@ public class ProcessPayrollComputation {
             double netSalary;
             if(branch.trim().equals("on-call and trainees")){
                 netSalary = taxableSalary;
-                System.out.println("sss"+payroll.getSss());
             } else {
                 if(employmentWageStatus.equals("senior citizen")){
                     netSalary = taxableSalary + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
@@ -250,8 +249,7 @@ public class ProcessPayrollComputation {
                     netSalary = taxableSalary - tax + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
                 }
             }
-            
-            
+                        
             payroll.setNetSalary(netSalary);
 
             double amountReceivable = new Double(df.format(netSalary + allowances + afl));  

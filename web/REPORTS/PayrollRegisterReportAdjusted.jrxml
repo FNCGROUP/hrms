@@ -1,13 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="PayrollRegisterReportOld" language="groovy" pageWidth="1188" pageHeight="612" orientation="Landscape" columnWidth="1148" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="16473a3e-63f8-4526-9a92-6256ac4f4633">
 	<property name="ireport.zoom" value="1.2100000000000002"/>
-	<property name="ireport.x" value="182"/>
-	<property name="ireport.y" value="62"/>
+	<property name="ireport.x" value="173"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT * FROM payroll_register WHERE branchId = $P{BRANCH_ID} AND 
-payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus IS NULL) AND (actionTaken = 'adjusted' OR actionTaken IS NULL ) ORDER BY employmentWageEntry, name ASC]]>
+		<![CDATA[SELECT *, 
+(SELECT sum(ifnull(latesLegalHolidayDeduction, 0)) 
+AS LatesLegalHolidayDeduction 
+FROM timekeeping_table WHERE payrollId = pr.salaryId) AS LatesLegalHolidayDeduction, 
+(SELECT sum(ifnull(latesSpecialHolidayDeduction, 0)) 
+AS LatesLegalHolidayDeduction 
+FROM timekeeping_table WHERE payrollId = pr.salaryId) AS LatesSpecialHolidayDeduction, 
+(SELECT sum(ifnull(undertimeLegalHolidayDeduction, 0)) 
+AS LatesLegalHolidayDeduction 
+FROM timekeeping_table WHERE payrollId = pr.salaryId) AS UndertimeLegalHolidayDeduction, 
+(SELECT sum(ifnull(undertimeSpecialHolidayDeduction, 0)) 
+AS LatesLegalHolidayDeduction 
+FROM timekeeping_table WHERE payrollId = pr.salaryId) AS UndertimeSpecialHolidayDeduction 
+FROM payroll_register pr 
+WHERE pr.branchId = $P{BRANCH_ID} 
+AND pr.payrollDate = $P{PAYROLL_DATE} 
+AND (pr.currentStatus != 'removed' OR pr.currentStatus IS NULL) 
+AND (pr.actionTaken = 'adjusted' OR pr.actionTaken IS NULL ) ORDER BY pr.employmentWageEntry, pr.name ASC]]>
 	</queryString>
 	<field name="salaryId" class="java.lang.Integer"/>
 	<field name="name" class="java.lang.String"/>
@@ -23,7 +39,9 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 	<field name="workingDayOffPay" class="java.lang.Double"/>
 	<field name="absences" class="java.lang.Double"/>
 	<field name="totalLatesDeduction" class="java.lang.Double"/>
+	<field name="totalLatesHolidayDeduction" class="java.lang.Double"/>
 	<field name="totalUndertimeDeduction" class="java.lang.Double"/>
+	<field name="totalUndertimeHolidayDeduction" class="java.lang.Double"/>
 	<field name="grossPay" class="java.lang.Double"/>
 	<field name="sss" class="java.lang.Double"/>
 	<field name="phic" class="java.lang.Double"/>
@@ -53,6 +71,11 @@ payrollDate = $P{PAYROLL_DATE} AND (currentStatus != 'removed' OR currentStatus 
 	<field name="corporateName" class="java.lang.String"/>
 	<field name="currentStatus" class="java.lang.String"/>
 	<field name="employeeId" class="java.lang.String"/>
+	<field name="EmployeeNo" class="java.lang.Integer"/>
+	<field name="LatesLegalHolidayDeduction" class="java.lang.Double"/>
+	<field name="LatesSpecialHolidayDeduction" class="java.lang.Double"/>
+	<field name="UndertimeLegalHolidayDeduction" class="java.lang.Double"/>
+	<field name="UndertimeSpecialHolidayDeduction" class="java.lang.Double"/>
 	<variable name="basicSalary" class="java.lang.Double" calculation="Sum">
 		<variableExpression><![CDATA[$F{basicSalary}]]></variableExpression>
 	</variable>
@@ -401,7 +424,7 @@ $F{transportationAllowance} + $F{otherAllowances}]]></variableExpression>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{specialHolidayPay}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{specialHolidayPay} - ($F{LatesSpecialHolidayDeduction} + $F{UndertimeSpecialHolidayDeduction})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
 				<reportElement uuid="9e39435c-e384-46c2-88dc-14c4248b615f" x="574" y="0" width="50" height="20"/>
@@ -415,7 +438,7 @@ $F{transportationAllowance} + $F{otherAllowances}]]></variableExpression>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font fontName="Times New Roman" size="6"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{legalHolidayPay}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{legalHolidayPay} - ($F{LatesLegalHolidayDeduction} + $F{UndertimeLegalHolidayDeduction})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00">
 				<reportElement uuid="b310b9cf-347d-4e49-8a42-50478525fefa" x="241" y="0" width="40" height="20"/>
