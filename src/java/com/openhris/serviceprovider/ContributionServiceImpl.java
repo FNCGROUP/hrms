@@ -92,33 +92,36 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
-    public List<SssSchedule> getSssContribution(int corporateId, int month, int year) {
+    public List<SssSchedule> getSssContribution(int corporateId, int year, int month) {
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         List<SssSchedule> sssList = new ArrayList<>();
         
         try {
+//            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule "
+//                    + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) "
+//                    + "AND ECMCorporateID = ? "                    
+//                    + "AND YEAR(payrollDate) = ? "
+//                    + "AND MONTH(payrollDate) = ? "
+//                    + "AND (eeShare != 0 AND erShare IS NOT NULL) "
+//                    + "ORDER BY name ASC");     
             pstmt = conn.prepareStatement("SELECT * FROM sss_schedule "
-                    + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) "                    
+                    + "WHERE CorporateID = ? "
+//                    + "WHERE (select CorporateID from employee_contribution_main ecm "
+//                    + "where (ecm.employeeId = employeeId) "
+//                    + "order by ecm.id desc limit 1) = ? "
                     + "AND YEAR(payrollDate) = ? "
                     + "AND MONTH(payrollDate) = ? "
+                    + "AND (currentStatus != 'removed' OR currentStatus IS NULL) "
                     + "AND (eeShare != 0 AND erShare IS NOT NULL) "
-                    + "AND ECMCorporateID = ? "
-                    + "ORDER BY name ASC");                        
-//            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule sss "
-//                    + "LEFT JOIN (SELECT ecm.CorporateID, ecm.employeeId FROM employee_contribution_main ecm ORDER BY ecm.id DESC) ec "
-//                    + "ON sss.employeeId = ec.employeeId "
-//                    + "WHERE ec.CorporateId = ? "
-//                    + "AND MONTH(payrollDate) = ? AND YEAR(payrollDate) = ? AND "
-//                    + "(eeShare != 0 AND erShare IS NOT NULL) "
-//                    + "GROUP BY sss.employeeId "
-//                    + "ORDER BY name ASC");
-            pstmt.setInt(1, year);
-            pstmt.setInt(2, month);
-            pstmt.setInt(3, corporateId);
+                    + "ORDER BY name ASC");
+            pstmt.setInt(1, corporateId);
+            pstmt.setInt(2, year);
+            pstmt.setInt(3, month);
             rs = pstmt.executeQuery();
             while(rs.next()){
+                System.out.println("name: "+rs.getString("name"));
                 SssSchedule s = new SssSchedule();
                 s.setEmployeeId(rs.getString("employeeId"));
                 s.setName(rs.getString("name"));

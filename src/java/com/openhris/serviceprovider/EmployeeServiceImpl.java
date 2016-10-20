@@ -464,6 +464,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 es.setSssNo(rs.getString("SSSNo"));
                 es.setTinNo(rs.getString("TINNo")); 
                 es.setPhicNo(rs.getString("PHICNo"));
+                es.setBankAccountNo(rs.getString("BankAccountNo"));
                 es.setEndDate(util.parsingDate(rs.getString("EndDate")));
                 esList.add(es);
             }

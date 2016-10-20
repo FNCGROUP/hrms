@@ -36,6 +36,7 @@ public class EmployeeSummaryTableProperties extends Table {
         setColumnHeader("sssNo", "SSS #");
         setColumnHeader("tinNo", "TIN #");
         setColumnHeader("phicNo", "PHIC #");
+        setColumnHeader("bankAccountNo", "BANK ACCOUNT #");
         setColumnHeader("entryDate", "DATE HIRED");
         setColumnHeader("endDate", "DATE END");
         
@@ -67,6 +68,7 @@ public class EmployeeSummaryTableProperties extends Table {
         setColumnHeader("sssNo", "SSS #");
         setColumnHeader("tinNo", "TIN #");
         setColumnHeader("phicNo", "PHIC #");
+        setColumnHeader("bankAccountNo", "BANK ACCOUNT #");
         setColumnHeader("entryDate", "DATE HIRED");
         setColumnHeader("endDate", "DATE END");
         

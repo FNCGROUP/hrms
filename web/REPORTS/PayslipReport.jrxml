@@ -285,7 +285,7 @@ $F{transportationAllowance} + $F{otherAllowances}]]></textFieldExpression>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="9" isBold="true"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{netPay} + $F{allowanceForLiquidation}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[($F{netPay} + $F{allowanceForLiquidation}) - ($F{LatesLegalHolidayDeduction} + $F{LatesSpecialHolidayDeduction} + $F{UndertimeLegalHolidayDeduction} + $F{UndertimeSpecialHolidayDeduction})]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="b896e0e2-973b-4c12-abf7-32f01252de9b" x="655" y="55" width="40" height="20"/>

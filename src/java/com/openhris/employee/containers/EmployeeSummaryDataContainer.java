@@ -50,6 +50,7 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
         addContainerProperty("sssNo", String.class, null);
         addContainerProperty("tinNo", String.class, null);
         addContainerProperty("phicNo", String.class, null);
+        addContainerProperty("bankAccountNo", String.class, null);
         addContainerProperty("entryDate", String.class, null);
         addContainerProperty("endDate", String.class, null);
     }
@@ -83,6 +84,7 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
         addContainerProperty("sssNo", String.class, null);
         addContainerProperty("tinNo", String.class, null);
         addContainerProperty("phicNo", String.class, null);
+        addContainerProperty("bankAccountNo", String.class, null);
         addContainerProperty("entryDate", String.class, null);
         addContainerProperty("endDate", String.class, null);
         
@@ -117,6 +119,7 @@ public class EmployeeSummaryDataContainer extends IndexedContainer {
             item.getItemProperty("sssNo").setValue(esum.getSssNo());
             item.getItemProperty("tinNo").setValue(esum.getTinNo());
             item.getItemProperty("phicNo").setValue((esum.getPhicNo()== null) ? "" : esum.getPhicNo());
+            item.getItemProperty("bankAccountNo").setValue((esum.getBankAccountNo()== null) ? "" : esum.getBankAccountNo());
             item.getItemProperty("entryDate").setValue((esum.getEntryDate() == null) ? "" : util.convertDateFormat(esum.getEntryDate().toString()));
             item.getItemProperty("endDate").setValue((esum.getEndDate()== null) ? "" : util.convertDateFormat(esum.getEndDate().toString()));
         }

@@ -18,6 +18,7 @@ import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.PopupDateField;
 import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.Window;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -30,7 +31,7 @@ public class SssUI extends VerticalLayout {
     CompanyService cs = new CompanyServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
     
-    SssTableProperties sssTable = new SssTableProperties();    
+    SssTableProperties sssTable = new SssTableProperties(); 
     private int branchId;
     private int tradeId;
     private int corporateId;
@@ -57,15 +58,22 @@ public class SssUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {
+                if(getBranchId() == 0){
+                    getWindow().showNotification("Select a Branch!", Window.Notification.TYPE_ERROR_MESSAGE);
+                    return;
+                }
+                
                 tradeId = cs.getTradeIdByBranchId(getBranchId());
                 corporateId = cs.getCorporateIdByTradeId(tradeId);
                 
                 Date date = util.parsingDate(util.convertDateFormat(payrollDateField.getValue().toString()));
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
+                int month = (1 + c.get(Calendar.MONTH));
+                int year = c.get(Calendar.YEAR);
                 
-                sssTable.setContainerDataSource(new SssDataContainer(corporateId, (1 + c.get(Calendar.MONTH)), c.get(Calendar.YEAR)));
-                
+                sssTable.getContainerDataSource().removeAllItems();
+                sssTable.setContainerDataSource(new SssDataContainer(corporateId, year, month));                
             }
         });
         h.addComponent(generateBtn);  

@@ -12,7 +12,6 @@ import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 /**
  *
@@ -26,7 +25,7 @@ public class SssDataContainer extends IndexedContainer {
     private int month;
     private int year;
 
-    public SssDataContainer() {
+    public SssDataContainer() {        
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
         addContainerProperty("sssNo", String.class, null);
@@ -38,11 +37,13 @@ public class SssDataContainer extends IndexedContainer {
     }
         
     public SssDataContainer(int corporateId, 
-            int month, 
-            int year) {
+            int year, 
+            int month) {
         this.corporateId = corporateId;
         this.month = month;
         this.year = year;
+        
+        System.out.println("This is a test!");
         
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
@@ -53,7 +54,9 @@ public class SssDataContainer extends IndexedContainer {
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
         
-        for(SssSchedule s : cs.getSssContribution(corporateId, month, year)){
+        System.out.println("This is another test!");
+        
+        for(SssSchedule s : cs.getSssContribution(corporateId, year, month)){            
             Item item = getItem(addItem());
             item.getItemProperty("employeeId").setValue(s.getEmployeeId());
             item.getItemProperty("name").setValue(s.getName().toUpperCase());

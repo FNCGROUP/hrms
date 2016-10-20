@@ -39,6 +39,7 @@ public class EmployeeSummary {
     private String sssNo;
     private String tinNo;
     private String phicNo;
+    private String bankAccountNo;
     private Date endDate;
 
     public String getEmployeeId() {
@@ -143,6 +144,10 @@ public class EmployeeSummary {
 
     public String getPhicNo() {
         return phicNo;
+    }
+
+    public String getBankAccountNo() {
+        return bankAccountNo;
     }
 
     public Date getEndDate() {
@@ -251,6 +256,10 @@ public class EmployeeSummary {
 
     public void setPhicNo(String phicNo) {
         this.phicNo = phicNo;
+    }
+
+    public void setBankAccountNo(String bankAccountNo) {
+        this.bankAccountNo = bankAccountNo;
     }
 
     public void setEndDate(Date endDate) {
