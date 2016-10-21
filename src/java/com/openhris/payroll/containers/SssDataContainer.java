@@ -42,9 +42,7 @@ public class SssDataContainer extends IndexedContainer {
         this.corporateId = corporateId;
         this.month = month;
         this.year = year;
-        
-        System.out.println("This is a test!");
-        
+                
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
         addContainerProperty("sssNo", String.class, null);
@@ -53,8 +51,6 @@ public class SssDataContainer extends IndexedContainer {
         addContainerProperty("ec", Double.class, null);
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
-        
-        System.out.println("This is another test!");
         
         for(SssSchedule s : cs.getSssContribution(corporateId, year, month)){            
             Item item = getItem(addItem());

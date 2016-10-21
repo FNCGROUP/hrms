@@ -121,7 +121,6 @@ public class ContributionServiceImpl implements ContributionService {
             pstmt.setInt(3, month);
             rs = pstmt.executeQuery();
             while(rs.next()){
-                System.out.println("name: "+rs.getString("name"));
                 SssSchedule s = new SssSchedule();
                 s.setEmployeeId(rs.getString("employeeId"));
                 s.setName(rs.getString("name"));
