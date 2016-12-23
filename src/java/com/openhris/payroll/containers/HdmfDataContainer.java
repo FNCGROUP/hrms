@@ -5,6 +5,7 @@
  */
 package com.openhris.payroll.containers;
 
+import com.hrms.utilities.CommonUtil;
 import com.openhris.model.Employee;
 import com.openhris.model.EmploymentInformation;
 import com.openhris.model.HdmfSchedule;
@@ -14,6 +15,8 @@ import com.openhris.serviceprovider.ContributionServiceImpl;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,9 +29,10 @@ public class HdmfDataContainer extends IndexedContainer {
     ContributionService cs = new ContributionServiceImpl();
     EmployeeService es = new EmployeeServiceImpl();
     
-    private int corporateId;
-    private int month;
-    private int year;
+    private int branchId;
+    private Date payrollDate;
+//    private int month;
+//    private int year;
     
     public HdmfDataContainer() {
         addContainerProperty("employeeId", String.class, null);
@@ -40,10 +44,10 @@ public class HdmfDataContainer extends IndexedContainer {
         addContainerProperty("date", String.class, null);
     }
 
-    public HdmfDataContainer(int corporateId, int month, int year) {
-        this.corporateId = corporateId;
-        this.month = month;
-        this.year = year;
+    public HdmfDataContainer(int branchId, 
+            Date payrollDate) {
+        this.branchId = branchId;
+        this.payrollDate = payrollDate;
         
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
@@ -53,7 +57,7 @@ public class HdmfDataContainer extends IndexedContainer {
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
         
-        for(HdmfSchedule hs : cs.getHdmfContribution(corporateId, month, year)){
+        for(HdmfSchedule hs : cs.getHdmfContribution(branchId, payrollDate)){
             EmploymentInformation ei = es.findEmployeeById(hs.getEmployeeId());
             
             Item item = getItem(addItem());
@@ -69,23 +73,17 @@ public class HdmfDataContainer extends IndexedContainer {
             }            
             
             item.getItemProperty("branch").setValue(hs.getBranchName());
-            item.getItemProperty("date").setValue(getMonthString().get(month)+" "+year);
+            
+            Date date = CommonUtil.parsingDate(CommonUtil.convertDateFormat(payrollDate.toString()));
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            int month = (1 + c.get(Calendar.MONTH));
+            int year = c.get(Calendar.YEAR);
+            item.getItemProperty("date").setValue(getMonth().get(month)+" "+year);
         }
     }
 
-    public int getCorporateId() {
-        return corporateId;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public int getYear() {
-        return year;
-    }
-    
-    Map<Integer, String> getMonthString(){
+    Map<Integer, String> getMonth(){
         Map<Integer, String> m = new HashMap<>();
         m.put(1, "January");
         m.put(2, "February");

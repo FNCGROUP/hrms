@@ -41,11 +41,13 @@ public interface ContributionService {
     
     public double getPhicTableLastRowMaxSalary();
     
-    public List<SssSchedule> getSssContribution(int corporateId, int month, int year);
+//    public List<SssSchedule> getSssContribution(int branchId, int month, int year);
     
-    public List<PhicSchedule> getPhicContribution(int corporateId, int month, int year);
+    public List<SssSchedule> getSssContribution(int branchId, Date payrollDate);
     
-    public List<HdmfSchedule> getHdmfContribution(int corporateId, int month, int year);
+    public List<PhicSchedule> getPhicContribution(int branchId, Date payrollDate);
+    
+    public List<HdmfSchedule> getHdmfContribution(int branchId, Date payrollDate);
     
     public List<TaxSchedule> getTaxContribution(int corporateId, Date payrollDate); 
     

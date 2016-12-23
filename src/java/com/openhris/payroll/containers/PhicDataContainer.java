@@ -5,11 +5,14 @@
  */
 package com.openhris.payroll.containers;
 
+import com.hrms.utilities.CommonUtil;
 import com.openhris.model.PhicSchedule;
 import com.openhris.service.ContributionService;
 import com.openhris.serviceprovider.ContributionServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,9 +24,10 @@ public class PhicDataContainer extends IndexedContainer {
 
     ContributionService cs = new ContributionServiceImpl();
     
-    private int corporateId;
-    private int month;
-    private int year;
+    private int branchId;
+    private Date payrollDate;
+//    private int month;
+//    private int year;
 
     public PhicDataContainer() {
         addContainerProperty("employeeId", String.class, null);
@@ -35,12 +39,10 @@ public class PhicDataContainer extends IndexedContainer {
         addContainerProperty("date", String.class, null);
     }
     
-    public PhicDataContainer(int corporateId, 
-            int month, 
-            int year) {
-        this.corporateId = corporateId;
-        this.month = month;
-        this.year = year;
+    public PhicDataContainer(int branchId, 
+            Date payrollDate) {
+        this.branchId = branchId;
+        this.payrollDate = payrollDate;
         
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
@@ -50,7 +52,7 @@ public class PhicDataContainer extends IndexedContainer {
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
         
-        for(PhicSchedule ps : cs.getPhicContribution(corporateId, month, year)){
+        for(PhicSchedule ps : cs.getPhicContribution(branchId, payrollDate)){
             Item item = getItem(addItem());
             item.getItemProperty("employeeId").setValue(ps.getEmployeeId());
             item.getItemProperty("name").setValue(ps.getEmployeeName().toUpperCase());
@@ -58,23 +60,17 @@ public class PhicDataContainer extends IndexedContainer {
             item.getItemProperty("eePhic").setValue(ps.getEePhic());
             item.getItemProperty("erPhic").setValue(ps.getErPhic());
             item.getItemProperty("branch").setValue(ps.getBranchName());
-            item.getItemProperty("date").setValue(getMonthString().get(month)+" "+year);
+            
+            Date date = CommonUtil.parsingDate(CommonUtil.convertDateFormat(payrollDate.toString()));
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            int month = (1 + c.get(Calendar.MONTH));
+            int year = c.get(Calendar.YEAR);
+            item.getItemProperty("date").setValue(getMonth().get(month)+" "+year);
         }
     }
-
-    public int getCorporateId() {
-        return corporateId;
-    }
-
-    public int getMonth() {
-        return month;
-    }
-
-    public int getYear() {
-        return year;
-    }
     
-    Map<Integer, String> getMonthString(){
+    private Map<Integer, String> getMonth(){
         Map<Integer, String> m = new HashMap<>();
         m.put(1, "January");
         m.put(2, "February");

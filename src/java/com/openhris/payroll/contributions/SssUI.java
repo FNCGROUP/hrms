@@ -67,13 +67,13 @@ public class SssUI extends VerticalLayout {
                 corporateId = cs.getCorporateIdByTradeId(tradeId);
                 
                 Date date = util.parsingDate(util.convertDateFormat(payrollDateField.getValue().toString()));
-                Calendar c = Calendar.getInstance();
-                c.setTime(date);
-                int month = (1 + c.get(Calendar.MONTH));
-                int year = c.get(Calendar.YEAR);
+//                Calendar c = Calendar.getInstance();
+//                c.setTime(date);
+//                int month = (1 + c.get(Calendar.MONTH));
+//                int year = c.get(Calendar.YEAR);
                 
                 sssTable.getContainerDataSource().removeAllItems();
-                sssTable.setContainerDataSource(new SssDataContainer(corporateId, year, month));                
+                sssTable.setContainerDataSource(new SssDataContainer(getBranchId(), date));                
             }
         });
         h.addComponent(generateBtn);  

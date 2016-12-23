@@ -63,7 +63,7 @@ public class HdmfUI extends VerticalLayout {
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
                 
-                hdmfTable.setContainerDataSource(new HdmfDataContainer(corporateId, (1 + c.get(Calendar.MONTH)), c.get(Calendar.YEAR)));
+                hdmfTable.setContainerDataSource(new HdmfDataContainer(getBranchId(), date));
                 
             }
         });

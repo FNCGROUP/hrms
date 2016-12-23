@@ -63,7 +63,7 @@ public class PhicUI extends VerticalLayout {
                 Calendar c = Calendar.getInstance();
                 c.setTime(date);
                 
-                phicTable.setContainerDataSource(new PhicDataContainer(corporateId, (1 + c.get(Calendar.MONTH)), c.get(Calendar.YEAR)));
+                phicTable.setContainerDataSource(new PhicDataContainer(getBranchId(), date));
                 
             }
         });

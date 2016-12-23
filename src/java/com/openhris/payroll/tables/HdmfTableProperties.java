@@ -37,28 +37,28 @@ public class HdmfTableProperties extends Table {
         setColumnAlignment("erHdmf", Table.ALIGN_RIGHT);
     }
 
-    public HdmfTableProperties(int corporateId, int month, int year) {
-        this.corporateId = corporateId;
-        this.month = month;
-        this.year = year;
-        
-        setWidth("900px");
-        setHeight("100%");
-        setImmediate(true);
-        setSelectable(true);
-        addStyleName("hris-table-layout");
-        
-        setContainerDataSource(new HdmfDataContainer(corporateId, month, year));
-        
-        setColumnHeader("employeeId", "Employee ID.");
-        setColumnHeader("hdmfNo", "Hdmf No.");
-        setColumnHeader("eeHdmf", "Employee Share");
-        setColumnHeader("erHdmf", "Employer Share");
-        
-        setColumnWidth("name", 250);
-        setColumnAlignment("eeHdmf", Table.ALIGN_RIGHT);
-        setColumnAlignment("erHdmf", Table.ALIGN_RIGHT);
-    }
+//    public HdmfTableProperties(int corporateId, int month, int year) {
+//        this.corporateId = corporateId;
+//        this.month = month;
+//        this.year = year;
+//        
+//        setWidth("900px");
+//        setHeight("100%");
+//        setImmediate(true);
+//        setSelectable(true);
+//        addStyleName("hris-table-layout");
+//        
+//        setContainerDataSource(new HdmfDataContainer(corporateId, month, year));
+//        
+//        setColumnHeader("employeeId", "Employee ID.");
+//        setColumnHeader("hdmfNo", "Hdmf No.");
+//        setColumnHeader("eeHdmf", "Employee Share");
+//        setColumnHeader("erHdmf", "Employer Share");
+//        
+//        setColumnWidth("name", 250);
+//        setColumnAlignment("eeHdmf", Table.ALIGN_RIGHT);
+//        setColumnAlignment("erHdmf", Table.ALIGN_RIGHT);
+//    }
 
     public int getCorporateId() {
         return corporateId;

@@ -5,6 +5,7 @@
 package com.openhris.serviceprovider;
 
 import com.hrms.dbconnection.GetSQLConnection;
+import com.hrms.utilities.CommonUtil;
 import com.openhris.commons.OpenHrisUtilities;
 import com.openhris.model.Phic;
 import com.openhris.model.Sss;
@@ -92,7 +93,8 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
-    public List<SssSchedule> getSssContribution(int corporateId, int year, int month) {
+//    public List<SssSchedule> getSssContribution(int branchId, int year, int month) {
+    public List<SssSchedule> getSssContribution(int branchId, Date payrollDate) {
         Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
@@ -105,25 +107,20 @@ public class ContributionServiceImpl implements ContributionService {
 //                    + "AND YEAR(payrollDate) = ? "
 //                    + "AND MONTH(payrollDate) = ? "
 //                    + "AND (eeShare != 0 AND erShare IS NOT NULL) "
-//                    + "ORDER BY name ASC");     
-            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule "
-                    + "WHERE CorporateID = ? "
-//                    + "WHERE (select CorporateID from employee_contribution_main ecm "
-//                    + "where (ecm.employeeId = employeeId) "
-//                    + "order by ecm.id desc limit 1) = ? "
-                    + "AND YEAR(payrollDate) = ? "
-                    + "AND MONTH(payrollDate) = ? "
-                    + "AND (currentStatus != 'removed' OR currentStatus IS NULL) "
-                    + "AND (eeShare != 0 AND erShare IS NOT NULL) "
-                    + "ORDER BY name ASC");
-            pstmt.setInt(1, corporateId);
-            pstmt.setInt(2, year);
-            pstmt.setInt(3, month);
+//                    + "ORDER BY name ASC");    
+            pstmt = conn.prepareStatement("SELECT * FROM sss_schedule sss "
+                    + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) "
+                    + "AND (SELECT branchId FROM employee_contribution_main WHERE employeeId = sss.employeeId ORDER BY id DESC LIMIT 1) = ? "
+                    + "AND payrollDate = ? "
+                    + "AND (actionTaken IS NULL OR actionTaken = 'adjusted') "
+                    + "ORDER BY EmployeeName ASC ");
+            pstmt.setInt(1, branchId);
+            pstmt.setString(2, CommonUtil.convertDateFormat(payrollDate.toString()));
             rs = pstmt.executeQuery();
             while(rs.next()){
                 SssSchedule s = new SssSchedule();
                 s.setEmployeeId(rs.getString("employeeId"));
-                s.setName(rs.getString("name"));
+                s.setName(rs.getString("EmployeeName"));
                 s.setSssNo(rs.getString("sssNo"));
                 s.setEeShare(util.convertStringToDouble(rs.getString("eeShare")));
                 s.setErShare(util.convertStringToDouble(rs.getString("erShare")));
@@ -149,31 +146,28 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     @Override
-    public List<PhicSchedule> getPhicContribution(int corporateId, int month, int year) {
-        Connection conn = getConnection.connection();
+//    public List<PhicSchedule> getPhicContribution(int corporateId, int month, int year) {
+    public List<PhicSchedule> getPhicContribution(int branchId, Date payrollDate) {
+            Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         List<PhicSchedule> psList = new ArrayList<>();
                 
         try {
-            pstmt = conn.prepareStatement("SELECT * FROM phic_schedule "
-                    + "WHERE (CurrentStatus != 'removed' OR CurrentStatus IS NULL) "                  
-                    + "AND YEAR(payrollDate) = ? "
-                    + "AND MONTH(payrollDate) = ? "
-                    + "AND ECMCorporateID = ? " 
-                    + "AND PhicAmount != 0 ORDER BY EmployeeName ASC");
-//            pstmt = conn.prepareStatement("SELECT * FROM phic_schedule phic "
-//                    + "LEFT JOIN (SELECT ecm.CorporateID, ecm.employeeId FROM employee_contribution_main ecm) ec "
-//                    + "ON phic.EmployeeID = ec.employeeId "
-//                    + "WHERE ec.CorporateId = ? "
-//                    + "AND MONTH(payrollDate) = ? "
+//            pstmt = conn.prepareStatement("SELECT * FROM phic_schedule "
+//                    + "WHERE (CurrentStatus != 'removed' OR CurrentStatus IS NULL) "                  
 //                    + "AND YEAR(payrollDate) = ? "
-//                    + "AND phic.PhicAmount != 0 "
-//                    + "GROUP BY phic.EmployeeID "
-//                    + "ORDER BY phic.EmployeeName ASC ");
-            pstmt.setInt(1, year);
-            pstmt.setInt(2, month);
-            pstmt.setInt(3, corporateId);
+//                    + "AND MONTH(payrollDate) = ? "
+//                    + "AND ECMCorporateID = ? " 
+//                    + "AND PhicAmount != 0 ORDER BY EmployeeName ASC");
+            pstmt = conn.prepareStatement("SELECT * FROM phic_schedule phic "
+                    + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) "
+                    + "AND (SELECT branchId FROM employee_contribution_main WHERE employeeId = phic.employeeId ORDER BY id DESC LIMIT 1) = ? "
+                    + "AND payrollDate = ? "
+                    + "AND (actionTaken IS NULL OR actionTaken = 'adjusted') "
+                    + "ORDER BY EmployeeName ASC ");
+            pstmt.setInt(1, branchId);
+            pstmt.setString(2, CommonUtil.convertDateFormat(payrollDate.toString()));
             rs = pstmt.executeQuery();
             while(rs.next()){
                 PhicSchedule ps = new PhicSchedule();
@@ -203,31 +197,28 @@ public class ContributionServiceImpl implements ContributionService {
     }    
 
     @Override
-    public List<HdmfSchedule> getHdmfContribution(int corporateId, int month, int year) {
-        Connection conn = getConnection.connection();
+//    public List<HdmfSchedule> getHdmfContribution(int corporateId, int month, int year) {
+    public List<HdmfSchedule> getHdmfContribution(int branchId, Date payrollDate) {
+            Connection conn = getConnection.connection();
         PreparedStatement pstmt = null;
         ResultSet rs = null;
         List<HdmfSchedule> hsList = new ArrayList<>();
                 
         try {
-            pstmt = conn.prepareStatement("SELECT * FROM hdmf_schedule "
-                    + "WHERE (CurrentStatus != 'removed' OR CurrentStatus IS NULL) "
-                    + "AND YEAR(payrollDate) = ? "
-                    + "AND MONTH(payrollDate) = ? "
-                    + "AND ECMCorporateID = ? " 
-                    + "AND HdmfAmount != 0 ORDER BY EmployeeName ASC");
-//            pstmt = conn.prepareStatement("SELECT * FROM hdmf_schedule hdmf "
-//                    + "LEFT JOIN (SELECT ecm.CorporateID, ecm.employeeId FROM employee_contribution_main ecm) ec "
-//                    + "ON hdmf.EmployeeID = ec.employeeId "
-//                    + "WHERE ec.CorporateId = ? "
-//                    + "AND MONTH(payrollDate) = ? "
+//            pstmt = conn.prepareStatement("SELECT * FROM hdmf_schedule "
+//                    + "WHERE (CurrentStatus != 'removed' OR CurrentStatus IS NULL) "
 //                    + "AND YEAR(payrollDate) = ? "
-//                    + "AND hdmf.HdmfAmount != 0 "
-//                    + "GROUP BY hdmf.EmployeeID "
-//                    + "ORDER BY hdmf.EmployeeName ASC");
-            pstmt.setInt(1, year);
-            pstmt.setInt(2, month);
-            pstmt.setInt(3, corporateId);
+//                    + "AND MONTH(payrollDate) = ? "
+//                    + "AND ECMCorporateID = ? " 
+//                    + "AND HdmfAmount != 0 ORDER BY EmployeeName ASC");
+            pstmt = conn.prepareStatement("SELECT * FROM hdmf_schedule hdmf "
+                    + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) "
+                    + "AND (SELECT branchId FROM employee_contribution_main WHERE employeeId = hdmf.employeeId ORDER BY id DESC LIMIT 1) = ? "
+                    + "AND payrollDate = ? "
+                    + "AND (actionTaken IS NULL OR actionTaken = 'adjusted') "
+                    + "ORDER BY EmployeeName ASC ");
+            pstmt.setInt(1, branchId);
+            pstmt.setString(2, CommonUtil.convertDateFormat(payrollDate.toString()));
             rs = pstmt.executeQuery();
             while(rs.next()){
                 HdmfSchedule hs = new HdmfSchedule();

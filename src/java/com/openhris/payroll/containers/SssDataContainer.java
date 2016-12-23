@@ -5,11 +5,14 @@
  */
 package com.openhris.payroll.containers;
 
+import com.hrms.utilities.CommonUtil;
 import com.openhris.model.SssSchedule;
 import com.openhris.service.ContributionService;
 import com.openhris.serviceprovider.ContributionServiceImpl;
 import com.vaadin.data.Item;
 import com.vaadin.data.util.IndexedContainer;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -21,9 +24,10 @@ public class SssDataContainer extends IndexedContainer {
 
     ContributionService cs = new ContributionServiceImpl();
     
-    private int corporateId;
-    private int month;
-    private int year;
+    private int branchId;
+    private Date payrollDate;
+//    private int month;
+//    private int year;
 
     public SssDataContainer() {        
         addContainerProperty("employeeId", String.class, null);
@@ -36,12 +40,12 @@ public class SssDataContainer extends IndexedContainer {
         addContainerProperty("date", String.class, null);
     }
         
-    public SssDataContainer(int corporateId, 
-            int year, 
-            int month) {
-        this.corporateId = corporateId;
-        this.month = month;
-        this.year = year;
+    public SssDataContainer(int branchId, 
+            Date payrollDate) {
+        this.branchId = branchId;
+        this.payrollDate = payrollDate;
+//        this.month = month;
+//        this.year = year;
                 
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);      
@@ -52,7 +56,7 @@ public class SssDataContainer extends IndexedContainer {
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
         
-        for(SssSchedule s : cs.getSssContribution(corporateId, year, month)){            
+        for(SssSchedule s : cs.getSssContribution(branchId, payrollDate)){            
             Item item = getItem(addItem());
             item.getItemProperty("employeeId").setValue(s.getEmployeeId());
             item.getItemProperty("name").setValue(s.getName().toUpperCase());
@@ -61,11 +65,17 @@ public class SssDataContainer extends IndexedContainer {
             item.getItemProperty("erShare").setValue(s.getErShare());
             item.getItemProperty("ec").setValue(s.getEc());
             item.getItemProperty("branch").setValue(s.getBranch());
+            
+            Date date = CommonUtil.parsingDate(CommonUtil.convertDateFormat(payrollDate.toString()));
+            Calendar c = Calendar.getInstance();
+            c.setTime(date);
+            int month = (1 + c.get(Calendar.MONTH));
+            int year = c.get(Calendar.YEAR);
             item.getItemProperty("date").setValue(getMonth().get(month)+" "+year);
         }
     }
     
-    Map<Integer, String> getMonth(){
+    private Map<Integer, String> getMonth(){
         Map<Integer, String> m = new HashMap<>();
         m.put(1, "January");
         m.put(2, "February");
