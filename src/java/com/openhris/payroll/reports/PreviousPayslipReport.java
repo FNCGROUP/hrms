@@ -25,7 +25,7 @@ import net.sf.jasperreports.engine.JasperPrint;
  *
  * @author jetdario
  */
-public class PayslipReport extends Window {
+public class PreviousPayslipReport extends Window {
     GetSQLConnection getConnection = new GetSQLConnection();
     private int branchId;
     private String payrollDate;
@@ -34,12 +34,12 @@ public class PayslipReport extends Window {
     String file;
     Application payrollApplication;
 
-    public PayslipReport(int branchId, String payrollDate, Application payrollApplication) {
+    public PreviousPayslipReport(int branchId, String payrollDate, Application payrollApplication) {
         this.branchId = branchId;
         this.payrollDate = payrollDate;
         this.payrollApplication = payrollApplication;
         
-        setCaption("Payslip Report");
+        setCaption("Previous Payslip Report");
         setSizeFull();
         setWidth("800px");
         setHeight("600px");
@@ -47,7 +47,7 @@ public class PayslipReport extends Window {
         
         Connection conn = getConnection.connection();
 //        URL url = this.getClass().getResource("/com/openhris/reports/PayslipReport.jasper");
-        File reportFile = new File("C:/reportsJasper/PayslipReport.jasper");
+        File reportFile = new File("C:/reportsJasper/AdjustedPayslip.jasper");
         
         final HashMap hm = new HashMap();
         hm.put("BRANCH_ID", getBranchId());
@@ -58,7 +58,7 @@ public class PayslipReport extends Window {
              SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmssSSS");
              String timestamp = df.format(new Date());
 //             file = File.createTempFile("PayslipReport_"+timestamp, ".pdf");
-             file = "C:/reportsPdf/PayslipReport_"+timestamp+".pdf";
+             file = "C:/reportsPdf/AdjustedPayslip_"+timestamp+".pdf";
              JasperExportManager.exportReportToPdfFile(jpReport, file);             
         }catch(Exception e){
              e.getMessage();
@@ -92,15 +92,15 @@ public class PayslipReport extends Window {
         getPayrollApplication().getMainWindow().open(resource, "_blank");
     }
 
-    public int getBranchId() {
+    private int getBranchId() {
         return branchId;
     }
 
-    public String getPayrollDate() {
+    private String getPayrollDate() {
         return payrollDate;
     }
 
-    public Application getPayrollApplication() {
+    private Application getPayrollApplication() {
         return payrollApplication;
     }
     

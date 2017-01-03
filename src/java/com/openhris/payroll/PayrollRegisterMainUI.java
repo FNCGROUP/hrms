@@ -29,6 +29,7 @@ import com.openhris.payroll.reports.HDMFSavingsReport;
 import com.openhris.payroll.reports.PHICReport;
 import com.openhris.payroll.reports.PayrollRegisterReport;
 import com.openhris.payroll.reports.PayslipReport;
+import com.openhris.payroll.reports.PreviousPayslipReport;
 import com.openhris.payroll.reports.SSSGeneralReport;
 import com.openhris.payroll.reports.SSSLoansPayable;
 import com.openhris.payroll.reports.SSSSbarroReport;
@@ -155,8 +156,9 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 //                        true); 
 		
                 payrollRegisterTbl.setContainerDataSource(new PayrollRegisterDataContainer(getBranchId(), getPayrollDate(), true));
-                payrollRegisterTbl.setColumnCollapsed("amount received", true);
-                payrollRegisterTbl.setColumnCollapsed("for adjustments", true);
+                payrollRegisterTbl.setColumnCollapsed("adjustments", true);
+                payrollRegisterTbl.setColumnCollapsed("amount received", false);
+                payrollRegisterTbl.setColumnCollapsed("for adjustments", false);
                 payrollRegisterTbl.setColumnCollapsed("cut-off from", true);
                 payrollRegisterTbl.setColumnCollapsed("cut-off to", true);
                 payrollRegisterTbl.setColumnCollapsed("payroll period", true);
@@ -258,6 +260,11 @@ public class PayrollRegisterMainUI extends VerticalLayout {
 //                    String fileName = "PayslipReport_";
                     reports.deleteFile("PayslipReport_");
                     Window payslipReport = new PayslipReport(getBranchId(), 
+                            util.convertDateFormat(payrollDateField.getValue().toString()), 
+                            getApplication());
+                }else if(reportType.getValue().equals("Previous Payslip Report")){
+                    reports.deleteFile("AdjustedPayslip_");
+                    Window adjustedPayslip = new PreviousPayslipReport(getBranchId(), 
                             util.convertDateFormat(payrollDateField.getValue().toString()), 
                             getApplication());
                 }else if(reportType.getValue().equals("SSS Report")){
@@ -398,51 +405,6 @@ public class PayrollRegisterMainUI extends VerticalLayout {
     }
     
     public Table payrollRegisterTable(int branchId, String payrollDate, boolean prev){
-//        payrollRegisterTbl.removeAllItems();        
-//        List<PayrollRegister> payrollRegisterList = payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev);
-//        int i = 0;
-//        for(PayrollRegister pr : payrollService.getPayrollRegisterByBranch(branchId, payrollDate, prev)){
-//            payrollRegisterTbl.addItem(new Object[]{
-//                pr.getId(), 
-//		pr.getName().toUpperCase(), 
-//		pr.getNumOfDays(), 
-//		util.roundOffToTwoDecimalPlaces(pr.getRatePerDay()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getBasicSalary()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getHalfMonthSalary()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getTotalOvertimePaid()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getTotalLegalHolidayPaid()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getTotalSpecialHolidayPaid()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getTotalNightDifferentialPaid()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getTotalWorkingDayOffPaid()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getAbsences()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getTotalLatesDeduction()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getTotalUndertimeDeduction()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getGrossPay()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getSss()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getPhic()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getHdmf()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getTax()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getNetSalary()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getCommunicationAllowance()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getPerDiemAllowance()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getColaAllowance()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getMealAllowance()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getTransportationAllowance()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getOtherAllowances()),  
-//                util.roundOffToTwoDecimalPlaces(pr.getAllowanceForLiquidation()),                  
-//		util.roundOffToTwoDecimalPlaces(pr.getAmount()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getAdjustment()), 
-//                util.roundOffToTwoDecimalPlaces(pr.getAmountToBeReceive()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getAmountReceivable()), 
-//		util.roundOffToTwoDecimalPlaces(pr.getForAdjustments()), 
-//                util.convertDateFormat(pr.getAttendancePeriodFrom().toString()), 
-//                util.convertDateFormat(pr.getAttendancePeriodTo().toString()), 
-//                util.convertDateFormat(pr.getPayrollDate().toString())
-//            }, i);
-//            i++;
-//        }
-//        payrollRegisterTbl.setPageLength(payrollRegisterTbl.size());
-        
         for(Object listener : payrollRegisterTbl.getListeners(ItemClickEvent.class)){
             payrollRegisterTbl.removeListener(ItemClickEvent.class, listener);
         }
@@ -490,7 +452,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         return payrollRegisterTbl;
     }
     
-    public int getBranchId(){
+    private int getBranchId(){
         return branchId;
     }
     
@@ -498,7 +460,7 @@ public class PayrollRegisterMainUI extends VerticalLayout {
         this.branchId = branchId;
     }    
     
-    String getPayrollDate(){
+    private String getPayrollDate(){
         return payrollDate;
     }
     
