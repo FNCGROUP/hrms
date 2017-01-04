@@ -8,10 +8,10 @@
 	<queryString>
 		<![CDATA[SELECT * FROM sss_schedule
 WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND
-(SELECT branchId FROM employee_contribution_main WHERE employeeId = sss_schedule.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND payrollDate = $P{PAYROLL_DATE} AND (actionTaken IS NULL OR actionTaken = 'adjusted') ORDER BY name ASC]]>
+(SELECT branchId FROM employee_contribution_main WHERE employeeId = sss_schedule.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND payrollDate = $P{PAYROLL_DATE} AND (actionTaken IS NULL OR actionTaken = 'adjusted') ORDER BY EmployeeName ASC]]>
 	</queryString>
 	<field name="sssNo" class="java.lang.String"/>
-	<field name="name" class="java.lang.String"/>
+	<field name="EmployeeName" class="java.lang.String"/>
 	<field name="eeShare" class="java.lang.Double"/>
 	<field name="erShare" class="java.lang.Double"/>
 	<field name="ec" class="java.lang.Integer"/>
@@ -22,6 +22,7 @@ WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND
 	<field name="branch" class="java.lang.String"/>
 	<field name="branchAddress" class="java.lang.String"/>
 	<field name="tradeName" class="java.lang.String"/>
+	<field name="CorporateID" class="java.lang.Integer"/>
 	<field name="corporateName" class="java.lang.String"/>
 	<field name="lastname" class="java.lang.String"/>
 	<field name="actionTaken" class="java.lang.String"/>
@@ -187,7 +188,7 @@ WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{EmployeeName}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0.00" isBlankWhenNull="true">
 				<reportElement uuid="2b05ca84-6459-4e5f-a643-2a6ce9a216ca" x="265" y="0" width="80" height="18"/>

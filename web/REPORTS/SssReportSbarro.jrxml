@@ -2,16 +2,16 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SssReportSbarro" language="groovy" pageWidth="792" pageHeight="612" orientation="Landscape" columnWidth="752" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="2c4b265e-0d10-40fe-9eac-7fe89e85ae4f">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="1"/>
+	<property name="ireport.y" value="0"/>
 	<parameter name="BRANCH_ID" class="java.lang.String"/>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT * FROM sss_schedule 
 WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND 
-(SELECT branchId FROM employee_contribution_main WHERE employeeId = sss_schedule.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND payrollDate = $P{PAYROLL_DATE} AND (corporateName = 'favorite italian fastfood, inc.' OR corporateName = 'big italian serving, inc.' OR corporateName = 'favorite pizzas, inc.' OR corporateName = 'fresh italian serving, inc.' OR corporateName = 'favorite italian eatery, inc.') ORDER BY name ASC]]>
+(SELECT branchId FROM employee_contribution_main WHERE employeeId = sss_schedule.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND payrollDate = $P{PAYROLL_DATE} AND (corporateName = 'favorite italian fastfood, inc.' OR corporateName = 'big italian serving, inc.' OR corporateName = 'favorite pizzas, inc.' OR corporateName = 'fresh italian serving, inc.' OR corporateName = 'favorite italian eatery, inc.') ORDER BY EmployeeName ASC]]>
 	</queryString>
 	<field name="sssNo" class="java.lang.String"/>
-	<field name="name" class="java.lang.String"/>
+	<field name="EmployeeName" class="java.lang.String"/>
 	<field name="eeShare" class="java.lang.Double"/>
 	<field name="erShare" class="java.lang.Double"/>
 	<field name="ec" class="java.lang.Integer"/>
@@ -22,6 +22,7 @@ WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND
 	<field name="branch" class="java.lang.String"/>
 	<field name="branchAddress" class="java.lang.String"/>
 	<field name="tradeName" class="java.lang.String"/>
+	<field name="CorporateID" class="java.lang.Integer"/>
 	<field name="corporateName" class="java.lang.String"/>
 	<field name="lastname" class="java.lang.String"/>
 	<field name="actionTaken" class="java.lang.String"/>
@@ -187,7 +188,7 @@ WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND
 				<textElement verticalAlignment="Middle">
 					<font size="8"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{EmployeeName}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement uuid="e5969dbf-f839-42b0-be3a-4d66964e709a" x="587" y="0" width="100" height="18"/>
