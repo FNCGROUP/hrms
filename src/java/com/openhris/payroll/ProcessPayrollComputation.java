@@ -149,6 +149,8 @@ public class ProcessPayrollComputation {
             payroll.setTotalLatesHolidayDeduction(totalLatesWHLHDeduction + totalLatesWHSHDeduction + totalLatesWDODeduction);
             payroll.setTotalUndertimeHolidayDeduction(totalUndertimeWHLHDeduction + totalUndertimeWHSHDeduction + totalUndertimeWDODeduction);
             payroll.setTotalNonWorkingHolidayPaid(getTotalNonWorkingHolidayPay());
+            payroll.setRate(employmentWage);
+            payroll.setWageEntry(employmentWageEntry.charAt(0));
             
             double basicSalary = payrollComputation.getBasicSalary(employmentWage, employmentWageEntry);
             payroll.setBasicSalary(basicSalary);

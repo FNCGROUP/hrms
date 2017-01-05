@@ -20,6 +20,9 @@ public class PayrollTableProperties extends Table {
         addStyleName("hris-table-layout");
         
         addContainerProperty("id", String.class, null);        
+        addContainerProperty("rate", Double.class, 0);
+        addContainerProperty("wage entry", String.class, null);
+        addContainerProperty("id", String.class, null);
         addContainerProperty("start date", String.class, null);
         addContainerProperty("cut-off date", String.class, null);        
         addContainerProperty("basic salary", Double.class, null); 

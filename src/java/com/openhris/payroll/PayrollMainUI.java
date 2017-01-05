@@ -61,7 +61,7 @@ public class PayrollMainUI extends VerticalLayout {
     
     Table payrollTbl = new PayrollTableProperties();
     Table advanceTbl = new Table();
-    int branchId;
+    private int branchId;
     String employeeId;
     boolean lastAddedAdvanceType;
     boolean isPayrollLocked;
@@ -167,16 +167,18 @@ public class PayrollMainUI extends VerticalLayout {
         String payrollStatus = null;
         TimekeepingService tk = new TimekeepingServiceImpl();
         int i = 0;
-        for(Payroll p : payrollService.getPayrollByBranchAndEmployee(branchId, employeeId)){
+        for(Payroll p : payrollService.findPayrollByBranchAndEmployee(branchId, employeeId)){
             if(p.getId() != 0){
                 if(p.getRowStatus().equals("unlocked")){
                     payrollStatus = "";
                 } else {
                     payrollStatus = "locked";
                 }
-                                
+                System.out.println("wage entry: "+p.getWageEntry());                
                 payrollTbl.addItem(new Object[]{
                     p.getId(), 
+                    p.getRate(), 
+                    String.valueOf(p.getWageEntry()), 
                     utililities.convertDateFormat(p.getAttendancePeriodFrom().toString()), 
                     utililities.convertDateFormat(p.getAttendancePeriodTo().toString()), 
                     utililities.roundOffToTwoDecimalPlaces(p.getBasicSalary()), 
@@ -251,7 +253,7 @@ public class PayrollMainUI extends VerticalLayout {
                     }                    
                 }
                 
-                if(payrollStatus.isEmpty() || payrollStatus == null){                    
+                if(payrollStatus.isEmpty()){                    
                 } else {
                     getWindow().showNotification("Contact your DBA to unlock this ROW!!", Window.Notification.TYPE_TRAY_NOTIFICATION);
                     return;
@@ -368,6 +370,30 @@ public class PayrollMainUI extends VerticalLayout {
                     subWindow.center();
                 }
                 
+                if(event.getPropertyId().equals("rate")){
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    String rate = item.getItemProperty("rate").getValue().toString();
+                    
+                    Window subWindow = updatePayrollData("rate", rate, payrollId, item);
+                    if(subWindow.getParent() == null){
+                        getWindow().addWindow(subWindow); 
+                    }                    
+                    subWindow.setModal(true);
+                    subWindow.center();
+                }
+                
+                if(event.getPropertyId().equals("wage entry")){
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    String wageEntry = item.getItemProperty("wage entry").getValue().toString();
+                    
+                    Window subWindow = updatePayrollData("wageEntry", wageEntry, payrollId, item);
+                    if(subWindow.getParent() == null){
+                        getWindow().addWindow(subWindow); 
+                    }                    
+                    subWindow.setModal(true);
+                    subWindow.center();
+                }
+                
                 if(event.getPropertyId().equals("status")){
                     int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
                     String status = null;
@@ -387,14 +413,7 @@ public class PayrollMainUI extends VerticalLayout {
                         getWindow().showNotification("You are not allowed to lock this row!", Window.Notification.TYPE_WARNING_MESSAGE);
                     }
                                                                         
-                }
-                
-//                if(event.getPropertyId().equals("per diem")){                    
-//                    Window sub = subModules.perDiemWindow(item);
-//                    if(sub.getParent() == null){
-//                        getWindow().addWindow(sub);
-//                    }
-//                }
+                }                
             }
         });
     }
@@ -963,7 +982,7 @@ public class PayrollMainUI extends VerticalLayout {
         return subWindow;
     }
 
-    int getBranchId(){
+    private int getBranchId(){
         return branchId;
     }
     
@@ -971,7 +990,7 @@ public class PayrollMainUI extends VerticalLayout {
         this.branchId = branchId;
     }
     
-    String getEmployeeId(){
+    private String getEmployeeId(){
         return employeeId;
     }
     
@@ -1005,6 +1024,44 @@ public class PayrollMainUI extends VerticalLayout {
                     (subWindow.getParent()).removeWindow(subWindow);
                 }else{
                     subWindow.getWindow().showNotification("UNABLE TO UPDATE ROW!", Window.Notification.TYPE_ERROR_MESSAGE);
+                }
+            }
+            
+        });
+        subWindow.addComponent(button);
+        return subWindow;
+    }
+
+    private Window updatePayrollData(final String column, String value, final int payrollId, final Item item){
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setSpacing(true);
+        vlayout.setMargin(true);
+        
+        final Window subWindow = new Window("EDIT PAYROLL DATA", vlayout);
+        subWindow.setWidth("200px");
+        
+        final TextField colTextField = new TextField(column+":");
+        colTextField.setWidth("100%");
+        colTextField.setValue(value);
+        vlayout.addComponent(colTextField);
+        
+        Button button = new Button("SAVE?");
+        button.setWidth("100%");
+        button.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                if(colTextField.getValue() == null || colTextField.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Add Value!", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                }
+                
+                boolean result = payrollService.update(column, colTextField.getValue().toString(), payrollId);
+                if(result == true){
+                    item.getItemProperty("id").setValue(colTextField.getValue().toString());
+                    payrollTable(getBranchId(), getEmployeeId());
+                    (subWindow.getParent()).removeWindow(subWindow);
+                    (subWindow.getParent()).removeWindow(subWindow);
                 }
             }
             

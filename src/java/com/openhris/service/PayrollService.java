@@ -9,7 +9,6 @@ import com.openhris.model.Advances;
 import com.openhris.model.Payroll;
 import com.openhris.model.PayrollRegister;
 import com.openhris.model.Timekeeping;
-import com.vaadin.data.Item;
 import java.util.List;
 
 /**
@@ -18,7 +17,7 @@ import java.util.List;
  */
 public interface PayrollService {
     
-    public List<Payroll> getPayrollByBranchAndEmployee(int branchId, String employeeId);
+    public List<Payroll> findPayrollByBranchAndEmployee(int branchId, String employeeId);
     
     public boolean removeSelectedRow(int id);
     
@@ -115,4 +114,8 @@ public interface PayrollService {
             double oldAmount, 
             double amountToBeReceive, 
             double amountReceived);
+    
+    public int findPreviousPayrollId(String employeeId);
+    
+    public boolean update(String column, String value, int payrollId);
 }

@@ -59,6 +59,8 @@ public class Payroll extends Employee {
     private Date payrollDate;
     private String rowStatus;
     private String actionTaken;
+    private double rate;
+    private char wageEntry;
     private Branch branch;
 
     TimekeepingService tkService = new TimekeepingServiceImpl();
@@ -242,6 +244,14 @@ public class Payroll extends Employee {
         return actionTaken;
     }
 
+    public double getRate() {
+        return rate;
+    }
+
+    public char getWageEntry() {
+        return wageEntry;
+    }
+
     public Branch getBranch() {
         return branch;
     }
@@ -421,6 +431,14 @@ public class Payroll extends Employee {
     public void setActionTaken(String actionTaken) {
         this.actionTaken = actionTaken;
     }    
+
+    public void setRate(double rate) {
+        this.rate = rate;
+    }
+
+    public void setWageEntry(char wageEntry) {
+        this.wageEntry = wageEntry;
+    }
 
     public void setBranch(Branch branch) {
         this.branch = branch;
