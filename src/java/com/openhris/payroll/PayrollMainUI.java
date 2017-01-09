@@ -174,7 +174,7 @@ public class PayrollMainUI extends VerticalLayout {
                 } else {
                     payrollStatus = "locked";
                 }
-                System.out.println("wage entry: "+p.getWageEntry());                
+                              
                 payrollTbl.addItem(new Object[]{
                     p.getId(), 
                     p.getRate(), 
@@ -251,6 +251,30 @@ public class PayrollMainUI extends VerticalLayout {
                         getWindow().showNotification("You are not allowed to add/delete advances!", Window.Notification.TYPE_WARNING_MESSAGE);
                         return;
                     }                    
+                }
+                
+                if(event.getPropertyId().equals("rate")){
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    String rate = item.getItemProperty("rate").getValue().toString();
+                    
+                    Window subWindow = updatePayrollData("rate", rate, payrollId, item);
+                    if(subWindow.getParent() == null){
+                        getWindow().addWindow(subWindow); 
+                    }                    
+                    subWindow.setModal(true);
+                    subWindow.center();
+                }
+                
+                if(event.getPropertyId().equals("wage entry")){
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    String wageEntry = item.getItemProperty("wage entry").getValue().toString();
+                    
+                    Window subWindow = updatePayrollData("wageEntry", wageEntry, payrollId, item);
+                    if(subWindow.getParent() == null){
+                        getWindow().addWindow(subWindow); 
+                    }                    
+                    subWindow.setModal(true);
+                    subWindow.center();
                 }
                 
                 if(payrollStatus.isEmpty()){                    
@@ -369,31 +393,7 @@ public class PayrollMainUI extends VerticalLayout {
                     subWindow.setModal(true);
                     subWindow.center();
                 }
-                
-                if(event.getPropertyId().equals("rate")){
-                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
-                    String rate = item.getItemProperty("rate").getValue().toString();
-                    
-                    Window subWindow = updatePayrollData("rate", rate, payrollId, item);
-                    if(subWindow.getParent() == null){
-                        getWindow().addWindow(subWindow); 
-                    }                    
-                    subWindow.setModal(true);
-                    subWindow.center();
-                }
-                
-                if(event.getPropertyId().equals("wage entry")){
-                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
-                    String wageEntry = item.getItemProperty("wage entry").getValue().toString();
-                    
-                    Window subWindow = updatePayrollData("wageEntry", wageEntry, payrollId, item);
-                    if(subWindow.getParent() == null){
-                        getWindow().addWindow(subWindow); 
-                    }                    
-                    subWindow.setModal(true);
-                    subWindow.center();
-                }
-                
+                                
                 if(event.getPropertyId().equals("status")){
                     int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
                     String status = null;
@@ -1060,7 +1060,6 @@ public class PayrollMainUI extends VerticalLayout {
                 if(result == true){
                     item.getItemProperty("id").setValue(colTextField.getValue().toString());
                     payrollTable(getBranchId(), getEmployeeId());
-                    (subWindow.getParent()).removeWindow(subWindow);
                     (subWindow.getParent()).removeWindow(subWindow);
                 }
             }
