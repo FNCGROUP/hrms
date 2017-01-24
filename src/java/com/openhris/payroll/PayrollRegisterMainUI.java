@@ -15,7 +15,6 @@ import com.openhris.serviceprovider.CompanyServiceImpl;
 import com.openhris.dao.ServiceUpdateDAO;
 import com.openhris.service.EmployeeService;
 import com.openhris.serviceprovider.EmployeeServiceImpl;
-import com.openhris.model.PayrollRegister;
 import com.openhris.payroll.containers.PayrollRegisterDataContainer;
 import com.openhris.payroll.reports.AdjustedPayrollRegisterReport;
 import com.openhris.payroll.reports.AdvancesReport;

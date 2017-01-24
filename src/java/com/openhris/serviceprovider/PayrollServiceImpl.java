@@ -546,6 +546,7 @@ public class PayrollServiceImpl implements PayrollService {
                 double previousAdjustments = 0;
                 double previousAdvances = 0;
 		double previousAmountReceived = 0;
+                int previousBranchId = 0;
                     
                 double communication = payroll.getCommunicationAllowance();
                 double perDiem = payroll.getPerDiemAllowance();
@@ -602,6 +603,16 @@ public class PayrollServiceImpl implements PayrollService {
                 pstmt = conn.prepareStatement("UPDATE payroll_table SET actionTaken = 'previous' WHERE id = "+previousPayrollId+" ");
                 pstmt.executeUpdate();
                              
+                stmt = conn.createStatement();
+                rs = stmt.executeQuery("SELECT branchId FROM payroll_register WHERE salaryId = "+previousPayrollId+" ");
+                while(rs.next()){
+                    previousBranchId = util.convertStringToInteger(rs.getString("branchId"));
+                }
+                
+                pstmt = conn.prepareStatement("UPDATE payroll_table SET branchId = ? WHERE id = "+previousPayrollId+" ");
+                pstmt.setInt(1, previousBranchId);
+                pstmt.executeUpdate();
+                
                 if(previousAdvances != 0){
                     double advancesAmount = 0;
                     String advanceType = null;
