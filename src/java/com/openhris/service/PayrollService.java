@@ -118,4 +118,10 @@ public interface PayrollService {
     public int findPreviousPayrollId(String employeeId);
     
     public boolean update(String column, String value, int payrollId);
+    
+    public boolean isPayrollEditted(int payrollId);
+    
+    public double getTotalAdjustmentByPayrollId(int payrollId);
+    
+    public boolean updateRemittanceTag(int payrollId, int branchId);
 }

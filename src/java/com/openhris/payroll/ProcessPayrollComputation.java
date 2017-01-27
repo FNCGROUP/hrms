@@ -25,13 +25,13 @@ import java.util.List;
  */
 public class ProcessPayrollComputation {
     
-    EmployeeService employeeService = new EmployeeServiceImpl();
+    EmployeeService es = new EmployeeServiceImpl();
     OpenHrisUtilities util = new OpenHrisUtilities();
-    PayrollComputation payrollComputation = new PayrollComputation();
+    PayrollComputation pComputation = new PayrollComputation();
     PayrollAllowances pa = new PayrollAllowances();
     ContributionUtilities contributionUtil = new ContributionUtilities();
     ServiceInsertDAO serviceInsert = new ServiceInsertDAO();
-    PayrollService payrollService = new PayrollServiceImpl();  
+    PayrollService pService = new PayrollServiceImpl();  
     CompanyService cs = new CompanyServiceImpl();
     DecimalFormat df = new DecimalFormat("0.00");
         
@@ -46,7 +46,7 @@ public class ProcessPayrollComputation {
     double allowanceForLiquidation;
     String totalDependent;
     
-    List<Payroll> payrollList = new ArrayList<>();
+    List<Payroll> pList = new ArrayList<>();
     List<Timekeeping> timekeepingList = new ArrayList<>();
     List<String> dateList = new ArrayList<>();
     List<String> policyList = new ArrayList<>();
@@ -83,13 +83,11 @@ public class ProcessPayrollComputation {
     }
     
     public void initVariables(){
-        employmentWage = employeeService.getEmploymentWage(getEmployeeId());
-        employmentWageStatus = employeeService.getEmploymentWageStatus(getEmployeeId());
-        employmentWageEntry = employeeService.getEmploymentWageEntry(getEmployeeId());
-//        allowance = employeeService.getEmploymentAllowance(getEmployeeId());
-//        allowanceEntry = employeeService.getEmploymentAllowanceEntry(getEmployeeId());
-        allowanceForLiquidation = employeeService.getEmploymentAllowanceForLiquidation(getEmployeeId());
-        totalDependent = employeeService.getEmployeeTotalDependent(getEmployeeId());
+        employmentWage = es.getEmploymentWage(getEmployeeId());
+        employmentWageStatus = es.getEmploymentWageStatus(getEmployeeId());
+        employmentWageEntry = es.getEmploymentWageEntry(getEmployeeId());
+        allowanceForLiquidation = es.getEmploymentAllowanceForLiquidation(getEmployeeId());
+        totalDependent = es.getEmployeeTotalDependent(getEmployeeId());
     }
     
     public void initVariablesForComputation(List<Timekeeping> tkeep){ 
@@ -124,51 +122,52 @@ public class ProcessPayrollComputation {
         }
     }
     
-    public boolean processPayrollComputation(String payrollDate, 
-            String payrollPeriod, 
+    public boolean processPayrollComputation(String pDate, 
+            String pPeriod, 
             String attendancePeriodFrom, 
             String attendancePeriodTo, 
             int previousPayrollId){
         boolean result = false;
         try{
-            Payroll payroll = new Payroll();
-            payroll.setEmployeeId(getEmployeeId());
-            payroll.setBranchId(getBranchId());
-            payroll.setPayrollDate(util.parsingDate(payrollDate));
-            payroll.setPayrollPeriod(payrollPeriod);
-            payroll.setAttendancePeriodFrom(util.parsingDate(attendancePeriodFrom));
-            payroll.setAttendancePeriodTo(util.parsingDate(attendancePeriodTo));
-            payroll.setTotalLatesDeduction(totalLatesDeduction);
-            payroll.setTotalUndertimeDeduction(totalUndertimeDeduction);
-            payroll.setTotalOvertimePaid(totalOvertimePay);
-            payroll.setTotalNightDifferentialPaid(totalNightDifferetinalPay);
-            payroll.setTotalDutyManagerPaid(totalDutyManagerPay);
-            payroll.setTotalLegalHolidayPaid(totalLegalHolidayPaid);
-            payroll.setTotalSpecialHolidayPaid(totalSpecialHolidayPaid);
-            payroll.setTotalWorkingDayOffPaid(totalWorkingDayOffPaid);
-            payroll.setTotalLatesHolidayDeduction(totalLatesWHLHDeduction + totalLatesWHSHDeduction + totalLatesWDODeduction);
-            payroll.setTotalUndertimeHolidayDeduction(totalUndertimeWHLHDeduction + totalUndertimeWHSHDeduction + totalUndertimeWDODeduction);
-            payroll.setTotalNonWorkingHolidayPaid(getTotalNonWorkingHolidayPay());
-            payroll.setRate(employmentWage);
-            payroll.setWageEntry(employmentWageEntry.charAt(0));
+            Payroll p = new Payroll();
+            p.setEmployeeId(getEmployeeId());
+            p.setBranchId(getBranchId());
+            p.setPayrollDate(util.parsingDate(pDate));
+            p.setPayrollPeriod(pPeriod);
+            p.setAttendancePeriodFrom(util.parsingDate(attendancePeriodFrom));
+            p.setAttendancePeriodTo(util.parsingDate(attendancePeriodTo));
+            p.setTotalLatesDeduction(totalLatesDeduction);
+            p.setTotalUndertimeDeduction(totalUndertimeDeduction);
+            p.setTotalOvertimePaid(totalOvertimePay);
+            p.setTotalNightDifferentialPaid(totalNightDifferetinalPay);
+            p.setTotalDutyManagerPaid(totalDutyManagerPay);
+            p.setTotalLegalHolidayPaid(totalLegalHolidayPaid);
+            p.setTotalSpecialHolidayPaid(totalSpecialHolidayPaid);
+            p.setTotalWorkingDayOffPaid(totalWorkingDayOffPaid);
+            p.setTotalLatesHolidayDeduction(totalLatesWHLHDeduction + totalLatesWHSHDeduction + totalLatesWDODeduction);
+            p.setTotalUndertimeHolidayDeduction(totalUndertimeWHLHDeduction + totalUndertimeWHSHDeduction + totalUndertimeWDODeduction);
+            p.setTotalNonWorkingHolidayPaid(getTotalNonWorkingHolidayPay());
+            p.setRate(employmentWage);
+            p.setWageEntry(employmentWageEntry.charAt(0));
+            p.setTag(es.findEmployeeRemittanceTag(getEmployeeId()));
             
-            double basicSalary = payrollComputation.getBasicSalary(employmentWage, employmentWageEntry);
-            payroll.setBasicSalary(basicSalary);
+            double basicSalary = pComputation.getBasicSalary(employmentWage, employmentWageEntry);
+            p.setBasicSalary(basicSalary);
             
-            double halfMonthSalary = payrollComputation.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, getEmployeeId()) + getTotalNonWorkingHolidayPay();
-            payroll.setHalfMonthSalary(halfMonthSalary);
+            double halfMonthSalary = pComputation.getHalfMonthSalary(employmentWageEntry, policyList, employmentWage, dateList, getEmployeeId()) + getTotalNonWorkingHolidayPay();
+            p.setHalfMonthSalary(halfMonthSalary);
                       
             double taxableSalary = 0;
             if(employmentWageEntry.equals("daily")){
-                taxableSalary = payroll.getGrossPay() - (payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid());
+                taxableSalary = p.getGrossPay() - (p.getTotalOvertimePaid() + p.getTotalSpecialHolidayPaid() + p.getTotalLegalHolidayPaid());
             } else {
-                double newTaxableSalary = payroll.getGrossPay() - (payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid());
-                taxableSalary = payrollComputation.getTaxableSalary(employmentWage, employmentWageEntry, policyList, newTaxableSalary);
+                double newTaxableSalary = p.getGrossPay() - (p.getTotalOvertimePaid() + p.getTotalSpecialHolidayPaid() + p.getTotalLegalHolidayPaid());
+                taxableSalary = pComputation.getTaxableSalary(employmentWage, employmentWageEntry, policyList, newTaxableSalary);
             }
             
             branch = cs.getBranchById(getBranchId()).replaceAll("\\(.*?\\)", "");
             if(branch.trim().equals("on-call and trainees")){
-                taxableSalary = payroll.getGrossPay();
+                taxableSalary = p.getGrossPay();
             }
             
             double sssContribution = 0;
@@ -176,36 +175,36 @@ public class ProcessPayrollComputation {
             double hdmfContribution = 0;
                               
             if(branch.trim().equals("on-call and trainees")){
-                payroll.setSss(0);
-                payroll.setPhic(0);
-                payroll.setHdmf(0);
-                payroll.setTaxableSalary(taxableSalary);
+                p.setSss(0);
+                p.setPhic(0);
+                p.setHdmf(0);
+                p.setTaxableSalary(taxableSalary);
             } else {
                 if(employmentWageStatus.equals("senior citizen")){
-                    payroll.setSss(0);
-                    payroll.setPhic(0);
-                    payroll.setHdmf(0);
-                    payroll.setTaxableSalary(taxableSalary);
+                    p.setSss(0);
+                    p.setPhic(0);
+                    p.setHdmf(0);
+                    p.setTaxableSalary(taxableSalary);
                 } else {
-                    if(payrollPeriod.equals("15th of the month")){ 
+                    if(pPeriod.equals("15th of the month")){ 
                         phicContribution = contributionUtil.getPhilhealth(basicSalary);
                         hdmfContribution = contributionUtil.getHdmf(basicSalary);
                         taxableSalary = taxableSalary - (phicContribution + hdmfContribution);
                     }else{              
-                        sssContribution = contributionUtil.getSss(payroll.getGrossPay(), employeeId, payrollDate);
+                        sssContribution = contributionUtil.getSss(p.getGrossPay(), employeeId, pDate);
                         taxableSalary = taxableSalary - (sssContribution);
                     }
 
-                    payroll.setSss(sssContribution);
-                    payroll.setPhic(phicContribution);
-                    payroll.setHdmf(hdmfContribution);
-                    payroll.setTaxableSalary(taxableSalary);
+                    p.setSss(sssContribution);
+                    p.setPhic(phicContribution);
+                    p.setHdmf(hdmfContribution);
+                    p.setTaxableSalary(taxableSalary);
                 }
             }
                         
-            payroll.setAbsences(payrollComputation.getTotalAbsences());            
+            p.setAbsences(pComputation.getTotalAbsences());            
             
-            double tax = payrollComputation.getTax(totalDependent, taxableSalary); //get tax          
+            double tax = pComputation.getTax(totalDependent, taxableSalary); //get tax          
             if(employmentWageStatus.equals("minimum") || tax < 0 || employmentWageStatus.equals("senior citizen")){
                 tax = 0;
             }        
@@ -214,10 +213,10 @@ public class ProcessPayrollComputation {
                 tax = 0;
             }
             
-            payroll.setTax(tax);
+            p.setTax(tax);
 
             double cashBond = 0;   
-            payroll.setCashBond(cashBond);
+            p.setCashBond(cashBond);
 
             double communication = pa.getCommunicationAllowance(policyList, getEmployeeId());
             double perDiem = pa.getPerDiemAllowance(policyList, getEmployeeId());
@@ -226,43 +225,43 @@ public class ProcessPayrollComputation {
             double transportation = pa.getTransportationAllowance(policyList, getEmployeeId());
             double others = pa.getOtherAllowance(policyList, getEmployeeId());
             
-            payroll.setCommunicationAllowance(communication);            
-            payroll.setPerDiemAllowance(perDiem);           
-            payroll.setColaAllowance(cola);         
-            payroll.setMealAllowance(meal);         
-            payroll.setTransportationAllowance(transportation);
-            payroll.setOtherAllowances(others);            
+            p.setCommunicationAllowance(communication);            
+            p.setPerDiemAllowance(perDiem);           
+            p.setColaAllowance(cola);         
+            p.setMealAllowance(meal);         
+            p.setTransportationAllowance(transportation);
+            p.setOtherAllowances(others);            
 
             double allowances = communication + perDiem + cola + meal + transportation + others;
                         
-            int numberOfDays = payrollComputation.getNumberOfDays(dateList, policyList);
-            payroll.setNumOfDays(numberOfDays);
+            int numberOfDays = pComputation.getNumberOfDays(dateList, policyList);
+            p.setNumOfDays(numberOfDays);
 
-            double afl = payrollComputation.getAllowanceForLiquidationDeduction(dateList, policyList, allowanceForLiquidation);
-            payroll.setAllowanceForLiquidation(afl);
+            double afl = pComputation.getAllowanceForLiquidationDeduction(dateList, policyList, allowanceForLiquidation);
+            p.setAllowanceForLiquidation(afl);
                           
             double netSalary;
             if(branch.trim().equals("on-call and trainees")){
                 netSalary = taxableSalary;
             } else {
                 if(employmentWageStatus.equals("senior citizen")){
-                    netSalary = taxableSalary + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
+                    netSalary = taxableSalary + p.getTotalOvertimePaid() + p.getTotalSpecialHolidayPaid() + p.getTotalLegalHolidayPaid();
                 } else {
-                    netSalary = taxableSalary - tax + payroll.getTotalOvertimePaid() + payroll.getTotalSpecialHolidayPaid() + payroll.getTotalLegalHolidayPaid();
+                    netSalary = taxableSalary - tax + p.getTotalOvertimePaid() + p.getTotalSpecialHolidayPaid() + p.getTotalLegalHolidayPaid();
                 }
             }
                         
-            payroll.setNetSalary(netSalary);
+            p.setNetSalary(netSalary);
 
             double amountReceivable = new Double(df.format(netSalary + allowances + afl));  
-            payroll.setAmountReceivable(amountReceivable);
+            p.setAmountReceivable(amountReceivable);
 
             double amountToBeReceive = amountReceivable;
-            payroll.setAmountToBeReceive(amountToBeReceive); 
+            p.setAmountToBeReceive(amountToBeReceive); 
 
-            double adjustment = payrollComputation.getAdjustmentFromPreviousPayroll(employeeId); 
+            double adjustment = pComputation.getAdjustmentFromPreviousPayroll(employeeId); 
 	                
-            result = payrollService.insertPayrollAndAttendance(payroll, 
+            result = pService.insertPayrollAndAttendance(p, 
                     timekeepingList, 
                     adjustment, 
                     previousPayrollId);

@@ -484,5 +484,39 @@ public class EmployeeServiceImpl implements EmployeeService {
         
         return esList;
     }
+
+    @Override
+    public int findEmployeeRemittanceTag(String employeeId) {
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null; 
+                
+        int branchId = 0;
+        try {
+            stmt = conn.createStatement();
+            pstmt = conn.prepareStatement("SELECT branchId FROM employee_contribution_main "
+                    + "WHERE employeeId = ? ORDER BY id DESC LIMIT 1");
+            pstmt.setString(1, employeeId);
+            rs = pstmt.executeQuery();            
+            while(rs.next()){
+                branchId = util.convertStringToInteger(rs.getString("branchId"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(EmployeeDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(ServiceGetDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return branchId;
+    }
     
 }

@@ -68,4 +68,6 @@ public interface EmployeeService {
     public boolean updateEmploymentAllowanceForLiquidation(double afl, String employeeId);
     
     public List<EmployeeSummary> findAllEmployeeSummaryByCorporateId(int corporateId, String employeeStatus);
+    
+    public int findEmployeeRemittanceTag(String employeeId);
 }

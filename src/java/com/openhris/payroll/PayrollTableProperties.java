@@ -59,6 +59,7 @@ public class PayrollTableProperties extends Table {
         addContainerProperty("status", String.class, null); 
         addContainerProperty("trade", String.class, null);
         addContainerProperty("branch", String.class, null);
+        addContainerProperty("remittance", String.class, null);
         
         setColumnAlignment("basic salary", Table.ALIGN_RIGHT);
         setColumnAlignment("half-month salary", Table.ALIGN_RIGHT);

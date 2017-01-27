@@ -18,8 +18,10 @@ import com.openhris.service.CompanyService;
 import com.openhris.serviceprovider.PayrollServiceImpl;
 import com.openhris.service.EmployeeService;
 import com.openhris.service.PayrollService;
+import com.openhris.service.SalaryInformationService;
 import com.openhris.service.TimekeepingService;
 import com.openhris.serviceprovider.CompanyServiceImpl;
+import com.openhris.serviceprovider.SalaryInformationServiceImpl;
 import com.openhris.timekeeping.serviceprovider.TimekeepingServiceImpl;
 import com.vaadin.addon.tableexport.ExcelExport;
 import com.vaadin.data.Item;
@@ -51,24 +53,32 @@ import java.util.List;
 public class PayrollMainUI extends VerticalLayout {
     
     OpenHrisUtilities utililities = new OpenHrisUtilities();
-    PayrollService payrollService = new PayrollServiceImpl();
+    PayrollService ps = new PayrollServiceImpl();
     EmployeeService employeeService = new EmployeeServiceImpl();
-    CompanyService companyService = new CompanyServiceImpl();
+    CompanyService cs = new CompanyServiceImpl();
     DropDownComponent dropDown = new DropDownComponent();
     ServiceUpdateDAO serviceUpdate = new ServiceUpdateDAO();
     AdministratorService administratorService = new AdministratorServiceImpl();
     PayrollSubModules subModules = new PayrollSubModules();
+    SalaryInformationService si = new SalaryInformationServiceImpl();
     
     Table payrollTbl = new PayrollTableProperties();
-    Table advanceTbl = new Table();
-    private int branchId;
+    Table advanceTbl = new Table();    
     String employeeId;
     boolean lastAddedAdvanceType;
     boolean isPayrollLocked;
     
     ComboBox employeesName = new ComboBox("Employees: ");
+    ComboBox corporate = new ComboBox("Corporate: ");
+    ComboBox trade = new ComboBox("Trade: ");
+    ComboBox branch = new ComboBox("Branch: ");
     DecimalFormat df = new DecimalFormat("0.00");
         
+    private int corporateId;
+    private int tradeId;
+    private int branchId;
+    private int newBranchTagId;
+    
     public PayrollMainUI(int branchId){
         this.branchId = branchId;
         
@@ -141,11 +151,11 @@ public class PayrollMainUI extends VerticalLayout {
                         return;
                     }
                     
-                    int tradeId = companyService.getTradeIdByBranchId(getBranchId());
+                    int tradeId = cs.getTradeIdByBranchId(getBranchId());
                     excelExport = new ExcelExport(payrollTbl, "Payroll Ledger");
                     excelExport.excludeCollapsedColumns();
                     excelExport.setReportTitle(employeesName.getValue().toString().toUpperCase()+" Payroll Ledger "
-                            +new Label(companyService.getBranchById(getBranchId()), Label.CONTENT_PREFORMATTED));
+                            +new Label(cs.getBranchById(getBranchId()), Label.CONTENT_PREFORMATTED));
                     excelExport.setExportFileName(employeesName.getValue().toString().replace(" ", "_").replace(",", "_").toUpperCase()+"-Payroll Ledger"+".xls");
                     excelExport.export();
 		}
@@ -167,7 +177,7 @@ public class PayrollMainUI extends VerticalLayout {
         String payrollStatus = null;
         TimekeepingService tk = new TimekeepingServiceImpl();
         int i = 0;
-        for(Payroll p : payrollService.findPayrollByBranchAndEmployee(branchId, employeeId)){
+        for(Payroll p : ps.findPayrollByBranchAndEmployee(branchId, employeeId)){
             if(p.getId() != 0){
                 if(p.getRowStatus().equals("unlocked")){
                     payrollStatus = "";
@@ -214,7 +224,8 @@ public class PayrollMainUI extends VerticalLayout {
                     utililities.convertDateFormat(p.getPayrollDate().toString()), 
                     payrollStatus, 
                     p.getBranch().getTradeName(), 
-                    p.getBranch().getBranchName()
+                    p.getBranch().getBranchName(), 
+                    cs.getBranchById(p.getTag()) 
                 }, new Integer(i));
             }
             i++;
@@ -270,6 +281,17 @@ public class PayrollMainUI extends VerticalLayout {
                     String wageEntry = item.getItemProperty("wage entry").getValue().toString();
                     
                     Window subWindow = updatePayrollData("wageEntry", wageEntry, payrollId, item);
+                    if(subWindow.getParent() == null){
+                        getWindow().addWindow(subWindow); 
+                    }                    
+                    subWindow.setModal(true);
+                    subWindow.center();
+                }
+                
+                if(event.getPropertyId().equals("remittance")){
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    
+                    Window subWindow = setContributionMainBranch(payrollId);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow); 
                     }                    
@@ -459,7 +481,7 @@ public class PayrollMainUI extends VerticalLayout {
                     return;
                 }
                 
-                Boolean result = payrollService.removeSelectedRow(id);
+                Boolean result = ps.removeSelectedRow(id);
                 if(result == true){
                     payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
@@ -510,7 +532,7 @@ public class PayrollMainUI extends VerticalLayout {
                 double newAmountReceive;
                 boolean isPayrollAdjusted;
                 
-                if(payrollService.isPayrollAdjusted(payrollId)){
+                if(ps.isPayrollAdjusted(payrollId)){
                      newNetSalary = (netPay + phicAmount) - utililities.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                     newAmountToBeReceive = (amountToBeReceive + phicAmount) - utililities.convertStringToDouble(phicNewAmount.getValue().toString().trim());
                     newAmountReceive = amountReceive;
@@ -523,7 +545,7 @@ public class PayrollMainUI extends VerticalLayout {
                     isPayrollAdjusted = false; 
                 }
                 
-                boolean result = payrollService.updatePhicContribution(payrollId, 
+                boolean result = ps.updatePhicContribution(payrollId, 
                         utililities.convertStringToDouble(phicNewAmount.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
@@ -580,7 +602,7 @@ public class PayrollMainUI extends VerticalLayout {
                 double newAmountReceive;
                 boolean isPayrollAdjusted;
                 
-                if(payrollService.isPayrollAdjusted(payrollId)){
+                if(ps.isPayrollAdjusted(payrollId)){
                     newNetSalary = (netPay + hdmfContribution) - utililities.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                     newAmountToBeReceive = (amountToBeReceive + hdmfContribution) - utililities.convertStringToDouble(newHdmfContribution.getValue().toString().trim());
                     newAmountReceive = amountReceive;
@@ -592,7 +614,7 @@ public class PayrollMainUI extends VerticalLayout {
                     isPayrollAdjusted = false;
                 }
                 
-                boolean result = payrollService.updateHdmfContribution(payrollId, 
+                boolean result = ps.updateHdmfContribution(payrollId, 
                         utililities.convertStringToDouble(newHdmfContribution.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
@@ -649,7 +671,7 @@ public class PayrollMainUI extends VerticalLayout {
                 double newAmountReceive;
                 boolean isPayrollAdjusted;
                 
-                if(payrollService.isPayrollAdjusted(payrollId)){
+                if(ps.isPayrollAdjusted(payrollId)){
                     newNetSalary = (netSalary + sssContribution) - utililities.convertStringToDouble(newSssContribution.getValue().toString().trim());
                     newAmountToBeReceive = (amountToBeReceive + sssContribution) - utililities.convertStringToDouble(newSssContribution.getValue().toString().trim());
                     newAmountReceive = amountReceive;
@@ -661,7 +683,7 @@ public class PayrollMainUI extends VerticalLayout {
                     isPayrollAdjusted = false;
                 }
                 
-                boolean result = payrollService.updateSssContribution(payrollId, 
+                boolean result = ps.updateSssContribution(payrollId, 
                         utililities.convertStringToDouble(newSssContribution.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
@@ -718,7 +740,7 @@ public class PayrollMainUI extends VerticalLayout {
                 double newAmountReceive;
                 boolean isPayrollAdjusted;
                 
-                if(payrollService.isPayrollAdjusted(payrollId)){
+                if(ps.isPayrollAdjusted(payrollId)){
                     newNetSalary = (netSalary + taxWitheldAmount) - utililities.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
                     newAmountToBeReceive = (amountToBeReceive + taxWitheldAmount) - utililities.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim());
                     newAmountReceive = amountReceive;
@@ -730,7 +752,7 @@ public class PayrollMainUI extends VerticalLayout {
                     isPayrollAdjusted = false;
                 }
                 
-                boolean result = payrollService.updateTaxWitheldAmount(payrollId, 
+                boolean result = ps.updateTaxWitheldAmount(payrollId, 
                         utililities.convertStringToDouble(newTaxWitheldAmount.getValue().toString().trim()), 
                         newNetSalary, 
                         newAmountToBeReceive, 
@@ -765,7 +787,7 @@ public class PayrollMainUI extends VerticalLayout {
 
             @Override
             public void buttonClick(Button.ClickEvent event) {                
-                Boolean result = payrollService.lockPayroll(payrollId);
+                Boolean result = ps.lockPayroll(payrollId);
                 if(result == true){
                     payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
@@ -864,7 +886,7 @@ public class PayrollMainUI extends VerticalLayout {
                 
                 Double advances = utililities.convertStringToDouble(amount.getValue().toString().trim());
                 String postedDate = utililities.convertDateFormat(datePosted.getValue().toString());
-                Boolean result = payrollService.updateSalaryByAdvances(advanceList);                
+                Boolean result = ps.updateSalaryByAdvances(advanceList);                
                 if(result == true){
                     payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
@@ -898,7 +920,7 @@ public class PayrollMainUI extends VerticalLayout {
         advanceTbl.addContainerProperty("date posted", String.class, null);
         
         int i = 0;
-        List<Advances> advancesList = payrollService.getAdvancesByPayroll(payrollId);
+        List<Advances> advancesList = ps.getAdvancesByPayroll(payrollId);
         for(Advances a : advancesList){
             advanceTbl.addItem(new Object[]{
                 a.getAdvanceId(), a.getAmount(), a.getAdvanceType(), 
@@ -965,7 +987,7 @@ public class PayrollMainUI extends VerticalLayout {
                     getWindow().showNotification("Add remarks!", Window.Notification.TYPE_WARNING_MESSAGE);
                     return;
                 }
-                boolean result = payrollService.removeAdvanceById(advanceId, payrollId, 
+                boolean result = ps.removeAdvanceById(advanceId, payrollId, 
                         removedAmount, amountToBeReceive, amountReceivable, remarks.getValue().toString());
                 if(result == true){
                     payrollTable(branchId, getEmployeeId());
@@ -984,6 +1006,18 @@ public class PayrollMainUI extends VerticalLayout {
 
     private int getBranchId(){
         return branchId;
+    }
+
+    public int getCorporateId() {
+        return corporateId;
+    }
+
+    public int getTradeId() {
+        return tradeId;
+    }
+
+    public int getNewBranchTagId() {
+        return newBranchTagId;
     }
     
     public void setBranchId(int branchId){
@@ -1018,7 +1052,7 @@ public class PayrollMainUI extends VerticalLayout {
             @Override
             public void buttonClick(Button.ClickEvent event) {
                 String date = utililities.convertDateFormat(payrollDate.getValue().toString());
-                Boolean result = payrollService.updatePayrollDate(payrollId, date);
+                Boolean result = ps.updatePayrollDate(payrollId, date);
                 if(result == true){
                     payrollTable(branchId, getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
@@ -1056,7 +1090,7 @@ public class PayrollMainUI extends VerticalLayout {
                     return;
                 }
                 
-                boolean result = payrollService.update(column, colTextField.getValue().toString(), payrollId);
+                boolean result = ps.update(column, colTextField.getValue().toString(), payrollId);
                 if(result == true){
                     item.getItemProperty("id").setValue(colTextField.getValue().toString());
                     payrollTable(getBranchId(), getEmployeeId());
@@ -1066,6 +1100,105 @@ public class PayrollMainUI extends VerticalLayout {
             
         });
         subWindow.addComponent(button);
+        return subWindow;
+    }
+    
+    private Window setContributionMainBranch(final int payrollId){
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setMargin(true);
+        vlayout.setSpacing(true);
+        
+        final Window subWindow = new Window("Set Branch", vlayout);
+        subWindow.setWidth("300px");
+                
+        corporate = dropDown.populateCorporateComboBox(new ComboBox());
+        corporate.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                if(corporate.getValue() == null){                    
+                } else {
+                    corporateId = cs.getCorporateId(corporate.getValue().toString());
+                    trade = dropDown.populateTradeComboBox(trade, corporateId);
+                }
+            }
+        });
+        corporate.setWidth("100%");
+        subWindow.addComponent(corporate);
+                
+        trade.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                if(trade.getValue() == null){                    
+                } else {
+                    tradeId = cs.getTradeId(trade.getValue().toString(), corporateId);
+                    branch = dropDown.populateBranchComboBox(branch, tradeId, corporateId);
+                }                
+            }
+        });
+        trade.setWidth("100%");
+        subWindow.addComponent(trade);
+        
+        branch.setWidth("100%");
+        branch.addListener(new Property.ValueChangeListener() {
+
+            @Override
+            public void valueChange(Property.ValueChangeEvent event) {
+                if(branch.getValue() == null){                    
+                } else {
+                    newBranchTagId = cs.getBranchId(tradeId, branch.getValue().toString());
+                }
+            }
+        });
+        subWindow.addComponent(branch);
+            
+//        final ComboBox remarks = new ComboBox("Remarks");
+//        remarks.setWidth("100%");
+//        remarks.setNullSelectionItemId(false);
+//        remarks.addItem("Transfer to new Branch.");
+//        remarks.addItem("Wrong Entry");
+//        subWindow.addComponent(remarks);
+        
+        Button updateBtn = new Button("SET BRANCH for CONTRIBUTION");
+        updateBtn.setWidth("100%");
+        updateBtn.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                    if(corporate.getValue() == null){
+                        getWindow().showNotification("Select Corporation!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                
+                    if(trade.getValue() == null){
+                        getWindow().showNotification("Select Trade!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                    
+                    if(branch.getValue() == null){
+                        getWindow().showNotification("Select Branch!", Window.Notification.TYPE_ERROR_MESSAGE);
+                        return;
+                    }
+                    
+//                    if(remarks.getValue() == null){
+//                        getWindow().showNotification("Remarks required!", Window.Notification.TYPE_ERROR_MESSAGE);
+//                        return;
+//                    }
+                    
+                    boolean result = ps.updateRemittanceTag(payrollId, getNewBranchTagId());
+                    if(result){
+                        getWindow().showNotification("Successfully transferred to new Branch!");
+                        payrollTable(getBranchId(), getEmployeeId());
+                        (subWindow.getParent()).removeWindow(subWindow);
+                    } else {
+                        getWindow().showNotification("SQL Error, Contact your DBA!");
+                        (subWindow.getParent()).removeWindow(subWindow);
+                    }                           
+            }
+        });
+        subWindow.addComponent(updateBtn);
+        
         return subWindow;
     }
 }
