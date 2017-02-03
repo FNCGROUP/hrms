@@ -225,7 +225,8 @@ public class PayrollMainUI extends VerticalLayout {
                     payrollStatus, 
                     p.getBranch().getTradeName(), 
                     p.getBranch().getBranchName(), 
-                    cs.getBranchById(p.getTag()) 
+                    cs.getBranchById(p.getTag()), 
+                    p.getWageStatus() 
                 }, new Integer(i));
             }
             i++;
@@ -281,6 +282,18 @@ public class PayrollMainUI extends VerticalLayout {
                     String wageEntry = item.getItemProperty("wage entry").getValue().toString();
                     
                     Window subWindow = updatePayrollData("wageEntry", wageEntry, payrollId, item);
+                    if(subWindow.getParent() == null){
+                        getWindow().addWindow(subWindow); 
+                    }                    
+                    subWindow.setModal(true);
+                    subWindow.center();
+                }
+                
+                if(event.getPropertyId().equals("wage status")){
+                    int payrollId = utililities.convertStringToInteger(item.getItemProperty("id").getValue().toString());
+                    String wageEntry = item.getItemProperty("wage status").getValue().toString();
+                    
+                    Window subWindow = updatePayrollWageStatus("wageStatus", wageEntry, payrollId, item);
                     if(subWindow.getParent() == null){
                         getWindow().addWindow(subWindow); 
                     }                    
@@ -1093,6 +1106,42 @@ public class PayrollMainUI extends VerticalLayout {
                 boolean result = ps.update(column, colTextField.getValue().toString(), payrollId);
                 if(result == true){
                     item.getItemProperty("id").setValue(colTextField.getValue().toString());
+                    payrollTable(getBranchId(), getEmployeeId());
+                    (subWindow.getParent()).removeWindow(subWindow);
+                }
+            }
+            
+        });
+        subWindow.addComponent(button);
+        return subWindow;
+    }
+    
+    private Window updatePayrollWageStatus(final String column, String value, final int payrollId, final Item item){
+        VerticalLayout vlayout = new VerticalLayout();
+        vlayout.setSpacing(true);
+        vlayout.setMargin(true);
+        
+        final Window subWindow = new Window("EDIT PAYROLL WAGE STATUS", vlayout);
+        subWindow.setWidth("200px");
+        
+        final ComboBox wageStatus = dropDown.populateEmploymentWageStatus("Wage Status: ");
+        wageStatus.setWidth("100%");
+        vlayout.addComponent(wageStatus);
+        
+        Button button = new Button("SAVE?");
+        button.setWidth("100%");
+        button.addListener(new Button.ClickListener() {
+
+            @Override
+            public void buttonClick(Button.ClickEvent event) {
+                if(wageStatus.getValue().toString().trim().isEmpty()){
+                    getWindow().showNotification("Add Value!", Window.Notification.TYPE_WARNING_MESSAGE);
+                    return;
+                }
+                
+                boolean result = ps.update(column, wageStatus.getItem(wageStatus.getValue()).toString(), payrollId);
+                if(result == true){
+                    item.getItemProperty("id").setValue(wageStatus.getItem(wageStatus.getValue()).toString());
                     payrollTable(getBranchId(), getEmployeeId());
                     (subWindow.getParent()).removeWindow(subWindow);
                 }

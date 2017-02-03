@@ -108,9 +108,11 @@ public class ContributionServiceImpl implements ContributionService {
 //                    + "AND MONTH(payrollDate) = ? "
 //                    + "AND (eeShare != 0 AND erShare IS NOT NULL) "
 //                    + "ORDER BY name ASC");    
+            
+//                    + "AND (SELECT branchId FROM employee_contribution_main WHERE employeeId = sss.employeeId ORDER BY id DESC LIMIT 1) = ? "            
             pstmt = conn.prepareStatement("SELECT * FROM sss_schedule sss "
                     + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) "
-                    + "AND (SELECT branchId FROM employee_contribution_main WHERE employeeId = sss.employeeId ORDER BY id DESC LIMIT 1) = ? "
+                    + "AND tag = ? "
                     + "AND payrollDate = ? "
                     + "AND (actionTaken IS NULL OR actionTaken = 'adjusted') "
                     + "ORDER BY EmployeeName ASC ");
@@ -160,9 +162,11 @@ public class ContributionServiceImpl implements ContributionService {
 //                    + "AND MONTH(payrollDate) = ? "
 //                    + "AND ECMCorporateID = ? " 
 //                    + "AND PhicAmount != 0 ORDER BY EmployeeName ASC");
+            
+//                    + "AND (SELECT branchId FROM employee_contribution_main WHERE employeeId = phic.employeeId ORDER BY id DESC LIMIT 1) = ? "            
             pstmt = conn.prepareStatement("SELECT * FROM phic_schedule phic "
                     + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) "
-                    + "AND (SELECT branchId FROM employee_contribution_main WHERE employeeId = phic.employeeId ORDER BY id DESC LIMIT 1) = ? "
+                    + "AND tag = ? "
                     + "AND payrollDate = ? "
                     + "AND (actionTaken IS NULL OR actionTaken = 'adjusted') "
                     + "ORDER BY EmployeeName ASC ");
@@ -211,9 +215,11 @@ public class ContributionServiceImpl implements ContributionService {
 //                    + "AND MONTH(payrollDate) = ? "
 //                    + "AND ECMCorporateID = ? " 
 //                    + "AND HdmfAmount != 0 ORDER BY EmployeeName ASC");
+            
+//                    + "AND (SELECT branchId FROM employee_contribution_main WHERE employeeId = hdmf.employeeId ORDER BY id DESC LIMIT 1) = ? "            
             pstmt = conn.prepareStatement("SELECT * FROM hdmf_schedule hdmf "
                     + "WHERE (currentStatus != 'removed' OR currentStatus IS NULL) "
-                    + "AND (SELECT branchId FROM employee_contribution_main WHERE employeeId = hdmf.employeeId ORDER BY id DESC LIMIT 1) = ? "
+                    + "AND tag = ? "
                     + "AND payrollDate = ? "
                     + "AND (actionTaken IS NULL OR actionTaken = 'adjusted') "
                     + "ORDER BY EmployeeName ASC ");

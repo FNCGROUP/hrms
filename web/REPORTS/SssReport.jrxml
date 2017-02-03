@@ -8,7 +8,7 @@
 	<queryString>
 		<![CDATA[SELECT * FROM sss_schedule
 WHERE (currentStatus != 'removed' OR currentStatus IS NULL) AND
-(SELECT branchId FROM employee_contribution_main WHERE employeeId = sss_schedule.employeeId ORDER BY id DESC LIMIT 1) = $P{BRANCH_ID} AND payrollDate = $P{PAYROLL_DATE} AND (actionTaken IS NULL OR actionTaken = 'adjusted') ORDER BY EmployeeName ASC]]>
+tag = $P{BRANCH_ID} AND payrollDate = $P{PAYROLL_DATE} AND (actionTaken IS NULL OR actionTaken = 'adjusted') ORDER BY EmployeeName ASC]]>
 	</queryString>
 	<field name="sssNo" class="java.lang.String"/>
 	<field name="EmployeeName" class="java.lang.String"/>

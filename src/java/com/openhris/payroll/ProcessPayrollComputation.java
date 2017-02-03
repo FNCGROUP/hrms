@@ -150,6 +150,7 @@ public class ProcessPayrollComputation {
             p.setRate(employmentWage);
             p.setWageEntry(employmentWageEntry.charAt(0));
             p.setTag(es.findEmployeeRemittanceTag(getEmployeeId()));
+            p.setWageStatus(employmentWageStatus);
             
             double basicSalary = pComputation.getBasicSalary(employmentWage, employmentWageEntry);
             p.setBasicSalary(basicSalary);

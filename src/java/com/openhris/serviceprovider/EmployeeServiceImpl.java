@@ -349,8 +349,8 @@ public class EmployeeServiceImpl implements EmployeeService {
                 ei.setEmploymentWageStatus(rs.getString("employmentWageStatus"));
                 ei.setEmploymentWageEntry(rs.getString("employmentWageEntry"));
                 ei.setEmploymentWage(Double.parseDouble(rs.getString("employmentWage")));
-                ei.setAllowance(Double.parseDouble(rs.getString("allowance")));
-                ei.setAllowanceEntry(rs.getString("allowanceEntry"));
+//                ei.setAllowance(Double.parseDouble(rs.getString("allowance")));
+//                ei.setAllowanceEntry(rs.getString("allowanceEntry"));
                 ei.setEntryDate(util.parsingDate(rs.getString("entryDate")));
                 ei.setTotalDependent(rs.getString("totalDependent"));
                 ei.setBankAccountNo(rs.getString("bankAccountNo"));

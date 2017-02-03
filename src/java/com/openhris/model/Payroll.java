@@ -63,6 +63,7 @@ public class Payroll extends Employee {
     private char wageEntry;
     private Branch branch;
     private int tag;
+    private String wageStatus;
 
     TimekeepingService tkService = new TimekeepingServiceImpl();
     
@@ -261,6 +262,10 @@ public class Payroll extends Employee {
         return tag;
     }
 
+    public String getWageStatus() {
+        return wageStatus;
+    }
+
     public void setId(int id){
         this.id = id;
     }
@@ -451,6 +456,10 @@ public class Payroll extends Employee {
 
     public void setTag(int tag) {
         this.tag = tag;
+    }
+
+    public void setWageStatus(String wageStatus) {
+        this.wageStatus = wageStatus;
     }
 
 }

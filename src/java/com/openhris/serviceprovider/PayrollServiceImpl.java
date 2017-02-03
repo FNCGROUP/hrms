@@ -103,6 +103,7 @@ public class PayrollServiceImpl implements PayrollService {
                 p.setRate(util.convertStringToDouble(rs.getString("rate")));
                 p.setWageEntry(rs.getString("wageEntry").charAt(0));
                 p.setTag(util.convertStringToInteger(rs.getString("tag")));
+                p.setWageStatus(rs.getString("wageStatus"));
                 
                 Branch b = new Branch();
                 b.setTradeName(rs.getString("tradeName"));
@@ -321,13 +322,109 @@ public class PayrollServiceImpl implements PayrollService {
     }
 
     @Override
-    public boolean updateSalaryByAdvances(List<Advances> advanceceList) {
-        return payrollDAO.updateSalaryByAdvances(advanceceList);
+    public boolean updateSalaryByAdvances(List<Advances> advanceList) {
+//        return payrollDAO.updateSalaryByAdvances(advanceceList);
+        Connection conn = getConnection.connection();
+        boolean result = false;
+        PreparedStatement pstmt = null;
+        String queryInsert = "INSERT INTO advance_table(payrollId, amount, advanceType, particulars, datePosted) VALUES(?, ?, ?, ?, ?)";
+        String queryUpdate = "UPDATE payroll_table SET amountToBeReceive = ?, amountReceivable = ? WHERE id = ? ";
+        int payrollId = 0;
+        try {
+            conn.setAutoCommit(false);
+            for(Advances a : advanceList){
+                pstmt = conn.prepareStatement(queryInsert);
+                pstmt.setInt(1, a.getId());
+                pstmt.setDouble(2, a.getAmount());
+                pstmt.setString(3, a.getAdvanceType());
+                pstmt.setString(4, a.getParticulars());
+                pstmt.setString(5, util.convertDateFormat(a.getDatePosted().toString()));
+                pstmt.executeUpdate();
+                
+                if(payrollId == 0){
+                    payrollId = a.getId();
+                }
+                
+                double amountReceivable;
+                
+                if(isPayrollEditted(a.getId())){
+                    amountReceivable = a.getAmountReceivable();
+                } else {
+                    amountReceivable = a.getAmountReceivable() - a.getAmount();
+                }                
+                double amountToBeReceive = Math.round((a.getAmountToBeReceive() - a.getAmount())*100.0)/100.0;
+                
+                pstmt = conn.prepareStatement(queryUpdate);
+                pstmt.setDouble(1, amountToBeReceive);
+                pstmt.setDouble(2, amountReceivable);
+                pstmt.setInt(3, a.getId());
+                pstmt.executeUpdate();
+            }
+            
+            pstmt = conn.prepareStatement("INSERT INTO payroll_logs "
+                    + "SET PayrollID = ?, "
+                    + "Remarks = ?, "
+                    + "DateRemarked = now(), "
+                    + "UserID = ?");
+            pstmt.setInt(1, payrollId);
+            pstmt.setString(2, SystemConstants.UPDATE_PAYROLL+", add Advances");
+            pstmt.setInt(3, GlobalVariables.getUserId());
+            pstmt.executeUpdate();
+            
+            conn.commit();
+            System.out.println("Transaction commit...");
+            result = true;
+        } catch (SQLException ex) {
+            try {
+                conn.rollback();
+                System.out.println("Connection rollback...");
+            } catch (SQLException ex1) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex1);
+            } 
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally{
+            try {
+                if(conn != null || !conn.isClosed()){
+                    pstmt.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return result;
     }
 
     @Override
     public double getTotalAdvancesByPayroll(int payrollId) {
-        return payrollDAO.getTotalAdvancesByPayroll(payrollId);
+//        return payrollDAO.getTotalAdvancesByPayroll(payrollId);
+        Connection conn = getConnection.connection();
+        Statement stmt = null;
+        ResultSet rs = null; 
+        double totalAmount = 0;
+        try {
+            stmt = conn.createStatement();
+            rs = stmt.executeQuery("SELECT ROUND(SUM(amount), 2) AS amount FROM advance_table "
+                    + "WHERE payrollId = "+payrollId+" AND rowStatus IS NULL ");
+            while(rs.next()){
+                totalAmount = util.convertStringToDouble(rs.getString("amount"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                if(conn != null || !conn.isClosed()){
+                    stmt.close();
+                    rs.close();
+                    conn.close();
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PayrollDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        return totalAmount;
     }
 
     @Override
@@ -403,6 +500,7 @@ public class PayrollServiceImpl implements PayrollService {
                 pr.setCorporateName(rs.getString("corporateName"));
                 pr.setCurrentStatus(rs.getString("currentStatus"));
                 pr.setTag(util.convertStringToInteger(rs.getString("tag")));
+                pr.setWageStatus(rs.getString("wageStatus"));
                 payrollRegisterList.add(pr);
             }
         } catch (SQLException ex) {
@@ -996,7 +1094,8 @@ public class PayrollServiceImpl implements PayrollService {
                     + "payrollDate = ?, "
                     + "rate = ?, "
                     + "wageEntry = ?, "
-                    + "tag = ? ");
+                    + "tag = ?, "
+                    + "wageStatus = ? ");
             pstmt.setString(1, payroll.getEmployeeId());
             pstmt.setString(2, util.convertDateFormat(payroll.getAttendancePeriodFrom().toString()));
             pstmt.setString(3, util.convertDateFormat(payroll.getAttendancePeriodTo().toString()));
@@ -1038,6 +1137,7 @@ public class PayrollServiceImpl implements PayrollService {
             pstmt.setDouble(39, payroll.getRate());
             pstmt.setString(40, String.valueOf(payroll.getWageEntry()));
             pstmt.setInt(41, payroll.getTag());
+            pstmt.setString(42, payroll.getWageStatus());
             pstmt.executeUpdate();
                 
             int payrollId = 0;            
