@@ -3,15 +3,17 @@
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="BRANCH_ID" class="java.lang.String"/>
+	<parameter name="BRANCH_ID" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
 	<parameter name="PAYROLL_DATE" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT e.hdmfNo AS hdmfNo,
 CONCAT_WS(', ', setNameToUpper(e.lastname),
 CONCAT_WS(' ', setNameToUpper(e.firstname), setNameToUpper(e.middlename))) AS name,
 s.hdmf AS hdmf,
-CASE WHEN (SELECT employmentWageStatus FROM employee WHERE employeeId = e.employeeId LIMIT 1) =
-'minimum' THEN (if(s.hdmf = 0, 0, 100)) ELSE IF(s.hdmf = 100, 100, if(s.hdmf = 0, 0, ROUND((s.hdmf), 0))) END AS erHdmf
+CASE WHEN s.wageStatus =
+'minimum' THEN (if(s.hdmf = 0, 0, 100)) ELSE (if(s.hdmf = 0, 0, ROUND((s.hdmf), 0))) END AS erHdmf
 , b.name AS branch,
 tn.name AS tradeName,
 cn.name AS corporateName,

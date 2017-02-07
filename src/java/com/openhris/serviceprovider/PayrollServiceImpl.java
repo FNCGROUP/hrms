@@ -1356,7 +1356,7 @@ public class PayrollServiceImpl implements PayrollService {
     @Override
     public List<Adjustment> getListOfAdjustmentFromPayrollId(int payrollId) {
 //        return payrollDAO.getListOfAdjustmentFromPayrollId(payrollId);
-        List<Adjustment> adjustmentList = new ArrayList<Adjustment>();
+        List<Adjustment> adjustmentList = new ArrayList<>();
         Connection conn = getConnection.connection();
         Statement stmt = null;
         ResultSet rs = null;
