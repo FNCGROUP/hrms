@@ -27,6 +27,7 @@ public class AFLContainer extends IndexedContainer {
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);     
         addContainerProperty("amount", Double.class, null);
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
     }
 
@@ -37,6 +38,7 @@ public class AFLContainer extends IndexedContainer {
         addContainerProperty("employeeId", String.class, null);
         addContainerProperty("name", String.class, null);  
         addContainerProperty("amount", Double.class, null);
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
         
         for(AFLSchedule a : cs.findAFLByCompany(corporateId, payrollDate)){
@@ -44,6 +46,7 @@ public class AFLContainer extends IndexedContainer {
             item.getItemProperty("employeeId").setValue(a.getEmployeeId());
             item.getItemProperty("name").setValue(a.getEmployeeName().toUpperCase());
             item.getItemProperty("amount").setValue(a.getAmount());
+            item.getItemProperty("corporate").setValue(a.getCorporateName());
             item.getItemProperty("branch").setValue(a.getBranchName());
         }
     }

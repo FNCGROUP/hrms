@@ -28,6 +28,7 @@ public class TaxDataContainer extends IndexedContainer {
         addContainerProperty("name", String.class, null);      
         addContainerProperty("tinNo", String.class, null);
         addContainerProperty("amount", Double.class, null);
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
     }
 
@@ -39,6 +40,7 @@ public class TaxDataContainer extends IndexedContainer {
         addContainerProperty("name", String.class, null);      
         addContainerProperty("tinNo", String.class, null);
         addContainerProperty("amount", Double.class, null);
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
         
         for(TaxSchedule ts : cs.getTaxContribution(corporateId, payrollDate)){
@@ -47,6 +49,7 @@ public class TaxDataContainer extends IndexedContainer {
             item.getItemProperty("name").setValue(ts.getEmployeeName().toUpperCase());
             item.getItemProperty("tinNo").setValue(ts.getTinNo());
             item.getItemProperty("amount").setValue(ts.getTaxAmount());
+            item.getItemProperty("corporate").setValue(ts.getCorporateName());
             item.getItemProperty("branch").setValue(ts.getBranchName());
         }
     }

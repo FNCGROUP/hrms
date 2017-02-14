@@ -128,6 +128,7 @@ public class ContributionServiceImpl implements ContributionService {
                 s.setErShare(util.convertStringToDouble(rs.getString("erShare")));
                 s.setEc(util.convertStringToDouble(rs.getString("ec")));
                 s.setBranch(rs.getString("branch"));
+                s.setCorporate(rs.getString("corporateName"));
                 sssList.add(s);
             }
         } catch (SQLException ex) {
@@ -181,6 +182,7 @@ public class ContributionServiceImpl implements ContributionService {
                 ps.setEePhic(util.convertStringToDouble(rs.getString("PhicAmount")));
                 ps.setErPhic(util.convertStringToDouble(rs.getString("PhicAmount")));
                 ps.setBranchName(rs.getString("BranchName"));
+                ps.setCorporateName(rs.getString("corporateName"));
                 psList.add(ps);
             }
         } catch (SQLException ex) {
@@ -234,6 +236,7 @@ public class ContributionServiceImpl implements ContributionService {
                 hs.setEeHdmf(util.convertStringToDouble(rs.getString("HdmfAmount")));
                 hs.setErHdmf(util.convertStringToDouble(rs.getString("HdmfAmount")));
                 hs.setBranchName(rs.getString("BranchName"));
+                hs.setCorporateName(rs.getString("corporateName"));
                 hsList.add(hs);
             }
         } catch (SQLException ex) {
@@ -283,6 +286,7 @@ public class ContributionServiceImpl implements ContributionService {
                 ts.setTinNo(rs.getString("TinNo"));
                 ts.setTaxAmount(util.convertStringToDouble(rs.getString("TaxAmount")));
                 ts.setBranchName(rs.getString("BranchName"));
+                ts.setCorporateName(rs.getString("corporateName"));
                 tsList.add(ts);
             }
         } catch (SQLException ex) {
@@ -325,6 +329,7 @@ public class ContributionServiceImpl implements ContributionService {
                 a.setEmployeeName(rs.getString("EmployeeName"));
                 a.setAmount(util.convertStringToDouble(rs.getString("AllowanceForLiquidation")));
                 a.setBranchName(rs.getString("BranchName"));
+                a.setCorporateName(rs.getString("corporateName"));
                 aflList.add(a);
             }
         } catch (SQLException ex) {

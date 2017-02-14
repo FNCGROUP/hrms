@@ -84,6 +84,7 @@ public class EmployeeServiceImpl implements EmployeeService {
                 dbm.setMiddlename(rs.getString("Middlename"));
                 dbm.setLastname(rs.getString("Lastname"));
                 dbm.setAmount(util.convertStringToDouble(rs.getString("Amount")));
+                dbm.setCorporateName(rs.getString("corporateName"));
                 dbm.setBranch(rs.getString("Branch"));
                 dbm.setPayrollDate(util.parsingDate(rs.getString("PayrollDate")));
                 dbmList.add(dbm);

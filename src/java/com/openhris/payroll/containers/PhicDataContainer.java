@@ -34,7 +34,8 @@ public class PhicDataContainer extends IndexedContainer {
         addContainerProperty("name", String.class, null);      
         addContainerProperty("phicNo", String.class, null);
         addContainerProperty("eePhic", Double.class, null);
-        addContainerProperty("erPhic", Double.class, null); 
+        addContainerProperty("erPhic", Double.class, null);
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
     }
@@ -49,6 +50,7 @@ public class PhicDataContainer extends IndexedContainer {
         addContainerProperty("phicNo", String.class, null);
         addContainerProperty("eePhic", Double.class, null);
         addContainerProperty("erPhic", Double.class, null); 
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
         
@@ -60,6 +62,7 @@ public class PhicDataContainer extends IndexedContainer {
             item.getItemProperty("eePhic").setValue(ps.getEePhic());
             item.getItemProperty("erPhic").setValue(ps.getErPhic());
             item.getItemProperty("branch").setValue(ps.getBranchName());
+            item.getItemProperty("corporate").setValue(ps.getCorporateName());
             
             Date date = CommonUtil.parsingDate(CommonUtil.convertDateFormat(payrollDate.toString()));
             Calendar c = Calendar.getInstance();

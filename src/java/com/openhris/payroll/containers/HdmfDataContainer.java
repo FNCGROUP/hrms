@@ -54,6 +54,7 @@ public class HdmfDataContainer extends IndexedContainer {
         addContainerProperty("hdmfNo", String.class, null);
         addContainerProperty("eeHdmf", Double.class, null);
         addContainerProperty("erHdmf", Double.class, null); 
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
         
@@ -73,6 +74,7 @@ public class HdmfDataContainer extends IndexedContainer {
             }            
             
             item.getItemProperty("branch").setValue(hs.getBranchName());
+            item.getItemProperty("corporate").setValue(hs.getCorporateName());
             
             Date date = CommonUtil.parsingDate(CommonUtil.convertDateFormat(payrollDate.toString()));
             Calendar c = Calendar.getInstance();

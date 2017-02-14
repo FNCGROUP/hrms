@@ -15,6 +15,7 @@ public class AFLSchedule {
     private String employeeName;
     private double amount;
     private String branchName;
+    private String corporateName;
 
     public String getEmployeeId() {
         return employeeId;
@@ -32,6 +33,10 @@ public class AFLSchedule {
         return branchName;
     }
 
+    public String getCorporateName() {
+        return corporateName;
+    }
+
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
@@ -46,6 +51,10 @@ public class AFLSchedule {
 
     public void setBranchName(String branchName) {
         this.branchName = branchName;
+    }
+
+    public void setCorporateName(String corporateName) {
+        this.corporateName = corporateName;
     }
     
 }

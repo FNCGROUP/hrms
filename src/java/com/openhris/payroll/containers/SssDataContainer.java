@@ -36,6 +36,7 @@ public class SssDataContainer extends IndexedContainer {
         addContainerProperty("eeShare", Double.class, null);
         addContainerProperty("erShare", Double.class, null); 
         addContainerProperty("ec", Double.class, null);
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
     }
@@ -53,6 +54,7 @@ public class SssDataContainer extends IndexedContainer {
         addContainerProperty("eeShare", Double.class, null);
         addContainerProperty("erShare", Double.class, null); 
         addContainerProperty("ec", Double.class, null);
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
         addContainerProperty("date", String.class, null);
         
@@ -64,6 +66,7 @@ public class SssDataContainer extends IndexedContainer {
             item.getItemProperty("eeShare").setValue(s.getEeShare());
             item.getItemProperty("erShare").setValue(s.getErShare());
             item.getItemProperty("ec").setValue(s.getEc());
+            item.getItemProperty("corporate").setValue(s.getCorporate());
             item.getItemProperty("branch").setValue(s.getBranch());
             
             Date date = CommonUtil.parsingDate(CommonUtil.convertDateFormat(payrollDate.toString()));

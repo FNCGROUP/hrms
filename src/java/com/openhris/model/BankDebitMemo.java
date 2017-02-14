@@ -22,6 +22,7 @@ public class BankDebitMemo {
     private double amount;
     private String branch;
     private Date payrollDate;
+    private String corporateName;
 
     public int getPayrollId() {
         return payrollId;
@@ -59,6 +60,10 @@ public class BankDebitMemo {
         return payrollDate;
     }
 
+    public String getCorporateName() {
+        return corporateName;
+    }
+
     public void setPayrollId(int payrollId) {
         this.payrollId = payrollId;
     }
@@ -93,6 +98,10 @@ public class BankDebitMemo {
 
     public void setPayrollDate(Date payrollDate) {
         this.payrollDate = payrollDate;
+    }
+
+    public void setCorporateName(String corporateName) {
+        this.corporateName = corporateName;
     }
     
 }

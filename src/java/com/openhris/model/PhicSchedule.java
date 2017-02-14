@@ -21,6 +21,7 @@ public class PhicSchedule {
     private Date payrollDate;
     private String branchName;
     private String currentStatus;
+    private String corporateName;
 
     public String getEmployeeId() {
         return employeeId;
@@ -54,6 +55,10 @@ public class PhicSchedule {
         return currentStatus;
     }
 
+    public String getCorporateName() {
+        return corporateName;
+    }
+
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
@@ -84,6 +89,10 @@ public class PhicSchedule {
 
     public void setCurrentStatus(String currentStatus) {
         this.currentStatus = currentStatus;
+    }
+
+    public void setCorporateName(String corporateName) {
+        this.corporateName = corporateName;
     }
     
 }

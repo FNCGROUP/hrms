@@ -18,6 +18,7 @@ public class SssSchedule {
     private double erShare;
     private double ec;
     private String branch;
+    private String corporate;
 
     public String getEmployeeId() {
         return employeeId;
@@ -47,6 +48,10 @@ public class SssSchedule {
         return branch;
     }
 
+    public String getCorporate() {
+        return corporate;
+    }
+
     public void setEmployeeId(String employeeId) {
         this.employeeId = employeeId;
     }
@@ -73,6 +78,10 @@ public class SssSchedule {
 
     public void setBranch(String branch) {
         this.branch = branch;
+    }
+
+    public void setCorporate(String corporate) {
+        this.corporate = corporate;
     }
     
 }

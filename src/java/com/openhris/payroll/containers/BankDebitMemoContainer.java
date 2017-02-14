@@ -27,6 +27,7 @@ public class BankDebitMemoContainer extends IndexedContainer {
         addContainerProperty("bankAccountNo", String.class, "");
         addContainerProperty("name", String.class, "");
         addContainerProperty("amount", Double.class, "");   
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
         addContainerProperty("payrollDate", String.class, null);
     }
@@ -36,6 +37,7 @@ public class BankDebitMemoContainer extends IndexedContainer {
         addContainerProperty("bankAccountNo", String.class, "");
         addContainerProperty("name", String.class, "");
         addContainerProperty("amount", Double.class, "");
+        addContainerProperty("corporate", String.class, null);
         addContainerProperty("branch", String.class, null);
         addContainerProperty("payrollDate", String.class, null);
         
@@ -45,6 +47,7 @@ public class BankDebitMemoContainer extends IndexedContainer {
             item.getItemProperty("bankAccountNo").setValue(dbm.getBankAccountNo());
             item.getItemProperty("name").setValue(dbm.getLastname().toUpperCase()+", "+dbm.getFirstname().toUpperCase()+" "+dbm.getMiddlename().toUpperCase());
             item.getItemProperty("amount").setValue(util.roundOffToTwoDecimalPlaces(dbm.getAmount()));  
+            item.getItemProperty("corporate").setValue(dbm.getCorporateName());
             item.getItemProperty("branch").setValue(dbm.getBranch());
             item.getItemProperty("payrollDate").setValue(util.convertDateFormat(dbm.getPayrollDate().toString()));
         }
